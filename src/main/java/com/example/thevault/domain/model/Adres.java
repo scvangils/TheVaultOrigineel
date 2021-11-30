@@ -29,4 +29,59 @@ public class Adres {
         this.postcode = postcode;
         this.plaatsnaam = plaatsnaam;
     }
+
+    @Override
+    public String toString() {
+        return "Adres{" +
+                "straatnaam='" + straatnaam + '\'' +
+                ", toevoeging='" + toevoeging + '\'' +
+                ", huisnummer=" + huisnummer +
+                ", postcode='" + postcode + '\'' +
+                ", plaatsnaam='" + plaatsnaam + '\'' +
+                '}';
+    }
+
+    public String getStraatnaam() {
+        return straatnaam;
+    }
+
+    public void setStraatnaam(String straatnaam) {
+        this.straatnaam = straatnaam;
+    }
+
+    public String getToevoeging() {
+        return toevoeging;
+    }
+
+    public void setToevoeging(String toevoeging) {
+        this.toevoeging = toevoeging;
+    }
+
+    public int getHuisnummer() {
+        return huisnummer;
+    }
+
+    public void setHuisnummer(int huisnummer) {
+        this.huisnummer = huisnummer;
+    }
+
+    public String getPostcode() {
+        return postcode;
+    }
+
+    public void setPostcode(String postcode) {
+        this.postcode = postcode;
+    }
+
+    public String getPlaatsnaam() {
+        return plaatsnaam;
+    }
+
+    public void setPlaatsnaam(String plaatsnaam) {
+        this.plaatsnaam = plaatsnaam;
+    }
+
+    public Logger getLogger() {
+        return logger;
+    }
 }

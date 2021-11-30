@@ -19,7 +19,7 @@ public class Klant extends Gebruiker {
 
     public Klant(){
         super();
-        logger.info("Lege klant object, no args constructor");
+        logger.info("Lege klant, no args constructor");
     }
 
     public Klant(String naam, Adres adres, int BSN, LocalDate geboortedatum) {

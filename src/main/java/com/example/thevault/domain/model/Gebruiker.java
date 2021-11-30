@@ -35,9 +35,57 @@ abstract class Gebruiker {
         logger.info("Gebruiker" + this + "aangemaakt");
     }
 
+    @Override
+    public String toString() {
+        return "Gebruiker{" +
+                "gebruikerID=" + gebruikerID +
+                ", gebruikersnaam='" + gebruikersnaam + '\'' +
+                ", portefeuille=" + portefeuille +
+                ", rekening=" + rekening +
+                '}';
+    }
 
+    public int getGebruikerID() {
+        return gebruikerID;
+    }
 
+    public void setGebruikerID(int gebruikerID) {
+        this.gebruikerID = gebruikerID;
+    }
 
+    public String getGebruikersnaam() {
+        return gebruikersnaam;
+    }
 
+    public void setGebruikersnaam(String gebruikersnaam) {
+        this.gebruikersnaam = gebruikersnaam;
+    }
 
+    public String getWachtwoord() {
+        return wachtwoord;
+    }
+
+    public void setWachtwoord(String wachtwoord) {
+        this.wachtwoord = wachtwoord;
+    }
+
+    public Portefeuille getPortefeuille() {
+        return portefeuille;
+    }
+
+    public void setPortefeuille(Portefeuille portefeuille) {
+        this.portefeuille = portefeuille;
+    }
+
+    public Rekening getRekening() {
+        return rekening;
+    }
+
+    public void setRekening(Rekening rekening) {
+        this.rekening = rekening;
+    }
+
+    public Logger getLogger() {
+        return logger;
+    }
 }
