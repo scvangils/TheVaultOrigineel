@@ -19,7 +19,7 @@ public class RekeningService {
 
 
     public Iban createIban(){
-        Iban iban = new Iban.Builder().countryCode(CountryCode.NL).bankCode("29312129").buildRandom();
+        Iban iban = new Iban.Builder().countryCode(CountryCode.NL).bankCode("TVLT").buildRandom();
         return iban;
     }
 
