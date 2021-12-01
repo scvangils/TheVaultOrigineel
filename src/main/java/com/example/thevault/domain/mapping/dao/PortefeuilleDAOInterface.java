@@ -7,7 +7,7 @@ import java.util.Map;
 
 public interface PortefeuilleDAOInterface {
 
-    public void slaOp(Portefeuille portefeuille);
+    public void slaPortefeuilleOp(Portefeuille portefeuille);
 
     public Portefeuille vindPortefeuilleMetID(int portefeuilleId);
 
@@ -15,9 +15,9 @@ public interface PortefeuilleDAOInterface {
 
     public void verwijderCryptomunt(int cryptomuntId);
 
-    public void pasSaldoCryptomuntAan(int cryptomuntId, int hoeveelheid);
+    public void updateSaldoCryptomunt(int cryptomuntId, int hoeveelheid);
 
-    public Map<Cryptomunt,Double> inhoudPortefeuille(int portefeuilleId);
+    public Map<Cryptomunt,Double> geefInhoudPortefeuille(int portefeuilleId);
 
 
 }
