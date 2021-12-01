@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 
 public class Cryptomunt {
 
+    int cryptomuntId;
+
     private final Logger logger = LoggerFactory.getLogger(Cryptomunt.class);
 
     public Cryptomunt() {
