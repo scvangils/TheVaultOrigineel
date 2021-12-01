@@ -1,19 +1,17 @@
-// Created by carme
-// Creation date 01/12/2021
-
 package com.example.thevault.domain.mapping.dao;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.example.thevault.domain.model.Cryptomunt;
+import com.example.thevault.domain.model.Portefeuille;
 
-public class PortefeuilleDAO {
+import java.util.Map;
 
-    private final Logger logger = LoggerFactory.getLogger(PortefeuilleDAO.class);
+public interface PortefeuilleDAO {
 
-    public PortefeuilleDAO() {
-        super();
-        logger.info("New PortefeuilleDAO");
-    }
+    public Portefeuille vindPortefeuilleInhoudMetID(int klantId);
 
+    public void voegCryptomuntToe(int cryptomuntId);
 
+    public void verwijderCryptomunt(int cryptomuntId);
+
+    public void updateSaldoCryptomunt(int cryptomuntId, int hoeveelheid);
 }
