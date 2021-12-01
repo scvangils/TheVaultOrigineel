@@ -6,7 +6,12 @@ package com.example.thevault.domain.model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
+
 public class Portefeuille {
+
+    int portefeuilleId;
+    Map<Cryptomunt, Double> saldiCryptomunten;
 
     private final Logger logger = LoggerFactory.getLogger(Portefeuille.class);
 
