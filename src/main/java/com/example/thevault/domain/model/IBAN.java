@@ -21,4 +21,11 @@ public class IBAN {
         this.ibanNummer = ibanNummer;
         logger.info("New IBAN");
     }
+
+    @Override
+    public String toString() {
+        return "IBAN{" +
+                "ibanNummer='" + ibanNummer + '\'' +
+                '}';
+    }
 }
