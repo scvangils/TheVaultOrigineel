@@ -22,11 +22,49 @@ public class Klant extends Gebruiker {
         logger.info("Lege klant, no args constructor");
     }
 
-    public Klant(String naam, Adres adres, int BSN, LocalDate geboortedatum) {
-        logger.info("New Klant");
+    public Klant(int gebruikerID, String gebruikersnaam, String wachtwoord,
+                 Portefeuille portefeuille, Rekening rekening,
+                 String naam, Adres adres, int BSN, LocalDate geboortedatum) {
+        super(gebruikerID, gebruikersnaam, wachtwoord);
         this.naam = naam;
         this.adres = adres;
         this.BSN = BSN;
+        this.geboortedatum = geboortedatum;
+        logger.info("New Klant, all args constructor");
+    }
+    public Klant(String gebruikersnaam, String wachtwoord,
+                 String naam, Adres adres, int BSN, LocalDate geboortedatum){
+
+    }
+    public String getNaam() {
+        return naam;
+    }
+
+    public void setNaam(String naam) {
+        this.naam = naam;
+    }
+
+    public Adres getAdres() {
+        return adres;
+    }
+
+    public void setAdres(Adres adres) {
+        this.adres = adres;
+    }
+
+    public int getBSN() {
+        return BSN;
+    }
+
+    public void setBSN(int BSN) {
+        this.BSN = BSN;
+    }
+
+    public LocalDate getGeboortedatum() {
+        return geboortedatum;
+    }
+
+    public void setGeboortedatum(LocalDate geboortedatum) {
         this.geboortedatum = geboortedatum;
     }
 
