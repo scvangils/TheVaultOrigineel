@@ -8,12 +8,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 @Repository
 public class JDBCKlantDAO implements KlantDAO{
 
     private final Logger logger = LoggerFactory.getLogger(JDBCKlantDAO.class);
+
+    private KlantListDatabase klantDatabase;
 
     public JDBCKlantDAO() {
         super();

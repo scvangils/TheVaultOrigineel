@@ -10,8 +10,6 @@ abstract class Gebruiker {
     private int gebruikerID;
     private String gebruikersnaam;
     private String wachtwoord;
-    private Portefeuille portefeuille;
-    private Rekening rekening;
 
     private final Logger logger = LoggerFactory.getLogger(Gebruiker.class);
 
@@ -20,15 +18,8 @@ abstract class Gebruiker {
         logger.info("Lege Gebruiker, no args constructor");
     }
 
-    public Gebruiker(Portefeuille portefeuille, Rekening rekening){
-        super();
-        this.portefeuille = portefeuille;
-        this.rekening = rekening;
-        logger.info("Lege gebruiker met rekening en portefeuille");
-    }
 
     public Gebruiker(int gebruikerID, String gebruikersnaam, String wachtwoord){
-        this(new Portefeuille(), new Rekening());
         this.gebruikerID = gebruikerID;
         this.gebruikersnaam = gebruikersnaam;
         this.wachtwoord = wachtwoord;
@@ -40,8 +31,6 @@ abstract class Gebruiker {
         return "Gebruiker{" +
                 "gebruikerID=" + gebruikerID +
                 ", gebruikersnaam='" + gebruikersnaam + '\'' +
-                ", portefeuille=" + portefeuille +
-                ", rekening=" + rekening +
                 '}';
     }
 
@@ -69,21 +58,7 @@ abstract class Gebruiker {
         this.wachtwoord = wachtwoord;
     }
 
-    public Portefeuille getPortefeuille() {
-        return portefeuille;
-    }
 
-    public void setPortefeuille(Portefeuille portefeuille) {
-        this.portefeuille = portefeuille;
-    }
-
-    public Rekening getRekening() {
-        return rekening;
-    }
-
-    public void setRekening(Rekening rekening) {
-        this.rekening = rekening;
-    }
 
 
 }

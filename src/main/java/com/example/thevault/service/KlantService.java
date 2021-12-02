@@ -6,7 +6,10 @@ package com.example.thevault.service;
 import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.model.Klant;
+import com.example.thevault.support.exceptions.IncorrectBSNException;
+import com.example.thevault.support.exceptions.IncorrectFormatException;
 import com.example.thevault.support.exceptions.RegistrationFailedException;
+import com.example.thevault.support.hashing.HashHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,16 +39,25 @@ public class KlantService {
 
     public Klant registreerKlant(Klant klant){
         //TODO format ingevoerde gegevens checken
+        //TODO juiste exception
+        if(!checkBsnFormat(klant.getBSN())){ // misschien overbodig
+            throw new IncorrectBSNException();
+        }
+        if(!checkGeboortedatumFormat(klant.getGeboortedatum())){
+            throw new IncorrectFormatException();
+        }
         if(rootRepository.vindKlantByUsername(klant.getGebruikersnaam()) != null){
             throw new RegistrationFailedException();
         }
         String teHashenWachtwoord = klant.getWachtwoord();
         //TODO hier hash en salt toevoegen
+        String gehashtWachtwoord = HashHelper.hashHelper(teHashenWachtwoord);
+        klant.setWachtwoord(gehashtWachtwoord);
         rootRepository.slaKlantOp(klant);
         return klant;
     }
     // kijkt na of BSN het juiste format heeft, nodig voor rechtstreekse API call
-    public boolean checkBsnFormat(String bsn){
+    public boolean checkBsnFormat(Long bsn){
         return true;
     }
     // kijkt na of geboortedatum juist format heeft, nodig voor rechtstreekse API call

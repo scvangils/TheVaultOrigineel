@@ -3,6 +3,7 @@
 
 package com.example.thevault.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +12,10 @@ import java.time.LocalDate;
 public class Klant extends Gebruiker {
     private String naam;
     private Adres adres;
-    private int BSN;
+    private long BSN;
+    private Rekening rekening;
+    private Portefeuille portefeuille;
+    @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate geboortedatum;
 
 
@@ -33,8 +37,8 @@ public class Klant extends Gebruiker {
         logger.info("New Klant, all args constructor");
     }
     public Klant(String gebruikersnaam, String wachtwoord,
-                 String naam, Adres adres, int BSN, LocalDate geboortedatum){
-
+                 String naam, int BSN, LocalDate geboortedatum){
+        this(0, gebruikersnaam, wachtwoord, null, null, naam, null, BSN, geboortedatum);
     }
     public String getNaam() {
         return naam;
@@ -52,7 +56,7 @@ public class Klant extends Gebruiker {
         this.adres = adres;
     }
 
-    public int getBSN() {
+    public long getBSN() {
         return BSN;
     }
 
@@ -67,6 +71,21 @@ public class Klant extends Gebruiker {
     public void setGeboortedatum(LocalDate geboortedatum) {
         this.geboortedatum = geboortedatum;
     }
+/*    public Portefeuille getPortefeuille() {
+        return portefeuille;
+    }
+
+    public void setPortefeuille(Portefeuille portefeuille) {
+        this.portefeuille = portefeuille;
+    }*/
+
+    public Rekening getRekening() {
+        return rekening;
+    }
+
+    public void setRekening(Rekening rekening) {
+        this.rekening = rekening;
+    }
 
     @Override
     public String toString() {
@@ -74,6 +93,8 @@ public class Klant extends Gebruiker {
                 "naam='" + naam + '\'' +
                 ", adres=" + adres +
                 ", BSN=" + BSN +
+                ", rekening=" + rekening +
+                ", portefeuille=" + portefeuille +
                 ", geboortedatum=" + geboortedatum +
                 '}';
     }
