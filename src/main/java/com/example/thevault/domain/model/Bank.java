@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 
 public class Bank extends Gebruiker{
 
+    private final String BANKNAAM = "The Vault";
+    public final static String BANKCODE = "TVLT";
+
     private final Logger logger = LoggerFactory.getLogger(Bank.class);
 
     public Bank() {
@@ -15,5 +18,7 @@ public class Bank extends Gebruiker{
         logger.info("New Bank");
     }
 
-
+    public String getBANKCODE() {
+        return BANKCODE;
+    }
 }
