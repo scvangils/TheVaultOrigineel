@@ -14,20 +14,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class KlantController {
+public class KlantController extends BasisApiController{
 
     private final Logger logger = LoggerFactory.getLogger(KlantController.class);
 
-    private KlantService klantService;
 
     public KlantController(KlantService klantService) {
-        super();
-        this.klantService = klantService;
+        super(klantService);
         logger.info("New KlantController");
     }
 @PostMapping("/register")
     public ResponseEntity<Klant> registreerKlantHandler(@RequestBody Klant klant){
-       klant = klantService.registreerKlant(klant);
+        klantService.registreerKlant(klant);
     return ResponseEntity.status(201).body(klant);
 }
 

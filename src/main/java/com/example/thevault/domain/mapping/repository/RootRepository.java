@@ -37,6 +37,7 @@ public class RootRepository {
     }
     public void slaKlantOp(Klant klant){
         klantDAO.slaKlantOp(klant);
+
     }
     public Klant vindKlantByUsername(String username){
         return klantDAO.vindKlantByUsername(username);
