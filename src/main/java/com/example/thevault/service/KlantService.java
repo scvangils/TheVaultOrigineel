@@ -44,9 +44,11 @@ public class KlantService {
         rootRepository.slaKlantOp(klant);
         return klant;
     }
+    // kijkt na of BSN het juiste format heeft, nodig voor rechtstreekse API call
     public boolean checkBsnFormat(String bsn){
         return true;
     }
+    // kijkt na of geboortedatum juist format heeft, nodig voor rechtstreekse API call
     public boolean checkGeboortedatumFormat(LocalDate geboortedatum){
         return true;
     }

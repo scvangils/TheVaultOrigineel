@@ -81,7 +81,4 @@ public class Adres {
         this.plaatsnaam = plaatsnaam;
     }
 
-    public Logger getLogger() {
-        return logger;
-    }
 }
