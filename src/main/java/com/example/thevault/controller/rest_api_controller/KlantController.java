@@ -3,7 +3,9 @@
 
 package com.example.thevault.controller.rest_api_controller;
 
+import com.example.thevault.domain.model.Adres;
 import com.example.thevault.domain.model.Klant;
+import com.example.thevault.domain.model.PostModel;
 import com.example.thevault.service.KlantService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +28,7 @@ public class KlantController {
     }
 @PostMapping("/register")
     public ResponseEntity<Klant> registreerKlantHandler(@RequestBody Klant klant){
-        klantService.registreerKlant(klant);
+    //    klantService.registreerKlant(klant);
     return ResponseEntity.status(201).body(klant);
 }
 
