@@ -1,6 +1,5 @@
 package com.example.thevault.service;
 
-import com.example.thevault.domain.model.IBAN;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import org.junit.jupiter.api.BeforeEach;

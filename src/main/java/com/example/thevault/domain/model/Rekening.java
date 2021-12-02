@@ -8,9 +8,11 @@ import org.slf4j.LoggerFactory;
 
 public class Rekening {
 
-    private  int rekeningId; // int klantId
+    private  int rekeningId;
     private String iban;
     private double saldo;
+    private Klant klant; // voor het klantId
+
 
     private final Logger logger = LoggerFactory.getLogger(Rekening.class);
 
@@ -19,14 +21,12 @@ public class Rekening {
         logger.info("Lege rekening, no args constructor");
     }
 
-    public Rekening(int rekeningId, String iban, double saldo) {
+    public Rekening(int rekeningId, String iban, double saldo, Klant klant) {
+        this.klant = klant;
         this.rekeningId = rekeningId;
         this.iban = iban;
         this.saldo = saldo;
-    }
-
-    public Rekening(int rekeningId) {
-        this.rekeningId = rekeningId;
+        logger.info("Nieuwe rekening " + this + " gemaakt");
     }
 
     public int getRekeningId() {
