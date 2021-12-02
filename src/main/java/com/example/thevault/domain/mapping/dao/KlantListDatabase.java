@@ -26,4 +26,12 @@ public class KlantListDatabase {
                 null, null, "Jan", null, 145801354, LocalDate.now());
         logger.info("New KlantListDatabase");
     }
+
+    public List<Klant> getListDatabase() {
+        return listDatabase;
+    }
+
+    public void setListDatabase(List<Klant> listDatabase) {
+        this.listDatabase = listDatabase;
+    }
 }
