@@ -2,6 +2,7 @@
 
 package com.example.thevault.service;
 
+import com.example.thevault.domain.model.Bank;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import org.slf4j.Logger;
@@ -16,10 +17,8 @@ public class RekeningService {
     private double Saldo;
     private Iban iban;
 
-
-
     public Iban createIban(){
-        Iban iban = new Iban.Builder().countryCode(CountryCode.NL).bankCode("TVLT").buildRandom();
+        Iban iban = new Iban.Builder().countryCode(CountryCode.NL).bankCode(Bank.BANKCODE).buildRandom();
         return iban;
     }
 
