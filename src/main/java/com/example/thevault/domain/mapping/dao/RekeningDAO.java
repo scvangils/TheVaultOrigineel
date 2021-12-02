@@ -1,18 +1,18 @@
 package com.example.thevault.domain.mapping.dao;
 
+import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.model.Rekening;
+
 
 public interface RekeningDAO {
 
     void slaRekeningOp(Rekening rekening);
 
-    Rekening vindRekeningMetKlantId(int id);
+    Rekening vindRekeningVanKlant(Klant klant);
 
-    //Rekening vindRekeningMetIban(String iban);
+    double vraagSaldoOpVanKlant(Klant klant);
 
-    Rekening vraagSaldoOpMetKlantId(int id);
+    void wijzigSaldoVanKlant(Klant klant, double bedrag);
 
-    Rekening wijzigSaldoMetKlantId(int id, double bedrag);
 
-    Rekening wijzigIbanMetKlantId(int id, String iban);
 }

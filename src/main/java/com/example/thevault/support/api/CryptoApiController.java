@@ -27,13 +27,10 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class CryptoApiController {
 
     private static HttpURLConnection connection;
     private static String apiKey = "b82c2a71-e4ae-4478-9c76-852e76796fa2";
-
-
 
     public static void main(String[] args)  {
         String uri = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";

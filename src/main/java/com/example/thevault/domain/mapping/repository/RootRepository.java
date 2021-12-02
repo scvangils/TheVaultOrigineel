@@ -4,8 +4,10 @@
 package com.example.thevault.domain.mapping.repository;
 
 import com.example.thevault.domain.mapping.dao.KlantDAO;
+import com.example.thevault.domain.mapping.dao.RekeningDAO;
 import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.model.Klant;
+import com.example.thevault.domain.model.Rekening;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -18,9 +20,11 @@ public class RootRepository {
     private final Logger logger = LoggerFactory.getLogger(RootRepository.class);
 
     private final KlantDAO klantDAO;
+    private final RekeningDAO rekeningDAO;
 
-    public RootRepository(KlantDAO klantDAO) {
+    public RootRepository(KlantDAO klantDAO, RekeningDAO rekeningDAO) {
         super();
+        this.rekeningDAO = rekeningDAO;
         this.klantDAO = klantDAO;
         logger.info("New RootRepository");
     }
@@ -40,5 +44,17 @@ public class RootRepository {
     }
     public Klant vindKlantByUsername(String username){
         return klantDAO.vindKlantByUsername(username);
+    }
+
+    public Rekening vindRekeningVanKlant(Klant klant){
+        return rekeningDAO.vindRekeningVanKlant(klant);
+    }
+
+    public double vraagSaldoOpVanKlant(Klant klant){
+        return rekeningDAO.vraagSaldoOpVanKlant(klant);
+    }
+
+    public void wijzigSaldoVanKlant(Klant klant, double bedrag){
+        rekeningDAO.wijzigSaldoVanKlant(klant, bedrag);
     }
 }

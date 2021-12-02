@@ -30,6 +30,7 @@ public class KlantService {
         this.rootRepository = rootRepository;
         logger.info("New KlantService.");
     }
+
     public Klant vindKlantByUsername(String username){
         return rootRepository.vindKlantByUsername(username);
     }
