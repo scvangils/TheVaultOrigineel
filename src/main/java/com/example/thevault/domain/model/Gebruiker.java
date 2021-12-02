@@ -85,4 +85,5 @@ abstract class Gebruiker {
         this.rekening = rekening;
     }
 
+
 }

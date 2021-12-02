@@ -71,7 +71,4 @@ public class Cryptomunt {
         this.waarde = waarde;
     }
 
-    public Logger getLogger() {
-        return logger;
-    }
 }

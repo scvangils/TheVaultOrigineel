@@ -7,22 +7,6 @@ Creation date 01/12/2021
 
 package com.example.thevault.support.api;
 
-import com.example.thevault.support.authorization.AuthorizationSupport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-/*
-
-public class CryptoApiController {
-    private final Logger logger = LoggerFactory.getLogger(AuthorizationSupport.class);
-
-    public CryptoApiController (){
-        super();
-        logger.info("new CryptoApiController, no args constructor");
-    }
-
-
-}
-*/
 
 /**
  * This example uses the Apache HTTPComponents library.
@@ -38,32 +22,32 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class CryptoApiController {
 
+    private static HttpURLConnection connection;
     private static String apiKey = "b82c2a71-e4ae-4478-9c76-852e76796fa2";
 
-    public static void main(String[] args) {
+
+
+    public static void main(String[] args)  {
         String uri = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
-        List<NameValuePair> paratmers = new ArrayList<NameValuePair>();
+        List<NameValuePair> parameters = new ArrayList<NameValuePair>();
 
-
-
-
-        paratmers.add(new BasicNameValuePair("start","1"));
-        paratmers.add(new BasicNameValuePair("limit","5000"));
-        paratmers.add(new BasicNameValuePair("convert","USD"));
+        parameters.add(new BasicNameValuePair("start","1"));
+        parameters.add(new BasicNameValuePair("limit","20"));
+        parameters.add(new BasicNameValuePair("convert","EUR"));
 
         try {
-            String result = makeAPICall(uri, paratmers);
-            System.out.println(result);
+            String result = makeAPICall(uri, parameters);
+            System.out.print(result);
         } catch (IOException e) {
-            System.out.println("Error: cannont access content - " + e.toString());
+            System.out.println("Error: cannot access content - " + e.toString());
         } catch (URISyntaxException e) {
             System.out.println("Error: Invalid URL " + e.toString());
         }
@@ -83,7 +67,6 @@ public class CryptoApiController {
         request.addHeader("X-CMC_PRO_API_KEY", apiKey);
 
         CloseableHttpResponse response = client.execute(request);
-
         try {
             System.out.println(response.getStatusLine());
             HttpEntity entity = response.getEntity();
@@ -92,10 +75,6 @@ public class CryptoApiController {
         } finally {
             response.close();
         }
-
         return response_content;
     }
-
-
-
 }
