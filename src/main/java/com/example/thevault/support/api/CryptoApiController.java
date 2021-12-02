@@ -36,7 +36,6 @@ public class CryptoApiController {
 
 
     public static void main(String[] args)  {
-        // de onderstaande URL kun je
         String uri = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
         List<NameValuePair> parameters = new ArrayList<NameValuePair>();
 

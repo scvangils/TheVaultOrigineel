@@ -85,7 +85,5 @@ abstract class Gebruiker {
         this.rekening = rekening;
     }
 
-    public Logger getLogger() {
-        return logger;
-    }
+
 }
