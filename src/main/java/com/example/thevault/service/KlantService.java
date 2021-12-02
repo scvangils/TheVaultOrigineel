@@ -5,15 +5,20 @@ package com.example.thevault.service;
 
 import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.Cryptomunt;
+import com.example.thevault.domain.model.Klant;
+import com.example.thevault.support.exceptions.RegistrationFailedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Service
 public class KlantService {
 
     private RootRepository rootRepository;
@@ -24,6 +29,26 @@ public class KlantService {
         super();
         this.rootRepository = rootRepository;
         logger.info("New KlantService.");
+    }
+    public Klant vindKlantByUsername(String username){
+        return rootRepository.vindKlantByUsername(username);
+    }
+
+    public Klant registreerKlant(Klant klant){
+        //TODO format ingevoerde gegevens checken
+        if(rootRepository.vindKlantByUsername(klant.getGebruikersnaam()) != null){
+            throw new RegistrationFailedException();
+        }
+        String teHashenWachtwoord = klant.getWachtwoord();
+        //TODO hier hash en salt toevoegen
+        rootRepository.slaKlantOp(klant);
+        return klant;
+    }
+    public boolean checkBsnFormat(String bsn){
+        return true;
+    }
+    public boolean checkGeboortedatumFormat(LocalDate geboortedatum){
+        return true;
     }
 
     /**
@@ -46,12 +71,14 @@ public class KlantService {
             return messages;
         }
         return new ArrayList<>();*/
+        return null;
     }
 
     public double geefSaldoCryptomunt(int cryptomuntId, int klantId){
         //Roept via de RootRepo informatie op vanuit de tussentabel 'portefeuille' obv combinatie klantId en cryptomuntId
         //Roept de methode 'geefHoeveelheidCryptomuntVanKlant' aan van de rootRepository
         //Zie beschrijving methode hierboven 'geefInhoudPortefeuille'
+        return 0.0;
     }
 
     public RootRepository getRootRepository() {
