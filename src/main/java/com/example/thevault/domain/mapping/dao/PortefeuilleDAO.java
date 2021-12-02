@@ -9,9 +9,9 @@ public interface PortefeuilleDAO {
 
     public Portefeuille vindPortefeuilleInhoudMetID(int klantId);
 
-    public void voegCryptomuntToe(int cryptomuntId);
+    public void voegCryptomuntToe(int cryptomuntId, int klantId);
 
-    public void verwijderCryptomunt(int cryptomuntId);
+    public void verwijderCryptomunt(int cryptomuntId, int klantId);
 
-    public void updateSaldoCryptomunt(int cryptomuntId, int hoeveelheid);
+    public void updateSaldoCryptomunt(int cryptomuntId, int hoeveelheid, int klantId);
 }

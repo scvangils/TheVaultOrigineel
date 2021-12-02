@@ -7,6 +7,7 @@ package com.example.thevault.domain.model;
  * @Author: Carmen
  * Note voor databaseimplementatie:
  * - Portefeuille wordt een tussentabel tussen klant/user en cryptomunt
+ * - Vraag aan PO: moet portefeuille bij user of bij klant?
  */
 
 import org.slf4j.Logger;
@@ -16,7 +17,7 @@ import java.util.Map;
 
 public class Portefeuille {
 
-    int portefeuilleId; //Dit is een attribuut
+    int portefeuilleId; //Dit is een attribuut. Deze komt overeen met klantId, maar heet hier portefeuilleId(?)
     Map<Cryptomunt, Double> saldiCryptomunten; //Dit is een referentie, want bevat verwijzing naar andere class
 
     private final Logger logger = LoggerFactory.getLogger(Portefeuille.class);
@@ -26,6 +27,9 @@ public class Portefeuille {
         logger.info("Lege portefeuille, no args constructor");
     }
 
+    /**
+     * Moet deze portefeuille constructor private of public zijn?
+     */
     private Portefeuille(int portefeuilleId, Map<Cryptomunt, Double> saldiCryptomunten) {
         this.portefeuilleId = portefeuilleId;
         this.saldiCryptomunten = saldiCryptomunten;
