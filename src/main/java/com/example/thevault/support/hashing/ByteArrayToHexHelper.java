@@ -2,7 +2,7 @@
 20211201 WB zet Array met bytes om naar hexadecimalen
  */
 
-package com.example.thevault.support;
+package com.example.thevault.support.hashing;
 
 public class ByteArrayToHexHelper {
 
