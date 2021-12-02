@@ -39,22 +39,22 @@ public class KlantService {
 
     public Klant registreerKlant(Klant klant){
         //TODO format ingevoerde gegevens checken
-        //TODO juiste exception
         if(!checkBsnFormat(klant.getBSN())){ // misschien overbodig
             throw new IncorrectBSNException();
         }
         if(!checkGeboortedatumFormat(klant.getGeboortedatum())){
             throw new IncorrectFormatException();
         }
-        if(rootRepository.vindKlantByUsername(klant.getGebruikersnaam()) != null){
+        if(vindKlantByUsername(klant.getGebruikersnaam()) != null){
             throw new RegistrationFailedException();
         }
         String teHashenWachtwoord = klant.getWachtwoord();
         //TODO hier hash en salt toevoegen
         String gehashtWachtwoord = HashHelper.hashHelper(teHashenWachtwoord);
         klant.setWachtwoord(gehashtWachtwoord);
-        rootRepository.slaKlantOp(klant);
-        return klant;
+       rootRepository.slaKlantOp(klant);
+        // TODO rekening aanmaken
+        return null;
     }
     // kijkt na of BSN het juiste format heeft, nodig voor rechtstreekse API call
     public boolean checkBsnFormat(Long bsn){
