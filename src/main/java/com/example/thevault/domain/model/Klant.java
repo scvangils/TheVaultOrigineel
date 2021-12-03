@@ -13,11 +13,12 @@ import java.util.Objects;
 public class Klant extends Gebruiker {
     private String naam;
     private Adres adres;
-    private long BSN;
+    private long bsn;
     private Rekening rekening;
     private Portefeuille portefeuille;
     @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate geboortedatum;
+    //TODO lijst van transacties en assets toevoegen, wrschl. portefeuille verwijderen
 
 
     private final Logger logger = LoggerFactory.getLogger(Klant.class);
@@ -29,17 +30,19 @@ public class Klant extends Gebruiker {
 
     public Klant(int gebruikerID, String gebruikersnaam, String wachtwoord,
                  Portefeuille portefeuille, Rekening rekening,
-                 String naam, Adres adres, int BSN, LocalDate geboortedatum) {
+                 String naam, Adres adres, int bsn, LocalDate geboortedatum) {
         super(gebruikerID, gebruikersnaam, wachtwoord);
         this.naam = naam;
         this.adres = adres;
-        this.BSN = BSN;
+        this.bsn = bsn;
         this.geboortedatum = geboortedatum;
+        this.rekening = rekening;
+        this.portefeuille = portefeuille;
         logger.info("New Klant, all args constructor");
     }
     public Klant(String gebruikersnaam, String wachtwoord,
-                 String naam, int BSN, LocalDate geboortedatum){
-        this(0, gebruikersnaam, wachtwoord, null, null, naam, null, BSN, geboortedatum);
+                 String naam, int bsn, LocalDate geboortedatum){
+        this(0, gebruikersnaam, wachtwoord, null, null, naam, null, bsn, geboortedatum);
     }
     public String getNaam() {
         return naam;
@@ -57,12 +60,12 @@ public class Klant extends Gebruiker {
         this.adres = adres;
     }
 
-    public long getBSN() {
-        return BSN;
+    public long getBsn() {
+        return bsn;
     }
 
-    public void setBSN(int BSN) {
-        this.BSN = BSN;
+    public void setBsn(int bsn) {
+        this.bsn = bsn;
     }
 
     public LocalDate getGeboortedatum() {
@@ -93,7 +96,7 @@ public class Klant extends Gebruiker {
         return "Klant{" +
                 "naam='" + naam + '\'' +
                 ", adres=" + adres +
-                ", BSN=" + BSN +
+                ", BSN=" + bsn +
                 ", rekening=" + rekening +
                 ", portefeuille=" + portefeuille +
                 ", geboortedatum=" + geboortedatum +
@@ -105,11 +108,11 @@ public class Klant extends Gebruiker {
         if (this == o) return true;
         if (!(o instanceof Klant)) return false;
         Klant klant = (Klant) o;
-        return BSN == klant.BSN && naam.equals(klant.naam) && Objects.equals(adres, klant.adres) && Objects.equals(rekening, klant.rekening) && Objects.equals(portefeuille, klant.portefeuille) && geboortedatum.equals(klant.geboortedatum);
+        return bsn == klant.bsn && naam.equals(klant.naam) && Objects.equals(adres, klant.adres) && Objects.equals(rekening, klant.rekening) && Objects.equals(portefeuille, klant.portefeuille) && geboortedatum.equals(klant.geboortedatum);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(naam, adres, BSN, rekening, portefeuille, geboortedatum);
+        return Objects.hash(naam, adres, bsn, rekening, portefeuille, geboortedatum);
     }
 }

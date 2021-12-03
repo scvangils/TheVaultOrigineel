@@ -6,6 +6,7 @@ package com.example.thevault.service;
 import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.model.Klant;
+import com.example.thevault.support.BSNvalidator;
 import com.example.thevault.support.exceptions.IncorrectBSNException;
 import com.example.thevault.support.exceptions.IncorrectFormatException;
 import com.example.thevault.support.exceptions.RegistrationFailedException;
@@ -16,10 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class KlantService {
@@ -39,32 +37,25 @@ public class KlantService {
     }
 
     public Klant registreerKlant(Klant klant){
-        //TODO format ingevoerde gegevens checken
-        if(!checkBsnFormat(klant.getBSN())){ // misschien overbodig
+        if(!BSNvalidator.bsnValideren(klant.getBsn())){
             throw new IncorrectBSNException();
         }
-        if(!checkGeboortedatumFormat(klant.getGeboortedatum())){
-            throw new IncorrectFormatException();
-        }
+        //TODO nakijken of datum check nodig heeft
         if(vindKlantByUsername(klant.getGebruikersnaam()) != null){
             throw new RegistrationFailedException();
         }
         String teHashenWachtwoord = klant.getWachtwoord();
         //TODO hier hash en salt toevoegen
-        String gehashtWachtwoord = HashHelper.hashHelper(teHashenWachtwoord);
+         String gehashtWachtwoord = HashHelper.hashHelper(teHashenWachtwoord);
+     //   gehashtWachtwoord = Base64.encodeBase64String(gehashtWachtwoord.getBytes(StandardCharsets.UTF_8));
+     //   gehashtWachtwoord = new String(Base64.decodeBase64(gehashtWachtwoord));
         klant.setWachtwoord(gehashtWachtwoord);
        rootRepository.slaKlantOp(klant);
         // TODO rekening aanmaken
         return null;
     }
     // kijkt na of BSN het juiste format heeft, nodig voor rechtstreekse API call
-    public boolean checkBsnFormat(Long bsn){
-        return true;
-    }
-    // kijkt na of geboortedatum juist format heeft, nodig voor rechtstreekse API call
-    public boolean checkGeboortedatumFormat(LocalDate geboortedatum){
-        return true;
-    }
+
 
     /**
      * @Author: Carmen

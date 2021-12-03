@@ -3,6 +3,7 @@
 
 package com.example.thevault.controller.rest_api_controller;
 
+import com.example.thevault.service.Facade;
 import com.example.thevault.service.KlantService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +15,11 @@ public abstract class BasisApiController {
     private final Logger logger = LoggerFactory.getLogger(BasisApiController.class);
 
     protected KlantService klantService;
+    protected Facade facade;
 
-    public BasisApiController(KlantService klantService) {
+    public BasisApiController(Facade facade, KlantService klantService) {
         super();
+        this.facade = facade;
         this.klantService = klantService;
         logger.info("New BasisApiController");
     }
