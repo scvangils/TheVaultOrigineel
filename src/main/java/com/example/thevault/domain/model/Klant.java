@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Klant extends Gebruiker {
     private String naam;
@@ -97,5 +98,18 @@ public class Klant extends Gebruiker {
                 ", portefeuille=" + portefeuille +
                 ", geboortedatum=" + geboortedatum +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Klant)) return false;
+        Klant klant = (Klant) o;
+        return BSN == klant.BSN && naam.equals(klant.naam) && Objects.equals(adres, klant.adres) && Objects.equals(rekening, klant.rekening) && Objects.equals(portefeuille, klant.portefeuille) && geboortedatum.equals(klant.geboortedatum);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(naam, adres, BSN, rekening, portefeuille, geboortedatum);
     }
 }
