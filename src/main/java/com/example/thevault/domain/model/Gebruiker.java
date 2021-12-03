@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 abstract class Gebruiker {
-    private int gebruikerID;
+    private int gebruikerId;
     private String gebruikersnaam;
     private String wachtwoord;
 
@@ -19,8 +19,8 @@ abstract class Gebruiker {
     }
 
 
-    public Gebruiker(int gebruikerID, String gebruikersnaam, String wachtwoord){
-        this.gebruikerID = gebruikerID;
+    public Gebruiker(int gebruikerId, String gebruikersnaam, String wachtwoord){
+        this.gebruikerId = gebruikerId;
         this.gebruikersnaam = gebruikersnaam;
         this.wachtwoord = wachtwoord;
         logger.info("Gebruiker" + this + "aangemaakt");
@@ -29,17 +29,17 @@ abstract class Gebruiker {
     @Override
     public String toString() {
         return "Gebruiker{" +
-                "gebruikerID=" + gebruikerID +
+                "gebruikerId=" + gebruikerId +
                 ", gebruikersnaam='" + gebruikersnaam + '\'' +
                 '}';
     }
 
-    public int getGebruikerID() {
-        return gebruikerID;
+    public int getGebruikerId() {
+        return gebruikerId;
     }
 
-    public void setGebruikerID(int gebruikerID) {
-        this.gebruikerID = gebruikerID;
+    public void setGebruikerId(int gebruikerId) {
+        this.gebruikerId = gebruikerId;
     }
 
     public String getGebruikersnaam() {
