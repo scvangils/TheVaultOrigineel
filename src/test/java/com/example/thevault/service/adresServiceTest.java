@@ -17,13 +17,13 @@ class adresServiceTest {
 
     @Test
     void postcodeOpmaak() {
-        boolean validatie = adresService.postcodeOpmaak(postcode1);
+        boolean validatie = AdresService.postcodeOpmaak(postcode1);
         assertThat(validatie).isTrue();
     }
 
     @Test
     void postcodeOpmaak2() {
-        boolean validatie = adresService.postcodeOpmaak(postcode2);
+        boolean validatie = AdresService.postcodeOpmaak(postcode2);
         assertThat(validatie).isFalse();
     }
 }

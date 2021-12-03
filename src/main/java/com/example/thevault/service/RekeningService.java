@@ -37,9 +37,14 @@ public class RekeningService {
 
     public Rekening creeerRekening(Klant klant) {
         String iban = creeerIban().toString();
+<<<<<<< HEAD
         Rekening rekening = new Rekening(iban, STARTSALDO);
         klant.setRekening(rekening);
         rekening.setKlant(klant);
+=======
+        Rekening rekening = new Rekening(klant.getGebruikerID(), iban, STARTSALDO, klant);
+        System.out.println(rekening);
+>>>>>>> 9cfd3341e2797939b367d96d3cb98ec3afc80b8a
         return rekening;
     }
 

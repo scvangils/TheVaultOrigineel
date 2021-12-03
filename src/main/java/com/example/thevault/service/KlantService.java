@@ -6,20 +6,21 @@ package com.example.thevault.service;
 import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.model.Klant;
+import com.example.thevault.support.BSNvalidator;
 import com.example.thevault.support.exceptions.IncorrectBSNException;
 import com.example.thevault.support.exceptions.IncorrectFormatException;
 import com.example.thevault.support.exceptions.RegistrationFailedException;
+import com.example.thevault.support.hashing.BCryptWachtwoordHash;
 import com.example.thevault.support.hashing.HashHelper;
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class KlantService {
@@ -38,33 +39,22 @@ public class KlantService {
         return rootRepository.vindKlantByUsername(username);
     }
 
-    public Klant registreerKlant(Klant klant){
-        //TODO format ingevoerde gegevens checken
-        if(!checkBsnFormat(klant.getBSN())){ // misschien overbodig
+    public Klant registreerKlant(Klant klant){ // TODO void van maken?
+        if(!BSNvalidator.bsnValideren(klant.getBsn())){
             throw new IncorrectBSNException();
         }
-        if(!checkGeboortedatumFormat(klant.getGeboortedatum())){
-            throw new IncorrectFormatException();
-        }
+        //TODO nakijken of datum check nodig heeft
         if(vindKlantByUsername(klant.getGebruikersnaam()) != null){
             throw new RegistrationFailedException();
         }
         String teHashenWachtwoord = klant.getWachtwoord();
-        //TODO hier hash en salt toevoegen
-        String gehashtWachtwoord = HashHelper.hashHelper(teHashenWachtwoord);
+        String gehashtWachtwoord = BCryptWachtwoordHash.hashWachtwoord(teHashenWachtwoord); // hash wachtwoord
+        gehashtWachtwoord = Base64.encodeBase64String(gehashtWachtwoord.getBytes(StandardCharsets.UTF_8)); // versleutel gehasht wachtwoord
         klant.setWachtwoord(gehashtWachtwoord);
-       rootRepository.slaKlantOp(klant);
-        // TODO rekening aanmaken
-        return null;
+        rootRepository.slaKlantOp(klant);
+        return klant;
     }
-    // kijkt na of BSN het juiste format heeft, nodig voor rechtstreekse API call
-    public boolean checkBsnFormat(Long bsn){
-        return true;
-    }
-    // kijkt na of geboortedatum juist format heeft, nodig voor rechtstreekse API call
-    public boolean checkGeboortedatumFormat(LocalDate geboortedatum){
-        return true;
-    }
+
 
     /**
      * @Author: Carmen
