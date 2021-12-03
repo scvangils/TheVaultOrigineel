@@ -25,14 +25,14 @@ class KlantServiceTest {
         String gehashtWachtwoord = HashHelper.hashHelper("testWW");
         testKlant = new Klant(2, "testKlant", gehashtWachtwoord,
                 null, null, "Jan", null, 145801354, LocalDate.now());
-        Mockito.when(rootRepository.vindKlantByUsername("testKlant"))
-                .thenReturn(testKlant);
+
 
     }
 
     @Test
     void vindKlantByUsername() {
-
+        Mockito.when(rootRepository.vindKlantByUsername("testKlant"))
+                .thenReturn(testKlant);
         Klant expected = testKlant;
         Klant actual = klantService.vindKlantByUsername(testKlant.getGebruikersnaam());
         assertThat(actual).isNotNull().isEqualTo(expected);
@@ -40,6 +40,8 @@ class KlantServiceTest {
 
     @Test
     void registreerKlant() {
+        Klant expected = testKlant;
+        Klant actual = klantService.registreerKlant(testKlant);
     }
 
 }

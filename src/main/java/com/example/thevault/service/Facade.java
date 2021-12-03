@@ -29,9 +29,9 @@ public class Facade {
         logger.info("New Facade");
     }
     public KlantDto registreerKlant(Klant klant){
-/*      if(!adresService.postcodeOpmaak(klant.getAdres().getPostcode())){
+      if(!adresService.postcodeOpmaak(klant.getAdres().getPostcode())){
           throw new IncorrectFormatException();
-      }*/
+      }
         klantService.registreerKlant(klant);
         klant.setRekening(rekeningService.creeerRekening(klant));
         return new KlantDto(klant);

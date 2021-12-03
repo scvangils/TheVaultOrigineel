@@ -10,12 +10,15 @@ import com.example.thevault.support.BSNvalidator;
 import com.example.thevault.support.exceptions.IncorrectBSNException;
 import com.example.thevault.support.exceptions.IncorrectFormatException;
 import com.example.thevault.support.exceptions.RegistrationFailedException;
+import com.example.thevault.support.hashing.BCryptWachtwoordHash;
 import com.example.thevault.support.hashing.HashHelper;
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.Map;
 
@@ -36,7 +39,7 @@ public class KlantService {
         return rootRepository.vindKlantByUsername(username);
     }
 
-    public Klant registreerKlant(Klant klant){
+    public Klant registreerKlant(Klant klant){ // TODO void van maken?
         if(!BSNvalidator.bsnValideren(klant.getBsn())){
             throw new IncorrectBSNException();
         }
@@ -45,16 +48,12 @@ public class KlantService {
             throw new RegistrationFailedException();
         }
         String teHashenWachtwoord = klant.getWachtwoord();
-        //TODO hier hash en salt toevoegen
-         String gehashtWachtwoord = HashHelper.hashHelper(teHashenWachtwoord);
-     //   gehashtWachtwoord = Base64.encodeBase64String(gehashtWachtwoord.getBytes(StandardCharsets.UTF_8));
-     //   gehashtWachtwoord = new String(Base64.decodeBase64(gehashtWachtwoord));
+        String gehashtWachtwoord = BCryptWachtwoordHash.hashWachtwoord(teHashenWachtwoord); // hash wachtwoord
+        gehashtWachtwoord = Base64.encodeBase64String(gehashtWachtwoord.getBytes(StandardCharsets.UTF_8)); // versleutel gehasht wachtwoord
         klant.setWachtwoord(gehashtWachtwoord);
-       rootRepository.slaKlantOp(klant);
-        // TODO rekening aanmaken
-        return null;
+        rootRepository.slaKlantOp(klant);
+        return klant;
     }
-    // kijkt na of BSN het juiste format heeft, nodig voor rechtstreekse API call
 
 
     /**
