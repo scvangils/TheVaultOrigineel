@@ -40,11 +40,12 @@ public class RootRepository {
         return 0.0;
     }
     public void slaKlantOp(Klant klant){
+        System.out.println("Root: " + klant);
         klantDAO.slaKlantOp(klant);
 
     }
     public Klant vindKlantByUsername(String username){
-        return klantDAO.vindKlantByUsername(username);
+        return klantDAO.vindKlantByGebruikersnaam(username);
     }
 
     public void slaRekeningOp(Rekening rekening){
