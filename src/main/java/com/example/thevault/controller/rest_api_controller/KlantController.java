@@ -4,7 +4,8 @@
 package com.example.thevault.controller.rest_api_controller;
 
 import com.example.thevault.domain.model.Klant;
-//import com.example.thevault.domain.model.PostModel;
+import com.example.thevault.domain.transfer.KlantDto;
+import com.example.thevault.service.Facade;
 import com.example.thevault.service.KlantService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,15 +19,18 @@ public class KlantController extends BasisApiController{
 
     private final Logger logger = LoggerFactory.getLogger(KlantController.class);
 
-
-    public KlantController(KlantService klantService) {
-        super(klantService);
+    public KlantController(Facade facade, KlantService klantService) {
+        super(facade, klantService);
         logger.info("New KlantController");
     }
 @PostMapping("/register")
-    public ResponseEntity<Klant> registreerKlantHandler(@RequestBody Klant klant){
-        klantService.registreerKlant(klant);
-    return ResponseEntity.status(201).body(klant);
+    public ResponseEntity<KlantDto> registreerKlantHandler(@RequestBody Klant klant){
+      KlantDto klantDto = facade.registreerKlant(klant);
+    return ResponseEntity.status(201).body(klantDto);
 }
-
+/*@PostMapping("/register")
+public ResponseEntity<Klant> registreerKlantHandler(@RequestBody Klant klant){
+    klantService.registreerKlant(klant);
+    return ResponseEntity.status(201).body(klant);
+}*/
 }
