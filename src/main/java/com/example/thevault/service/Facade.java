@@ -33,6 +33,7 @@ public class Facade {
           throw new IncorrectFormatException();
       }
         klantService.registreerKlant(klant);
+        //TODO rekening creëren en opslaan
         klant.setRekening(rekeningService.creeerRekening(klant));
         return new KlantDto(klant);
     }

@@ -51,6 +51,7 @@ public class KlantService {
         String gehashtWachtwoord = BCryptWachtwoordHash.hashWachtwoord(teHashenWachtwoord); // hash wachtwoord
         gehashtWachtwoord = Base64.encodeBase64String(gehashtWachtwoord.getBytes(StandardCharsets.UTF_8)); // versleutel gehasht wachtwoord
         klant.setWachtwoord(gehashtWachtwoord);
+        System.out.println(gehashtWachtwoord);
         rootRepository.slaKlantOp(klant);
         return klant;
     }
