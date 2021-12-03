@@ -7,8 +7,10 @@ import com.example.thevault.domain.mapping.dao.AssetDAO;
 import com.example.thevault.domain.mapping.dao.JDBCAssetDAO;
 import com.example.thevault.domain.mapping.dao.KlantDAO;
 import com.example.thevault.domain.model.Asset;
+import com.example.thevault.domain.mapping.dao.RekeningDAO;
 import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.model.Klant;
+import com.example.thevault.domain.model.Rekening;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -23,11 +25,13 @@ public class RootRepository {
 
     private final KlantDAO klantDAO;
     private final AssetDAO assetDAO;
+    private final RekeningDAO rekeningDAO;
 
-    public RootRepository(KlantDAO klantDAO, AssetDAO assetDAO) {
+    public RootRepository(KlantDAO klantDAO, AssetDAO assetDAO, RekeningDAO rekeningDAO) {
         super();
         this.klantDAO = klantDAO;
         this.assetDAO = assetDAO;
+        this.rekeningDAO = rekeningDAO;
         logger.info("New RootRepository");
     }
 
@@ -45,5 +49,17 @@ public class RootRepository {
     }
     public Klant vindKlantByUsername(String username){
         return klantDAO.vindKlantByUsername(username);
+    }
+
+    public Rekening vindRekeningVanKlant(Klant klant){
+        return rekeningDAO.vindRekeningVanKlant(klant);
+    }
+
+    public double vraagSaldoOpVanKlant(Klant klant){
+        return rekeningDAO.vraagSaldoOpVanKlant(klant);
+    }
+
+    public void wijzigSaldoVanKlant(Klant klant, double bedrag){
+        rekeningDAO.wijzigSaldoVanKlant(klant, bedrag);
     }
 }
