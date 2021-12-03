@@ -40,7 +40,6 @@ public class RootRepository {
         return 0.0;
     }
     public void slaKlantOp(Klant klant){
-        System.out.println("Root: " + klant);
         klantDAO.slaKlantOp(klant);
 
     }
