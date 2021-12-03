@@ -47,6 +47,10 @@ public class RootRepository {
         return klantDAO.vindKlantByUsername(username);
     }
 
+    public void slaRekeningOp(Rekening rekening){
+        rekeningDAO.slaRekeningOp(rekening);
+    }
+
     public Rekening vindRekeningVanKlant(Klant klant){
         return rekeningDAO.vindRekeningVanKlant(klant);
     }
