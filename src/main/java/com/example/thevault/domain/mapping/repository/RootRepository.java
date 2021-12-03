@@ -3,13 +3,17 @@
 
 package com.example.thevault.domain.mapping.repository;
 
+import com.example.thevault.domain.mapping.dao.AssetDAO;
+import com.example.thevault.domain.mapping.dao.JDBCAssetDAO;
 import com.example.thevault.domain.mapping.dao.KlantDAO;
+import com.example.thevault.domain.model.Asset;
 import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.model.Klant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -18,23 +22,23 @@ public class RootRepository {
     private final Logger logger = LoggerFactory.getLogger(RootRepository.class);
 
     private final KlantDAO klantDAO;
+    private final AssetDAO assetDAO;
 
-    public RootRepository(KlantDAO klantDAO) {
+    public RootRepository(KlantDAO klantDAO, AssetDAO assetDAO) {
         super();
         this.klantDAO = klantDAO;
+        this.assetDAO = assetDAO;
         logger.info("New RootRepository");
     }
 
-    public Map<Cryptomunt,Double> geefAlleCryptomuntenVanKlant(int klantId){
-        //Roept via de PortefeuilleDAO (of klantDAO?) informatie op vanuit de tussentabel 'portefeuille' obv de klantId
-        return null;
+    public List<Asset> vulPortefeuilleKlant(int klantId){
+        return assetDAO.geefAlleAssets(klantId);
     }
 
-    public double geefHoeveelheidCryptomuntVanKlant(int cryptomuntId, int klantId){
-        //Roept via de PortefeuilleDAO (of klantDAO?) informatie op vanuit de tussentabel 'portefeuille' obv combinatie
-        // klantId en cryptomuntId
-        return 0.0;
+    public Asset geefAssetVanKlant(int klantId, int cryptomuntId){
+        return assetDAO.geefAsset(klantId, cryptomuntId);
     }
+
     public void slaKlantOp(Klant klant){
         klantDAO.slaKlantOp(klant);
 

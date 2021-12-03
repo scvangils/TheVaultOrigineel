@@ -8,13 +8,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class Klant extends Gebruiker {
     private String naam;
     private Adres adres;
     private long BSN;
     private Rekening rekening;
-    private Portefeuille portefeuille;
+    private List<Asset> portefeuille;
     @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate geboortedatum;
 
@@ -27,7 +28,7 @@ public class Klant extends Gebruiker {
     }
 
     public Klant(int gebruikerID, String gebruikersnaam, String wachtwoord,
-                 Portefeuille portefeuille, Rekening rekening,
+                 List<Asset> portefeuille, Rekening rekening,
                  String naam, Adres adres, int BSN, LocalDate geboortedatum) {
         super(gebruikerID, gebruikersnaam, wachtwoord);
         this.naam = naam;
@@ -71,13 +72,14 @@ public class Klant extends Gebruiker {
     public void setGeboortedatum(LocalDate geboortedatum) {
         this.geboortedatum = geboortedatum;
     }
-/*    public Portefeuille getPortefeuille() {
+
+    public List<Asset> getPortefeuille() {
         return portefeuille;
     }
 
-    public void setPortefeuille(Portefeuille portefeuille) {
+    public void setPortefeuille(List<Asset> portefeuille) {
         this.portefeuille = portefeuille;
-    }*/
+    }
 
     public Rekening getRekening() {
         return rekening;
