@@ -39,6 +39,7 @@ public class RootRepository {
         // klantId en cryptomuntId
         return 0.0;
     }
+
     public void slaKlantOp(Klant klant){
         klantDAO.slaKlantOp(klant);
 

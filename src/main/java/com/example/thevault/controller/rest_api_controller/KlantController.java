@@ -7,6 +7,10 @@ import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.transfer.KlantDto;
 import com.example.thevault.service.Facade;
 import com.example.thevault.service.KlantService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -32,16 +36,11 @@ public class KlantController extends BasisApiController{
      *  met daarin zijn nieuwe rekeningnummer, terug alsmede een HTTP-respons 201 = created.
      *
      * @param klant een Klant-object dat wordt aangemaakt op basis van ingevoerde gegevens
-     * @return een DTO waarin de voor de respons relevante klantgegevens in staan
+     * @return een DTO waar de relevante klantgegevens in staan als de klant succesvol is opgeslagen
      */
     @PostMapping("/register")
     public ResponseEntity<KlantDto> registreerKlantHandler(@RequestBody Klant klant){
-      KlantDto klantDto = facade.registreerKlant(klant);
+        KlantDto klantDto = facade.registreerKlant(klant);
     return ResponseEntity.status(HttpStatus.CREATED).body(klantDto);
-}
-/*@PostMapping("/register")
-public ResponseEntity<Klant> registreerKlantHandler(@RequestBody Klant klant){
-    klantService.registreerKlant(klant);
-    return ResponseEntity.status(201).body(klant);
-}*/
+    }
 }
