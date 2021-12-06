@@ -44,6 +44,7 @@ public class KlantService {
             throw new IncorrectBSNException();
         }
         //TODO nakijken of datum check nodig heeft
+        //TODO leeftijd minimaal 18 checken
         if(vindKlantByUsername(klant.getGebruikersnaam()) != null){
             throw new RegistrationFailedException();
         }

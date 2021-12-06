@@ -103,17 +103,18 @@ public class Klant extends Gebruiker {
                 ", geboortedatum=" + geboortedatum +
                 '}';
     }
-
+//TODO nadenken over noodzakelijke velden
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Klant)) return false;
+        if (!super.equals(o)) return false;
         Klant klant = (Klant) o;
-        return bsn == klant.bsn && naam.equals(klant.naam) && Objects.equals(adres, klant.adres) && Objects.equals(rekening, klant.rekening) && Objects.equals(portefeuille, klant.portefeuille) && geboortedatum.equals(klant.geboortedatum);
+        return bsn == klant.bsn && naam.equals(klant.naam) && Objects.equals(adres, klant.adres) && Objects.equals(rekening, klant.rekening) && geboortedatum.equals(klant.geboortedatum);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(naam, adres, bsn, rekening, portefeuille, geboortedatum);
+        return Objects.hash(super.hashCode(), naam, adres, bsn, rekening, portefeuille, geboortedatum);
     }
 }

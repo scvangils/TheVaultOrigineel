@@ -6,6 +6,8 @@ package com.example.thevault.domain.model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
+
 abstract class Gebruiker {
     private int gebruikerId;
     private String gebruikersnaam;
@@ -23,7 +25,7 @@ abstract class Gebruiker {
         this.gebruikerId = gebruikerId;
         this.gebruikersnaam = gebruikersnaam;
         this.wachtwoord = wachtwoord;
-        logger.info("Gebruiker" + this + "aangemaakt");
+        logger.info("Gebruiker " + this + "aangemaakt");
     }
 
     @Override
@@ -58,7 +60,16 @@ abstract class Gebruiker {
         this.wachtwoord = wachtwoord;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Gebruiker)) return false;
+        Gebruiker gebruiker = (Gebruiker) o;
+        return gebruikerId == gebruiker.gebruikerId && gebruikersnaam.equals(gebruiker.gebruikersnaam) && wachtwoord.equals(gebruiker.wachtwoord);
+    }
 
-
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(gebruikerId, gebruikersnaam, wachtwoord);
+    }
 }

@@ -51,7 +51,7 @@ public class RekeningService {
         if (klant == null){
             throw new UserNotExistsException();
         }
-        if (rootRepository.vindKlantByUsername(klant.getNaam()) == null ){
+        if (rootRepository.vindKlantByUsername(klant.getGebruikersnaam()) == null ){
             throw new UserNotExistsException();
         }
         return rootRepository.vindRekeningVanKlant(klant);

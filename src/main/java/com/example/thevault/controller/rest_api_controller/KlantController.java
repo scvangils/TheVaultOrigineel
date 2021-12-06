@@ -9,6 +9,7 @@ import com.example.thevault.service.Facade;
 import com.example.thevault.service.KlantService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,10 +24,20 @@ public class KlantController extends BasisApiController{
         super(facade, klantService);
         logger.info("New KlantController");
     }
-@PostMapping("/register")
+
+    /**
+     *  Deze methode zorgt ervoor dat ingevoerde registratiegegevens in een Klant-object
+     *  worden omgezet, waarna het registratieproces in gang wordt gezet.
+     *  Als alles goed gaat, krijgt de klant de voor hem relevante informatie,
+     *  met daarin zijn nieuwe rekeningnummer, terug alsmede een HTTP-respons 201 = created.
+     *
+     * @param klant een Klant-object dat wordt aangemaakt op basis van ingevoerde gegevens
+     * @return een DTO waarin de voor de respons relevante klantgegevens in staan
+     */
+    @PostMapping("/register")
     public ResponseEntity<KlantDto> registreerKlantHandler(@RequestBody Klant klant){
       KlantDto klantDto = facade.registreerKlant(klant);
-    return ResponseEntity.status(201).body(klantDto);
+    return ResponseEntity.status(HttpStatus.CREATED).body(klantDto);
 }
 /*@PostMapping("/register")
 public ResponseEntity<Klant> registreerKlantHandler(@RequestBody Klant klant){
