@@ -5,6 +5,7 @@ package com.example.thevault.service;
 import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.model.Rekening;
+import com.example.thevault.support.exceptions.UserNotExistsException;
 import org.iban4j.CountryCode;
 import org.iban4j.Iban;
 import org.slf4j.Logger;
@@ -36,17 +37,28 @@ public class RekeningService {
 
     public Rekening creeerRekening(Klant klant) {
         String iban = creeerIban().toString();
-        Rekening rekening = new Rekening(klant.getGebruikerID(), iban, STARTSALDO, klant);
-        System.out.println(rekening);
+        Rekening rekening = new Rekening(iban, STARTSALDO);
+        klant.setRekening(rekening);
+        rekening.setKlant(klant);
         return rekening;
     }
 
-    public Rekening vindRekeningVanKlant (Klant klant){
+    public void slaRekeningOp(Rekening rekening){
+        rootRepository.slaRekeningOp(rekening);
+    }
+
+    public Rekening vindRekeningVanKlant (Klant klant) throws UserNotExistsException {
+        if (klant == null){
+            throw new UserNotExistsException();
+        }
+        if (rootRepository.vindKlantByUsername(klant.getNaam()) == null ){
+            throw new UserNotExistsException();
+        }
         return rootRepository.vindRekeningVanKlant(klant);
     }
 
-    public double vraagSaldoOpVanKlant(Klant klant){
-        return rootRepository.vraagSaldoOpVanKlant(klant);
+    public double vraagSaldoOpVanKlant(Klant klant) throws UserNotExistsException{
+        return vindRekeningVanKlant(klant).getSaldo();
     }
 
     public void wijzigSaldoVanKlant(Klant klant, double bedrag){
