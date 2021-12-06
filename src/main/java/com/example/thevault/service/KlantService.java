@@ -42,7 +42,18 @@ public class KlantService {
         return rootRepository.vindKlantByUsername(username);
     }
 
-    public Klant registreerKlant(Klant klant){ // TODO void van maken?
+
+    /**
+     * Deze methode probeert een nieuwe klant te registreren.
+     * Als de gegevens correct zijn ingevuld en de gebruikersnaam nog niet bestaat,
+     * wordt het wachtwoord eerst gehasht en daarna versleuteld.
+     * Vervolgens wordt de klant opgeslagen in de database.
+     *
+     * @param klant een Klant-object is wordt aangemaakt op basis van ingevoerde gegevens
+     * @return het klant-object met het gealtereerde wachtwoord
+     */
+
+    public Klant registreerKlant(Klant klant){
         if(!BSNvalidator.bsnValideren(klant.getBsn())){
             throw new IncorrectBSNException();
         }
@@ -55,7 +66,6 @@ public class KlantService {
         String gehashtWachtwoord = BCryptWachtwoordHash.hashWachtwoord(teHashenWachtwoord); // hash wachtwoord
         gehashtWachtwoord = Base64.encodeBase64String(gehashtWachtwoord.getBytes(StandardCharsets.UTF_8)); // versleutel gehasht wachtwoord
         klant.setWachtwoord(gehashtWachtwoord);
-        System.out.println(gehashtWachtwoord);
         rootRepository.slaKlantOp(klant);
         return klant;
     }

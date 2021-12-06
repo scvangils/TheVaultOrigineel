@@ -3,6 +3,7 @@
 
 package com.example.thevault.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +13,8 @@ abstract class Gebruiker {
     private int gebruikerId;
     private String gebruikersnaam;
     private String wachtwoord;
-
+    private static int DEFAULT_GEBRUIKERID = 0;
+    @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Gebruiker.class);
 
     public Gebruiker() {
@@ -22,7 +24,7 @@ abstract class Gebruiker {
 
 
     public Gebruiker(int gebruikerId, String gebruikersnaam, String wachtwoord){
-        this.gebruikerId = gebruikerId;
+        this.gebruikerId = DEFAULT_GEBRUIKERID;
         this.gebruikersnaam = gebruikersnaam;
         this.wachtwoord = wachtwoord;
         logger.info("Gebruiker " + this + "aangemaakt");

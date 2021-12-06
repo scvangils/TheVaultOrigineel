@@ -28,13 +28,22 @@ public class Facade {
         this.rekeningService = rekeningService;
         logger.info("New Facade");
     }
+
+    /**
+     * Deze methode probeert een nieuwe klant te registreren.
+     * Als de gegevens allemaal kloppen, wordt er een nieuwe rekening aangemaakt en
+     * wordt deze vervolgens opgeslagen.
+     *
+     * @param klant een Klant-object is wordt aangemaakt op basis van ingevoerde gegevens
+     * @return een DTO waar de relevante klantgegevens in staan als de klant succesvol is opgeslagen
+     */
     public KlantDto registreerKlant(Klant klant){
       if(!adresService.postcodeOpmaak(klant.getAdres().getPostcode())){
           throw new IncorrectFormatException();
       }
         klantService.registreerKlant(klant);
-        //TODO rekening creëren en opslaan
         klant.setRekening(rekeningService.creeerRekening(klant));
+        rekeningService.slaRekeningOp(klant.getRekening());
         return new KlantDto(klant);
     }
 
