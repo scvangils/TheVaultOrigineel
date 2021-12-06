@@ -5,19 +5,13 @@ package com.example.thevault.domain.mapping.dao;
 
 import com.example.thevault.domain.model.Asset;
 import com.example.thevault.domain.model.Cryptomunt;
-import com.example.thevault.domain.model.Klant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -94,7 +88,6 @@ public class JDBCAssetDAO implements AssetDAO{
      * @param cryptomuntId de identifier van de cryptomunt die uit de portefeuille wordt verwijderd
      * @return String bericht dat de cryptomunt uit de portefeuille is verwijderd
      */
-
     @Override
     public String verwijderAssetUitPortefeuille(int klantId, int cryptomuntId) {
         return "Cryptomunt is verwijderd";
@@ -109,7 +102,6 @@ public class JDBCAssetDAO implements AssetDAO{
      * @param asset de asset waarin de klant handelt
      * @return Asset de asset na de update
      */
-
     @Override
     public Asset updateAsset(int klantId, Asset asset) {
         //Eerst 'geef asset' en haal daar het huidige aantal uit
@@ -124,7 +116,6 @@ public class JDBCAssetDAO implements AssetDAO{
      * @param cryptomuntId identifier waarover informatie wordt opgevraagd
      * @return Asset de asset (cryptomunt + aantal) waarover informatie is opgevraagd
      */
-
     @Override
     public Asset geefAsset(int klantId, int cryptomuntId){
         String sql = "Select * from asset where klantId = ? AND cryptomuntId = ?;";
@@ -136,7 +127,7 @@ public class JDBCAssetDAO implements AssetDAO{
      * @param klantId identifier van de klant die informatie opvraagt over de cryptomunt
      * @return List</Asset> een lijst van alle Assets (cryptomunten + hoeveelheden) in het bezit van de klant
      */
-
+    @Override
     public List<Asset> geefAlleAssets(int klantId){
         String sql = "SELECT * FROM asset WHERE klantId = ?;";
         return jdbcTemplate.query(sql, new JDBCAssetDAO.AssetRowMapper(), klantId);
