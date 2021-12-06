@@ -2,6 +2,7 @@ package com.example.thevault.domain.mapping.dao;
 
 import com.example.thevault.domain.model.Asset;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -21,5 +22,5 @@ public interface AssetDAO {
 
     public Asset geefAsset(int klantId, int cryptomuntId);
 
-    public List<Asset> geefAlleAssets(int klantId) throws SQLException;
+    public List<Asset> geefAlleAssets(int klantId);
 }

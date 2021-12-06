@@ -52,6 +52,13 @@ public class JDBCAssetDAO implements AssetDAO{
         return ps;
     }
 
+    private PreparedStatement geefAlleAssetsStatement(int klantId, Connection connection) throws SQLException {
+        String sql = "SELECT * FROM asset WHERE klantId = ?;";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setInt(1, klantId);
+        return ps;
+    }
+
     private static class AssetRowMapper implements RowMapper<Asset> {
         @Override
         public Asset mapRow(ResultSet resultSet, int rowNum) throws SQLException {
@@ -93,7 +100,7 @@ public class JDBCAssetDAO implements AssetDAO{
         return "Cryptomunt is verwijderd";
     }
 
-    //TODO Besluiten of dit twee methodes moeten worden: kopen vs verkopen. Opzich gebeurt er in beide gevallen
+    //TODO Besluiten of dit twee methodes moeten worden: kopen vs verkopen. Op zich gebeurt er in beide gevallen
     // hetzelfde, namelijk het aanpassen van het aantal van de cryptomunt.
     /**
      * Dit betreft het updaten van een cryptomunt die al in de portefeuille zit
@@ -119,9 +126,9 @@ public class JDBCAssetDAO implements AssetDAO{
      */
 
     @Override
-    public Asset geefAsset(int klantId, int cryptomuntId, Connection connection) throws SQLException{
+    public Asset geefAsset(int klantId, int cryptomuntId){
         String sql = "Select * from asset where klantId = ? AND cryptomuntId = ?;";
-        return jdbcTemplate.queryForObject(sql, new Object{klantId}, new Object{cryptomuntId}, new JDBCAssetDAO.AssetRowMapper());
+        return jdbcTemplate.queryForObject(sql, new JDBCAssetDAO.AssetRowMapper(), klantId, cryptomuntId);
     }
 
     /**
@@ -130,11 +137,9 @@ public class JDBCAssetDAO implements AssetDAO{
      * @return List</Asset> een lijst van alle Assets (cryptomunten + hoeveelheden) in het bezit van de klant
      */
 
-    public List<Asset> geefAlleAssets(int klantId, Connection connection) throws SQLException{
-        String sql = "Select * from asset where klantId = ?;";
-        PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, klantId);
-        return jdbcTemplate.query((PreparedStatementCreator) ps, new JDBCAssetDAO.AssetRowMapper());
+    public List<Asset> geefAlleAssets(int klantId){
+        String sql = "SELECT * FROM asset WHERE klantId = ?;";
+        return jdbcTemplate.query(sql, new JDBCAssetDAO.AssetRowMapper(), klantId);
     }
 
 }

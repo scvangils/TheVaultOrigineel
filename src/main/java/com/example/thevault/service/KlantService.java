@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +60,7 @@ public class KlantService {
         return klant;
     }
 
-    public List<Asset> geefInhoudPortefeuille(int klantId){
+    public List<Asset> geefInhoudPortefeuille(int klantId) throws SQLException {
         return rootRepository.vulPortefeuilleKlant(klantId);
     }
 
