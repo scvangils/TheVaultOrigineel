@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  * Beschrijving: De model voor Asset, bestaande uit cryptomunt en aantal, wat de bouwstenen zijn voor de portefeuille
  * van cryptomunten van de klant
  */
-//TODO model pushen op DEVELOP
+
 public class Asset {
 
     private Cryptomunt cryptomunt;
