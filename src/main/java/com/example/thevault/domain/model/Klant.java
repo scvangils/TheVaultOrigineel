@@ -31,7 +31,7 @@ public class Klant extends Gebruiker {
 
     public Klant(int gebruikerID, String gebruikersnaam, String wachtwoord,
                  List<Asset> portefeuille, Rekening rekening,
-                 String naam, Adres adres, int BSN, LocalDate geboortedatum) {
+                 String naam, Adres adres, long bsn, LocalDate geboortedatum) {
         super(gebruikerID, gebruikersnaam, wachtwoord);
         this.naam = naam;
         this.adres = adres;
