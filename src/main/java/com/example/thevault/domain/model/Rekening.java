@@ -21,13 +21,14 @@ public class Rekening {
         logger.info("Lege rekening, no args constructor");
     }
 
-    public Rekening(int rekeningId, String iban, double saldo, Klant klant) {
-        this.klant = klant;
-        this.rekeningId = rekeningId;
+    public Rekening(String iban, double saldo) {
+        this.klant = null;
+        this.rekeningId = 0;
         this.iban = iban;
         this.saldo = saldo;
         logger.info("Nieuwe rekening " + this + " gemaakt");
     }
+
 
     public int getRekeningId() {
         return rekeningId;
@@ -53,6 +54,10 @@ public class Rekening {
         this.saldo = saldo;
     }
 
+    public void setKlant(Klant klant) {
+        this.klant = klant;
+    }
+
     @Override
     public String toString() {
         return "Rekening{" +
@@ -61,4 +66,6 @@ public class Rekening {
                 ", saldo=" + saldo +
                 '}';
     }
+
+
 }

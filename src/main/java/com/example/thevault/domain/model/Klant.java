@@ -30,7 +30,7 @@ public class Klant extends Gebruiker {
 
     public Klant(int gebruikerID, String gebruikersnaam, String wachtwoord,
                  Portefeuille portefeuille, Rekening rekening,
-                 String naam, Adres adres, int bsn, LocalDate geboortedatum) {
+                 String naam, Adres adres, long bsn, LocalDate geboortedatum) {
         super(gebruikerID, gebruikersnaam, wachtwoord);
         this.naam = naam;
         this.adres = adres;
@@ -40,9 +40,10 @@ public class Klant extends Gebruiker {
         this.portefeuille = portefeuille;
         logger.info("New Klant, all args constructor");
     }
-    public Klant(String gebruikersnaam, String wachtwoord,
-                 String naam, int bsn, LocalDate geboortedatum){
-        this(0, gebruikersnaam, wachtwoord, null, null, naam, null, bsn, geboortedatum);
+    public Klant(int gebruikerID, String gebruikersnaam, String wachtwoord,
+                 String naam, long bsn, LocalDate geboortedatum){
+        this(gebruikerID, gebruikersnaam, wachtwoord, null, null, naam, null, bsn, geboortedatum);
+        logger.info("New Klant, rowMapperConstructor");
     }
     public String getNaam() {
         return naam;
@@ -93,8 +94,8 @@ public class Klant extends Gebruiker {
 
     @Override
     public String toString() {
-        return "Klant{" +
-                "naam='" + naam + '\'' +
+        return  "Klant{" + super.toString() +
+                ", naam='" + naam + '\'' +
                 ", adres=" + adres +
                 ", BSN=" + bsn +
                 ", rekening=" + rekening +
