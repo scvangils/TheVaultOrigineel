@@ -12,7 +12,7 @@ public interface RekeningDAO {
 
     double vraagSaldoOpVanKlant(Klant klant);
 
-    void wijzigSaldoVanKlant(Klant klant, double bedrag);
+    Rekening wijzigSaldoVanKlant(Klant klant, double bedrag);
 
 
 }
