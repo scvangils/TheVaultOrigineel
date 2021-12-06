@@ -59,7 +59,8 @@ public class RootRepository {
         return rekeningDAO.vraagSaldoOpVanKlant(klant);
     }
 
-    public void wijzigSaldoVanKlant(Klant klant, double bedrag){
+    public Rekening wijzigSaldoVanKlant(Klant klant, double bedrag){
         rekeningDAO.wijzigSaldoVanKlant(klant, bedrag);
+        return rekeningDAO.vindRekeningVanKlant(klant);
     }
 }

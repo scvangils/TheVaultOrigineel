@@ -27,7 +27,6 @@ public class JDBCRekeningDAO implements RekeningDAO {
 
     @Override
     public void slaRekeningOp(Rekening rekening) {
-
     }
 
     @Override
@@ -41,6 +40,7 @@ public class JDBCRekeningDAO implements RekeningDAO {
     }
 
     @Override
-    public void wijzigSaldoVanKlant(Klant klant, double bedrag) {
+    public Rekening wijzigSaldoVanKlant(Klant klant, double bedrag) {
+        return null;
     }
 }

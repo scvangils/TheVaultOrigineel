@@ -31,7 +31,7 @@ public class RekeningService {
     }
 
     public Iban creeerIban(){
-        Iban iban = new Iban.Builder().countryCode(CountryCode.NL).bankCode("TVLT").buildRandom();
+        iban = new Iban.Builder().countryCode(CountryCode.NL).bankCode("TVLT").buildRandom();
         return iban;
     }
 
@@ -51,7 +51,7 @@ public class RekeningService {
         if (klant == null){
             throw new UserNotExistsException();
         }
-        if (rootRepository.vindKlantByUsername(klant.getNaam()) == null ){
+        if (rootRepository.vindKlantByUsername(klant.getGebruikersnaam()) == null ){
             throw new UserNotExistsException();
         }
         return rootRepository.vindRekeningVanKlant(klant);
@@ -61,8 +61,9 @@ public class RekeningService {
         return vindRekeningVanKlant(klant).getSaldo();
     }
 
-    public void wijzigSaldoVanKlant(Klant klant, double bedrag){
-        rootRepository.wijzigSaldoVanKlant(klant, bedrag);
+    public Rekening wijzigSaldoVanKlant(Klant klant, double bedrag){
+        rootRepository.vindRekeningVanKlant(klant).setSaldo(bedrag);
+        return rootRepository.vindRekeningVanKlant(klant);
     }
 
     public RootRepository getRootRepository() {
