@@ -58,18 +58,20 @@ public class KlantService {
         return klant;
     }
 
-
-    /**
-     * @Author: Carmen
-     * geefInhoudPortefeuille en geefCryptomunt
-     */
-
     public List<Asset> geefInhoudPortefeuille(int klantId){
         return rootRepository.vulPortefeuilleKlant(klantId);
     }
 
     public Asset geefCryptomunt(int klantId, int cryptomuntId){
         return rootRepository.geefAssetVanKlant(klantId, cryptomuntId);
+    }
+
+    public Asset slaAssetOp(int klantId, Asset asset){
+        return rootRepository.slaAssetVanKlantOp(klantId, asset);
+    }
+
+    public Asset wijzigAsset(int klantId, Asset asset){
+        return rootRepository.wijzigAssetVanKlant(klantId, asset);
     }
 
     public RootRepository getRootRepository() {

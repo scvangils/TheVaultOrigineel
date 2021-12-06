@@ -35,18 +35,10 @@ public class RootRepository {
         logger.info("New RootRepository");
     }
 
-    public List<Asset> vulPortefeuilleKlant(int klantId){
-        return assetDAO.geefAlleAssets(klantId);
-    }
-
-    public Asset geefAssetVanKlant(int klantId, int cryptomuntId){
-        return assetDAO.geefAsset(klantId, cryptomuntId);
-    }
-
     public void slaKlantOp(Klant klant){
         klantDAO.slaKlantOp(klant);
-
     }
+
     public Klant vindKlantByUsername(String username){
         return klantDAO.vindKlantByGebruikersnaam(username);
     }
@@ -65,5 +57,25 @@ public class RootRepository {
 
     public void wijzigSaldoVanKlant(Klant klant, double bedrag){
         rekeningDAO.wijzigSaldoVanKlant(klant, bedrag);
+    }
+
+    public List<Asset> vulPortefeuilleKlant(int klantId){
+        return assetDAO.geefAlleAssets(klantId);
+    }
+
+    public Asset geefAssetVanKlant(int klantId, int cryptomuntId){
+        return assetDAO.geefAsset(klantId, cryptomuntId);
+    }
+
+    public Asset slaAssetVanKlantOp(int klantId, Asset asset){
+        if(assetDAO.geefAsset(klantId, asset.getCryptomunt().getCryptomuntId()) == null){
+            return assetDAO.voegNieuwAssetToeAanPortefeuille(klantId, asset);
+        } else {
+            return assetDAO.updateAsset(klantId, asset);
+        }
+    }
+
+    public Asset wijzigAssetVanKlant(int klantId, Asset asset){
+        return assetDAO.updateAsset(klantId, asset);
     }
 }

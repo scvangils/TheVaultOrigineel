@@ -2,17 +2,24 @@ package com.example.thevault.domain.mapping.dao;
 
 import com.example.thevault.domain.model.Asset;
 
+import java.sql.SQLException;
 import java.util.List;
+
+/**
+ * @Author: Carmen Rietdijk
+ * Beschrijving: De interface voor de DAO voor Asset, waar methodes in staan voor CRUD van de Asset van de klant,
+ * alsmede de methode om de portefeuille van de klant te vullen met Assets
+ */
 
 public interface AssetDAO {
 
-    public void voegNieuwAssetToeAanPortefeuille(int klantId, Asset asset);
+    public Asset voegNieuwAssetToeAanPortefeuille(int klantId, Asset asset);
 
-    public void verwijderAssetUitPortefeuille(int klantId, int cryptomuntId);
+    public String verwijderAssetUitPortefeuille(int klantId, int cryptomuntId);
 
-    public void updateAsset(int klantId, int cryptomuntId, double aantal);
+    public Asset updateAsset(int klantId, Asset asset);
 
     public Asset geefAsset(int klantId, int cryptomuntId);
 
-    public List<Asset> geefAlleAssets(int klantId);
+    public List<Asset> geefAlleAssets(int klantId) throws SQLException;
 }

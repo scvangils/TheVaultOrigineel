@@ -8,6 +8,12 @@ import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 
+/**
+ * @Author: Carmen Rietdijk
+ * Beschrijving: De model voor Asset, bestaande uit cryptomunt en aantal, wat de bouwstenen zijn voor de portefeuille
+ * van cryptomunten van de klant
+ */
+//TODO model pushen op DEVELOP
 public class Asset {
 
     private Cryptomunt cryptomunt;
@@ -26,6 +32,19 @@ public class Asset {
         logger.info("Asset: " + this);
     }
 
+    public Cryptomunt getCryptomunt() {
+        return cryptomunt;
+    }
 
+    public void setCryptomunt(Cryptomunt cryptomunt) {
+        this.cryptomunt = cryptomunt;
+    }
 
+    public double getAantal() {
+        return aantal;
+    }
+
+    public void setAantal(double aantal) {
+        this.aantal = aantal;
+    }
 }
