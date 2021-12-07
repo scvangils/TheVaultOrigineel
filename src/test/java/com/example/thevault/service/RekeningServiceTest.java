@@ -29,7 +29,7 @@ class RekeningServiceTest {
 
     @Test
     void vraagSaldoOpVanKlant() {
-        Klant bestaandeKlant = new Klant(1, "Henknr1", "fdsaljkl", "Hello", 1890393, LocalDate.of(1991, 01, 12));
+        Klant bestaandeKlant = new Klant("Henknr1", "fdsaljkl", "Hello", 1890393, LocalDate.of(1991, 01, 12));
         Rekening rekeningExpected = new Rekening("INGB0001234567NL", 1000.0);
         bestaandeKlant.setRekening(rekeningExpected);
         rekeningExpected.setKlant(bestaandeKlant);
@@ -38,7 +38,7 @@ class RekeningServiceTest {
 
         RootRepository mockRepo = Mockito.mock(RootRepository.class);
 
-        Mockito.when(mockRepo.vindKlantByUsername(bestaandeKlant.getGebruikersnaam())).thenReturn(bestaandeKlant);
+        Mockito.when(mockRepo.vindKlantByGebruikersnaam(bestaandeKlant.getGebruikersnaam())).thenReturn(bestaandeKlant);
         Mockito.when(mockRepo.vindRekeningVanKlant(bestaandeKlant)).thenReturn(rekeningExpected);
         Mockito.when(mockRepo.vraagSaldoOpVanKlant(bestaandeKlant)).thenReturn(bestaandeKlant.getRekening().getSaldo());
 
@@ -54,15 +54,15 @@ class RekeningServiceTest {
 
     @Test
     void vraagSaldoOpVanNietBestaandeKlant() {
-        Klant bestaatWel = new Klant(1, "Henknr1", "fdsaljkl", "Hello", 1890393, LocalDate.of(1991, 01, 12));
-        Klant bestaatNiet = new Klant(2, "HarryBeste", "210jklf", "", 101212, LocalDate.of(1991, 01, 12));
+        Klant bestaatWel = new Klant("Henknr1", "fdsaljkl", "Hello", 1890393, LocalDate.of(1991, 01, 12));
+        Klant bestaatNiet = new Klant("HarryBeste", "210jklf", "", 101212, LocalDate.of(1991, 01, 12));
 
         Rekening rekeningExpected = new Rekening("INGB0001234567NL", 1000);
         bestaatWel.setRekening(rekeningExpected);
 
         RootRepository mockRepo = Mockito.mock(RootRepository.class);
 
-        Mockito.when(mockRepo.vindKlantByUsername(bestaatWel.getGebruikersnaam())).thenReturn(bestaatWel);
+        Mockito.when(mockRepo.vindKlantByGebruikersnaam(bestaatWel.getGebruikersnaam())).thenReturn(bestaatWel);
         Mockito.when(mockRepo.vindRekeningVanKlant(bestaatWel)).thenReturn(rekeningExpected);
         Mockito.when(mockRepo.vraagSaldoOpVanKlant(bestaatWel)).thenReturn(bestaatWel.getRekening().getSaldo());
 

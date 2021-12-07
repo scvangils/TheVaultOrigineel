@@ -38,10 +38,10 @@ public class JDBCAssetDAO implements AssetDAO{
                 "(?, ?, ?, ?, ?, ?);";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, klantId);
-        ps.setInt(2, asset.getCryptomunt().getCryptomuntId());
-        ps.setString(3, asset.getCryptomunt().getNaam());
-        ps.setString(4, asset.getCryptomunt().getAfkorting());
-        ps.setDouble(5, asset.getCryptomunt().getWaarde());
+        ps.setInt(2, asset.getCryptomunt().getId());
+        ps.setString(3, asset.getCryptomunt().getName());
+        ps.setString(4, asset.getCryptomunt().getSymbol());
+        ps.setDouble(5, asset.getCryptomunt().getPrice());
         ps.setDouble(6, asset.getAantal());
         return ps;
     }
