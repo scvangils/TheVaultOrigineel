@@ -78,4 +78,12 @@ public class Asset {
     public void setAantal(double aantal) {
         this.aantal = aantal;
     }
+
+    @Override
+    public String toString() {
+        return "Asset{" +
+                "cryptomunt=" + cryptomunt +
+                ", aantal=" + aantal +
+                '}';
+    }
 }

@@ -61,7 +61,7 @@ class AssetServiceTest {
         assertThat(actual).as("Test geef inhoud portefeuille van testklant").isNotNull().isEqualTo(expected).
                 contains(testAsset1, atIndex(0)).contains(testAsset2, atIndex(1)).contains(testAsset3, atIndex(2)).
                 doesNotContain(testAsset4).hasSize(3).extracting(Asset::getCryptomunt).extracting(Cryptomunt::getName).
-                contains("CarmenCrypto", "DigiCrypto", "Coyne");
+                contains("CarmenCrypto", "DigiCrypto", "Coyne").doesNotContain("BitCoin");
     }
 
     @Test
