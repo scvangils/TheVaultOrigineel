@@ -36,11 +36,11 @@ public class RootRepository {
         logger.info("New RootRepository");
     }
 
-    public void slaKlantOp(Klant klant){
-        klantDAO.slaKlantOp(klant);
+    public Klant slaKlantOp(Klant klant){
+      return  klantDAO.slaKlantOp(klant);
     }
 
-    public Klant vindKlantByUsername(String username){
+    public Klant vindKlantByGebruikersnaam(String username){
         return klantDAO.vindKlantByGebruikersnaam(username);
     }
 
@@ -69,7 +69,7 @@ public class RootRepository {
     }
 
     public Asset slaAssetVanKlantOp(int klantId, Asset asset){
-        if(assetDAO.geefAsset(klantId, asset.getCryptomunt().getCryptomuntId()) == null){
+        if(assetDAO.geefAsset(klantId, asset.getCryptomunt().getId()) == null){
             return assetDAO.voegNieuwAssetToeAanPortefeuille(klantId, asset);
         } else {
             return assetDAO.updateAsset(klantId, asset);

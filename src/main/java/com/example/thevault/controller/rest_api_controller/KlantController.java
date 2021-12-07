@@ -7,7 +7,6 @@ import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.transfer.KlantDto;
 import com.example.thevault.service.RegistrationService;
 import com.example.thevault.domain.transfer.LoginDto;
-import com.example.thevault.service.Facade;
 import com.example.thevault.service.KlantService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

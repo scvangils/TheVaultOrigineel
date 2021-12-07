@@ -54,7 +54,7 @@ class AssetServiceTest {
     }
 
     @Test
-    void geefInhoudPortefeuille() {
+    void geefInhoudPortefeuille() throws SQLException {
         Mockito.when(rootRepository.vulPortefeuilleKlant(1)).thenReturn(portefeuille);
         List<Asset> expected = portefeuille;
         List<Asset> actual = assetService.geefInhoudPortefeuille(1);
