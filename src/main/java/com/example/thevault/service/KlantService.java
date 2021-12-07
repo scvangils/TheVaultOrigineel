@@ -7,6 +7,7 @@ import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.Asset;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.support.BSNvalidator;
+import com.example.thevault.support.exceptions.AgeTooLowException;
 import com.example.thevault.support.exceptions.IncorrectBSNException;
 import com.example.thevault.support.exceptions.RegistrationFailedException;
 import com.example.thevault.support.hashing.BCryptWachtwoordHash;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.security.auth.login.LoginException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -26,6 +28,7 @@ public class KlantService {
 
     private RootRepository rootRepository;
     private final Logger logger = LoggerFactory.getLogger(KlantService.class);
+    private final static int VOLWASSEN_LEEFTIJD = 18;
 
     @Autowired
     public KlantService(RootRepository rootRepository) {
@@ -53,8 +56,10 @@ public class KlantService {
         if(!BSNvalidator.bsnValideren(klant.getBsn())){
             throw new IncorrectBSNException();
         }
-        //TODO nakijken of datum check nodig heeft
-        //TODO leeftijd minimaal 18 checken
+        //TODO wachtwoordcheck
+        if(!checkVolwassen(klant)){
+            throw new AgeTooLowException();
+        }
         if(vindKlantByGebruikersnaam(klant.getGebruikersnaam()) != null){
             throw new RegistrationFailedException();
         }
@@ -83,7 +88,9 @@ public class KlantService {
         return vindKlantByGebruikersnaam(gebruikersNaam);
     }
 
-
+    public boolean checkVolwassen(Klant klant){ // 1 dag correctie nodig voor groter / gelijk
+         return LocalDate.now().minusYears(VOLWASSEN_LEEFTIJD).plusDays(1).isAfter(klant.getGeboortedatum());
+    }
 
     public List<Asset> geefInhoudPortefeuille(int klantId) throws SQLException {
         return rootRepository.vulPortefeuilleKlant(klantId);
