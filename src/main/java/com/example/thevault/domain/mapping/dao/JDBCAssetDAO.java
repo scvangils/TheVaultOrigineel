@@ -5,19 +5,13 @@ package com.example.thevault.domain.mapping.dao;
 
 import com.example.thevault.domain.model.Asset;
 import com.example.thevault.domain.model.Cryptomunt;
-import com.example.thevault.domain.model.Klant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,10 +38,10 @@ public class JDBCAssetDAO implements AssetDAO{
                 "(?, ?, ?, ?, ?, ?);";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, klantId);
-        ps.setInt(2, asset.getCryptomunt().getCryptomuntId());
-        ps.setString(3, asset.getCryptomunt().getNaam());
-        ps.setString(4, asset.getCryptomunt().getAfkorting());
-        ps.setDouble(5, asset.getCryptomunt().getWaarde());
+        ps.setInt(2, asset.getCryptomunt().getId());
+        ps.setString(3, asset.getCryptomunt().getName());
+        ps.setString(4, asset.getCryptomunt().getSymbol());
+        ps.setDouble(5, asset.getCryptomunt().getPrice());
         ps.setDouble(6, asset.getAantal());
         return ps;
     }

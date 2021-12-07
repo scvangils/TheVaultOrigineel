@@ -1,20 +1,15 @@
 package com.example.thevault.service;
 
-import com.example.thevault.domain.mapping.dao.KlantDAO;
-import com.example.thevault.domain.mapping.dao.RekeningDAO;
 import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.support.hashing.HashHelper;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class KlantServiceTest {
 
@@ -23,7 +18,7 @@ class KlantServiceTest {
     @BeforeAll
     static void setUp() {
         String gehashtWachtwoord = HashHelper.hashHelper("testWW");
-        testKlant = new Klant(2, "testKlant", gehashtWachtwoord,
+        testKlant = new Klant("testKlant", gehashtWachtwoord,
                 null, null, "Jan", null, 145801354, LocalDate.now());
 
 
@@ -33,10 +28,10 @@ class KlantServiceTest {
     void vindKlantByUsername() {
         RootRepository rootRepository = Mockito.mock(RootRepository.class);
         KlantService klantService = new KlantService(rootRepository);
-        Mockito.when(rootRepository.vindKlantByUsername("testKlant"))
+        Mockito.when(rootRepository.vindKlantByGebruikersnaam("testKlant"))
                 .thenReturn(testKlant);
         Klant expected = testKlant;
-        Klant actual = klantService.vindKlantByUsername(testKlant.getGebruikersnaam());
+        Klant actual = klantService.vindKlantByGebruikersnaam(testKlant.getGebruikersnaam());
         assertThat(actual).isNotNull().isEqualTo(expected);
     }
 

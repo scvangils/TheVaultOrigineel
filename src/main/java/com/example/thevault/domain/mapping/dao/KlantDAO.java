@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface KlantDAO {
-    void slaKlantOp(Klant klant);
+    Klant slaKlantOp(Klant klant);
 
     Klant vindKlantById(int gebruikerId);
 
