@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.*;
 
 class adresServiceTest {
 
+    AdresService adresService;
     String postcode1;
     String postcode2;
 
@@ -13,17 +14,18 @@ class adresServiceTest {
     void setUp() {
         postcode1 = "1000AA";
         postcode2 = "100 AA";
+        adresService = new AdresService();
     }
 
     @Test
     void postcodeOpmaak() {
-        boolean validatie = AdresService.postcodeOpmaak(postcode1);
+        boolean validatie = adresService.postcodeOpmaak(postcode1);
         assertThat(validatie).isTrue();
     }
 
     @Test
     void postcodeOpmaak2() {
-        boolean validatie = AdresService.postcodeOpmaak(postcode2);
+        boolean validatie = adresService.postcodeOpmaak(postcode2);
         assertThat(validatie).isFalse();
     }
 }

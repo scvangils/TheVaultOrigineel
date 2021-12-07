@@ -5,6 +5,7 @@ package com.example.thevault.controller.rest_api_controller;
 
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.transfer.KlantDto;
+import com.example.thevault.domain.transfer.LoginDto;
 import com.example.thevault.service.Facade;
 import com.example.thevault.service.KlantService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -18,6 +19,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.security.auth.login.LoginException;
 
 @RestController
 public class KlantController extends BasisApiController{
@@ -42,5 +45,25 @@ public class KlantController extends BasisApiController{
     public ResponseEntity<KlantDto> registreerKlantHandler(@RequestBody Klant klant){
         KlantDto klantDto = facade.registreerKlant(klant);
     return ResponseEntity.status(HttpStatus.CREATED).body(klantDto);
+    }
+
+    /**
+    @author Wim 20211207
+    methode die inloggegevens ontvangt en laat checken of deze correct zijn en inlog succesvol wordt
+    of een algemene foutmelding verstuurt
+     */
+    @PostMapping("/login")
+    public ResponseEntity<KlantDto> loginHandler(@RequestBody LoginDto loginDto) throws LoginException {
+//roep loginValidatie aan in de service
+        Klant klant = klantService.valideerLogin(
+                loginDto.getGebruikersnaam(), loginDto.getWachtwoord());
+        if(klant != null){
+            return ResponseEntity.ok()
+                    .header("Authorization")
+                    .body(new KlantDto());
+
+        }
+        throw new LoginException();
+
     }
 }
