@@ -5,19 +5,13 @@ package com.example.thevault.domain.mapping.dao;
 
 import com.example.thevault.domain.model.Asset;
 import com.example.thevault.domain.model.Cryptomunt;
-import com.example.thevault.domain.model.Klant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,10 +38,10 @@ public class JDBCAssetDAO implements AssetDAO{
                 "(?, ?, ?, ?, ?, ?);";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, klantId);
-        ps.setInt(2, asset.getCryptomunt().getCryptomuntId());
-        ps.setString(3, asset.getCryptomunt().getNaam());
-        ps.setString(4, asset.getCryptomunt().getAfkorting());
-        ps.setDouble(5, asset.getCryptomunt().getWaarde());
+        ps.setInt(2, asset.getCryptomunt().getId());
+        ps.setString(3, asset.getCryptomunt().getName());
+        ps.setString(4, asset.getCryptomunt().getSymbol());
+        ps.setDouble(5, asset.getCryptomunt().getPrice());
         ps.setDouble(6, asset.getAantal());
         return ps;
     }
@@ -77,10 +71,6 @@ public class JDBCAssetDAO implements AssetDAO{
      */
     @Override
     public Asset voegNieuwAssetToeAanPortefeuille(int klantId, Asset asset) {
-        /*Map<klantId, Asset> portefeuille = new HashMap<>();
-        portefeuille.add(klantId, asset);
-        System.out.println(portefeuille.contains(klantId));
-        System.out.println(portefeuille.contains(asset))*/
         jdbcTemplate.update(connection -> slaAssetOpStatement(klantId, asset, connection));
         return asset;
     }
@@ -94,7 +84,6 @@ public class JDBCAssetDAO implements AssetDAO{
      * @param cryptomuntId de identifier van de cryptomunt die uit de portefeuille wordt verwijderd
      * @return String bericht dat de cryptomunt uit de portefeuille is verwijderd
      */
-
     @Override
     public String verwijderAssetUitPortefeuille(int klantId, int cryptomuntId) {
         return "Cryptomunt is verwijderd";
@@ -106,15 +95,20 @@ public class JDBCAssetDAO implements AssetDAO{
      * Dit betreft het updaten van een cryptomunt die al in de portefeuille zit
      * Dit gebeurt via een 'transactie', waarbij een klant crypto's koopt of verkoopt
      * @param klantId identifier van de klant die de cryptomunt koopt/verkoopt
-     * @param asset de asset waarin de klant handelt
-     * @return Asset de asset na de update
+     * @param asset de asset waarin de klant handelt, met de informatie wélke cryptomunt wordt verhandeld
+     *              en hoeveel deze omhoog/omlaag gaat (oftewel: betreft het een koop of een verkoop)
+     * @return Asset de asset na de update, waarbij het nieuwe aantal wordt meegegeven
      */
-
     @Override
     public Asset updateAsset(int klantId, Asset asset) {
-        //Eerst 'geef asset' en haal daar het huidige aantal uit
-        //Dan berekenen nieuwe hoeveelheid: oude hoeveelheid +/- hoeveelheid van @param asset
-        //Dan opslaan cryptomunt met nieuwe hoeveelheid, en deze informatie @return
+        double huidigeAantal = geefAsset(klantId, asset.getCryptomunt().getId()).getAantal();
+        double teVerhandelenAantal = asset.getAantal();
+        if(huidigeAantal >= teVerhandelenAantal) {
+            Asset nieuwAsset = new Asset(asset.getCryptomunt(), huidigeAantal - teVerhandelenAantal);
+            jdbcTemplate.update(connection -> slaAssetOpStatement(klantId, nieuwAsset, connection));
+            return nieuwAsset;
+        }
+        System.out.println("Het saldo van deze cryptomunt is te laag voor deze transactie");
         return null;
     }
 
@@ -124,7 +118,6 @@ public class JDBCAssetDAO implements AssetDAO{
      * @param cryptomuntId identifier waarover informatie wordt opgevraagd
      * @return Asset de asset (cryptomunt + aantal) waarover informatie is opgevraagd
      */
-
     @Override
     public Asset geefAsset(int klantId, int cryptomuntId){
         String sql = "Select * from asset where klantId = ? AND cryptomuntId = ?;";
@@ -136,7 +129,7 @@ public class JDBCAssetDAO implements AssetDAO{
      * @param klantId identifier van de klant die informatie opvraagt over de cryptomunt
      * @return List</Asset> een lijst van alle Assets (cryptomunten + hoeveelheden) in het bezit van de klant
      */
-
+    @Override
     public List<Asset> geefAlleAssets(int klantId){
         String sql = "SELECT * FROM asset WHERE klantId = ?;";
         return jdbcTemplate.query(sql, new JDBCAssetDAO.AssetRowMapper(), klantId);

@@ -5,25 +5,21 @@ package com.example.thevault.service;
 
 import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.Asset;
-import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.support.BSNvalidator;
 import com.example.thevault.support.exceptions.IncorrectBSNException;
-import com.example.thevault.support.exceptions.IncorrectFormatException;
 import com.example.thevault.support.exceptions.RegistrationFailedException;
 import com.example.thevault.support.hashing.BCryptWachtwoordHash;
-import com.example.thevault.support.hashing.HashHelper;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.login.LoginException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class KlantService {
@@ -38,8 +34,8 @@ public class KlantService {
         logger.info("New KlantService.");
     }
 
-    public Klant vindKlantByUsername(String username){
-        return rootRepository.vindKlantByUsername(username);
+    public Klant vindKlantByGebruikersnaam(String username){
+        return rootRepository.vindKlantByGebruikersnaam(username);
     }
 
 
@@ -59,7 +55,7 @@ public class KlantService {
         }
         //TODO nakijken of datum check nodig heeft
         //TODO leeftijd minimaal 18 checken
-        if(vindKlantByUsername(klant.getGebruikersnaam()) != null){
+        if(vindKlantByGebruikersnaam(klant.getGebruikersnaam()) != null){
             throw new RegistrationFailedException();
         }
         String teHashenWachtwoord = klant.getWachtwoord();
@@ -69,6 +65,25 @@ public class KlantService {
         rootRepository.slaKlantOp(klant);
         return klant;
     }
+
+    /**
+     * Wim 20211207
+     * @param gebruikersNaam
+     * @param wachtwoord
+     * @return Klant als combinatie gebruikersnaam en wachtwoord correct is, anders geef foutmelding
+     */
+    public Klant valideerLogin (String gebruikersNaam, String wachtwoord) throws LoginException {
+        //vraag wachtwoord op via RootRepos
+        if(vindKlantByGebruikersnaam(gebruikersNaam) == null){
+            throw new LoginException();
+        }
+       if(!BCryptWachtwoordHash.verifyHash(wachtwoord, vindKlantByGebruikersnaam(gebruikersNaam).getWachtwoord())){
+           throw new LoginException();
+       }
+        return vindKlantByGebruikersnaam(gebruikersNaam);
+    }
+
+
 
     public List<Asset> geefInhoudPortefeuille(int klantId) throws SQLException {
         return rootRepository.vulPortefeuilleKlant(klantId);

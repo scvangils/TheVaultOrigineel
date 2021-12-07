@@ -1,14 +1,22 @@
 // Created by S.C. van Gils
 // Creation date 3-12-2021
 
+/**
+ * Deze klasse zorgt ervoor dat alleen de relevante informatie terug bij de klant komt
+ * en dat er niet onnodige en eventueel gevoelige informatie wordt verstuurd naar de frontend.
+ */
+
 package com.example.thevault.domain.transfer;
 
 import com.example.thevault.domain.model.Klant;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class KlantDto {
+import java.util.Objects;
 
+public class KlantDto {
+    @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(KlantDto.class);
 
     private String naam;
@@ -58,5 +66,28 @@ public class KlantDto {
 
     public void setPostcodeEnHuisnummer(String postcodeEnHuisnummer) {
         this.postcodeEnHuisnummer = postcodeEnHuisnummer;
+    }
+
+    @Override
+    public String toString() {
+        return "KlantDto{" +
+                "naam='" + naam + '\'' +
+                ", gebruikersnaam='" + gebruikersnaam + '\'' +
+                ", iban='" + iban + '\'' +
+                ", postcodeEnHuisnummer='" + postcodeEnHuisnummer + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof KlantDto)) return false;
+        KlantDto klantDto = (KlantDto) o;
+        return naam.equals(klantDto.naam) && gebruikersnaam.equals(klantDto.gebruikersnaam) && iban.equals(klantDto.iban) && postcodeEnHuisnummer.equals(klantDto.postcodeEnHuisnummer);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(naam, gebruikersnaam, iban, postcodeEnHuisnummer);
     }
 }

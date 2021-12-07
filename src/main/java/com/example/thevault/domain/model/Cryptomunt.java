@@ -8,10 +8,10 @@ import org.slf4j.LoggerFactory;
 
 public class Cryptomunt {
 
-    private int cryptomuntId;
-    private String naam;
-    private String afkorting;
-    private double waarde;
+    private int Id;
+    private String name;
+    private String symbol;
+    private double price;
 
     private final Logger logger = LoggerFactory.getLogger(Cryptomunt.class);
 
@@ -21,54 +21,54 @@ public class Cryptomunt {
     }
 
 
-    public Cryptomunt (int cryptomuntId, String naam, String afkorting, double waarde){
-        this.cryptomuntId = cryptomuntId;
-        this.naam = naam;
-        this.afkorting = afkorting;
-        this.waarde = waarde;
+    public Cryptomunt (int cryptomuntId, String name, String afkorting, double price){
+        this.Id = cryptomuntId;
+        this.name = name;
+        this.symbol = afkorting;
+        this.price = price;
         logger.info("Cryptomunt:" + this);
     }
 
     @Override
     public String toString() {
         return "Cryptomunt{" +
-                "cryptomuntId=" + cryptomuntId +
-                ", naam='" + naam + '\'' +
-                ", afkorting='" + afkorting + '\'' +
-                ", waarde=" + waarde +
+                "cryptomuntId=" + Id +
+                ", naam='" + name + '\'' +
+                ", afkorting='" + symbol + '\'' +
+                ", waarde=" + price +
                 '}';
     }
 
-    public int getCryptomuntId() {
-        return cryptomuntId;
+    public int getId() {
+        return Id;
     }
 
-    public void setCryptomuntId(int cryptomuntId) {
-        this.cryptomuntId = cryptomuntId;
+    public void setId(int cryptomuntId) {
+        this.Id = cryptomuntId;
     }
 
-    public String getNaam() {
-        return naam;
+    public String getName() {
+        return name;
     }
 
-    public void setNaam(String naam) {
-        this.naam = naam;
+    public void setName(String naam) {
+        this.name = naam;
     }
 
-    public String getAfkorting() {
-        return afkorting;
+    public String getSymbol() {
+        return symbol;
     }
 
-    public void setAfkorting(String afkorting) {
-        this.afkorting = afkorting;
+    public void setSymbol(String afkorting) {
+        this.symbol = afkorting;
     }
 
-    public double getWaarde() {
-        return waarde;
+    public double getPrice() {
+        return price;
     }
 
-    public void setWaarde(double waarde) {
-        this.waarde = waarde;
+    public void setPrice(double waarde) {
+        this.price = waarde;
     }
 
 }

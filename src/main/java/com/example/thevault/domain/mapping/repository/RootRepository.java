@@ -4,7 +4,7 @@
 package com.example.thevault.domain.mapping.repository;
 
 import com.example.thevault.domain.mapping.dao.AssetDAO;
-import com.example.thevault.domain.mapping.dao.JDBCAssetDAO;
+//import com.example.thevault.domain.mapping.dao.JDBCAssetDAO;
 import com.example.thevault.domain.mapping.dao.KlantDAO;
 import com.example.thevault.domain.model.Asset;
 import com.example.thevault.domain.mapping.dao.RekeningDAO;
@@ -36,11 +36,11 @@ public class RootRepository {
         logger.info("New RootRepository");
     }
 
-    public void slaKlantOp(Klant klant){
-        klantDAO.slaKlantOp(klant);
+    public Klant slaKlantOp(Klant klant){
+      return  klantDAO.slaKlantOp(klant);
     }
 
-    public Klant vindKlantByUsername(String username){
+    public Klant vindKlantByGebruikersnaam(String username){
         return klantDAO.vindKlantByGebruikersnaam(username);
     }
 
@@ -70,7 +70,7 @@ public class RootRepository {
     }
 
     public Asset slaAssetVanKlantOp(int klantId, Asset asset){
-        if(assetDAO.geefAsset(klantId, asset.getCryptomunt().getCryptomuntId()) == null){
+        if(assetDAO.geefAsset(klantId, asset.getCryptomunt().getId()) == null){
             return assetDAO.voegNieuwAssetToeAanPortefeuille(klantId, asset);
         } else {
             return assetDAO.updateAsset(klantId, asset);

@@ -5,12 +5,9 @@ package com.example.thevault.controller.rest_api_controller;
 
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.transfer.KlantDto;
-import com.example.thevault.service.Facade;
+import com.example.thevault.service.RegistrationService;
+import com.example.thevault.domain.transfer.LoginDto;
 import com.example.thevault.service.KlantService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -19,13 +16,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.security.auth.login.LoginException;
+
 @RestController
 public class KlantController extends BasisApiController{
 
     private final Logger logger = LoggerFactory.getLogger(KlantController.class);
 
-    public KlantController(Facade facade, KlantService klantService) {
-        super(facade, klantService);
+    public KlantController(RegistrationService registrationService, KlantService klantService) {
+        super(registrationService, klantService);
         logger.info("New KlantController");
     }
 
@@ -40,7 +39,27 @@ public class KlantController extends BasisApiController{
      */
     @PostMapping("/register")
     public ResponseEntity<KlantDto> registreerKlantHandler(@RequestBody Klant klant){
-        KlantDto klantDto = facade.registreerKlant(klant);
+        KlantDto klantDto = registrationService.registreerKlant(klant);
     return ResponseEntity.status(HttpStatus.CREATED).body(klantDto);
+    }
+
+    /**
+    @author Wim 20211207
+    methode die inloggegevens ontvangt en laat checken of deze correct zijn en inlog succesvol wordt
+    of een algemene foutmelding verstuurt
+     */
+    @PostMapping("/login")
+    public ResponseEntity<KlantDto> loginHandler(@RequestBody LoginDto loginDto) throws LoginException {
+//roep loginValidatie aan in de service
+        Klant klant = klantService.valideerLogin(
+                loginDto.getGebruikersnaam(), loginDto.getWachtwoord());
+        if(klant != null){
+            return ResponseEntity.ok()
+                    .header("Authorization")
+                    .body(new KlantDto());
+
+        }
+        throw new LoginException();
+
     }
 }

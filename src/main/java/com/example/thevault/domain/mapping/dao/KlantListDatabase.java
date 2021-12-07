@@ -22,7 +22,7 @@ public class KlantListDatabase {
         super();
         this.listDatabase = new ArrayList<>();
         String gehashtWachtwoord = HashHelper.hashHelper("testWW");
-        Klant testKlant = new Klant(2, "testKlant", gehashtWachtwoord,
+        Klant testKlant = new Klant("testKlant", gehashtWachtwoord,
                 null, null, "Jan", null, 145801354, LocalDate.now());
         logger.info("New KlantListDatabase");
     }
