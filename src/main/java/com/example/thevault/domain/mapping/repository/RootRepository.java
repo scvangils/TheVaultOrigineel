@@ -37,17 +37,6 @@ public class RootRepository {
         logger.info("New RootRepository");
     }
 
-    public Map<Cryptomunt,Double> geefAlleCryptomuntenVanKlant(int klantId){
-        //Roept via de MySQLPortefeuilleDAO (of klantDAO?) informatie op vanuit de tussentabel 'portefeuille' obv de klantId
-        return null;
-    }
-
-    public double geefHoeveelheidCryptomuntVanKlant(int cryptomuntId, int klantId){
-        //Roept via de MySQLPortefeuilleDAO (of klantDAO?) informatie op vanuit de tussentabel 'portefeuille' obv combinatie
-        // klantId en cryptomuntId
-        return 0.0;
-    }
-
     public Klant slaKlantOp(Klant klant){
         return klantDAO.slaKlantOp(klant);
     }
@@ -99,7 +88,7 @@ public class RootRepository {
         return rekeningDAO.vindRekeningVanKlant(klant);
     }
 
-    public List<Asset> vulPortefeuilleKlant(int klantId) throws SQLException {
+    public List<Asset> vulPortefeuilleKlant(int klantId){
         return assetDAO.geefAlleAssets(klantId);
     }
 
