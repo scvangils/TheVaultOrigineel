@@ -85,10 +85,8 @@ class RootRepositoryTest {
         Rekening expected = rekening;
         Rekening actual = rootRepository.vindRekeningVanKlant(testKlant);
         assertThat(actual).as("Test vraag rekening op van testklant").isNotNull().isEqualTo(expected).
-                hasNoNullFieldsOrProperties().extracting("iban", "saldo").contains("INGB0001234567NL").
-                contains("1000.0");
-
-
+                hasNoNullFieldsOrProperties().extracting("iban", "saldo").
+                contains("INGB0001234567NL","1000.0");
     }
 
     @Test
