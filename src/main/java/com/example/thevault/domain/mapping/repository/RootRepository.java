@@ -58,6 +58,7 @@ public class RootRepository {
     }
 
     /**
+     * @Author Carmen
      * De informatie van alle Assets van de klant wordt als List weergegeven, wat de portefeuille van de klant vormt
      * @param klantId identifier van de klant die de portefeuille opvraagt
      * @return List</Asset> een lijst van alle Assets van de klant
@@ -68,6 +69,7 @@ public class RootRepository {
     }
 
     /**
+     * @Author Carmen
      * De klant krijgt informatie te zien over een specifieke Asset die hij/zij bezit
      * @param klantId
      * @param cryptomuntId
@@ -78,6 +80,7 @@ public class RootRepository {
     }
 
     /**
+     * @Author Carmen
      * Informatie over een asset van de klant wordt opgeslagen, op basis van een transactie. Als de cryptomunt nog niet
      * in de portefeuille zit wordt deze als nieuwe asset opgeslagen, en anders wordt de bestaande asset geüpdate
      * @param klantId indentifier van de klant die een asset wil opslaan
@@ -93,6 +96,7 @@ public class RootRepository {
     }
 
     /**
+     * @Author Carmen
      * De klant wil informatie over een asset in zijn/haar portefeuille aanpassen, dit gebeurt op basis van een
      * transactie
      * @param klantId identifier van de klant die een wijziging aan de asset wil doorvoeren
