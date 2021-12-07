@@ -60,7 +60,7 @@ public class RootRepository {
         rekeningDAO.wijzigSaldoVanKlant(klant, bedrag);
     }
 
-    public List<Asset> vulPortefeuilleKlant(int klantId) throws SQLException {
+    public List<Asset> vulPortefeuilleKlant(int klantId){
         return assetDAO.geefAlleAssets(klantId);
     }
 
@@ -69,7 +69,7 @@ public class RootRepository {
     }
 
     public Asset slaAssetVanKlantOp(int klantId, Asset asset){
-        if(assetDAO.geefAsset(klantId, asset.getCryptomunt().getCryptomuntId()) == null){
+        if(assetDAO.geefAsset(klantId, asset.getCryptomunt().getId()) == null){
             return assetDAO.voegNieuwAssetToeAanPortefeuille(klantId, asset);
         } else {
             return assetDAO.updateAsset(klantId, asset);
