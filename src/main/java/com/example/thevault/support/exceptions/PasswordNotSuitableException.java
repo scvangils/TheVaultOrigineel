@@ -8,14 +8,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-
-//TODO message variabel maken
 @ResponseStatus(value = HttpStatus.NOT_ACCEPTABLE)
-public class AgeTooLowException extends RuntimeException{
+public class PasswordNotSuitableException extends RuntimeException{
 
-    public AgeTooLowException(String message){
+    public PasswordNotSuitableException(String message){
         super(message);
-
     }
-
 }
