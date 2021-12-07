@@ -19,25 +19,47 @@ class RekeningServiceTest {
 
     public static Klant bestaandeKlant;
     public static Klant nietBestaandeKlant;
+    public static Klant nieuweKlant;
     public static RootRepository mockRepo;
     public static Rekening rekeningExpected;
     public static RekeningService rekeningServiceTest;
+    public static Rekening nieuweRekening;
 
     @BeforeAll
     static void setUp() {
         bestaandeKlant = new Klant(1, "Henknr1", "fdsaljkl", "Hello", 1890393, LocalDate.of(1991, 1, 12));
         nietBestaandeKlant = new Klant(2, "HarryBeste", "210jklf", "", 101212, LocalDate.of(1991, 1, 12));
+        nieuweKlant = new Klant(3, "ThomasBeste", "831hgtr", "", 1528719, LocalDate.of(1990, 5, 10));
         mockRepo = Mockito.mock(RootRepository.class);
+        rekeningServiceTest = new RekeningService(mockRepo);
         rekeningExpected = new Rekening("INGB0001234567NL", 1000.0);
         bestaandeKlant.setRekening(rekeningExpected);
         rekeningExpected.setKlant(bestaandeKlant);
-        rekeningServiceTest = new RekeningService(mockRepo);
+        nieuweRekening = new Rekening("NL20RABO9876543", 1000.0);
     }
 
     @Test
     void createIban() {
         Iban iban = new Iban.Builder().countryCode(CountryCode.NL).bankCode("TVLT").buildRandom();
         assertThat(iban.toString()).contains("NL");
+    }
+
+    @Test
+    void creeerRekening() {
+        Rekening actual = rekeningServiceTest.creeerRekening(nieuweKlant);
+        System.out.println(actual);
+        assertThat(actual.getIban()).isNotNull();
+        assertThat(actual.getSaldo()).isEqualTo(1000.0);
+    }
+
+    @Test
+    void slaRekeningOp() {
+        Mockito.when(mockRepo.slaRekeningOp(nieuweRekening)).thenReturn(nieuweRekening);
+
+        Rekening actual = rekeningServiceTest.slaRekeningOp(nieuweRekening);
+        System.out.println(actual);
+        Rekening expected = nieuweRekening;
+        assertThat(actual).isNotNull().isEqualTo(expected);
     }
 
     @Test
@@ -98,6 +120,7 @@ class RekeningServiceTest {
         Mockito.when(mockRepo.wijzigSaldoVanKlant(bestaandeKlant, 2000.0)).thenReturn(bestaandeKlant.getRekening());
 
         Rekening rekeningActual = rekeningServiceTest.wijzigSaldoVanKlant(bestaandeKlant, 2000.0);
+        System.out.println(rekeningActual);
         double expected = 2000.0;
         double actual = rekeningActual.getSaldo();
         assertThat(actual).isEqualTo(expected);
