@@ -43,6 +43,7 @@ public class KlantService {
     public Klant vindKlantByGebruikersnaam(String gebruikersnaam){
         return rootRepository.vindKlantByGebruikersnaam(gebruikersnaam);
     }
+
     /**
      * Deze methode zoekt of er in de database al een klant bestaat met deze gebruikerId
      * en maakt eventueel een klant-object aan op nasis van de teruggestuurde gegevens
@@ -63,7 +64,6 @@ public class KlantService {
      * @param klant een Klant-object is wordt aangemaakt op basis van ingevoerde gegevens
      * @return het klant-object met het gealtereerde wachtwoord
      */
-
     public Klant registreerKlant(Klant klant){
         if(!BSNvalidator.bsnValideren(klant.getBsn())){
             throw new IncorrectBSNException();

@@ -6,6 +6,7 @@ package com.example.thevault.domain.mapping.dao;
 import com.example.thevault.domain.model.Klant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -88,9 +89,15 @@ public class JDBCKlantDAO implements KlantDAO{
     @Override
     public Klant vindKlantById(int gebruikerId) {
         String sql = "SELECT * FROM Klant WHERE gebruikerId = ?;";
-        return jdbcTemplate.queryForObject(sql, new KlantRowMapper(), gebruikerId);
-
+        Klant klant;
+        try {
+            klant = jdbcTemplate.queryForObject(sql, new KlantRowMapper(), gebruikerId);
+        } catch (EmptyResultDataAccessException noResult) {
+            klant = null;
+        }
+        return klant;
     }
+
 
     /**
      * Deze methode zoekt of er in de database al een klant bestaat met deze gebruikersnaam
@@ -99,10 +106,16 @@ public class JDBCKlantDAO implements KlantDAO{
      * @param gebruikersnaam gebruikersnaam van een (mogelijke) klant die uniek moet zijn
      * @return klant-object op basis van gegevens uit de database of null indien gebruikersnaam niet gevonden is
      */
-    @Override
-    public Klant vindKlantByGebruikersnaam(String gebruikersnaam) {
+    @Override //TODO uitvinden waarom dit niet kan
+        public Klant vindKlantByGebruikersnaam(String gebruikersnaam) {
         String sql = "SELECT * FROM klant WHERE gebruikersnaam = ?;";
-        return jdbcTemplate.queryForObject(sql, new KlantRowMapper(), gebruikersnaam);
+        Klant klant;
+        try {
+            klant = jdbcTemplate.queryForObject(sql, new KlantRowMapper(), gebruikersnaam);
+        } catch (EmptyResultDataAccessException noResult) {
+            klant = null;
+        }
+        return klant;
     }
 
     private static class KlantRowMapper implements RowMapper<Klant>{
