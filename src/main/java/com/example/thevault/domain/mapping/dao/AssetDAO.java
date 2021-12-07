@@ -27,10 +27,10 @@ public interface AssetDAO {
      * Dit betreft het verwijderen van een cryptomunt uit de portefeuille
      * Dit gebeurt via een 'transactie', waarbij een klant crypto's verkoopt
      * @param klantId identifier van de klant die de cryptomunt verkoopt
-     * @param cryptomuntId de identifier van de cryptomunt die uit de portefeuille wordt verwijderd
+     * @param asset de asset die uit de portefeuille wordt verwijderd
      * @return String bericht dat de cryptomunt uit de portefeuille is verwijderd
      */
-    public String verwijderAssetUitPortefeuille(int klantId, int cryptomuntId);
+    public Asset verwijderAssetUitPortefeuille(int klantId, Asset asset);
 
     /**
      * Dit betreft het updaten van een cryptomunt die al in de portefeuille zit

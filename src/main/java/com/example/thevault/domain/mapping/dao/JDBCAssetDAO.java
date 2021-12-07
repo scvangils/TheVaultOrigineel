@@ -53,6 +53,14 @@ public class JDBCAssetDAO implements AssetDAO{
         return ps;
     }
 
+    private PreparedStatement verwijderAssetStatement(int klantId, int cryptomuntId, Connection connection) throws SQLException {
+        String sql = "DELETE * FROM asset WHERE klantId = ? AND cryptomuntId = ?;";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setInt(1, klantId);
+        ps.setInt(2, cryptomuntId);
+        return ps;
+    }
+
     private static class AssetRowMapper implements RowMapper<Asset> {
         @Override
         public Asset mapRow(ResultSet resultSet, int rowNum) throws SQLException {
@@ -81,12 +89,14 @@ public class JDBCAssetDAO implements AssetDAO{
      * Dit betreft het verwijderen van een cryptomunt uit de portefeuille
      * Dit gebeurt via een 'transactie', waarbij een klant crypto's verkoopt
      * @param klantId identifier van de klant die de cryptomunt verkoopt
-     * @param cryptomuntId de identifier van de cryptomunt die uit de portefeuille wordt verwijderd
+     * @param asset de asset die uit de portefeuille wordt verwijderd
      * @return String bericht dat de cryptomunt uit de portefeuille is verwijderd
      */
     @Override
-    public String verwijderAssetUitPortefeuille(int klantId, int cryptomuntId) {
-        return "Cryptomunt is verwijderd";
+    public Asset verwijderAssetUitPortefeuille(int klantId, Asset asset) {
+        jdbcTemplate.update(connection -> verwijderAssetStatement(klantId, asset.getCryptomunt().getId(), connection));
+        asset.setAantal(0);
+        return asset;
     }
 
     //TODO Besluiten of dit twee methodes moeten worden: kopen vs verkopen. Op zich gebeurt er in beide gevallen
@@ -107,6 +117,8 @@ public class JDBCAssetDAO implements AssetDAO{
             Asset nieuwAsset = new Asset(asset.getCryptomunt(), huidigeAantal - teVerhandelenAantal);
             jdbcTemplate.update(connection -> slaAssetOpStatement(klantId, nieuwAsset, connection));
             return nieuwAsset;
+        } else if(huidigeAantal == -teVerhandelenAantal){
+            return verwijderAssetUitPortefeuille(klantId, asset);
         }
         System.out.println("Het saldo van deze cryptomunt is te laag voor deze transactie");
         return null;
