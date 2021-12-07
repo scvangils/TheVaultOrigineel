@@ -4,6 +4,11 @@
 package com.example.thevault.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,11 +22,13 @@ public class Klant extends Gebruiker {
     private long bsn;
     private Rekening rekening;
     private List<Asset> portefeuille;
+    @JsonDeserialize(using = LocalDateDeserializer.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
     @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate geboortedatum;
     //TODO lijst van transacties toevoegen
 
-
+    @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Klant.class);
 
     public Klant(){
