@@ -85,9 +85,8 @@ public class RootRepository {
      * De informatie van alle Assets van de klant wordt als List weergegeven, wat de portefeuille van de klant vormt
      * @param klantId identifier van de klant die de portefeuille opvraagt
      * @return List</Asset> een lijst van alle Assets van de klant
-     * @throws SQLException
      */
-    public List<Asset> vulPortefeuilleKlant(int klantId) throws SQLException {
+    public List<Asset> vulPortefeuilleKlant(int klantId){
         return assetDAO.geefAlleAssets(klantId);
     }
 

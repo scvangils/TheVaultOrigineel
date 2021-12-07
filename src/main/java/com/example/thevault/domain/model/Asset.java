@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 /**
  * @Author: Carmen Rietdijk
@@ -38,6 +39,28 @@ public class Asset {
         this.cryptomunt = cryptomunt;
         this.aantal = aantal;
         logger.info("Asset: " + this);
+    }
+
+    /**
+     * Equals methode voor Asset
+     * @param o het object waarmee de Asset wordt vergeleken
+     * @return boolean: is het object gelijk aan de Asset of niet
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Asset asset = (Asset) o;
+        return Double.compare(asset.aantal, aantal) == 0 && cryptomunt.equals(asset.cryptomunt);
+    }
+
+    /**
+     * Hashcode methode voor Asset, waarbij een hanshcode wordt gegenereerd op basis van cryptomunt en aantal
+     * @return int de hashcode voor deze Asset
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(cryptomunt, aantal);
     }
 
     public Cryptomunt getCryptomunt() {

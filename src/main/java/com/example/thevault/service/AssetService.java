@@ -41,9 +41,8 @@ public class AssetService {
      * Er wordt een lijst met alle assets van de klant gemaakt en doorgegeven
      * @param klantId identifier van de klant die de portefeuille oproept
      * @return List</Asset> een lijst met alle assets van de klant, zijnde de portefeuille
-     * @throws SQLException
      */
-    public List<Asset> geefInhoudPortefeuille(int klantId) throws SQLException {
+    public List<Asset> geefInhoudPortefeuille(int klantId){
         return rootRepository.vulPortefeuilleKlant(klantId);
     }
 
