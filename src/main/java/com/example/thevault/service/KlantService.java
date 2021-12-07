@@ -7,7 +7,9 @@ import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.Asset;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.support.BSNvalidator;
+import com.example.thevault.support.exceptions.AgeTooLowException;
 import com.example.thevault.support.exceptions.IncorrectBSNException;
+import com.example.thevault.support.exceptions.PasswordNotSuitableException;
 import com.example.thevault.support.exceptions.RegistrationFailedException;
 import com.example.thevault.support.hashing.BCryptWachtwoordHash;
 import org.apache.commons.codec.binary.Base64;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 import javax.security.auth.login.LoginException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -26,6 +29,8 @@ public class KlantService {
 
     private RootRepository rootRepository;
     private final Logger logger = LoggerFactory.getLogger(KlantService.class);
+    private final static int VOLWASSEN_LEEFTIJD = 18;
+    private final static int MINIMALE_WACHTWOORDLENGTE = 8;
 
     @Autowired
     public KlantService(RootRepository rootRepository) {
@@ -50,20 +55,62 @@ public class KlantService {
      */
 
     public Klant registreerKlant(Klant klant){
-        if(!BSNvalidator.bsnValideren(klant.getBsn())){
-            throw new IncorrectBSNException();
-        }
-        //TODO nakijken of datum check nodig heeft
-        //TODO leeftijd minimaal 18 checken
-        if(vindKlantByGebruikersnaam(klant.getGebruikersnaam()) != null){
-            throw new RegistrationFailedException();
-        }
+        bsnHandler(klant);
+        wachtWoordHandler(klant);
+        minumumLeeftijdHandler(klant);
+        gebruikersnaamHandler(klant);
         String teHashenWachtwoord = klant.getWachtwoord();
         String gehashtWachtwoord = BCryptWachtwoordHash.hashWachtwoord(teHashenWachtwoord); // hash wachtwoord
         gehashtWachtwoord = Base64.encodeBase64String(gehashtWachtwoord.getBytes(StandardCharsets.UTF_8)); // versleutel gehasht wachtwoord
         klant.setWachtwoord(gehashtWachtwoord);
         rootRepository.slaKlantOp(klant);
         return klant;
+    }
+
+    /**
+     * Deze methode zorgt ervoor dat bij een al bestaande gebruikersnaam de juiste exception wordt aangeroepen
+     *
+     * @param klant de ingevoerde klantgegevens in objectvorm
+     */
+    private void gebruikersnaamHandler(Klant klant) {
+        if(vindKlantByGebruikersnaam(klant.getGebruikersnaam()) != null){
+            throw new RegistrationFailedException();
+        }
+    }
+    /**
+     * Deze methode zorgt ervoor dat bij een te lage leeftijd de juiste exception wordt aangeroepen
+     *
+     * @param klant de ingevoerde klantgegevens in objectvorm
+     */
+    private void minumumLeeftijdHandler(Klant klant) {
+        if(!checkVolwassen(klant)){
+            String message = String.format("Je moet %d om een rekening te openen.", VOLWASSEN_LEEFTIJD);
+            throw new AgeTooLowException(message);
+        }
+    }
+
+    /**
+     * Deze methode zorgt ervoor dat wanneer het wachtwoord niet aan de eisen voldoet,
+     * de juiste exception wordt aangeroepen
+     *
+     * @param klant de ingevoerde klantgegevens in objectvorm
+     */
+    private void wachtWoordHandler(Klant klant) {
+        if(!checkWachtwoordLengte(klant) || !checkWachtwoordFormat(klant)){
+            String message = String.format("Het wachtwoord moet minimaal %d karakters lang zijn" +
+                    " en mag geen spaties bevatten", MINIMALE_WACHTWOORDLENGTE);
+            throw new PasswordNotSuitableException(message);
+        }
+    }
+    /**
+     * Deze methode zorgt ervoor dat bij een niet correct ingevoerde BSN de juiste exception wordt aangeroepen
+     *
+     * @param klant de ingevoerde klantgegevens in objectvorm
+     */
+    private void bsnHandler(Klant klant) {
+        if(!BSNvalidator.bsnValideren(klant.getBsn())){
+            throw new IncorrectBSNException();
+        }
     }
 
     /**
@@ -83,6 +130,41 @@ public class KlantService {
         return vindKlantByGebruikersnaam(gebruikersNaam);
     }
 
+    /**
+     * Deze methode kijkt of de ingevulde geboortedatum van de klant
+     * minimaal 18 jaar in het verleden ligt.
+     *
+     * @param klant de ingevoerde klantgegevens in objectvorm
+     * @return een boolean die aangeeft of de klant volwassen is
+     */
+    public boolean checkVolwassen(Klant klant){ // 1 dag correctie nodig voor groter / gelijk
+         return LocalDate.now().minusYears(VOLWASSEN_LEEFTIJD).plusDays(1).isAfter(klant.getGeboortedatum());
+    }
+
+    /**
+     * Deze methode gaat na of het wachtwoord aan de minimumeis qua lengte voldoet
+     *
+     * @param klant de ingevoerde klantgegevens in objectvorm
+     * @return een boolean die aangeeft of het wachtwoord lang genoeg is
+     */
+    public boolean checkWachtwoordLengte(Klant klant){
+        return klant.getWachtwoord().length() >= MINIMALE_WACHTWOORDLENGTE;
+    }
+
+    /**
+     * Deze methode gaat na of het wachtwoord geen spaties bevat
+     *
+     * @param klant de ingevoerde klantgegevens in objectvorm
+     * @return een boolean die aangeeft of het wachtwoord geen spaties bevat
+     */
+    public boolean checkWachtwoordFormat(Klant klant){
+        for(char letter: klant.getWachtwoord().toCharArray()){
+            if (letter == 32){
+                return false;
+            }
+        }
+        return true;
+    }
 
 
     public List<Asset> geefInhoudPortefeuille(int klantId) throws SQLException {
