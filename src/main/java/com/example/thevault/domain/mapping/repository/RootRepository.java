@@ -36,11 +36,11 @@ public class RootRepository {
         logger.info("New RootRepository");
     }
 
-    public void slaKlantOp(Klant klant){
-        klantDAO.slaKlantOp(klant);
+    public Klant slaKlantOp(Klant klant){
+      return  klantDAO.slaKlantOp(klant);
     }
 
-    public Klant vindKlantByUsername(String username){
+    public Klant vindKlantByGebruikersnaam(String username){
         return klantDAO.vindKlantByGebruikersnaam(username);
     }
 

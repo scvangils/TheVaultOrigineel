@@ -5,14 +5,11 @@ package com.example.thevault.service;
 
 import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.Asset;
-import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.support.BSNvalidator;
 import com.example.thevault.support.exceptions.IncorrectBSNException;
-import com.example.thevault.support.exceptions.IncorrectFormatException;
 import com.example.thevault.support.exceptions.RegistrationFailedException;
 import com.example.thevault.support.hashing.BCryptWachtwoordHash;
-import com.example.thevault.support.hashing.HashHelper;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +19,7 @@ import org.springframework.stereotype.Service;
 import javax.security.auth.login.LoginException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class KlantService {
@@ -39,8 +34,8 @@ public class KlantService {
         logger.info("New KlantService.");
     }
 
-    public Klant vindKlantByUsername(String username){
-        return rootRepository.vindKlantByUsername(username);
+    public Klant vindKlantByGebruikersnaam(String username){
+        return rootRepository.vindKlantByGebruikersnaam(username);
     }
 
 
@@ -60,7 +55,7 @@ public class KlantService {
         }
         //TODO nakijken of datum check nodig heeft
         //TODO leeftijd minimaal 18 checken
-        if(vindKlantByUsername(klant.getGebruikersnaam()) != null){
+        if(vindKlantByGebruikersnaam(klant.getGebruikersnaam()) != null){
             throw new RegistrationFailedException();
         }
         String teHashenWachtwoord = klant.getWachtwoord();
@@ -79,13 +74,13 @@ public class KlantService {
      */
     public Klant valideerLogin (String gebruikersNaam, String wachtwoord) throws LoginException {
         //vraag wachtwoord op via RootRepos
-        if(vindKlantByUsername(gebruikersNaam) == null){
+        if(vindKlantByGebruikersnaam(gebruikersNaam) == null){
             throw new LoginException();
         }
-       if(!BCryptWachtwoordHash.verifyHash(wachtwoord, vindKlantByUsername(gebruikersNaam).getWachtwoord())){
+       if(!BCryptWachtwoordHash.verifyHash(wachtwoord, vindKlantByGebruikersnaam(gebruikersNaam).getWachtwoord())){
            throw new LoginException();
        }
-        return vindKlantByUsername(gebruikersNaam);
+        return vindKlantByGebruikersnaam(gebruikersNaam);
     }
 
 
