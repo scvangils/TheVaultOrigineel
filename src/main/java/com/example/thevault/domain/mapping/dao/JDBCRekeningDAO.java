@@ -2,19 +2,19 @@ package com.example.thevault.domain.mapping.dao;
 
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.model.Rekening;
+import net.minidev.json.annotate.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
-import java.util.Map;
 
 @Repository
 public class JDBCRekeningDAO implements RekeningDAO {
     JdbcTemplate jdbcTemplate;
 
+    @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(JDBCKlantDAO.class);
 
     @Autowired
@@ -24,10 +24,9 @@ public class JDBCRekeningDAO implements RekeningDAO {
         logger.info("New JDBCRekeningDAO");
     }
 
-
     @Override
-    public void slaRekeningOp(Rekening rekening) {
-
+    public Rekening slaRekeningOp(Rekening rekening) {
+        return null;
     }
 
     @Override
@@ -41,6 +40,7 @@ public class JDBCRekeningDAO implements RekeningDAO {
     }
 
     @Override
-    public void wijzigSaldoVanKlant(Klant klant, double bedrag) {
+    public Rekening wijzigSaldoVanKlant(Klant klant, double bedrag) {
+        return null;
     }
 }
