@@ -13,6 +13,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
+
 public class KlantDto {
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(KlantDto.class);
@@ -74,5 +76,18 @@ public class KlantDto {
                 ", iban='" + iban + '\'' +
                 ", postcodeEnHuisnummer='" + postcodeEnHuisnummer + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof KlantDto)) return false;
+        KlantDto klantDto = (KlantDto) o;
+        return naam.equals(klantDto.naam) && gebruikersnaam.equals(klantDto.gebruikersnaam) && iban.equals(klantDto.iban) && postcodeEnHuisnummer.equals(klantDto.postcodeEnHuisnummer);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(naam, gebruikersnaam, iban, postcodeEnHuisnummer);
     }
 }

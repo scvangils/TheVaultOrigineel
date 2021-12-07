@@ -5,13 +5,10 @@ package com.example.thevault.controller.rest_api_controller;
 
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.transfer.KlantDto;
+import com.example.thevault.service.RegistrationService;
 import com.example.thevault.domain.transfer.LoginDto;
 import com.example.thevault.service.Facade;
 import com.example.thevault.service.KlantService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -27,8 +24,8 @@ public class KlantController extends BasisApiController{
 
     private final Logger logger = LoggerFactory.getLogger(KlantController.class);
 
-    public KlantController(Facade facade, KlantService klantService) {
-        super(facade, klantService);
+    public KlantController(RegistrationService registrationService, KlantService klantService) {
+        super(registrationService, klantService);
         logger.info("New KlantController");
     }
 
@@ -43,7 +40,7 @@ public class KlantController extends BasisApiController{
      */
     @PostMapping("/register")
     public ResponseEntity<KlantDto> registreerKlantHandler(@RequestBody Klant klant){
-        KlantDto klantDto = facade.registreerKlant(klant);
+        KlantDto klantDto = registrationService.registreerKlant(klant);
     return ResponseEntity.status(HttpStatus.CREATED).body(klantDto);
     }
 
