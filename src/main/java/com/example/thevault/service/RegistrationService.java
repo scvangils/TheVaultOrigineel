@@ -12,21 +12,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class Facade {
+public class RegistrationService {
 
-    private final Logger logger = LoggerFactory.getLogger(Facade.class);
+    private final Logger logger = LoggerFactory.getLogger(RegistrationService.class);
 
     private final KlantService klantService;
     private final AdresService adresService;
     private final RekeningService rekeningService;
 
     @Autowired
-    public Facade(KlantService klantService, AdresService adresService, RekeningService rekeningService) {
+    public RegistrationService(KlantService klantService, AdresService adresService, RekeningService rekeningService) {
         super();
         this.klantService =  klantService;
         this.adresService = adresService;
         this.rekeningService = rekeningService;
-        logger.info("New Facade");
+        logger.info("New RegistrationService");
     }
 
     /**
@@ -41,8 +41,9 @@ public class Facade {
       if(!adresService.postcodeOpmaak(klant.getAdres().getPostcode())){
           throw new IncorrectFormatException();
       }
-        klantService.registreerKlant(klant);
+        klant = klantService.registreerKlant(klant);
         klant.setRekening(rekeningService.creeerRekening(klant));
+        System.out.println(klant.getRekening());
         rekeningService.slaRekeningOp(klant.getRekening());
         return new KlantDto(klant);
     }
