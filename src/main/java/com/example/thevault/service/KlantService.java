@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.login.LoginException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -69,6 +70,25 @@ public class KlantService {
         rootRepository.slaKlantOp(klant);
         return klant;
     }
+
+    /**
+     * Wim 20211207
+     * @param gebruikersNaam
+     * @param wachtwoord
+     * @return Klant als combinatie gebruikersnaam en wachtwoord correct is, anders geef foutmelding
+     */
+    public Klant valideerLogin (String gebruikersNaam, String wachtwoord) throws LoginException {
+        //vraag wachtwoord op via RootRepos
+        if(vindKlantByUsername(gebruikersNaam) == null){
+            throw new LoginException();
+        }
+       if(!BCryptWachtwoordHash.verifyHash(wachtwoord, vindKlantByUsername(gebruikersNaam).getWachtwoord())){
+           throw new LoginException();
+       }
+        return vindKlantByUsername(gebruikersNaam);
+    }
+
+
 
     public List<Asset> geefInhoudPortefeuille(int klantId) throws SQLException {
         return rootRepository.vulPortefeuilleKlant(klantId);

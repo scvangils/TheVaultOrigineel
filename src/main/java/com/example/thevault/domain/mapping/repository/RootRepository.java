@@ -4,7 +4,7 @@
 package com.example.thevault.domain.mapping.repository;
 
 import com.example.thevault.domain.mapping.dao.AssetDAO;
-import com.example.thevault.domain.mapping.dao.JDBCAssetDAO;
+//import com.example.thevault.domain.mapping.dao.JDBCAssetDAO;
 import com.example.thevault.domain.mapping.dao.KlantDAO;
 import com.example.thevault.domain.model.Asset;
 import com.example.thevault.domain.mapping.dao.RekeningDAO;
