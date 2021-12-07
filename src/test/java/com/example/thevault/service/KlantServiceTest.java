@@ -31,7 +31,7 @@ class KlantServiceTest {
         mockRootRepository = Mockito.mock(RootRepository.class);
         String gehashtWachtwoord = BCryptWachtwoordHash.hashWachtwoord("testWW");
         testKlant = new Klant("testKlant", gehashtWachtwoord,
-                null, null, "Jan", null, 145801354, LocalDate.now());
+                null, null, "Jan", null, 145801354, LocalDate.now().minusYears(18));
          klantService = new KlantService(mockRootRepository);
 
     }
@@ -52,6 +52,13 @@ class KlantServiceTest {
         Klant actual = klantService.registreerKlant(testKlant);
         System.out.println(actual);
         assertThat(actual).isNotNull().isEqualTo(expected);
+    }
+    @Test
+    void checkVolwassen(){
+        assertThat(klantService.checkVolwassen(testKlant)).isTrue();
+        testKlant.setGeboortedatum(LocalDate.now().minusYears(18).plusDays(1));
+        assertThat(klantService.checkVolwassen(testKlant)).isFalse();
+
     }
 
 }
