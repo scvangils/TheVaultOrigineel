@@ -3,6 +3,7 @@
 
 package com.example.thevault.domain.model;
 
+import net.minidev.json.annotate.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +14,7 @@ public class Rekening {
     private double saldo;
     private Klant klant; // voor het klantId
 
-
+    @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Rekening.class);
 
     public Rekening() {
