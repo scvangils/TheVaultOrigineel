@@ -4,22 +4,16 @@ import com.example.thevault.domain.model.Adres;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.model.Rekening;
 import com.example.thevault.domain.transfer.KlantDto;
-import com.example.thevault.service.Facade;
+import com.example.thevault.service.RegistrationService;
 import com.example.thevault.service.KlantService;
 import com.example.thevault.support.hashing.BCryptWachtwoordHash;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.google.gson.Gson;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.Mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.json.GsonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,9 +25,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.assertj.core.api.Assertions.*;
-
 @WebMvcTest
 class KlantControllerTest {
 
@@ -43,7 +34,7 @@ class KlantControllerTest {
     @MockBean
     private KlantService klantService;
     @MockBean
-    private Facade facade;
+    private RegistrationService registrationService;
 
     @Autowired
     public KlantControllerTest(MockMvc mockMvc){
@@ -69,7 +60,7 @@ class KlantControllerTest {
         String testKlantJson = objectMapper.writeValueAsString(testKlant);
         testKlant.setRekening(rekening);
         KlantDto testKlantDto = new KlantDto(testKlant);
-        Mockito.when(facade.registreerKlant(testKlant)).thenReturn(testKlantDto);
+        Mockito.when(registrationService.registreerKlant(testKlant)).thenReturn(testKlantDto);
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/register");
         requestBuilder.content(testKlantJson).contentType(MediaType.APPLICATION_JSON);
         try {

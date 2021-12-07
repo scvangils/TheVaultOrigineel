@@ -4,9 +4,11 @@
 package com.example.thevault.domain.mapping.repository;
 
 import com.example.thevault.domain.mapping.dao.AssetDAO;
+//import com.example.thevault.domain.mapping.dao.JDBCAssetDAO;
 import com.example.thevault.domain.mapping.dao.KlantDAO;
 import com.example.thevault.domain.model.Asset;
 import com.example.thevault.domain.mapping.dao.RekeningDAO;
+import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.model.Rekening;
 import org.slf4j.Logger;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class RootRepository {
@@ -33,35 +36,12 @@ public class RootRepository {
         logger.info("New RootRepository");
     }
 
-    /**
-     * Deze methode slaat de gegevens van een klant op in de database
-     * via de methode in de KlantDAO
-     *
-     * @param klant het klant-object op basis van bij registratie ingevoerde gegevens
-     * @return het klant-object met de juiste gebruikerId
-     */
-    public Klant slaKlantOp(Klant klant){
-        return klantDAO.slaKlantOp(klant);
+    public void slaKlantOp(Klant klant){
+        klantDAO.slaKlantOp(klant);
     }
-    /**
-     * Deze methode zoekt of er in de database al een klant bestaat met deze gebruikerId
-     * en maakt eventueel een klant-object aan op nasis van de teruggestuurde gegevens
-     *
-     * @param gebruikerId gebruikerId van een (mogelijke) klant die uniek moet zijn
-     * @return klant-object op basis van gegevens uit de database of null indien gebruikerId niet gevonden is
-     */
-    public Klant vindKlantById(int gebruikerId){
-        return klantDAO.vindKlantById(gebruikerId);
-    }
-    /**
-     * Deze methode zoekt of er in de database al een klant bestaat met deze gebruikersnaam
-     * en maakt eventueel een klant-object aan op nasis van de teruggestuurde gegevens
-     *
-     * @param gebruikersnaam gebruikersnaam van een (mogelijke) klant die uniek moet zijn
-     * @return klant-object op basis van gegevens uit de database of null indien gebruikersnaam niet gevonden is
-     */
-    public Klant vindKlantByGebruikersnaam(String gebruikersnaam){
-        return klantDAO.vindKlantByGebruikersnaam(gebruikersnaam);
+
+    public Klant vindKlantByUsername(String username){
+        return klantDAO.vindKlantByGebruikersnaam(username);
     }
 
     public void slaRekeningOp(Rekening rekening){
@@ -80,51 +60,22 @@ public class RootRepository {
         rekeningDAO.wijzigSaldoVanKlant(klant, bedrag);
     }
 
-    /**
-     * @Author Carmen
-     * De informatie van alle Assets van de klant wordt als List weergegeven, wat de portefeuille van de klant vormt
-     * @param klantId identifier van de klant die de portefeuille opvraagt
-     * @return List</Asset> een lijst van alle Assets van de klant
-     */
-    public List<Asset> vulPortefeuilleKlant(int klantId){
+    public List<Asset> vulPortefeuilleKlant(int klantId) throws SQLException {
         return assetDAO.geefAlleAssets(klantId);
     }
 
-    /**
-     * @Author Carmen
-     * De klant krijgt informatie te zien over een specifieke Asset die hij/zij bezit
-     * @param klantId
-     * @param cryptomuntId
-     * @return Asset de asset waarover de klant informatie heeft opgevraagd
-     */
     public Asset geefAssetVanKlant(int klantId, int cryptomuntId){
         return assetDAO.geefAsset(klantId, cryptomuntId);
     }
 
-    /**
-     * @Author Carmen
-     * Informatie over een asset van de klant wordt opgeslagen, op basis van een transactie. Als de cryptomunt nog niet
-     * in de portefeuille zit wordt deze als nieuwe asset opgeslagen, en anders wordt de bestaande asset geüpdate
-     * @param klantId indentifier van de klant die een asset wil opslaan
-     * @param asset de asset die wordt opgeslagen
-     * @return Asset de asset die is opgeslagen
-     */
     public Asset slaAssetVanKlantOp(int klantId, Asset asset){
-        if(assetDAO.geefAsset(klantId, asset.getCryptomunt().getId()) == null){
+        if(assetDAO.geefAsset(klantId, asset.getCryptomunt().getCryptomuntId()) == null){
             return assetDAO.voegNieuwAssetToeAanPortefeuille(klantId, asset);
         } else {
             return assetDAO.updateAsset(klantId, asset);
         }
     }
 
-    /**
-     * @Author Carmen
-     * De klant wil informatie over een asset in zijn/haar portefeuille aanpassen, dit gebeurt op basis van een
-     * transactie
-     * @param klantId identifier van de klant die een wijziging aan de asset wil doorvoeren
-     * @param asset de asset die moet worden aangepast
-     * @return Asset de asset die is aangepast
-     */
     public Asset wijzigAssetVanKlant(int klantId, Asset asset){
         return assetDAO.updateAsset(klantId, asset);
     }

@@ -5,20 +5,26 @@ package com.example.thevault.service;
 
 import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.Asset;
+import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.support.BSNvalidator;
 import com.example.thevault.support.exceptions.IncorrectBSNException;
+import com.example.thevault.support.exceptions.IncorrectFormatException;
 import com.example.thevault.support.exceptions.RegistrationFailedException;
 import com.example.thevault.support.hashing.BCryptWachtwoordHash;
+import com.example.thevault.support.hashing.HashHelper;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.security.auth.login.LoginException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class KlantService {
@@ -33,27 +39,10 @@ public class KlantService {
         logger.info("New KlantService.");
     }
 
-    /**
-     * Deze methode zoekt of er in de database al een klant bestaat met deze gebruikersnaam
-     * en maakt eventueel een klant-object aan op nasis van de teruggestuurde gegevens
-     *
-     * @param gebruikersnaam gebruikersnaam van een (mogelijke) klant die uniek moet zijn
-     * @return klant-object op basis van gegevens uit de database of null indien gebruikersnaam niet gevonden is
-     */
-    public Klant vindKlantByGebruikersnaam(String gebruikersnaam){
-        return rootRepository.vindKlantByGebruikersnaam(gebruikersnaam);
+    public Klant vindKlantByUsername(String username){
+        return rootRepository.vindKlantByUsername(username);
     }
 
-    /**
-     * Deze methode zoekt of er in de database al een klant bestaat met deze gebruikerId
-     * en maakt eventueel een klant-object aan op nasis van de teruggestuurde gegevens
-     *
-     * @param gebruikerId gebruikerId van een (mogelijke) klant die uniek moet zijn
-     * @return klant-object op basis van gegevens uit de database of null indien gebruikerId niet gevonden is
-     */
-    public Klant vindKlantbyId(String gebruikerId){
-        return vindKlantbyId(gebruikerId);
-    }
 
     /**
      * Deze methode probeert een nieuwe klant te registreren.
@@ -64,13 +53,14 @@ public class KlantService {
      * @param klant een Klant-object is wordt aangemaakt op basis van ingevoerde gegevens
      * @return het klant-object met het gealtereerde wachtwoord
      */
+
     public Klant registreerKlant(Klant klant){
         if(!BSNvalidator.bsnValideren(klant.getBsn())){
             throw new IncorrectBSNException();
         }
         //TODO nakijken of datum check nodig heeft
         //TODO leeftijd minimaal 18 checken
-        if(vindKlantByGebruikersnaam(klant.getGebruikersnaam()) != null){
+        if(vindKlantByUsername(klant.getGebruikersnaam()) != null){
             throw new RegistrationFailedException();
         }
         String teHashenWachtwoord = klant.getWachtwoord();
@@ -79,6 +69,41 @@ public class KlantService {
         klant.setWachtwoord(gehashtWachtwoord);
         rootRepository.slaKlantOp(klant);
         return klant;
+    }
+
+    /**
+     * Wim 20211207
+     * @param gebruikersNaam
+     * @param wachtwoord
+     * @return Klant als combinatie gebruikersnaam en wachtwoord correct is, anders geef foutmelding
+     */
+    public Klant valideerLogin (String gebruikersNaam, String wachtwoord) throws LoginException {
+        //vraag wachtwoord op via RootRepos
+        if(vindKlantByUsername(gebruikersNaam) == null){
+            throw new LoginException();
+        }
+       if(!BCryptWachtwoordHash.verifyHash(wachtwoord, vindKlantByUsername(gebruikersNaam).getWachtwoord())){
+           throw new LoginException();
+       }
+        return vindKlantByUsername(gebruikersNaam);
+    }
+
+
+
+    public List<Asset> geefInhoudPortefeuille(int klantId) throws SQLException {
+        return rootRepository.vulPortefeuilleKlant(klantId);
+    }
+
+    public Asset geefCryptomunt(int klantId, int cryptomuntId){
+        return rootRepository.geefAssetVanKlant(klantId, cryptomuntId);
+    }
+
+    public Asset slaAssetOp(int klantId, Asset asset){
+        return rootRepository.slaAssetVanKlantOp(klantId, asset);
+    }
+
+    public Asset wijzigAsset(int klantId, Asset asset){
+        return rootRepository.wijzigAssetVanKlant(klantId, asset);
     }
 
     public RootRepository getRootRepository() {
