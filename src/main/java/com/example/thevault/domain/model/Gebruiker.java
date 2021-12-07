@@ -23,7 +23,7 @@ abstract class Gebruiker {
     }
 
 
-    public Gebruiker(int gebruikerId, String gebruikersnaam, String wachtwoord){
+    public Gebruiker(String gebruikersnaam, String wachtwoord){
         this.gebruikerId = DEFAULT_GEBRUIKERID;
         this.gebruikersnaam = gebruikersnaam;
         this.wachtwoord = wachtwoord;
@@ -62,12 +62,12 @@ abstract class Gebruiker {
         this.wachtwoord = wachtwoord;
     }
 
-    @Override
+    @Override // TODO juiste equals?
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Gebruiker)) return false;
         Gebruiker gebruiker = (Gebruiker) o;
-        return gebruikerId == gebruiker.gebruikerId && gebruikersnaam.equals(gebruiker.gebruikersnaam) && wachtwoord.equals(gebruiker.wachtwoord);
+        return gebruikersnaam.equals(gebruiker.gebruikersnaam) && wachtwoord.equals(gebruiker.wachtwoord);
     }
 
     @Override

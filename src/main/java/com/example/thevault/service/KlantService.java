@@ -5,14 +5,11 @@ package com.example.thevault.service;
 
 import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.Asset;
-import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.support.BSNvalidator;
 import com.example.thevault.support.exceptions.IncorrectBSNException;
-import com.example.thevault.support.exceptions.IncorrectFormatException;
 import com.example.thevault.support.exceptions.RegistrationFailedException;
 import com.example.thevault.support.hashing.BCryptWachtwoordHash;
-import com.example.thevault.support.hashing.HashHelper;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,9 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class KlantService {
@@ -38,10 +33,26 @@ public class KlantService {
         logger.info("New KlantService.");
     }
 
-    public Klant vindKlantByUsername(String username){
-        return rootRepository.vindKlantByUsername(username);
+    /**
+     * Deze methode zoekt of er in de database al een klant bestaat met deze gebruikersnaam
+     * en maakt eventueel een klant-object aan op nasis van de teruggestuurde gegevens
+     *
+     * @param gebruikersnaam gebruikersnaam van een (mogelijke) klant die uniek moet zijn
+     * @return klant-object op basis van gegevens uit de database of null indien gebruikersnaam niet gevonden is
+     */
+    public Klant vindKlantByGebruikersnaam(String gebruikersnaam){
+        return rootRepository.vindKlantByGebruikersnaam(gebruikersnaam);
     }
-
+    /**
+     * Deze methode zoekt of er in de database al een klant bestaat met deze gebruikerId
+     * en maakt eventueel een klant-object aan op nasis van de teruggestuurde gegevens
+     *
+     * @param gebruikerId gebruikerId van een (mogelijke) klant die uniek moet zijn
+     * @return klant-object op basis van gegevens uit de database of null indien gebruikerId niet gevonden is
+     */
+    public Klant vindKlantbyId(String gebruikerId){
+        return vindKlantbyId(gebruikerId);
+    }
 
     /**
      * Deze methode probeert een nieuwe klant te registreren.
@@ -59,7 +70,7 @@ public class KlantService {
         }
         //TODO nakijken of datum check nodig heeft
         //TODO leeftijd minimaal 18 checken
-        if(vindKlantByUsername(klant.getGebruikersnaam()) != null){
+        if(vindKlantByGebruikersnaam(klant.getGebruikersnaam()) != null){
             throw new RegistrationFailedException();
         }
         String teHashenWachtwoord = klant.getWachtwoord();

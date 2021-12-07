@@ -36,10 +36,10 @@ public class Klant extends Gebruiker {
         logger.info("Lege klant, no args constructor");
     }
 
-    public Klant(int gebruikerID, String gebruikersnaam, String wachtwoord,
+    public Klant(String gebruikersnaam, String wachtwoord,
                  List<Asset> portefeuille, Rekening rekening,
                  String naam, Adres adres, long bsn, LocalDate geboortedatum) {
-        super(gebruikerID, gebruikersnaam, wachtwoord);
+        super(gebruikersnaam, wachtwoord);
         this.naam = naam;
         this.adres = adres;
         this.bsn = bsn;
@@ -48,9 +48,9 @@ public class Klant extends Gebruiker {
         this.portefeuille = portefeuille;
         logger.info("New Klant, all args constructor");
     }
-    public Klant(int gebruikerID, String gebruikersnaam, String wachtwoord,
+    public Klant(String gebruikersnaam, String wachtwoord,
                  String naam, long bsn, LocalDate geboortedatum){
-        this(gebruikerID, gebruikersnaam, wachtwoord, null, null, naam, null, bsn, geboortedatum);
+        this(gebruikersnaam, wachtwoord, null, null, naam, null, bsn, geboortedatum);
         logger.info("New Klant, rowMapperConstructor");
     }
     public String getNaam() {
@@ -119,7 +119,7 @@ public class Klant extends Gebruiker {
         if (!(o instanceof Klant)) return false;
         if (!super.equals(o)) return false;
         Klant klant = (Klant) o;
-        return bsn == klant.bsn && naam.equals(klant.naam) && Objects.equals(adres, klant.adres) && Objects.equals(rekening, klant.rekening) && geboortedatum.equals(klant.geboortedatum);
+        return bsn == klant.bsn && naam.equals(klant.naam) && geboortedatum.equals(klant.geboortedatum);
     }
 
     @Override
