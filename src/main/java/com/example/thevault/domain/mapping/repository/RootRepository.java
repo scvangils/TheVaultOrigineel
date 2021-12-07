@@ -3,8 +3,10 @@
 
 package com.example.thevault.domain.mapping.repository;
 
+import com.example.thevault.domain.mapping.dao.AssetDAO;
 import com.example.thevault.domain.mapping.dao.KlantDAO;
 import com.example.thevault.domain.mapping.dao.RekeningDAO;
+import com.example.thevault.domain.model.Asset;
 import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.model.Rekening;
@@ -13,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -23,11 +27,13 @@ public class RootRepository {
 
     private final KlantDAO klantDAO;
     private final RekeningDAO rekeningDAO;
+    private final AssetDAO assetDAO;
 
-    public RootRepository(KlantDAO klantDAO, RekeningDAO rekeningDAO) {
+    public RootRepository(KlantDAO klantDAO, RekeningDAO rekeningDAO, AssetDAO assetDAO) {
         super();
         this.rekeningDAO = rekeningDAO;
         this.klantDAO = klantDAO;
+        this.assetDAO = assetDAO;
         logger.info("New RootRepository");
     }
 
@@ -42,8 +48,8 @@ public class RootRepository {
         return 0.0;
     }
 
-    public void slaKlantOp(Klant klant){
-        klantDAO.slaKlantOp(klant);
+    public Klant slaKlantOp(Klant klant){
+        return klantDAO.slaKlantOp(klant);
     }
 
     public Klant vindKlantByGebruikersnaam(String username){
@@ -91,5 +97,25 @@ public class RootRepository {
     public Rekening wijzigSaldoVanKlant(Klant klant, double bedrag){
         rekeningDAO.wijzigSaldoVanKlant(klant, bedrag);
         return rekeningDAO.vindRekeningVanKlant(klant);
+    }
+
+    public List<Asset> vulPortefeuilleKlant(int klantId) throws SQLException {
+        return assetDAO.geefAlleAssets(klantId);
+    }
+
+    public Asset geefAssetVanKlant(int klantId, int cryptomuntId){
+        return assetDAO.geefAsset(klantId, cryptomuntId);
+    }
+
+    public Asset slaAssetVanKlantOp(int klantId, Asset asset){
+        if(assetDAO.geefAsset(klantId, asset.getCryptomunt().getId()) == null){
+            return assetDAO.voegNieuwAssetToeAanPortefeuille(klantId, asset);
+        } else {
+            return assetDAO.updateAsset(klantId, asset);
+        }
+    }
+
+    public Asset wijzigAssetVanKlant(int klantId, Asset asset){
+        return assetDAO.updateAsset(klantId, asset);
     }
 }
