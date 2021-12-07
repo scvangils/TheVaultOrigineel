@@ -85,13 +85,13 @@ public class Klant extends Gebruiker {
         this.geboortedatum = geboortedatum;
     }
 
-    public List<Asset> getPortefeuille() {
+/*    public List<Asset> getPortefeuille() {
         return portefeuille;
     }
 
     public void setPortefeuille(List<Asset> portefeuille) {
         this.portefeuille = portefeuille;
-    }
+    }*/
 
     public Rekening getRekening() {
         return rekening;
