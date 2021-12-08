@@ -29,8 +29,9 @@ public class KlantService {
 
     private RootRepository rootRepository;
     private final Logger logger = LoggerFactory.getLogger(KlantService.class);
-    private final static int VOLWASSEN_LEEFTIJD = 18;
-    private final static int MINIMALE_WACHTWOORDLENGTE = 8;
+    public final static int VOLWASSEN_LEEFTIJD = 18;
+    public final static int MINIMALE_WACHTWOORDLENGTE = 8; // TODO navragen of dit public of private moet
+    public final static int ASCII_CODE_SPATIE = 32;
 
     @Autowired
     public KlantService(RootRepository rootRepository) {
@@ -55,10 +56,10 @@ public class KlantService {
      */
 
     public Klant registreerKlant(Klant klant){
-        bsnHandler(klant);
-        wachtWoordHandler(klant);
-        minumumLeeftijdHandler(klant);
-        gebruikersnaamHandler(klant);
+        bsnExceptionHandler(klant);
+        wachtWoordExceptionHandler(klant);
+        minumumLeeftijdExceptionHandler(klant);
+        gebruikersnaamExceptionHandler(klant);
         String teHashenWachtwoord = klant.getWachtwoord();
         String gehashtWachtwoord = BCryptWachtwoordHash.hashWachtwoord(teHashenWachtwoord); // hash wachtwoord
         gehashtWachtwoord = Base64.encodeBase64String(gehashtWachtwoord.getBytes(StandardCharsets.UTF_8)); // versleutel gehasht wachtwoord
@@ -72,7 +73,7 @@ public class KlantService {
      *
      * @param klant de ingevoerde klantgegevens in objectvorm
      */
-    private void gebruikersnaamHandler(Klant klant) {
+    private void gebruikersnaamExceptionHandler(Klant klant) {
         if(vindKlantByGebruikersnaam(klant.getGebruikersnaam()) != null){
             throw new RegistrationFailedException();
         }
@@ -82,7 +83,7 @@ public class KlantService {
      *
      * @param klant de ingevoerde klantgegevens in objectvorm
      */
-    private void minumumLeeftijdHandler(Klant klant) {
+    private void minumumLeeftijdExceptionHandler(Klant klant) {
         if(!checkVolwassen(klant)){
             String message = String.format("Je moet %d om een rekening te openen.", VOLWASSEN_LEEFTIJD);
             throw new AgeTooLowException(message);
@@ -95,7 +96,7 @@ public class KlantService {
      *
      * @param klant de ingevoerde klantgegevens in objectvorm
      */
-    private void wachtWoordHandler(Klant klant) {
+    private void wachtWoordExceptionHandler(Klant klant) {
         if(!checkWachtwoordLengte(klant) || !checkWachtwoordFormat(klant)){
             String message = String.format("Het wachtwoord moet minimaal %d karakters lang zijn" +
                     " en mag geen spaties bevatten", MINIMALE_WACHTWOORDLENGTE);
@@ -107,7 +108,7 @@ public class KlantService {
      *
      * @param klant de ingevoerde klantgegevens in objectvorm
      */
-    private void bsnHandler(Klant klant) {
+    private void bsnExceptionHandler(Klant klant) {
         if(!BSNvalidator.bsnValideren(klant.getBsn())){
             throw new IncorrectBSNException();
         }
@@ -153,13 +154,15 @@ public class KlantService {
 
     /**
      * Deze methode gaat na of het wachtwoord geen spaties bevat
+     * door een wachtwoord in een char-array te veranderen
+     * en na te gaan of een karakter gelijk is aan een spatie
      *
      * @param klant de ingevoerde klantgegevens in objectvorm
      * @return een boolean die aangeeft of het wachtwoord geen spaties bevat
      */
     public boolean checkWachtwoordFormat(Klant klant){
         for(char letter: klant.getWachtwoord().toCharArray()){
-            if (letter == 32){
+            if (letter == ASCII_CODE_SPATIE){
                 return false;
             }
         }

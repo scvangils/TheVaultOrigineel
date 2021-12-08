@@ -73,7 +73,7 @@ public class Klant extends Gebruiker {
         return bsn;
     }
 
-    public void setBsn(int bsn) {
+    public void setBsn(long bsn) {
         this.bsn = bsn;
     }
 
