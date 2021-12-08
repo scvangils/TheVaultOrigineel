@@ -11,6 +11,7 @@ import java.util.Iterator;
 
 public class BSNvalidator {
 
+public static long TESTBSN_VAN_RIVG = 999997683;
 
     public static boolean bsnValideren(long bsn){
         if (bsn <= 9999999 || bsn > 999999999){

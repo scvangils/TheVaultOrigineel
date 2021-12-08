@@ -6,6 +6,7 @@ import com.example.thevault.domain.model.Rekening;
 import com.example.thevault.domain.transfer.KlantDto;
 import com.example.thevault.service.RegistrationService;
 import com.example.thevault.service.KlantService;
+import com.example.thevault.support.BSNvalidator;
 import com.example.thevault.support.hashing.BCryptWachtwoordHash;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -51,9 +52,7 @@ class KlantControllerTest {
         String gehashtWachtwoord = BCryptWachtwoordHash.hashWachtwoord("testWW");
         Adres adres = new Adres("straat", 357, "C", "1000AA", "Amsterdam");
         Klant testKlant = new Klant("testKlant", gehashtWachtwoord,
-                null, null, "Jan", adres, 145801354, LocalDate.of(1975, 7, 30));
-        Klant fouteKlant = new Klant("testKlant", gehashtWachtwoord,
-                null, null, "Jan", adres, 145801354, LocalDate.of(1975, 7, 30));
+                null, null, "Jan", adres, BSNvalidator.TESTBSN_VAN_RIVG, LocalDate.of(1975, 7, 30));
         testKlant.setGebruikerId(2);
         Rekening rekening = new Rekening("NL20INGB0006582287", 1000);
         ObjectMapper objectMapper = new ObjectMapper();
