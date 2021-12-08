@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class AssetServiceTest {
 
-    public static Klant testKlant;
     public static Asset testAsset1;
     public static Asset testAsset2;
     public static Asset testAsset3;
@@ -63,8 +62,6 @@ class AssetServiceTest {
         portefeuilleDto.add(testAssetDto1);
         portefeuilleDto.add(testAssetDto2);
         portefeuilleDto.add(testAssetDto3);
-        testKlant = new Klant("Carmen", "Wachtwoord", portefeuille, null,
-                "Carmen Rietdijk", null, 123456789, LocalDate.now());
     }
 
     @Test

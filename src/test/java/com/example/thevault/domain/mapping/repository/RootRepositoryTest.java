@@ -19,12 +19,9 @@ import static org.assertj.core.api.Assertions.atIndex;
 class RootRepositoryTest {
 
     public static RootRepository rootRepository;
-    public static RootRepository spyRootRepository;
     private static KlantDAO klantDAO;
     private static AssetDAO assetDAO;
     private static RekeningDAO rekeningDAO;
-    private static AssetDAO spyAssetDAO;
-    public static JdbcTemplate jdbcTemplate;
     private static Klant testKlant;
     public static Asset testAsset1;
     public static Asset testAsset2;
@@ -47,9 +44,7 @@ class RootRepositoryTest {
         klantDAO = Mockito.mock(KlantDAO.class);
         assetDAO = Mockito.mock(AssetDAO.class);
         rekeningDAO = Mockito.mock(RekeningDAO.class);
-        spyAssetDAO = Mockito.spy(new JDBCAssetDAO(jdbcTemplate));
         rootRepository = new RootRepository(klantDAO, rekeningDAO, assetDAO);
-        spyRootRepository = new RootRepository(klantDAO, rekeningDAO, spyAssetDAO);
         testCryptomunt1 = new Cryptomunt(1, "CarmenCrypto", "CCR", 100.0);
         testCryptomunt2 = new Cryptomunt(2, "DigiCrypto", "DIG", 75.0);
         testCryptomunt3 = new Cryptomunt(3, "Coyne", "COY", 125.0);
@@ -70,7 +65,6 @@ class RootRepositoryTest {
         teWijzigenBedrag = 100.0;
         gewijzigdSaldo = 1100.0;
         rekeningGewijzigdSaldo = new Rekening("INGB0001234567NL", gewijzigdSaldo);
-
     }
 
     @Test
@@ -137,7 +131,7 @@ class RootRepositoryTest {
         Mockito.when(assetDAO.geefAlleAssets(testKlant.getGebruikerId())).thenReturn(portefeuille);
         List<Asset> expected = portefeuille;
         List<Asset> actual = rootRepository.vulPortefeuilleKlant(testKlant.getGebruikerId());
-        assertThat(actual).as("Test vullen portefeuille van testklant").isNotNull().isEqualTo(portefeuille).
+        assertThat(actual).as("Test vullen portefeuille van testklant").isNotNull().isEqualTo(expected).
                 hasSize(3).contains(testAsset1, atIndex(0)).contains(testAsset2, atIndex(1)).
                 contains(testAsset3, atIndex(2)).doesNotContain(testAsset4).extracting(Asset::getCryptomunt).
                 extracting(Cryptomunt::getName).contains("CarmenCrypto", "DigiCrypto", "Coyne").doesNotContain("BitCoin");

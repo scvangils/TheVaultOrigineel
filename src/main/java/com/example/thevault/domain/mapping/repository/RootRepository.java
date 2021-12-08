@@ -91,47 +91,47 @@ public class RootRepository {
     /**
      * @Author Carmen
      * Dit betreft het vullen van de portefeuille met alle cryptomunten die er in zitten
-     * @param klantId identifier van de klant die informatie opvraagt over de cryptomunt
+     * @param gebruikerId identifier van de klant die informatie opvraagt over de cryptomunt
      * @return List</Asset> een lijst van alle Assets (cryptomunten + hoeveelheden) in het bezit van de klant
      */
-    public List<Asset> vulPortefeuilleKlant(int klantId){
-        return assetDAO.geefAlleAssets(klantId);
+    public List<Asset> vulPortefeuilleKlant(int gebruikerId){
+        return assetDAO.geefAlleAssets(gebruikerId);
     }
 
     /**
      * Dit betreft het vinden van een specifieke cryptomunt die in de portefeuille zit
-     * @param klantId identifier van de klant die informatie opvraagt over de cryptomunt
+     * @param gebruikerId identifier van de klant die informatie opvraagt over de cryptomunt
      * @param cryptomuntId identifier waarover informatie wordt opgevraagd
      * @return Asset de asset (cryptomunt + aantal) waarover informatie is opgevraagd
      */
-    public Asset geefAssetVanKlant(int klantId, int cryptomuntId){
-        return assetDAO.geefAsset(klantId, cryptomuntId);
+    public Asset geefAssetVanKlant(int gebruikerId, int cryptomuntId){
+        return assetDAO.geefAsset(gebruikerId, cryptomuntId);
     }
 
     /**
      * Dit betreft het toevoegen van een cryptomunt die nog niet in de portefeuille zit
      * Dit gebeurt via een 'transactie', waarbij een klant crypto's koopt
-     * @param klantId identifier van de klant die de cryptomunt koopt
+     * @param gebruikerId identifier van de klant die de cryptomunt koopt
      * @param asset de cryptomunt en het aantal dat de klant aanschaft
      * @return Asset de asset die de klant heeft toegevoegd
      */
-    public Asset slaAssetVanKlantOp(int klantId, Asset asset){
-        if(assetDAO.geefAsset(klantId, asset.getCryptomunt().getId()) == null){
-            return assetDAO.voegNieuwAssetToeAanPortefeuille(klantId, asset);
+    public Asset slaAssetVanKlantOp(int gebruikerId, Asset asset){
+        if(assetDAO.geefAsset(gebruikerId, asset.getCryptomunt().getId()) == null){
+            return assetDAO.voegNieuwAssetToeAanPortefeuille(gebruikerId, asset);
         } else {
-            return assetDAO.updateAsset(klantId, asset);
+            return assetDAO.updateAsset(gebruikerId, asset);
         }
     }
 
     /**
      * Dit betreft het wijzigen van een cryptomunt die al in de portefeuille zit
      * Dit gebeurt via een 'transactie', waarbij een klant crypto's koopt of verkoopt
-     * @param klantId identifier van de klant die de cryptomunt koopt/verkoopt
+     * @param gebruikerId identifier van de klant die de cryptomunt koopt/verkoopt
      * @param asset de asset waarin de klant handelt, met de informatie wélke cryptomunt wordt verhandeld
      *              en hoeveel deze omhoog/omlaag gaat (oftewel: betreft het een koop of een verkoop)
      * @return Asset de asset na de update, waarbij het nieuwe aantal wordt meegegeven
      */
-    public Asset wijzigAssetVanKlant(int klantId, Asset asset){
-        return assetDAO.updateAsset(klantId, asset);
+    public Asset wijzigAssetVanKlant(int gebruikerId, Asset asset){
+        return assetDAO.updateAsset(gebruikerId, asset);
     }
 }
