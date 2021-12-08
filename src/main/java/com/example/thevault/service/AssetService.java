@@ -5,12 +5,14 @@ package com.example.thevault.service;
 
 import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.Asset;
+import com.example.thevault.domain.model.Cryptomunt;
+import com.example.thevault.domain.transfer.AssetDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,22 +40,30 @@ public class AssetService {
     }
 
     /**
-     * Er wordt een lijst met alle assets van de klant gemaakt en doorgegeven
+     * Er wordt een lijst met alle assets van de klant gemaakt en doorgegeven, waarbij alleen de benodigde informatie
+     * voor de klant wordt doorgegeven
      * @param klantId identifier van de klant die de portefeuille oproept
-     * @return List</Asset> een lijst met alle assets van de klant, zijnde de portefeuille
+     * @return List</AssetDto> een lijst met alle assets van de klant, zijnde de portefeuille, in de vorm die voor de
+     * klant meerwaarde heeft
      */
-    public List<Asset> geefInhoudPortefeuille(int klantId) throws SQLException {
-        return rootRepository.vulPortefeuilleKlant(klantId);
+    public List<AssetDto> geefInhoudPortefeuille(int klantId){
+        List<AssetDto> portefeuilleVoorKlant = new ArrayList<>();
+        List<Asset> portefeuilleVolledig = rootRepository.vulPortefeuilleKlant(klantId);
+        for (Asset asset : portefeuilleVolledig) {
+            portefeuilleVoorKlant.add(new AssetDto(asset));
+        }
+        return portefeuilleVoorKlant;
     }
 
     /**
-     * Er wordt een specifieke asset in de portefeuille opgeroepen en doorgegeven
+     * Er wordt een specifieke asset in de portefeuille opgeroepen en doorgegeven, waarbij alleen de benodigde
+     * informatie voor de klant wordt doorgegeven
      * @param klantId identifier van de klant die informatie opvraagt over de cryptomunt
      * @param cryptomuntId identifier waarover informatie wordt opgevraagd
-     * @return Asset de asset waarover informatie is opgevraagd
+     * @return AssetDto de asset waarover informatie is opgevraagd, in de vorm die voor de klant meerwaarde heeft
      */
-    public Asset geefCryptomunt(int klantId, int cryptomuntId){
-        return rootRepository.geefAssetVanKlant(klantId, cryptomuntId);
+    public AssetDto geefCryptomunt(int klantId, int cryptomuntId){
+        return new AssetDto(rootRepository.geefAssetVanKlant(klantId, cryptomuntId));
     }
 
     /**

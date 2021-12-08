@@ -4,6 +4,7 @@ import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.Asset;
 import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.model.Klant;
+import com.example.thevault.domain.transfer.AssetDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -25,9 +26,14 @@ class AssetServiceTest {
     public static Asset testAsset3;
     public static Asset testAsset4;
     public static Asset testAsset5;
+    public static AssetDto testAssetDto1;
+    public static AssetDto testAssetDto2;
+    public static AssetDto testAssetDto3;
+    public static AssetDto testAssetDto4;
     public static RootRepository rootRepository;
     public static AssetService assetService;
     public static List<Asset> portefeuille;
+    public static List<AssetDto> portefeuilleDto;
     public static Cryptomunt testCryptomunt1;
     public static Cryptomunt testCryptomunt2;
     public static Cryptomunt testCryptomunt3;
@@ -43,34 +49,42 @@ class AssetServiceTest {
         testAsset3 = new Asset(testCryptomunt3, 3.6);
         testAsset4 = new Asset(testCryptomunt1, 0.5);
         testAsset5 = new Asset(testCryptomunt1, 5.6);
+        testAssetDto1 = new AssetDto(testAsset1);
+        testAssetDto2 = new AssetDto(testAsset2);
+        testAssetDto3 = new AssetDto(testAsset3);
+        testAssetDto4 = new AssetDto(testAsset4);
         rootRepository = Mockito.mock(RootRepository.class);
         assetService = new AssetService(rootRepository);
         portefeuille = new ArrayList<>();
         portefeuille.add(testAsset1);
         portefeuille.add(testAsset2);
         portefeuille.add(testAsset3);
+        portefeuilleDto = new ArrayList<>();
+        portefeuilleDto.add(testAssetDto1);
+        portefeuilleDto.add(testAssetDto2);
+        portefeuilleDto.add(testAssetDto3);
         testKlant = new Klant("Carmen", "Wachtwoord", portefeuille, null,
                 "Carmen Rietdijk", null, 123456789, LocalDate.now());
     }
 
     @Test
-    void geefInhoudPortefeuille() throws SQLException {
+    void geefInhoudPortefeuille() {
         Mockito.when(rootRepository.vulPortefeuilleKlant(1)).thenReturn(portefeuille);
-        List<Asset> expected = portefeuille;
-        List<Asset> actual = assetService.geefInhoudPortefeuille(1);
-        assertThat(actual).as("Test geef inhoud portefeuille van testklant").isNotNull().isEqualTo(expected).
-                contains(testAsset1, atIndex(0)).contains(testAsset2, atIndex(1)).contains(testAsset3, atIndex(2)).
-                doesNotContain(testAsset4).hasSize(3).extracting(Asset::getCryptomunt).extracting(Cryptomunt::getName).
+        List<AssetDto> expected = portefeuilleDto;
+        List<AssetDto> actual = assetService.geefInhoudPortefeuille(1);
+        assertThat(actual).as("Test geef inhoud portefeuilleDto van testklant").isNotNull().isEqualTo(expected).
+                contains(testAssetDto1, atIndex(0)).contains(testAssetDto2, atIndex(1)).contains(testAssetDto3, atIndex(2)).
+                doesNotContain(testAssetDto4).hasSize(3).extracting(AssetDto::getName).
                 contains("CarmenCrypto", "DigiCrypto", "Coyne").doesNotContain("BitCoin");
     }
 
     @Test
     void geefCryptomunt() {
         Mockito.when(rootRepository.geefAssetVanKlant(1, 1)).thenReturn(testAsset1);
-        Asset expected = testAsset1;
-        Asset actual = assetService.geefCryptomunt(1, 1);
-        assertThat(actual).as("Test geef specifieke Asset van testklant").isNotNull().isEqualTo(expected).
-                isIn(portefeuille).isNotEqualTo(testAsset2).isNotSameAs(testAsset3);
+        AssetDto expected = new AssetDto(testAsset1);
+        AssetDto actual = assetService.geefCryptomunt(1, 1);
+        assertThat(actual).as("Test geef specifieke AssetDto van testklant").isNotNull().isEqualTo(expected).
+                isIn(portefeuilleDto).isNotEqualTo(testAssetDto2).isNotSameAs(testAssetDto3);
     }
 
     @Test
