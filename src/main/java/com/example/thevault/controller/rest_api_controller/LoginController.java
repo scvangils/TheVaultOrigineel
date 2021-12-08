@@ -11,6 +11,8 @@ import com.example.thevault.support.authorization.AuthorizationService;
 import com.example.thevault.support.authorization.TokenKlantCombinatie;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,10 +35,13 @@ public class LoginController extends BasisApiController {
                 loginDto.getGebruikersnaam(), loginDto.getWachtwoord());
         if(klant != null){
             TokenKlantCombinatie tokenKlantCombinatie = authorizationService.authoriseer(klant);
+            ResponseCookie responseCookie = ResponseCookie.from("Refresh Token",
+                    tokenKlantCombinatie.toString()).httpOnly(true).build();
             String jwtToken = authorizationService.generateJwtToken(klant);
             // hier moeten de tokens worden toegevoegd aan de header
             return ResponseEntity.ok()
-                    .header("Authorization", tokenKlantCombinatie.getKey().toString(), "AuthoriatJwt", jwtToken)
+                    .header("Authorization", "Bearer " + jwtToken)
+                    .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                     .body(new WelkomDTO(klant));
         }
         throw new LoginException();
