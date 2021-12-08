@@ -25,6 +25,9 @@ class RekeningServiceTest {
     public static RekeningService rekeningServiceTest;
     public static Rekening nieuweRekening;
 
+    /**
+     * @Author Ju-Sen
+     */
     @BeforeAll
     static void setUp() {
         bestaandeKlant = new Klant( "Henknr1", "fdsaljkl", "Hello", 1890393, LocalDate.of(1991, 1, 12));
@@ -38,12 +41,18 @@ class RekeningServiceTest {
         nieuweRekening = new Rekening("NL20RABO9876543", 1000.0);
     }
 
+    /**
+     * @Author Wim
+     */
     @Test
     void createIban() {
         Iban iban = new Iban.Builder().countryCode(CountryCode.NL).bankCode("TVLT").buildRandom();
         assertThat(iban.toString()).contains("NL");
     }
 
+    /**
+     * @Author Ju-Sen
+     */
     @Test
     void creeerRekening() {
         Rekening actual = rekeningServiceTest.creeerRekening(nieuweKlant);
@@ -52,6 +61,9 @@ class RekeningServiceTest {
         assertThat(actual.getSaldo()).isEqualTo(1000.0);
     }
 
+    /**
+     * @Author Ju-Sen
+     */
     @Test
     void slaRekeningOp() {
         Mockito.when(mockRepo.slaRekeningOp(nieuweRekening)).thenReturn(nieuweRekening);
@@ -62,6 +74,9 @@ class RekeningServiceTest {
         assertThat(actual).isNotNull().isEqualTo(expected);
     }
 
+    /**
+     * @Author Ju-Sen
+     */
     @Test
     void vindRekeningVanKlant() {
         Mockito.when(mockRepo.vindKlantByGebruikersnaam(bestaandeKlant.getGebruikersnaam())).thenReturn(bestaandeKlant);
@@ -73,6 +88,9 @@ class RekeningServiceTest {
         assertThat(actual).isNotNull().isEqualTo(expected);
     }
 
+    /**
+     * @Author Ju-Sen
+     */
     @Test
     void vindRekeningVanNietBestaandeKlant() {
         Mockito.when(mockRepo.vindKlantByGebruikersnaam(bestaandeKlant.getGebruikersnaam())).thenReturn(bestaandeKlant);
@@ -86,6 +104,9 @@ class RekeningServiceTest {
         }
     }
 
+    /**
+     * @Author ELise
+     */
     @Test
     void vraagSaldoOpVanKlant() {
         Mockito.when(mockRepo.vindKlantByGebruikersnaam(bestaandeKlant.getGebruikersnaam())).thenReturn(bestaandeKlant);
@@ -99,6 +120,9 @@ class RekeningServiceTest {
         assertThat(actual).isEqualTo(expected);
     }
 
+    /**
+     * @Author ELise
+     */
     @Test
     void vraagSaldoOpVanNietBestaandeKlant() {
         Mockito.when(mockRepo.vindKlantByGebruikersnaam(bestaandeKlant.getGebruikersnaam())).thenReturn(bestaandeKlant);
@@ -113,6 +137,9 @@ class RekeningServiceTest {
         }
     }
 
+    /**
+     * @Author Ju-Sen
+     */
     @Test
     void wijzigSaldoVanKlant() {
         Mockito.when(mockRepo.vindKlantByGebruikersnaam(bestaandeKlant.getGebruikersnaam())).thenReturn(bestaandeKlant);

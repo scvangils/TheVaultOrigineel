@@ -14,6 +14,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * @Author Ju-Sen m.u.v. methode creeerIban
+ * Servicelaag voor rekening waarin een rekening aangemaakt kan worden en informatie over een rekening opgevraagd of aangepast kan worden.
+ */
+
 @Service
 public class RekeningService {
 
@@ -32,7 +37,9 @@ public class RekeningService {
         this.rootRepository = rootRepository;
         logger.info("Nieuwe RekeningService.");
     }
-
+    /**
+     * @Author Wim
+     */
     public Iban creeerIban(){
         iban = new Iban.Builder().countryCode(CountryCode.NL).bankCode("TVLT").buildRandom();
         return iban;
