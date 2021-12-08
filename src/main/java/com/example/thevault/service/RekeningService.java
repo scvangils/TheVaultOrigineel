@@ -38,7 +38,7 @@ public class RekeningService {
         logger.info("Nieuwe RekeningService.");
     }
     /**
-     * @Author Wim
+     * @Author Wim Bultman
      */
     public Iban creeerIban(){
         iban = new Iban.Builder().countryCode(CountryCode.NL).bankCode("TVLT").buildRandom();
@@ -81,7 +81,7 @@ public class RekeningService {
      * @return als de gebruikersnaam overeenkomt met de gebruikersnaam in de database dan
      * wordt de opgevraagde rekening teruggegeven.
      */
-    public Rekening vindRekeningVanKlant (Klant klant) throws UserNotExistsException {
+    public Rekening vindRekening(Klant klant) throws UserNotExistsException {
         if (klant == null){
             throw new UserNotExistsException();
         }
@@ -101,8 +101,8 @@ public class RekeningService {
      * @return als de gebruikersnaam overeenkomt met de gebruikersnaam in de database dan
      * wordt het saldo van de opgevraagde rekening teruggegeven.
      */
-    public double vraagSaldoOpVanKlant(Klant klant) throws UserNotExistsException{
-        return vindRekeningVanKlant(klant).getSaldo();
+    public double vraagSaldoOp(Klant klant) throws UserNotExistsException{
+        return vindRekening(klant).getSaldo();
     }
 
     /**
@@ -116,7 +116,7 @@ public class RekeningService {
      * @return als de gebruikersnaam overeenkomt met de gebruikersnaam in de database dan
      * wordt het saldo van de opgevraagde rekening gewijzigd naar het opgegeven bedrag.
      */
-    public Rekening wijzigSaldoVanKlant(Klant klant, double bedrag) throws UserNotExistsException{
+    public Rekening wijzigSaldo(Klant klant, double bedrag) throws UserNotExistsException{
         rootRepository.vindRekeningVanKlant(klant).setSaldo(bedrag);
         return rootRepository.vindRekeningVanKlant(klant);
     }

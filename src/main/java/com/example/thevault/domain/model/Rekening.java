@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 
 public class Rekening {
 
-    private  int rekeningId;
     private String iban;
     private double saldo;
     private Klant klant; // voor het klantId
@@ -17,26 +16,24 @@ public class Rekening {
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Rekening.class);
 
+    /**
+    * De no-args constructor voor Rekening
+    */
     public Rekening() {
         super();
         logger.info("Lege rekening, no args constructor");
     }
 
+    /**
+     * De all-args constructor voor Rekening
+     * @param iban uniek iban-nummer die elke rekening heeft
+     * @param saldo het bedrag wat op de rekening staat met cryptomunten te handelen
+     */
     public Rekening(String iban, double saldo) {
         this.klant = null;
-        this.rekeningId = 0;
         this.iban = iban;
         this.saldo = saldo;
         logger.info("Nieuwe rekening " + this + " gemaakt");
-    }
-
-
-    public int getRekeningId() {
-        return rekeningId;
-    }
-
-    public void setRekeningId(int rekeningId) {
-        this.rekeningId = rekeningId;
     }
 
     public String getIban() {
@@ -62,11 +59,8 @@ public class Rekening {
     @Override
     public String toString() {
         return "Rekening{" +
-                "rekeningId=" + rekeningId +
                 ", iban='" + iban + '\'' +
                 ", saldo=" + saldo +
                 '}';
     }
-
-
 }
