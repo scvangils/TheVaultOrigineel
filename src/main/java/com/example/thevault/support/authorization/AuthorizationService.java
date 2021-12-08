@@ -21,6 +21,7 @@ import java.util.UUID;
 
 @Service
 public class AuthorizationService {
+    private final static String PRIVATE_KEY = "private_key";
     private static TokenKlantCombinatieDao tokenKlantCombinatieDao;
     //protected final TokenKlantCombinatieDao tokenKlantCombinatieDao;
 
@@ -41,11 +42,11 @@ public class AuthorizationService {
 
     }
 
-    //jwt token met opaakTokenCheck
+    //jwt token met
     public String generateJwtToken (Klant klant){
         String jwtToken = null;
         try {
-            Algorithm algorithm = Algorithm.HMAC256("secret");
+            Algorithm algorithm = Algorithm.HMAC256(PRIVATE_KEY);
 
             Instant gemaaktOp = Instant.now().truncatedTo(ChronoUnit.SECONDS);
             Instant verlooptOp = gemaaktOp.plus(20, ChronoUnit.MINUTES);
@@ -66,11 +67,17 @@ public class AuthorizationService {
                     .getBody();*/
 
         } catch (JWTCreationException exception){
-            //Invalid Signing configuration / Couldn't convert Claims.
+            logger.info("Invalid Signing configuration / Couldn't convert Claims.", exception);
         }
         logger.info("Token (HMAC256) gemaakt: {}", jwtToken);
         return jwtToken;
     }
+
+        // Valideer token
+        public boolean valideerJwtToken(String jwtToken ){
+            JWT.require(Algorithm.HMAC256(PRIVATE_KEY));
+            return true;
+        }
 
 
     //opaak token combineren met klant in token-database
