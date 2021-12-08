@@ -8,8 +8,6 @@ import com.example.thevault.domain.model.Klant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
@@ -20,7 +18,7 @@ public class TokenKlantCombinatie {
     private Klant klant;
 
     @JsonIgnore
-    private final Logger logger = LoggerFactory.getLogger(AuthorizationSupport.class);
+    private final Logger logger = LoggerFactory.getLogger(AuthorizationService.class);
 
     public TokenKlantCombinatie(UUID key, Klant klant) {
         super();
@@ -30,4 +28,19 @@ public class TokenKlantCombinatie {
     }
 
 
+    public UUID getKey() {
+        return key;
+    }
+
+    public void setKey(UUID key) {
+        this.key = key;
+    }
+
+    public Klant getKlant() {
+        return klant;
+    }
+
+    public void setKlant(Klant klant) {
+        this.klant = klant;
+    }
 }
