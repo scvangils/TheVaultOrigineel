@@ -2,8 +2,6 @@ package com.example.thevault.domain.mapping.dao;
 
 import com.example.thevault.domain.model.Asset;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 /**
