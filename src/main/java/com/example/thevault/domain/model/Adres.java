@@ -3,8 +3,11 @@
 
 package com.example.thevault.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Objects;
 
 public class Adres {
     private String straatnaam;
@@ -13,6 +16,7 @@ public class Adres {
     private String postcode;
     private String plaatsnaam;
 
+    @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Adres.class);
 
     public Adres(){
@@ -81,4 +85,16 @@ public class Adres {
         this.plaatsnaam = plaatsnaam;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Adres adres = (Adres) o;
+        return huisnummer == adres.huisnummer && straatnaam.equals(adres.straatnaam) && Objects.equals(toevoeging, adres.toevoeging) && postcode.equals(adres.postcode) && plaatsnaam.equals(adres.plaatsnaam);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(straatnaam, toevoeging, huisnummer, postcode, plaatsnaam);
+    }
 }
