@@ -8,6 +8,7 @@ import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.transfer.LoginDto;
 import com.example.thevault.support.authorization.AuthorizationService;
 import com.example.thevault.support.hashing.BCryptWachtwoordHash;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

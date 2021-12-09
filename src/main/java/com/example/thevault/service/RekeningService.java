@@ -1,5 +1,3 @@
-//20211201WB random IBAN
-
 package com.example.thevault.service;
 
 import com.example.thevault.domain.mapping.repository.RootRepository;
@@ -39,6 +37,7 @@ public class RekeningService {
     }
     /**
      * @Author Wim Bultman
+     * creeert IBAN, mbv org.iban4j.Iban library, zie https://github.com/arturmkrtchyan/iban4j
      */
     public Iban creeerIban(){
         iban = new Iban.Builder().countryCode(CountryCode.NL).bankCode("TVLT").buildRandom();

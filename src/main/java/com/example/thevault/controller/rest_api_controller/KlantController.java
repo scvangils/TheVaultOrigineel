@@ -53,16 +53,17 @@ public class KlantController extends BasisApiController{
     of een algemene foutmelding verstuurt
      */
     @PostMapping("/login")
-    public ResponseEntity<WelkomDTO> loginHandler(@RequestBody LoginDto loginDto) throws LoginException {
+    public ResponseEntity<Klant> loginHandler(@RequestBody LoginDto loginDto) throws LoginException {
         //roep loginValidatie aan in de service
         Klant klant = loginService.valideerLogin(loginDto);
-        if(klant != null){
+       if(klant != null){/*
             TokenKlantCombinatie tokenKlantCombinatie = authorizationService.authoriseer(klant);
             String jwtToken = authorizationService.generateJwtToken(klant);
             // hier moeten de tokens worden toegevoegd aan de header
             return ResponseEntity.ok()
                     .header("Authorization", tokenKlantCombinatie.getKey().toString(), "AuthoriatJwt", jwtToken)
-                    .body(new WelkomDTO(klant));
+                    .body(new WelkomDTO(klant));*/
+        return ResponseEntity.ok().body(klant);
         }
         throw new LoginException();
     }
