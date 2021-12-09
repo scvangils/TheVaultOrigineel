@@ -3,6 +3,7 @@
 
 package com.example.thevault.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +14,7 @@ public class Cryptomunt {
     private String symbol;
     private double price;
 
+    @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Cryptomunt.class);
 
     public Cryptomunt() {
