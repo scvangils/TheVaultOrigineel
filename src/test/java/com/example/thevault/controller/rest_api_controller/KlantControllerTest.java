@@ -132,7 +132,7 @@ class KlantControllerTest {
         testKlant.setRekening(rekening);
 
 
-        Mockito.when(loginService.valideerLogin(loginDto2)).thenReturn(klant);
+        Mockito.when(loginService.valideerLogin(loginDto2)).thenReturn(testKlant);
         Mockito.when(authorizationService.authoriseerKlantMetOpaakToken(testKlant)).thenReturn(new TokenKlantCombinatie(UUID.randomUUID(), testKlant));
         Mockito.when(authorizationService.generateJwtToken(testKlant)).thenReturn("testTransparentToken");
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/login");
