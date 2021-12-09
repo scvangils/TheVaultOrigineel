@@ -3,10 +3,11 @@
 
 package com.example.thevault.support.authorization;
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTCreator;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.thevault.domain.model.Klant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
@@ -52,12 +53,14 @@ public class AuthorizationService {
         String jwtToken = null;
         try {
             Algorithm algorithm = Algorithm.HMAC256(PRIVATE_KEY);
+            // Optie?: Algorithm algorithm = Algorithm.HMAC256(tokenKlantCombinatieDao.vindTokenKlantCombinatieMetKlant(klant).get().getKey().toString());
 
             Instant gemaaktOp = Instant.now().truncatedTo(ChronoUnit.SECONDS);
             Instant verlooptOp = gemaaktOp.plus(20, ChronoUnit.MINUTES);
 
             logger.info("Gecreeerd op: {}", gemaaktOp);
             logger.info("Veerloopt op: {}", verlooptOp);
+
             jwtToken = JWT.create()
                     .withSubject(klant.getGebruikersnaam())
                     .withIssuedAt(Date.from(gemaaktOp))
@@ -81,19 +84,25 @@ public class AuthorizationService {
         // Valideer token
         // Als het dus false returned moet er een exception gegooid worden
         // wat moet deze valideer methode teruggeven?
-        public boolean valideerJwtToken(String jwtToken) {
-            try {
-                JWT.require(Algorithm.HMAC256(PRIVATE_KEY));
-            } catch (JWTVerificationException exception) {
-
-            }
-            return true;
-
+    public boolean valideerJwtToken(String jwtToken) {
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(getKey().toString());
+            JWTVerifier verifier = JWT.require(algorithm)
+                    .withIssuer("auth0")
+                    .build(); //Reusable verifier instance
+            DecodedJWT jwt = verifier.verify(jwtToken);
+            // waarvoor ookalweer require? > : JWT.require(Algorithm.HMAC256(PRIVATE_KEY));
+            logger.info("Token gevalideerd");
+        } catch (JWTVerificationException exception) {
+            logger.info("JWTtoken niet gevalideerd");
+            return false;
         }
+        return true;
+    }
 
     //opaak token combineren met klant in token-database
-    public TokenKlantCombinatie authoriseer(Klant klant) {
-        Optional<TokenKlantCombinatie> optioneleCombinatie = tokenKlantCombinatieDao.vindTokenKlantPairMetKlant(klant);
+    public TokenKlantCombinatie authoriseerKlantMetOpaakToken(Klant klant) {
+        Optional<TokenKlantCombinatie> optioneleCombinatie = tokenKlantCombinatieDao.vindTokenKlantCombinatieMetKlant(klant);
         if (optioneleCombinatie.isPresent()) {
             tokenKlantCombinatieDao.delete(optioneleCombinatie.get().getKey());
         }
@@ -107,7 +116,7 @@ public class AuthorizationService {
         AuthorizationService authorizationSupport = new AuthorizationService(tokenKlantCombinatieDao);
         Klant testKlant = new Klant( "Henknr1", "fdsaljkl", "Hello", 1890393, LocalDate.of(1991, 1, 12));
         authorizationSupport.getKey();
-        authorizationSupport.generateJwtToken(testKlant);
-
+        String token = authorizationSupport.generateJwtToken(testKlant);
+        authorizationSupport.valideerJwtToken(token);
     }
 }

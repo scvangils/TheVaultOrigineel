@@ -17,7 +17,7 @@ public interface TokenKlantCombinatieDao {
 
     public Optional<TokenKlantCombinatie> vindTokenKlantPairMetKey (UUID key);
 
-    public Optional<TokenKlantCombinatie> vindTokenKlantPairMetKlant(Klant klant);
+    public Optional<TokenKlantCombinatie> vindTokenKlantCombinatieMetKlant(Klant klant);
 
     public void delete(UUID uuid);
 }

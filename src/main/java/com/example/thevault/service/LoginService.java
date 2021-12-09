@@ -13,8 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.security.auth.login.LoginException;
-import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -37,7 +35,7 @@ public class LoginService {
     }
 
     public String koppelTokenNaValidatieLogin (Klant klant){
-        authorizationService.authoriseer(klant);
+        authorizationService.authoriseerKlantMetOpaakToken(klant);
 
         // nog goed toevoegen:
         return jwtToken;
