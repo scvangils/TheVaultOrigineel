@@ -4,7 +4,7 @@
 package com.example.thevault.controller.rest_api_controller;
 
 import com.example.thevault.domain.model.Klant;
-import com.example.thevault.domain.transfer.RegistrationDto;
+import com.example.thevault.domain.transfer.KlantDto;
 import com.example.thevault.domain.transfer.WelkomDTO;
 import com.example.thevault.service.LoginService;
 import com.example.thevault.service.RegistrationService;
@@ -18,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.security.auth.login.LoginException;
@@ -28,9 +27,8 @@ public class KlantController extends BasisApiController{
 
     private final Logger logger = LoggerFactory.getLogger(KlantController.class);
 
-    public KlantController(RegistrationService registrationService,
-                           AuthorizationService authorizationService, LoginService loginService) {
-        super(registrationService, authorizationService, loginService);
+    public KlantController(RegistrationService registrationService, KlantService klantService, AuthorizationService authorizationService) {
+        super(registrationService, klantService, authorizationService);
         logger.info("New KlantController");
     }
 
@@ -44,13 +42,9 @@ public class KlantController extends BasisApiController{
      * @return een DTO waar de relevante klantgegevens in staan als de klant succesvol is opgeslagen
      */
     @PostMapping("/register")
-    public ResponseEntity<RegistrationDto> registreerKlantHandler(@RequestBody Klant klant){
-        RegistrationDto registrationDto = registrationService.registreerKlant(klant);
-    return ResponseEntity.status(HttpStatus.CREATED).body(registrationDto);
-    }
-    @PostMapping("/klantDashboard") // 401 response nodig indien token niet geldig
-    public ResponseEntity<String> clientDashboardHandler(@RequestHeader("Authorization") String token, @RequestBody String inhoud){
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(inhoud);
+    public ResponseEntity<KlantDto> registreerKlantHandler(@RequestBody Klant klant){
+        KlantDto klantDto = registrationService.registreerKlant(klant);
+    return ResponseEntity.status(HttpStatus.CREATED).body(klantDto);
     }
 
     /**
@@ -59,18 +53,17 @@ public class KlantController extends BasisApiController{
     of een algemene foutmelding verstuurt
      */
     @PostMapping("/login")
-    public ResponseEntity<WelkomDTO> loginHandler(@RequestBody LoginDto loginDto) throws LoginException {
+    public ResponseEntity<Klant> loginHandler(@RequestBody LoginDto loginDto) throws LoginException {
         //roep loginValidatie aan in de service
         Klant klant = loginService.valideerLogin(loginDto);
-        if(klant != null){
-            TokenKlantCombinatie tokenKlantCombinatie = authorizationService.authoriseerKlantMetOpaakToken(klant);
-            System.out.println(tokenKlantCombinatie.getKey());
+       if(klant != null){/*
+            TokenKlantCombinatie tokenKlantCombinatie = authorizationService.authoriseer(klant);
             String jwtToken = authorizationService.generateJwtToken(klant);
-            System.out.println(jwtToken);
             // hier moeten de tokens worden toegevoegd aan de header
             return ResponseEntity.ok()
                     .header("Authorization", tokenKlantCombinatie.getKey().toString(), "AuthoriatJwt", jwtToken)
-                    .body(new WelkomDTO(klant));
+                    .body(new WelkomDTO(klant));*/
+        return ResponseEntity.ok().body(klant);
         }
         throw new LoginException();
     }
