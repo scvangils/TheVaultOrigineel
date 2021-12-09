@@ -34,32 +34,20 @@ public class LoginController extends BasisApiController {
         //roep loginValidatie aan in de service
         Klant klant = loginService.valideerLogin(loginDto);
         if(klant != null){
-            TokenKlantCombinatie tokenKlantCombinatie = authorizationService.authoriseer(klant);
+            // haal opaak token op uit database
+            TokenKlantCombinatie tokenKlantCombinatie = authorizationService.authoriseerKlantMetOpaakToken(klant);
+            // genereer cookie met het opgehaalde opaakToken
             ResponseCookie responseCookie = ResponseCookie.from("Refresh Token",
                     tokenKlantCombinatie.toString()).httpOnly(true).build();
+            // genereer JWT token
             String jwtToken = authorizationService.generateJwtToken(klant);
             // hier moeten de tokens worden toegevoegd aan de header
             return ResponseEntity.ok()
-                    .header("Authorization", "Bearer " + jwtToken)
-                    .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                    .body(new WelkomDTO(klant));
+                    .header("Authorization", jwtToken) // het JWT token ZONDER bearer geeft later problemen
+                    .header(HttpHeaders.SET_COOKIE, responseCookie.toString()) // cookie met de refreshtoken
+                    .body(new WelkomDTO(klant)); //geeft een welkom DTO terug met Saldo, iban en portefeuille van de klant
         }
         throw new LoginException();
     }
 
-    /*
-    @PostMapping("validate")
-    public ResponseEntity<String> validationHandler(@RequestHeader String authorization) {
-        try {
-            UUID uuid = UUID.fromString(authorization);
-            Optional<Klant> member = authorizationService.validate(uuid);
-            if (member.isPresent()) {
-                return ResponseEntity.ok().body(member.get().getFullname());
-            } else {
-                throw new LoginException();
-            }
-        } catch (IllegalArgumentException e) {
-            throw new LoginException();
-        }
-    }*/
 }

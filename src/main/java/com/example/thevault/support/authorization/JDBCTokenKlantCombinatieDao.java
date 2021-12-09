@@ -58,7 +58,7 @@ public class JDBCTokenKlantCombinatieDao implements TokenKlantCombinatieDao{
         return Optional.empty();    }
 
     @Override
-    public Optional<TokenKlantCombinatie> vindTokenKlantPairMetKlant(Klant klant) {
+    public Optional<TokenKlantCombinatie> vindTokenKlantCombinatieMetKlant(Klant klant) {
         List<TokenKlantCombinatie> tokenKlantCombinaties =
                 jdbcTemplate.query(
                         "select * from connection_table where klant_fk = ?", new ConnectionRowMapper(), klant.getGebruikerId());

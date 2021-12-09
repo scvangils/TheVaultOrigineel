@@ -6,7 +6,6 @@ package com.example.thevault.controller.rest_api_controller;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.transfer.RegistrationDto;
 import com.example.thevault.domain.transfer.WelkomDTO;
-import com.example.thevault.service.LoginService;
 import com.example.thevault.service.RegistrationService;
 import com.example.thevault.domain.transfer.LoginDto;
 import com.example.thevault.service.KlantService;
@@ -63,8 +62,12 @@ public class KlantController extends BasisApiController{
         //roep loginValidatie aan in de service
         Klant klant = loginService.valideerLogin(loginDto);
         if(klant != null){
+<<<<<<< HEAD
             TokenKlantCombinatie tokenKlantCombinatie = authorizationService.authoriseer(klant);
             System.out.println(tokenKlantCombinatie.getKey());
+=======
+            TokenKlantCombinatie tokenKlantCombinatie = authorizationService.authoriseerKlantMetOpaakToken(klant);
+>>>>>>> tokenValidation
             String jwtToken = authorizationService.generateJwtToken(klant);
             System.out.println(jwtToken);
             // hier moeten de tokens worden toegevoegd aan de header
