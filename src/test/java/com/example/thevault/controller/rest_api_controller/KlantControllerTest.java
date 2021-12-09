@@ -3,7 +3,7 @@ package com.example.thevault.controller.rest_api_controller;
 import com.example.thevault.domain.model.Adres;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.model.Rekening;
-import com.example.thevault.domain.transfer.KlantDto;
+import com.example.thevault.domain.transfer.RegistrationDto;
 import com.example.thevault.service.RegistrationService;
 import com.example.thevault.service.KlantService;
 import com.example.thevault.support.BSNvalidator;
@@ -58,8 +58,8 @@ class KlantControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String testKlantJson = objectMapper.writeValueAsString(testKlant);
         testKlant.setRekening(rekening);
-        KlantDto testKlantDto = new KlantDto(testKlant);
-        Mockito.when(registrationService.registreerKlant(testKlant)).thenReturn(testKlantDto);
+        RegistrationDto testRegistrationDto = new RegistrationDto(testKlant);
+        Mockito.when(registrationService.registreerKlant(testKlant)).thenReturn(testRegistrationDto);
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/register");
         requestBuilder.content(testKlantJson).contentType(MediaType.APPLICATION_JSON);
         try {

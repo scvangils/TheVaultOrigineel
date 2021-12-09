@@ -15,20 +15,20 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
-public class KlantDto {
+public class RegistrationDto {
     @JsonIgnore
-    private final Logger logger = LoggerFactory.getLogger(KlantDto.class);
+    private final Logger logger = LoggerFactory.getLogger(RegistrationDto.class);
 
     private String naam;
     private String gebruikersnaam;
     private String iban;
     private String postcodeEnHuisnummer;
 
-    public KlantDto() {
+    public RegistrationDto() {
         super();
-        logger.info("New KlantDto no args");
+        logger.info("New RegistrationDto no args");
     }
-    public KlantDto(Klant klant){
+    public RegistrationDto(Klant klant){
         this.naam = klant.getNaam();
         this.gebruikersnaam = klant.getGebruikersnaam();
         this.iban = klant.getRekening().getIban();
@@ -70,7 +70,7 @@ public class KlantDto {
 
     @Override
     public String toString() {
-        return "KlantDto{" +
+        return "RegistrationDto{" +
                 "naam='" + naam + '\'' +
                 ", gebruikersnaam='" + gebruikersnaam + '\'' +
                 ", iban='" + iban + '\'' +
@@ -81,9 +81,9 @@ public class KlantDto {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof KlantDto)) return false;
-        KlantDto klantDto = (KlantDto) o;
-        return naam.equals(klantDto.naam) && gebruikersnaam.equals(klantDto.gebruikersnaam) && iban.equals(klantDto.iban) && postcodeEnHuisnummer.equals(klantDto.postcodeEnHuisnummer);
+        if (!(o instanceof RegistrationDto)) return false;
+        RegistrationDto registrationDto = (RegistrationDto) o;
+        return naam.equals(registrationDto.naam) && gebruikersnaam.equals(registrationDto.gebruikersnaam) && iban.equals(registrationDto.iban) && postcodeEnHuisnummer.equals(registrationDto.postcodeEnHuisnummer);
     }
 
     @Override

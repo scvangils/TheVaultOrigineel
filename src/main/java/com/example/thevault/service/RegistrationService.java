@@ -4,7 +4,7 @@
 package com.example.thevault.service;
 
 import com.example.thevault.domain.model.Klant;
-import com.example.thevault.domain.transfer.KlantDto;
+import com.example.thevault.domain.transfer.RegistrationDto;
 import com.example.thevault.support.exceptions.IncorrectFormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,7 @@ public class RegistrationService {
      * @param klant een Klant-object is wordt aangemaakt op basis van ingevoerde gegevens
      * @return een DTO waar de relevante klantgegevens in staan als de klant succesvol is opgeslagen
      */
-    public KlantDto registreerKlant(Klant klant){
+    public RegistrationDto registreerKlant(Klant klant){
       if(!adresService.postcodeOpmaak(klant.getAdres().getPostcode())){
           throw new IncorrectFormatException();
       }
@@ -45,7 +45,7 @@ public class RegistrationService {
         klant.setRekening(rekeningService.creeerRekening(klant));
         System.out.println(klant.getRekening());
         rekeningService.slaRekeningOp(klant.getRekening());
-        return new KlantDto(klant);
+        return new RegistrationDto(klant);
     }
 
 }

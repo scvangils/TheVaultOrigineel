@@ -75,6 +75,7 @@ public class AuthorizationService {
 
         // Valideer token
         public boolean valideerJwtToken(String jwtToken ){
+
             JWT.require(Algorithm.HMAC256(PRIVATE_KEY));
             return true;
         }
