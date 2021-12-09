@@ -11,8 +11,7 @@ import com.example.thevault.support.exceptions.IncorrectBSNException;
 import com.example.thevault.support.exceptions.PasswordNotSuitableException;
 import com.example.thevault.support.hashing.BCryptWachtwoordHash;
 import com.example.thevault.support.hashing.HashHelper;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -26,20 +25,26 @@ class KlantServiceTest {
 
 
     private static Klant testKlant;
+    private static Klant andereKlant;
     private static KlantService klantService;
     private static RootRepository mockRootRepository;
 
 
-    @BeforeAll
-    static void setUp() {
+    @BeforeEach
+    void setUp() {
         mockRootRepository = Mockito.mock(RootRepository.class);
         String gehashtWachtwoord = BCryptWachtwoordHash.hashWachtwoord("testWW");
         testKlant = new Klant("testKlant", gehashtWachtwoord, // klant is exact 18 vandaag
                 null, null, "Jan", null, BSNvalidator.TESTBSN_VAN_RIVG,
                 LocalDate.now().minusYears(KlantService.VOLWASSEN_LEEFTIJD));
          klantService = new KlantService(mockRootRepository);
+        andereKlant = new Klant("andereKlant", gehashtWachtwoord, // klant is exact 18 vandaag
+                null, null, "Jan", null, BSNvalidator.TESTBSN_VAN_RIVG,
+                LocalDate.now().minusYears(KlantService.VOLWASSEN_LEEFTIJD));
 
     }
+
+
 
     @Test
     void vindKlantByUsername() {
@@ -48,10 +53,12 @@ class KlantServiceTest {
         Klant expected = testKlant;
         Klant actual = klantService.vindKlantByGebruikersnaam(testKlant.getGebruikersnaam());
         assertThat(actual).isNotNull().isEqualTo(expected);
+        actual = klantService.vindKlantByGebruikersnaam(andereKlant.getGebruikersnaam());
+        assertThat(actual).isNull();
     }
 
     @Test
-    void registreerKlant() {
+    void registreerKlant() { // de a staat ervoor, zodat deze test als eerste gaat
         Mockito.when(mockRootRepository.slaKlantOp(testKlant)).thenReturn(testKlant);
         Klant expected = testKlant;
         Klant actual = klantService.registreerKlant(testKlant);
@@ -75,6 +82,9 @@ class KlantServiceTest {
         assertThat(klantService.checkVolwassen(testKlant)).isTrue();
         testKlant.setGeboortedatum(testKlant.getGeboortedatum().plusDays(1)); // nu te jong om rekening te openen
         assertThat(klantService.checkVolwassen(testKlant)).isFalse();
+        testKlant.setGeboortedatum(testKlant.getGeboortedatum().minusDays(4));
+        assertThat(klantService.checkVolwassen(testKlant)).isTrue();
+
     }
     @Test
     void checkWachtwoordFormat(){

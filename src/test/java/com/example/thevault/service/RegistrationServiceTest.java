@@ -28,10 +28,10 @@ class RegistrationServiceTest {
     mockAdresService = Mockito.mock(AdresService.class);
     mockRekeningService = Mockito.mock(RekeningService.class);
     registrationService = new RegistrationService(mockKlantService, mockAdresService, mockRekeningService);
-        String gehashtWachtwoord = BCryptWachtwoordHash.hashWachtwoord("testWW");
+        String gehashtWachtwoord = BCryptWachtwoordHash.hashWachtwoord("testWWWWWWWWW");
         adres = new Adres("straat", 357, "C", "1000AA", "Amsterdam");
         testKlant = new Klant("testKlant", gehashtWachtwoord,
-                null, null, "Jan", adres, 145801354, LocalDate.now());
+                null, null, "Jan", adres, 145801354, LocalDate.now().minusYears(18));
         testRekening = new Rekening("NL20INGB0006582287", 0.0);
     }
 
@@ -41,6 +41,7 @@ class RegistrationServiceTest {
     void registreerKlant() {
     Mockito.when(mockKlantService.registreerKlant(testKlant)).thenReturn(testKlant);
     Mockito.when(mockRekeningService.creeerRekening(testKlant)).thenReturn(testRekening);
+    Mockito.when(mockAdresService.postcodeOpmaak(adres.getPostcode())).thenReturn(true);
     RegistrationDto actual = registrationService.registreerKlant(testKlant);
     RegistrationDto expected = new RegistrationDto(testKlant);
     assertThat(actual).isNotNull().isEqualTo(expected);
