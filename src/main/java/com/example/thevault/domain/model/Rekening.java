@@ -11,7 +11,7 @@ public class Rekening {
 
     private String iban;
     private double saldo;
-    private Klant klant; // voor het klantId
+    private Klant klant;
 
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Rekening.class);
