@@ -39,10 +39,10 @@ public class RekeningService {
     }
     /**
      * @Author Wim Bultman
+     * //TODO JavaDoc schrijven
      */
     public Iban creeerIban(){
-        iban = new Iban.Builder().countryCode(CountryCode.NL).bankCode("TVLT").buildRandom();
-        return iban;
+        return new Iban.Builder().countryCode(CountryCode.NL).bankCode("TVLT").buildRandom();
     }
 
     /**
@@ -102,6 +102,7 @@ public class RekeningService {
      * wordt het saldo van de opgevraagde rekening teruggegeven.
      */
     public double vraagSaldoOp(Klant klant) throws UserNotExistsException{
+        //TODO Code nodig voor UserNotExistsException
         return vindRekening(klant).getSaldo();
     }
 
@@ -117,6 +118,7 @@ public class RekeningService {
      * wordt het saldo van de opgevraagde rekening gewijzigd naar het opgegeven bedrag.
      */
     public Rekening wijzigSaldo(Klant klant, double bedrag) throws UserNotExistsException{
+        //TODO Code nodig voor UserNotExistsException
         rootRepository.vindRekeningVanKlant(klant).setSaldo(bedrag);
         return rootRepository.vindRekeningVanKlant(klant);
     }

@@ -118,7 +118,7 @@ class RootRepositoryTest {
 
     @Test
     void wijzigSaldoVanKlant() {
-        Mockito.when(rekeningDAO.vindRekeningVanKlant(testKlant)).thenReturn(rekeningGewijzigdSaldo);
+        Mockito.when(rekeningDAO.wijzigSaldoVanKlant(testKlant, teWijzigenBedrag)).thenReturn(rekeningGewijzigdSaldo);
         Rekening expected = rekeningGewijzigdSaldo;
         Rekening actual = rootRepository.wijzigSaldoVanKlant(testKlant, teWijzigenBedrag);
         assertThat(actual).as("Test wijzigen saldo van testklant").isNotNull().isEqualTo(expected).

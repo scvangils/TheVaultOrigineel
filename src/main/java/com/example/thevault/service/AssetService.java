@@ -7,6 +7,7 @@ import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.Asset;
 import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.transfer.AssetDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,8 @@ import java.util.List;
 public class AssetService {
 
     private RootRepository rootRepository;
+
+    @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(AssetService.class);
 
     /**

@@ -5,8 +5,10 @@ package com.example.thevault.domain.mapping.dao;
 
 import com.example.thevault.domain.model.Asset;
 import com.example.thevault.domain.model.Cryptomunt;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -23,11 +25,12 @@ import java.util.List;
 @Repository
 public class JDBCAssetDAO implements AssetDAO{
 
+    @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(JDBCAssetDAO.class);
 
     private JdbcTemplate jdbcTemplate;
-    private KlantDAO klantDAO;
 
+    @Autowired
     public JDBCAssetDAO(JdbcTemplate jdbcTemplate) {
         super();
         this.jdbcTemplate = jdbcTemplate;
