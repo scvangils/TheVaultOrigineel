@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.*;
 @ActiveProfiles("test")
 class JDBCAssetDAOTest {
 
-    private AssetDAO testAssetDAO;
+/*    private AssetDAO testAssetDAO;
 
     @Autowired
     public JDBCAssetDAOTest(AssetDAO testAssetDAO) {
@@ -42,5 +42,5 @@ class JDBCAssetDAOTest {
 
     @Test
     void geefAlleAssets() {
-    }
+    }*/
 }
