@@ -28,8 +28,9 @@ public class KlantController extends BasisApiController{
 
     private final Logger logger = LoggerFactory.getLogger(KlantController.class);
 
-    public KlantController(RegistrationService registrationService, KlantService klantService, AuthorizationService authorizationService) {
-        super(registrationService, klantService, authorizationService);
+    public KlantController(RegistrationService registrationService,
+                           AuthorizationService authorizationService, LoginService loginService) {
+        super(registrationService, authorizationService, loginService);
         logger.info("New KlantController");
     }
 
@@ -63,7 +64,9 @@ public class KlantController extends BasisApiController{
         Klant klant = loginService.valideerLogin(loginDto);
         if(klant != null){
             TokenKlantCombinatie tokenKlantCombinatie = authorizationService.authoriseer(klant);
+            System.out.println(tokenKlantCombinatie.getKey());
             String jwtToken = authorizationService.generateJwtToken(klant);
+            System.out.println(jwtToken);
             // hier moeten de tokens worden toegevoegd aan de header
             return ResponseEntity.ok()
                     .header("Authorization", tokenKlantCombinatie.getKey().toString(), "AuthoriatJwt", jwtToken)

@@ -42,7 +42,9 @@ public class RootRepository {
     }
 
     public Klant vindKlantByGebruikersnaam(String username){
-        return klantDAO.vindKlantByGebruikersnaam(username);
+        Klant klant = klantDAO.vindKlantByGebruikersnaam(username);
+        //TODO rekening toevoegen en portefeuille toevoegen na database compleet
+        return klant;
     }
 
     /**

@@ -6,6 +6,7 @@ import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.transfer.LoginDto;
 import com.example.thevault.domain.transfer.WelkomDTO;
 import com.example.thevault.service.KlantService;
+import com.example.thevault.service.LoginService;
 import com.example.thevault.service.RegistrationService;
 import com.example.thevault.support.authorization.AuthorizationService;
 import com.example.thevault.support.authorization.TokenKlantCombinatie;
@@ -23,8 +24,8 @@ public class LoginController extends BasisApiController {
 
     private final Logger logger = LoggerFactory.getLogger(KlantController.class);
 
-    public LoginController (RegistrationService registrationService, KlantService klantService, AuthorizationService authorizationService) {
-        super(registrationService, klantService, authorizationService);
+    public LoginController (RegistrationService registrationService, AuthorizationService authorizationService, LoginService loginService) {
+        super(registrationService, authorizationService, loginService);
         logger.info("New KlantController");
     }
 

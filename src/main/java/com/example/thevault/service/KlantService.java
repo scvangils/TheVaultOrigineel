@@ -31,7 +31,6 @@ public class KlantService {
     private final Logger logger = LoggerFactory.getLogger(KlantService.class);
     public final static int VOLWASSEN_LEEFTIJD = 18;
     public final static int MINIMALE_WACHTWOORDLENGTE = 8; // TODO navragen of dit public of private moet
-//    public final static int ASCII_CODE_SPATIE = 32;
 
     @Autowired
     public KlantService(RootRepository rootRepository) {
@@ -160,12 +159,6 @@ public class KlantService {
      */
     public boolean checkWachtwoordFormat(Klant klant){
        return !klant.getWachtwoord().contains(" ");
- /*       for(char letter: klant.getWachtwoord().toCharArray()){
-            if (letter == ASCII_CODE_SPATIE){
-                return false;
-            }
-        }
-        return true;*/
     }
 
 

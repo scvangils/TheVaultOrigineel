@@ -3,7 +3,6 @@ package com.example.thevault.controller.rest_api_controller;
 import com.example.thevault.domain.model.Adres;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.model.Rekening;
-import com.example.thevault.domain.transfer.KlantDto;
 import com.example.thevault.domain.transfer.LoginDto;
 import com.example.thevault.service.LoginService;
 import com.example.thevault.domain.transfer.RegistrationDto;

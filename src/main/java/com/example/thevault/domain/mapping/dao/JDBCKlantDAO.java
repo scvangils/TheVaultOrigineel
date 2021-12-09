@@ -75,7 +75,7 @@ public class JDBCKlantDAO implements KlantDAO{
      */
     @Override
     public List<Klant> vindAlleKlanten() {
-        String sql = "Select * from Klant;";
+        String sql = "Select * from klant;";
         return jdbcTemplate.query(sql, new KlantRowMapper());
     }
 
@@ -88,7 +88,7 @@ public class JDBCKlantDAO implements KlantDAO{
      */
     @Override
     public Klant vindKlantById(int gebruikerId) {
-        String sql = "SELECT * FROM Klant WHERE gebruikerId = ?;";
+        String sql = "SELECT * FROM klant WHERE gebruikerId = ?;";
         Klant klant;
         try {
             klant = jdbcTemplate.queryForObject(sql, new KlantRowMapper(), gebruikerId);

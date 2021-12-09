@@ -17,15 +17,14 @@ public abstract class BasisApiController {
     private final Logger logger = LoggerFactory.getLogger(BasisApiController.class);
 
     protected AuthorizationService authorizationService;
-    protected KlantService klantService;
     protected RegistrationService registrationService;
     protected LoginService loginService;
 
-    public BasisApiController(RegistrationService registrationService, KlantService klantService, AuthorizationService authorizationService) {
+    public BasisApiController(RegistrationService registrationService, AuthorizationService authorizationService, LoginService loginService) {
         super();
         this.registrationService = registrationService;
-        this.klantService = klantService;
         this.authorizationService = authorizationService;
+        this.loginService = loginService;
         logger.info("New BasisApiController");
     }
 
