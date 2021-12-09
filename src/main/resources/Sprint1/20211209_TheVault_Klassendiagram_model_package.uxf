@@ -4,106 +4,10 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>396</x>
-      <y>261</y>
-      <w>198</w>
-      <h>99</h>
-    </coordinates>
-    <panel_attributes>lw=2
-/model :: Gebruiker/
---
-- gebruikerID: int
-- gebruikersNaam: String
-- wachtwoord: String
-_- default_gebruikerId: int_
-
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>126</x>
-      <y>261</y>
-      <w>171</w>
-      <h>126</h>
-    </coordinates>
-    <panel_attributes>lw=2
-model :: Klant
---
-- naam: String
-- geboortedatum: localDate
-- adres: Adres
-- BSN: long
-- rekening: Rekening
-- portefeuille: list&lt;Asset&gt;</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>288</x>
-      <y>288</y>
-      <w>126</w>
-      <h>27</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>120.0;10.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>585</x>
-      <y>288</y>
-      <w>72</w>
-      <h>27</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;60.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>126</x>
-      <y>459</y>
-      <w>171</w>
-      <h>90</h>
-    </coordinates>
-    <panel_attributes>lw=2
-model :: Rekening
---
-- iban:String
-- saldo: double
-- klant: Klant
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>126</x>
-      <y>90</y>
-      <w>171</w>
-      <h>108</h>
-    </coordinates>
-    <panel_attributes>lw=2
-model :: Adres
---
-- straatnaam: String
-- huisnummer: int
-- toevoeging: String
-- postcode: String
-- plaatsnaam: String
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>333</x>
-      <y>585</y>
-      <w>180</w>
-      <h>90</h>
+      <x>603</x>
+      <y>648</y>
+      <w>342</w>
+      <h>171</h>
     </coordinates>
     <panel_attributes>lw=2
 model :: CryptoMunt
@@ -111,27 +15,93 @@ model :: CryptoMunt
 - Id: int
 - name: String
 - symbol: String
-- price: double</panel_attributes>
+- price: double
+- logger: Logger
+
+--
++ Cryptomunt()
++ Cryptomunt(cryptomuntId: int, name: String, afkorting: String, price: double)
++ toString(): String
+</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>198</x>
-      <y>189</y>
+      <x>684</x>
+      <y>576</y>
       <w>45</w>
       <h>90</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
-m2=1..n
+m2=0..n
 m1=1</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
+    <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>207</x>
-      <y>378</y>
+      <x>486</x>
+      <y>369</y>
+      <w>252</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m2=0..n
+m1=0..n</panel_attributes>
+    <additional_attributes>240.0;50.0;240.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>603</x>
+      <y>414</y>
+      <w>342</w>
+      <h>171</h>
+    </coordinates>
+    <panel_attributes>lw=2
+model :: Asset
+--
+- cryptomunt: Cryptomunt
+- aantal: double
+- logger: Logger
+
+--
++ Asset()
++ Asset(cryptomunt: Cryptomunt, aantal: double)
++ equals(o: Object): boolean
++ hashCode(): int
++ toString(): String</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>180</x>
+      <y>657</y>
+      <w>252</w>
+      <h>162</h>
+    </coordinates>
+    <panel_attributes>lw=2
+model :: Rekening
+--
+- iban:String
+- saldo: double
+- klant: Klant
+- logger: Logger
+
+--
++ Rekening()
++ Rekening(iban: String, saldo: double)
++ toString(): String
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>342</x>
+      <y>576</y>
       <w>45</w>
       <h>99</h>
     </coordinates>
@@ -143,29 +113,41 @@ m1=1..n</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>414</x>
-      <y>513</y>
+      <x>342</x>
+      <y>243</y>
       <w>45</w>
       <h>90</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
-m2=0..n
+m2=1..n
 m1=1</panel_attributes>
-    <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>639</x>
-      <y>261</y>
-      <w>180</w>
-      <h>63</h>
+      <x>180</x>
+      <y>27</y>
+      <w>315</w>
+      <h>225</h>
     </coordinates>
     <panel_attributes>lw=2
-model :: Bank
+model :: Adres
 --
-_- banknaam: String_
-_+ bankcode: String_
+- straatnaam: String
+- huisnummer: int
+- toevoeging: String
+- postcode: String
+- plaatsnaam: String
+- logger: Logger
+
+--
++ Adres()
++ Adres(straatnaam: String, toevoeging: String, 
+huisnummer: int, postcode: String, plaatsnaam: String
++ toString(): String
++ equals(o: Object): boolean
++ hashCode(): int
 
 </panel_attributes>
     <additional_attributes/>
@@ -173,29 +155,100 @@ _+ bankcode: String_
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>288</x>
-      <y>369</y>
-      <w>171</w>
-      <h>108</h>
+      <x>423</x>
+      <y>270</y>
+      <w>198</w>
+      <h>63</h>
     </coordinates>
-    <panel_attributes>lt=&lt;-
-m2=0..n
-m1=0..n</panel_attributes>
-    <additional_attributes>150.0;100.0;150.0;10.0;10.0;10.0</additional_attributes>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>200.0;10.0;10.0;10.0;10.0;50.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>333</x>
-      <y>459</y>
-      <w>180</w>
-      <h>63</h>
+      <x>180</x>
+      <y>315</y>
+      <w>315</w>
+      <h>270</h>
     </coordinates>
     <panel_attributes>lw=2
-model :: Asset
+model :: Klant
 --
-- cryptomunt: Cryptomunt
-- aantal: double</panel_attributes>
+- naam: String
+- geboortedatum: localDate
+- adres: Adres
+- BSN: long
+- rekening: Rekening
+- portefeuille: list&lt;Asset&gt;
+- logger: Logger
+
+--
++ Klant()
++ Klant(gebruikersnaam: String, wachtwoord: String, 
+portefeuille: List&lt;Asset&gt;, rekening: Rekening,
+naam: String, adres: Adres, bsn: long,
+geboortedatum: LocalDate)
++ toString(): String
++ equals(o: Object): boolean
++ hashCode(): int
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>756</x>
+      <y>117</y>
+      <w>27</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;50.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>603</x>
+      <y>162</y>
+      <w>342</w>
+      <h>198</h>
+    </coordinates>
+    <panel_attributes>lw=2
+/model :: Gebruiker/
+--
+- gebruikerID: int
+- gebruikersNaam: String
+- wachtwoord: String
+_- default_gebruikerId: int_
+- logger: Logger
+
+--
++ Gebruiker()
++ Gebruiker(gebruikersnaam: String, wachtwoord: String)
++ toString(): String
++ equals(o: Object): boolean
++ hashCode(): int
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>675</x>
+      <y>27</y>
+      <w>180</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>lw=2
+model :: Bank
+--
+_- banknaam: String_
+_+ bankcode: String_
++ logger: Logger
+--
++ Bank()
+
+</panel_attributes>
     <additional_attributes/>
   </element>
 </diagram>
