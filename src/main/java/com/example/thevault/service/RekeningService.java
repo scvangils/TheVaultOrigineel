@@ -1,5 +1,3 @@
-//20211201WB random IBAN
-
 package com.example.thevault.service;
 
 import com.example.thevault.domain.mapping.repository.RootRepository;
@@ -39,10 +37,11 @@ public class RekeningService {
     }
     /**
      * @Author Wim Bultman
-     * //TODO JavaDoc schrijven
+     * creeert IBAN, mbv org.iban4j.Iban library, zie https://github.com/arturmkrtchyan/iban4j
      */
     public Iban creeerIban(){
-        return new Iban.Builder().countryCode(CountryCode.NL).bankCode("TVLT").buildRandom();
+        iban = new Iban.Builder().countryCode(CountryCode.NL).bankCode("TVLT").buildRandom();
+        return iban;
     }
 
     /**
@@ -102,7 +101,6 @@ public class RekeningService {
      * wordt het saldo van de opgevraagde rekening teruggegeven.
      */
     public double vraagSaldoOp(Klant klant) throws UserNotExistsException{
-        //TODO Code nodig voor UserNotExistsException
         return vindRekening(klant).getSaldo();
     }
 
@@ -118,7 +116,6 @@ public class RekeningService {
      * wordt het saldo van de opgevraagde rekening gewijzigd naar het opgegeven bedrag.
      */
     public Rekening wijzigSaldo(Klant klant, double bedrag) throws UserNotExistsException{
-        //TODO Code nodig voor UserNotExistsException
         rootRepository.vindRekeningVanKlant(klant).setSaldo(bedrag);
         return rootRepository.vindRekeningVanKlant(klant);
     }

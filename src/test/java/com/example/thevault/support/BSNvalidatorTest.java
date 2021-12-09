@@ -12,8 +12,8 @@ class BSNvalidatorTest {
 
     @BeforeEach
     void setUp() {
-        bsn = 111222333;
-        bsnFalse = 123456789;
+        bsn = 999998031; //is een geldige BSN (zie lijst in resources)
+        bsnFalse = 123456789; //is een ongeldig BSN
     }
 
     @Test

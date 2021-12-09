@@ -1,5 +1,6 @@
 package com.example.thevault.controller.rest_api_controller;
 
+import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.Adres;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.model.Rekening;
@@ -31,6 +32,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import javax.security.auth.login.LoginException;
 import java.time.LocalDate;
 import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 @WebMvcTest
 class KlantControllerTest {
@@ -72,6 +75,7 @@ class KlantControllerTest {
         rekening = new Rekening("NL20INGB0006582287", 1000);
         gebruikersnaam = "testKlant";
         wachtwoord = "testWW";
+        loginDto2 = new LoginDto("testKlant", "ww2");
 
 //        loginDto = new LoginDto("testKlant", "testWW");
 
@@ -103,6 +107,7 @@ class KlantControllerTest {
                     .andDo(MockMvcResultHandlers.print());
         } catch (Exception e){
             System.out.println("nee fout: " + e);
+            fail();
         }
     }
 //    /*        String echteKlant = String.format("{\"gebruikerId\":2,\"gebruikersnaam\":\"testKlant\",\"" +
@@ -120,9 +125,11 @@ class KlantControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         //loginDto wordt door noArgs constr opgepakt, waarom?
 
+
         String testInlogJson = objectMapper.writeValueAsString(loginDto2);
         Klant klant = new Klant("testKlant", gehashtWachtwoord,null, null, "Jan",
                 adres, BSNvalidator.TESTBSN_VAN_RIVG, LocalDate.of(1975, 7, 30));
+        testKlant.setRekening(rekening);
 
 
         Mockito.when(loginService.valideerLogin(loginDto2)).thenReturn(klant);
@@ -133,16 +140,17 @@ class KlantControllerTest {
 
         try {
             ResultActions response = mockMvc.perform(requestBuilder);
-            response.andExpect(MockMvcResultMatchers.status().is2xxSuccessful())
-/*                    .andExpect(MockMvcResultMatchers
-                    .content()
-                    .json("{\"naam\":\"Jan\"," +
-                    "\"gebruikersnaam\":\"testKlant\",\"iban\":\"NL20INGB0006582287\"," +
-                    "\"postcodeEnHuisnummer\":\"1000AA / 357C\"}"))*/
+            response.andExpect(MockMvcResultMatchers.status().isOk())
+                    /*                   .andExpect(MockMvcResultMatchers
+                                   .content()
+                                       .json("{\"naam\":\"Jan\"," +
+                                       "\"gebruikersnaam\":\"testKlant\",\"iban\":\"NL20INGB0006582287\"," +
+                                       "\"postcodeEnHuisnummer\":\"1000AA / 357C\"}"))*/
                     .andDo(MockMvcResultHandlers.print());
 
         }catch (Exception e){
             System.out.println("dit gaat niet goed: " + e);
+            fail();
         }
 
     }
