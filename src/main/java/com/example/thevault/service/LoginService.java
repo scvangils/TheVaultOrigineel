@@ -69,8 +69,9 @@ public class LoginService {
     public Klant vindKlantByGebruikersnaam(String username){
         Klant klant = rootRepository.vindKlantByGebruikersnaam(username);
         //tijdelijke oplossing
+        if(klant != null){
         Rekening rekening = rekeningService.creeerRekening(klant);
-        klant.setRekening(rekening);
+        klant.setRekening(rekening);}
         return klant;
     }
 

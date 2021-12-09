@@ -10,6 +10,7 @@ import com.example.thevault.service.LoginService;
 import com.example.thevault.service.RegistrationService;
 import com.example.thevault.support.authorization.AuthorizationService;
 import com.example.thevault.support.authorization.TokenKlantCombinatie;
+import com.example.thevault.support.exceptions.LoginFailedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -17,9 +18,11 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.security.auth.login.LoginException;
 
+@RestController
 public class LoginController extends BasisApiController {
 
     private final Logger logger = LoggerFactory.getLogger(KlantController.class);
@@ -35,8 +38,8 @@ public class LoginController extends BasisApiController {
         Klant klant = loginService.valideerLogin(loginDto);
         if(klant != null){
             TokenKlantCombinatie tokenKlantCombinatie = authorizationService.authoriseer(klant);
-            ResponseCookie responseCookie = ResponseCookie.from("Refresh Token",
-                    tokenKlantCombinatie.toString()).httpOnly(true).build();
+            ResponseCookie responseCookie = ResponseCookie.from("RefreshToken",
+                    tokenKlantCombinatie.getKey().toString()).httpOnly(true).build();
             String jwtToken = authorizationService.generateJwtToken(klant);
             // hier moeten de tokens worden toegevoegd aan de header
             return ResponseEntity.ok()
@@ -44,7 +47,7 @@ public class LoginController extends BasisApiController {
                     .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                     .body(new WelkomDTO(klant));
         }
-        throw new LoginException();
+        throw new LoginFailedException();
     }
 
     /*
@@ -56,10 +59,10 @@ public class LoginController extends BasisApiController {
             if (member.isPresent()) {
                 return ResponseEntity.ok().body(member.get().getFullname());
             } else {
-                throw new LoginException();
+                throw new LoginFailedException();
             }
         } catch (IllegalArgumentException e) {
-            throw new LoginException();
+            throw new LoginFailedException();
         }
     }*/
 }

@@ -10,12 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Deze combinatie van gegevens is niet bekend.")
-public class LoginException extends RuntimeException{
+public class LoginFailedException extends RuntimeException{
 
-//    private final Logger logger = LoggerFactory.getLogger(LoginException.class);
+//    private final Logger logger = LoggerFactory.getLogger(LoginFailedException.class);
 //
-//    public LoginException() {
+//    public LoginFailedException() {
 //        super();
-//        logger.info("New LoginException");
+//        logger.info("New LoginFailedException");
 //    }
 }
