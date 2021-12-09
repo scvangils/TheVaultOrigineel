@@ -31,7 +31,7 @@ public class KlantService {
     private final Logger logger = LoggerFactory.getLogger(KlantService.class);
     public final static int VOLWASSEN_LEEFTIJD = 18;
     public final static int MINIMALE_WACHTWOORDLENGTE = 8; // TODO navragen of dit public of private moet
-    public final static int ASCII_CODE_SPATIE = 32;
+//    public final static int ASCII_CODE_SPATIE = 32;
 
     @Autowired
     public KlantService(RootRepository rootRepository) {
@@ -154,19 +154,18 @@ public class KlantService {
 
     /**
      * Deze methode gaat na of het wachtwoord geen spaties bevat
-     * door een wachtwoord in een char-array te veranderen
-     * en na te gaan of een karakter gelijk is aan een spatie
      *
      * @param klant de ingevoerde klantgegevens in objectvorm
      * @return een boolean die aangeeft of het wachtwoord geen spaties bevat
      */
     public boolean checkWachtwoordFormat(Klant klant){
-        for(char letter: klant.getWachtwoord().toCharArray()){
+       return !klant.getWachtwoord().contains(" ");
+ /*       for(char letter: klant.getWachtwoord().toCharArray()){
             if (letter == ASCII_CODE_SPATIE){
                 return false;
             }
         }
-        return true;
+        return true;*/
     }
 
 

@@ -3,7 +3,7 @@ package com.example.thevault.service;
 import com.example.thevault.domain.model.Adres;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.model.Rekening;
-import com.example.thevault.domain.transfer.KlantDto;
+import com.example.thevault.domain.transfer.RegistrationDto;
 import com.example.thevault.support.hashing.BCryptWachtwoordHash;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,8 +41,8 @@ class RegistrationServiceTest {
     void registreerKlant() {
     Mockito.when(mockKlantService.registreerKlant(testKlant)).thenReturn(testKlant);
     Mockito.when(mockRekeningService.creeerRekening(testKlant)).thenReturn(testRekening);
-    KlantDto actual = registrationService.registreerKlant(testKlant);
-    KlantDto expected = new KlantDto(testKlant);
+    RegistrationDto actual = registrationService.registreerKlant(testKlant);
+    RegistrationDto expected = new RegistrationDto(testKlant);
     assertThat(actual).isNotNull().isEqualTo(expected);
 
     }

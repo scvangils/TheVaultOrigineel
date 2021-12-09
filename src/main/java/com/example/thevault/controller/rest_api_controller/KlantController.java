@@ -4,7 +4,7 @@
 package com.example.thevault.controller.rest_api_controller;
 
 import com.example.thevault.domain.model.Klant;
-import com.example.thevault.domain.transfer.KlantDto;
+import com.example.thevault.domain.transfer.RegistrationDto;
 import com.example.thevault.domain.transfer.WelkomDTO;
 import com.example.thevault.service.LoginService;
 import com.example.thevault.service.RegistrationService;
@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.security.auth.login.LoginException;
@@ -42,9 +43,13 @@ public class KlantController extends BasisApiController{
      * @return een DTO waar de relevante klantgegevens in staan als de klant succesvol is opgeslagen
      */
     @PostMapping("/register")
-    public ResponseEntity<KlantDto> registreerKlantHandler(@RequestBody Klant klant){
-        KlantDto klantDto = registrationService.registreerKlant(klant);
-    return ResponseEntity.status(HttpStatus.CREATED).body(klantDto);
+    public ResponseEntity<RegistrationDto> registreerKlantHandler(@RequestBody Klant klant){
+        RegistrationDto registrationDto = registrationService.registreerKlant(klant);
+    return ResponseEntity.status(HttpStatus.CREATED).body(registrationDto);
+    }
+    @PostMapping("/klantDashboard") // 401 response nodig indien token niet geldig
+    public ResponseEntity<String> clientDashboardHandler(@RequestHeader("Authorization") String token, @RequestBody String inhoud){
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(inhoud);
     }
 
     /**

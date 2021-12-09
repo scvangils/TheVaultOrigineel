@@ -8,6 +8,7 @@ import com.example.thevault.domain.model.Klant;
 import com.example.thevault.support.BSNvalidator;
 import com.example.thevault.support.exceptions.AgeTooLowException;
 import com.example.thevault.support.exceptions.IncorrectBSNException;
+import com.example.thevault.support.exceptions.PasswordNotSuitableException;
 import com.example.thevault.support.hashing.BCryptWachtwoordHash;
 import com.example.thevault.support.hashing.HashHelper;
 import org.junit.jupiter.api.BeforeAll;
@@ -60,7 +61,13 @@ class KlantServiceTest {
         testKlant.setGeboortedatum(testKlant.getGeboortedatum().minusDays(1));
         testKlant.setBsn(testKlant.getBsn() + 1);
         assertThatThrownBy(() -> klantService.registreerKlant(testKlant)).isInstanceOf(IncorrectBSNException.class);
-        testKlant.setBsn(testKlant.getBsn() + 1);
+        testKlant.setBsn(testKlant.getBsn() - 1);
+        testKlant.setWachtwoord("WwMet Spatie");
+        assertThat(klantService.checkWachtwoordFormat(testKlant)).isFalse();
+        assertThatThrownBy(() -> klantService.registreerKlant(testKlant)).isInstanceOf(PasswordNotSuitableException.class);
+        testKlant.setWachtwoord("Ww<8Kar");
+        assertThat(klantService.checkWachtwoordLengte(testKlant)).isFalse();
+        assertThatThrownBy(() -> klantService.registreerKlant(testKlant)).isInstanceOf(PasswordNotSuitableException.class);
 
     }
     @Test
@@ -71,7 +78,19 @@ class KlantServiceTest {
     }
     @Test
     void checkWachtwoordFormat(){
+        testKlant.setWachtwoord("WwMet Spatie");
+        assertThat(klantService.checkWachtwoordFormat(testKlant)).isFalse();
+        testKlant.setWachtwoord("WwZonderSpatie");
+        assertThat(klantService.checkWachtwoordFormat(testKlant)).isTrue();
 
+
+    }
+    @Test
+    void checkWachtwoordLengte(){
+        testKlant.setWachtwoord("Ww<8Kar");
+        assertThat(klantService.checkWachtwoordLengte(testKlant)).isFalse();
+        testKlant.setWachtwoord("8KarInWw");
+        assertThat(klantService.checkWachtwoordLengte(testKlant)).isTrue();
     }
 
 }
