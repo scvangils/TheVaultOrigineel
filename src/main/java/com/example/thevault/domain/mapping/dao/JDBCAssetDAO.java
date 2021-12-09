@@ -50,13 +50,6 @@ public class JDBCAssetDAO implements AssetDAO{
         return ps;
     }
 
-    private PreparedStatement geefAlleAssetsStatement(int gebruikerId, Connection connection) throws SQLException {
-        String sql = "SELECT * FROM asset WHERE klantId = ?;";
-        PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, gebruikerId);
-        return ps;
-    }
-
     private PreparedStatement verwijderAssetStatement(int gebruikerId, int cryptomuntId, Connection connection) throws SQLException {
         String sql = "DELETE * FROM asset WHERE klantId = ? AND cryptomuntId = ?;";
         PreparedStatement ps = connection.prepareStatement(sql);
