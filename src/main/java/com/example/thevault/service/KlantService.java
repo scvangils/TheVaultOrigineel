@@ -84,7 +84,7 @@ public class KlantService {
      */
     private void minumumLeeftijdExceptionHandler(Klant klant) {
         if(!checkVolwassen(klant)){
-            String message = String.format("Je moet %d om een rekening te openen.", VOLWASSEN_LEEFTIJD);
+            String message = String.format("Je moet %d zijn om een rekening te openen.", VOLWASSEN_LEEFTIJD);
             throw new AgeTooLowException(message);
         }
     }
@@ -119,13 +119,13 @@ public class KlantService {
 //     * @param wachtwoord
 //     * @return Klant als combinatie gebruikersnaam en wachtwoord correct is, anders geef foutmelding
 //     */
-//    public Klant valideerLogin (String gebruikersNaam, String wachtwoord) throws LoginException {
+//    public Klant valideerLogin (String gebruikersNaam, String wachtwoord) throws LoginFailedException {
 //        //vraag wachtwoord op via RootRepos
 //        if(vindKlantByGebruikersnaam(gebruikersNaam) == null){
-//            throw new LoginException();
+//            throw new LoginFailedException();
 //        }
 //       if(!BCryptWachtwoordHash.verifyHash(wachtwoord, vindKlantByGebruikersnaam(gebruikersNaam).getWachtwoord())){
-//           throw new LoginException();
+//           throw new LoginFailedException();
 //       }
 //        return vindKlantByGebruikersnaam(gebruikersNaam);
 //    }

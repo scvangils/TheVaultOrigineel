@@ -75,7 +75,7 @@ public class JDBCKlantDAO implements KlantDAO{
      */
     @Override
     public List<Klant> vindAlleKlanten() {
-        String sql = "Select * from klant;";
+        String sql = "SELECT * FROM klant;";
         return jdbcTemplate.query(sql, new KlantRowMapper());
     }
 

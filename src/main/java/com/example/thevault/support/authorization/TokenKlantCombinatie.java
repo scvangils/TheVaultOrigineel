@@ -43,4 +43,12 @@ public class TokenKlantCombinatie {
     public void setKlant(Klant klant) {
         this.klant = klant;
     }
+
+    @Override
+    public String toString() {
+        return "TokenKlantCombinatie{" +
+                "key=" + key +
+                ", klant=" + klant +
+                '}';
+    }
 }
