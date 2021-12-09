@@ -42,7 +42,7 @@ public class JDBCTokenKlantCombinatieDao implements TokenKlantCombinatieDao{
     @Override
     public void slaTokenKlantPairOp(TokenKlantCombinatie tokenKlantCombinatie) {
         jdbcTemplate.update(
-                "insert into connection_table (uuid, klant_fk) values (?, ?)",
+                "insert into refreshToken (token, gebruikerId) values (?, ?)",
                 tokenKlantCombinatie.getKey().toString(), tokenKlantCombinatie.getKlant().getGebruikerId());
     }
 
@@ -51,7 +51,7 @@ public class JDBCTokenKlantCombinatieDao implements TokenKlantCombinatieDao{
     public Optional<TokenKlantCombinatie> vindTokenKlantPairMetKey(UUID key) {
         List<TokenKlantCombinatie> tokenKlantCombinaties =
                 jdbcTemplate.query(
-                        "select * from connection_table where uuid = ?", new ConnectionRowMapper(), key.toString());
+                        "select * from refreshToken where token = ?", new ConnectionRowMapper(), key.toString());
         if (tokenKlantCombinaties.size() == 1) {
             return Optional.of(tokenKlantCombinaties.get(0));
         }
@@ -61,7 +61,7 @@ public class JDBCTokenKlantCombinatieDao implements TokenKlantCombinatieDao{
     public Optional<TokenKlantCombinatie> vindTokenKlantCombinatieMetKlant(Klant klant) {
         List<TokenKlantCombinatie> tokenKlantCombinaties =
                 jdbcTemplate.query(
-                        "select * from connection_table where klant_fk = ?", new ConnectionRowMapper(), klant.getGebruikerId());
+                        "select * from refreshToken where gebruikerId = ?", new ConnectionRowMapper(), klant.getGebruikerId());
         if (tokenKlantCombinaties.size() == 1) {
             return Optional.of(tokenKlantCombinaties.get(0));
         }
@@ -70,7 +70,7 @@ public class JDBCTokenKlantCombinatieDao implements TokenKlantCombinatieDao{
 
     @Override
     public void delete(UUID uuid) {
-        jdbcTemplate.update("delete from connection_table where uuid = ?", uuid.toString());
+        jdbcTemplate.update("delete from refreshToken where uuid = ?", uuid.toString());
         logger.info("Verwijderde uuid " + uuid.toString());
     }
 
