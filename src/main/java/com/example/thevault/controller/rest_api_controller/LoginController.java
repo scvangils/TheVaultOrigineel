@@ -33,19 +33,16 @@ public class LoginController extends BasisApiController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<WelkomDTO> loginHandler(@RequestBody LoginDto loginDto) throws LoginException {
+    public ResponseEntity<WelkomDTO> loginHandler(@RequestBody LoginDto loginDto) throws LoginFailedException {
         //roep loginValidatie aan in de service
         Klant klant = loginService.valideerLogin(loginDto);
         if(klant != null){
             // haal opaak token op uit database
             TokenKlantCombinatie tokenKlantCombinatie = authorizationService.authoriseerKlantMetOpaakToken(klant);
             // genereer cookie met het opgehaalde opaakToken
-            ResponseCookie responseCookie = ResponseCookie.from("Refresh Token",
-                    tokenKlantCombinatie.toString()).httpOnly(true).build();
-            // genereer JWT token
-            TokenKlantCombinatie tokenKlantCombinatie = authorizationService.authoriseer(klant);
             ResponseCookie responseCookie = ResponseCookie.from("RefreshToken",
                     tokenKlantCombinatie.getKey().toString()).httpOnly(true).build();
+            // genereer JWT token
             String jwtToken = authorizationService.generateJwtToken(klant);
             // hier moeten de tokens worden toegevoegd aan de header
             return ResponseEntity.ok()
