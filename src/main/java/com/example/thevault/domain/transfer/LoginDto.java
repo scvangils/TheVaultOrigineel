@@ -5,7 +5,10 @@ import org.slf4j.LoggerFactory;
 
 import org.slf4j.Logger;
 
+import java.util.Objects;
+
 public class LoginDto {
+
     private String gebruikersnaam;
     private String wachtwoord;
 
@@ -14,7 +17,17 @@ public class LoginDto {
 
     public LoginDto() {
         super();
-        logger.info("New LoginDto");
+        gebruikersnaam = "testKlant";
+        wachtwoord = "testWW";
+        logger.info("New LoginDto noArgs");
+    }
+
+
+
+    public LoginDto(String gebruikersnaam, String wachtwoord) {
+        this.gebruikersnaam = gebruikersnaam;
+        this.wachtwoord = wachtwoord;
+        logger.info("new loginDto {} " + gebruikersnaam, wachtwoord);
     }
 
     public String getGebruikersnaam() {
@@ -31,5 +44,26 @@ public class LoginDto {
 
     public void setWachtwoord(String wachtwoord) {
         this.wachtwoord = wachtwoord;
+    }
+
+    @Override
+    public String toString() {
+        return "LoginDto{" +
+                "gebruikersnaam='" + gebruikersnaam + '\'' +
+                ", wachtwoord='" + wachtwoord + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LoginDto loginDto = (LoginDto) o;
+        return gebruikersnaam.equals(loginDto.gebruikersnaam) && wachtwoord.equals(loginDto.wachtwoord);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(gebruikersnaam, wachtwoord);
     }
 }

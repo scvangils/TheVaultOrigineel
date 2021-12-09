@@ -3,6 +3,7 @@
 
 package com.example.thevault.controller.rest_api_controller;
 
+import com.example.thevault.service.LoginService;
 import com.example.thevault.service.RegistrationService;
 import com.example.thevault.service.KlantService;
 import com.example.thevault.support.authorization.AuthorizationService;
@@ -18,6 +19,7 @@ public abstract class BasisApiController {
     protected AuthorizationService authorizationService;
     protected KlantService klantService;
     protected RegistrationService registrationService;
+    protected LoginService loginService;
 
     public BasisApiController(RegistrationService registrationService, KlantService klantService, AuthorizationService authorizationService) {
         super();

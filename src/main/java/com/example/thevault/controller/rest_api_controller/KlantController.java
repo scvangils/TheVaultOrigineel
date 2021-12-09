@@ -6,6 +6,7 @@ package com.example.thevault.controller.rest_api_controller;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.transfer.KlantDto;
 import com.example.thevault.domain.transfer.WelkomDTO;
+import com.example.thevault.service.LoginService;
 import com.example.thevault.service.RegistrationService;
 import com.example.thevault.domain.transfer.LoginDto;
 import com.example.thevault.service.KlantService;
@@ -54,8 +55,7 @@ public class KlantController extends BasisApiController{
     @PostMapping("/login")
     public ResponseEntity<WelkomDTO> loginHandler(@RequestBody LoginDto loginDto) throws LoginException {
         //roep loginValidatie aan in de service
-        Klant klant = klantService.valideerLogin(
-                loginDto.getGebruikersnaam(), loginDto.getWachtwoord());
+        Klant klant = loginService.valideerLogin(loginDto);
         if(klant != null){
             TokenKlantCombinatie tokenKlantCombinatie = authorizationService.authoriseer(klant);
             String jwtToken = authorizationService.generateJwtToken(klant);

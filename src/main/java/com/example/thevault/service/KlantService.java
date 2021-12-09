@@ -114,22 +114,22 @@ public class KlantService {
         }
     }
 
-    /**
-     * Wim 20211207
-     * @param gebruikersNaam
-     * @param wachtwoord
-     * @return Klant als combinatie gebruikersnaam en wachtwoord correct is, anders geef foutmelding
-     */
-    public Klant valideerLogin (String gebruikersNaam, String wachtwoord) throws LoginException {
-        //vraag wachtwoord op via RootRepos
-        if(vindKlantByGebruikersnaam(gebruikersNaam) == null){
-            throw new LoginException();
-        }
-       if(!BCryptWachtwoordHash.verifyHash(wachtwoord, vindKlantByGebruikersnaam(gebruikersNaam).getWachtwoord())){
-           throw new LoginException();
-       }
-        return vindKlantByGebruikersnaam(gebruikersNaam);
-    }
+//    /**
+//     * Wim 20211207
+//     * @param gebruikersNaam
+//     * @param wachtwoord
+//     * @return Klant als combinatie gebruikersnaam en wachtwoord correct is, anders geef foutmelding
+//     */
+//    public Klant valideerLogin (String gebruikersNaam, String wachtwoord) throws LoginException {
+//        //vraag wachtwoord op via RootRepos
+//        if(vindKlantByGebruikersnaam(gebruikersNaam) == null){
+//            throw new LoginException();
+//        }
+//       if(!BCryptWachtwoordHash.verifyHash(wachtwoord, vindKlantByGebruikersnaam(gebruikersNaam).getWachtwoord())){
+//           throw new LoginException();
+//       }
+//        return vindKlantByGebruikersnaam(gebruikersNaam);
+//    }
 
     /**
      * Deze methode kijkt of de ingevulde geboortedatum van de klant

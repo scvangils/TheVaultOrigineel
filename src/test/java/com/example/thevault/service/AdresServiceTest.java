@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.*;
 
-class adresServiceTest {
+class AdresServiceTest {
 
     AdresService adresService;
     String postcode1;

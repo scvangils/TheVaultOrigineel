@@ -31,8 +31,7 @@ public class LoginController extends BasisApiController {
     @PostMapping("/login")
     public ResponseEntity<WelkomDTO> loginHandler(@RequestBody LoginDto loginDto) throws LoginException {
         //roep loginValidatie aan in de service
-        Klant klant = klantService.valideerLogin(
-                loginDto.getGebruikersnaam(), loginDto.getWachtwoord());
+        Klant klant = loginService.valideerLogin(loginDto);
         if(klant != null){
             TokenKlantCombinatie tokenKlantCombinatie = authorizationService.authoriseer(klant);
             ResponseCookie responseCookie = ResponseCookie.from("Refresh Token",
