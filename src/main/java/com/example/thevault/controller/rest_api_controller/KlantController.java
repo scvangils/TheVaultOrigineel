@@ -12,9 +12,12 @@ import com.example.thevault.domain.transfer.LoginDto;
 import com.example.thevault.service.KlantService;
 import com.example.thevault.support.authorization.AuthorizationService;
 import com.example.thevault.support.authorization.TokenKlantCombinatie;
+import com.example.thevault.support.exceptions.LoginFailedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -79,5 +82,26 @@ public class KlantController extends BasisApiController{
         }
         throw new LoginFailedException();
     }*/
+
+    @PostMapping("/login")
+    public ResponseEntity<WelkomDTO> loginHandler(@RequestBody LoginDto loginDto) throws LoginFailedException {
+        //roep loginValidatie aan in de service
+        Klant klant = loginService.valideerLogin(loginDto);
+        if(klant != null){
+            // haal opaak token op uit database
+            TokenKlantCombinatie tokenKlantCombinatie = authorizationService.authoriseerKlantMetOpaakToken(klant);
+            // genereer cookie met het opgehaalde opaakToken
+            ResponseCookie responseCookie = ResponseCookie.from("RefreshToken",
+                    tokenKlantCombinatie.getKey().toString()).httpOnly(true).build();
+            // genereer JWT token
+            String jwtToken = authorizationService.generateJwtToken(klant);
+            // hier moeten de tokens worden toegevoegd aan de header
+            return ResponseEntity.ok()
+                    .header("Authorization", "Bearer " + jwtToken)
+                    .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                    .body(new WelkomDTO(klant));
+        }
+        throw new LoginFailedException();
+    }
 
 }
