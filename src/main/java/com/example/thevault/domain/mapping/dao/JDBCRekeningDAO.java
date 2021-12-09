@@ -14,6 +14,8 @@ import org.springframework.stereotype.Repository;
 public class JDBCRekeningDAO implements RekeningDAO {
     JdbcTemplate jdbcTemplate;
 
+    //TODO Alle JavaDoc schrijven
+
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(JDBCKlantDAO.class);
 

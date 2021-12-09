@@ -24,6 +24,9 @@ class RekeningServiceTest {
     public static Rekening rekeningExpected;
     public static RekeningService rekeningServiceTest;
     public static Rekening nieuweRekening;
+    public static Klant bestaandeKlantVoorWijzigSaldo;
+    public static Rekening rekeningVoorWijzigSaldoExpected;
+
 
     /**
      * @Author Ju-Sen Cheung
@@ -39,6 +42,10 @@ class RekeningServiceTest {
         bestaandeKlant.setRekening(rekeningExpected);
         rekeningExpected.setKlant(bestaandeKlant);
         nieuweRekening = new Rekening("NL20RABO9876543", 1000.0);
+        bestaandeKlantVoorWijzigSaldo = new Klant("MarkSlegte", "456jesv", "", 5248136, LocalDate.of(1987, 2, 16));
+        rekeningVoorWijzigSaldoExpected = new Rekening("INGB0001234567NL", 1000.0);
+        bestaandeKlantVoorWijzigSaldo.setRekening(rekeningVoorWijzigSaldoExpected);
+        rekeningVoorWijzigSaldoExpected.setKlant(bestaandeKlantVoorWijzigSaldo);
     }
 
     /**
@@ -59,6 +66,7 @@ class RekeningServiceTest {
         System.out.println(actual);
         assertThat(actual.getIban()).isNotNull();
         assertThat(actual.getSaldo()).isEqualTo(1000.0);
+        //TODO Testen dat de rekening aan de juiste klant is gekoppeld
     }
 
     /**
@@ -147,10 +155,6 @@ class RekeningServiceTest {
      */
     @Test
     void wijzigSaldo() {
-        Klant bestaandeKlantVoorWijzigSaldo = new Klant("MarkSlegte", "456jesv", "", 5248136, LocalDate.of(1987, 2, 16));
-        Rekening rekeningVoorWijzigSaldoExpected = new Rekening("INGB0001234567NL", 1000.0);
-        bestaandeKlantVoorWijzigSaldo.setRekening(rekeningVoorWijzigSaldoExpected);
-        rekeningVoorWijzigSaldoExpected.setKlant(bestaandeKlantVoorWijzigSaldo);
         Mockito.when(mockRepo.vindKlantByGebruikersnaam(bestaandeKlantVoorWijzigSaldo.getGebruikersnaam())).thenReturn(bestaandeKlantVoorWijzigSaldo);
         Mockito.when(mockRepo.vindRekeningVanKlant(bestaandeKlantVoorWijzigSaldo)).thenReturn(rekeningVoorWijzigSaldoExpected);
         Mockito.when(mockRepo.wijzigSaldoVanKlant(bestaandeKlantVoorWijzigSaldo, 2000.0)).thenReturn(bestaandeKlantVoorWijzigSaldo.getRekening());
