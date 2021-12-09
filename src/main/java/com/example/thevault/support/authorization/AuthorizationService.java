@@ -6,6 +6,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.thevault.domain.model.Klant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
@@ -34,7 +35,11 @@ public class AuthorizationService {
         this.tokenKlantCombinatieDao = tokenKlantCombinatieDao;
         logger.info("New AuthorizationSupport");
     }
-
+    /**== TO DO:
+     -- encryption cookie
+     == welke eigenschappen moet de cookie meekrijgen
+     == Verify token method
+     */
     public UUID getKey() {
         UUID opaakToken = UUID.randomUUID();
         logger.info("Nieuw opaakToken opgehaald: {}", opaakToken);
@@ -74,11 +79,17 @@ public class AuthorizationService {
     }
 
         // Valideer token
-        public boolean valideerJwtToken(String jwtToken ){
-            JWT.require(Algorithm.HMAC256(PRIVATE_KEY));
-            return true;
-        }
+        // Als het dus false returned moet er een exception gegooid worden
+        // wat moet deze valideer methode teruggeven?
+        public boolean valideerJwtToken(String jwtToken) {
+            try {
+                JWT.require(Algorithm.HMAC256(PRIVATE_KEY));
+            } catch (JWTVerificationException exception) {
 
+            }
+            return true;
+
+        }
 
     //opaak token combineren met klant in token-database
     public TokenKlantCombinatie authoriseer(Klant klant) {
