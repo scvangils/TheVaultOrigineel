@@ -50,18 +50,19 @@ public class LoginService {
      * @return Klant als combinatie gebruikersnaam en wachtwoord correct is, anders geef foutmelding
      */
 
-    public Klant valideerLogin (LoginDto loginDto){
-        //vraag wachtwoord op via RootRepos
-        if(vindKlantByGebruikersnaam(loginDto.getGebruikersnaam()) == null){
-           return null;
-        }
-        String encryptedWachtwoord = vindKlantByGebruikersnaam(loginDto.getGebruikersnaam()).getWachtwoord();
-        String wachtwoord = new String(Base64.decodeBase64(encryptedWachtwoord));
 
-        if(!BCryptWachtwoordHash.verifyHash(loginDto.getWachtwoord(), wachtwoord)){
-            return null;
+    public Klant valideerLogin (LoginDto loginDto){
+        Klant klant = vindKlantByGebruikersnaam(loginDto.getGebruikersnaam());
+        if(!klant.equals(null)) {
+
+            String encodedWachtwoord = klant.getWachtwoord();
+            String wachtwoord = new String(Base64.decodeBase64(encodedWachtwoord));
+
+            if (!BCryptWachtwoordHash.verifyHash(loginDto.getWachtwoord(), wachtwoord)) {
+                klant = null;
+            }
         }
-        return vindKlantByGebruikersnaam(loginDto.getGebruikersnaam());
+        return klant;
     }
 
     public Klant vindKlantByGebruikersnaam(String username){
