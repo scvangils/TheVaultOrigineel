@@ -4,12 +4,18 @@
 package com.example.thevault.support.authorization;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.*;
 
 class AuthorizationServiceTest {
 
+public UUID opaakToken;
+
     @Test
-    void getKey() {
+    void creeerOpaakToken() {
+        UUID opaakToken = UUID.randomUUID();
+        assertThat(opaakToken);
     }
 
     @Test

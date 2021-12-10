@@ -89,12 +89,12 @@ public class KlantController extends BasisApiController{
         Klant klant = loginService.valideerLogin(loginDto);
         if(klant != null){
             // haal opaak token op uit database
-            TokenKlantCombinatie tokenKlantCombinatie = authorizationService.authoriseerKlantMetOpaakToken(klant);
+            TokenKlantCombinatie tokenKlantCombinatie = authorizationService.authoriseerKlantMetRefreshToken(klant);
             // genereer cookie met het opgehaalde opaakToken
             ResponseCookie responseCookie = ResponseCookie.from("RefreshToken",
                     tokenKlantCombinatie.getKey().toString()).httpOnly(true).build();
             // genereer JWT token
-            String jwtToken = authorizationService.generateJwtToken(klant);
+            String jwtToken = authorizationService.genereerAccessToken(klant);
             // hier moeten de tokens worden toegevoegd aan de header
             return ResponseEntity.ok()
                     .header("Authorization", "Bearer " + jwtToken)

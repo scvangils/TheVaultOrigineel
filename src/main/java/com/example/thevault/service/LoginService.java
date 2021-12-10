@@ -38,19 +38,11 @@ public class LoginService {
         logger.info("New LoginService......");
     }
 
-    public String koppelTokenNaValidatieLogin (Klant klant){
-        authorizationService.authoriseerKlantMetOpaakToken(klant);
-
-        // nog goed toevoegen:
-        return jwtToken;
-    }
 
     /**
      * Wim 20211207
      * @return Klant als combinatie gebruikersnaam en wachtwoord correct is, anders geef foutmelding
      */
-
-
     public Klant valideerLogin (LoginDto loginDto){
         Klant klant = vindKlantByGebruikersnaam(loginDto.getGebruikersnaam());
         if(!klant.equals(null)) {
