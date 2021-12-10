@@ -39,15 +39,22 @@ public class KlantService {
         logger.info("New KlantService.");
     }
 
-    public Klant vindKlantByGebruikersnaam(String username){
-        return rootRepository.vindKlantByGebruikersnaam(username);
+    /**
+     * Deze methode zoekt of er in de database al een klant bestaat met deze gebruikersnaam
+     * en maakt eventueel een klant-object aan op nasis van de teruggestuurde gegevens
+     * Hier in de repository worden portefeuille en rekening toegevoegd
+     *
+     * @param gebruikersnaam gebruikersnaam van een (mogelijke) klant die uniek moet zijn
+     * @return klant-object op basis van gegevens uit de database of null indien gebruikersnaam niet gevonden is
+     */
+    public Klant vindKlantByGebruikersnaam(String gebruikersnaam){
+        return rootRepository.vindKlantByGebruikersnaam(gebruikersnaam);
     }
-
 
     /**
      * Deze methode probeert een nieuwe klant te registreren.
      * Als de gegevens correct zijn ingevuld en de gebruikersnaam nog niet bestaat,
-     * wordt het wachtwoord eerst gehasht en daarna versleuteld.
+     * wordt het wachtwoord eerst gehasht en daarna gecodeerd.
      * Vervolgens wordt de klant opgeslagen in de database.
      *
      * @param klant een Klant-object is wordt aangemaakt op basis van ingevoerde gegevens
