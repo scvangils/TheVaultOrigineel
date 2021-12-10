@@ -10,11 +10,13 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.thevault.domain.model.Klant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.el.parser.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Optional;
@@ -25,7 +27,8 @@ public class AuthorizationService {
     private final static String PRIVATE_KEY = "private_key";
     private int accessExpirationDateInMs = 10;
     private int refreshExpirationDateInMs;
-    protected final TokenKlantCombinatieDao tokenKlantCombinatieDao;
+    //protected final TokenKlantCombinatieDao tokenKlantCombinatieDao;
+    public static TokenKlantCombinatieDao tokenKlantCombinatieDao;
 
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(AuthorizationService.class);
@@ -68,13 +71,13 @@ public class AuthorizationService {
             Instant verlooptOp = gemaaktOp.plus(accessExpirationDateInMs, ChronoUnit.MINUTES);
 
             logger.info("Gecreeerd op: {}", gemaaktOp);
-            logger.info("Veerloopt op: {}", verlooptOp);
+            logger.info("Verloopt op: {}", verlooptOp);
 
             accessToken = JWT.create()
                     .withSubject(klant.getGebruikersnaam())
                     .withIssuedAt(Date.from(gemaaktOp))
                     .withExpiresAt(Date.from(verlooptOp))
-                    .withIssuer("auth0")
+                    .withIssuer("TVLT")
                     .sign(algorithm);
 
         } catch (JWTCreationException exception){
@@ -83,6 +86,7 @@ public class AuthorizationService {
         logger.info("Token (HMAC256) gemaakt: {}", accessToken);
         return accessToken;
     }
+
 
 
     /**
@@ -94,16 +98,19 @@ public class AuthorizationService {
      * @return boolean
      * @throws JWTVerificationException als het token niet gevalideerd wordt
      */
-    public boolean valideerAccessToken(String accessToken) {
+    public boolean valideerAccessToken(String accessToken, Klant klant) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(PRIVATE_KEY);
             JWTVerifier verifier = JWT.require(algorithm)
-                    .withIssuer("auth0")
+                    .withSubject(klant.getGebruikersnaam())
+                    .withIssuer("TVLT")
                     .build();
             DecodedJWT jwt = verifier.verify(accessToken);
             logger.info("Token gevalideerd {}", jwt);
         } catch (JWTVerificationException exception) {
             logger.info("JWTtoken niet gevalideerd");
+            // Nog een andere exception toevoegen
+            // moet een 401 teruggeven
             return false;
         }
         return true;
@@ -132,6 +139,19 @@ public class AuthorizationService {
         tokenKlantCombinatieDao.slaTokenKlantPairOp(tokenKlantCombinatie);
         return tokenKlantCombinatie;
     }
+
+    public static void main(String[] args) {
+        Klant test = new Klant( "HarryBeste", "210jklf", "", 101212,LocalDate.of(1991,
+                1, 12));
+
+        AuthorizationService authorizationService = new AuthorizationService(tokenKlantCombinatieDao);
+        authorizationService.genereerRefreshToken();
+        authorizationService.genereerAccessToken(test);
+
+
+
+    }
+
 
 
 }
