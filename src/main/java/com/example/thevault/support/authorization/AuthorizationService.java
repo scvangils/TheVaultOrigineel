@@ -10,6 +10,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.thevault.domain.model.Klant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.el.parser.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,10 @@ import java.util.UUID;
 @Service
 public class AuthorizationService {
     private final static String PRIVATE_KEY = "private_key";
-    private static TokenKlantCombinatieDao tokenKlantCombinatieDao;
+    private int accessExpirationDateInMs = 10;
+    private int refreshExpirationDateInMs;
     //protected final TokenKlantCombinatieDao tokenKlantCombinatieDao;
+    public static TokenKlantCombinatieDao tokenKlantCombinatieDao;
 
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(AuthorizationService.class);
@@ -36,87 +39,119 @@ public class AuthorizationService {
         this.tokenKlantCombinatieDao = tokenKlantCombinatieDao;
         logger.info("New AuthorizationSupport");
     }
-    /**== TO DO:
-     -- encryption cookie
-     == welke eigenschappen moet de cookie meekrijgen
-     == Verify token method
+    /**
+     * Genereert een refresh token op basis van de UUID (universally unique identifier)
+     * library en bestaat uit een willekeurig gegenereerde 128-bit waarde
+     *
+     * @return refreshToken
      */
-    public UUID getKey() {
-        UUID opaakToken = UUID.randomUUID();
-        logger.info("Nieuw opaakToken opgehaald: {}", opaakToken);
-        return opaakToken;
-
+    public UUID genereerRefreshToken() {
+        UUID refreshToken = UUID.randomUUID();
+        logger.info("Nieuw refresh token opgehaald: {}", refreshToken);
+        return refreshToken;
     }
 
-    //jwt token met
-    public String generateJwtToken (Klant klant){
-        String jwtToken = null;
+    /**
+     * Genereert een access token middels een JWT (JSON Web Token). Hierbij wordt
+     * het HMAC256 algorithme gebruikt om het token te signeren. De token
+     * vervalt na een aangegeven aantal minuten via de accessExpirationDateInMs
+     * en neemt daarnaast de gebruikersnaam van de meegegeven klant mee.
+     *
+     * @param klant de klant waarvoor het token bij inlog gegenereerd moet worden
+     * @return String accesToken
+     * @throws JWTCreationException als er een probleem is met het "signen" van
+     * het token of als de meegegeven items niet kunnen worden omgezet naar JSON
+     */
+    public String genereerAccessToken(Klant klant) {
+        String accessToken = null;
         try {
             Algorithm algorithm = Algorithm.HMAC256(PRIVATE_KEY);
-            // Optie?: Algorithm algorithm = Algorithm.HMAC256(tokenKlantCombinatieDao.vindTokenKlantCombinatieMetKlant(klant).get().getKey().toString());
 
             Instant gemaaktOp = Instant.now().truncatedTo(ChronoUnit.SECONDS);
-            Instant verlooptOp = gemaaktOp.plus(20, ChronoUnit.MINUTES);
+            Instant verlooptOp = gemaaktOp.plus(accessExpirationDateInMs, ChronoUnit.MINUTES);
 
             logger.info("Gecreeerd op: {}", gemaaktOp);
-            logger.info("Veerloopt op: {}", verlooptOp);
+            logger.info("Verloopt op: {}", verlooptOp);
 
-            jwtToken = JWT.create()
+            accessToken = JWT.create()
                     .withSubject(klant.getGebruikersnaam())
                     .withIssuedAt(Date.from(gemaaktOp))
                     .withExpiresAt(Date.from(verlooptOp))
-                    .withIssuer("auth0")
+                    .withIssuer("TVLT")
                     .sign(algorithm);
 
-            /* NOG UITZOEKEN:
-            Claims claims = Jwts.parser()
-                    .setSigningKey(key)
-                    .parseClaimsJws(jws)
-                    .getBody();*/
-
         } catch (JWTCreationException exception){
-            logger.info("Invalid Signing configuration / Couldn't convert Claims.", exception);
+            logger.info("Invalid Signing configuration.", exception);
         }
-        logger.info("Token (HMAC256) gemaakt: {}", jwtToken);
-        return jwtToken;
+        logger.info("Token (HMAC256) gemaakt: {}", accessToken);
+        return accessToken;
     }
 
-        // Valideer token
-        // Als het dus false returned moet er een exception gegooid worden
-        // wat moet deze valideer methode teruggeven?
-    public boolean valideerJwtToken(String jwtToken) {
+
+
+    /**
+     * Valideert het access token. Deze methode kan worden gebruikt zodra de klant
+     * een nieuwe request verstuurt. De validatie van de methode hangt onder andere
+     * af van de vervaldatum
+     *
+     * @param accessToken
+     * @return boolean
+     * @throws JWTVerificationException als het token niet gevalideerd wordt
+     */
+    public boolean valideerAccessToken(String accessToken, Klant klant) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256(getKey().toString());
+            Algorithm algorithm = Algorithm.HMAC256(PRIVATE_KEY);
             JWTVerifier verifier = JWT.require(algorithm)
-                    .withIssuer("auth0")
-                    .build(); //Reusable verifier instance
-            DecodedJWT jwt = verifier.verify(jwtToken);
-            // waarvoor ookalweer require? > : JWT.require(Algorithm.HMAC256(PRIVATE_KEY));
-            logger.info("Token gevalideerd");
+                    .withSubject(klant.getGebruikersnaam())
+                    .withIssuer("TVLT")
+                    .build();
+            DecodedJWT jwt = verifier.verify(accessToken);
+            logger.info("Token gevalideerd {}", jwt);
         } catch (JWTVerificationException exception) {
             logger.info("JWTtoken niet gevalideerd");
+            // Nog een andere exception toevoegen
+            // moet een 401 teruggeven
             return false;
         }
         return true;
     }
 
-    //opaak token combineren met klant in token-database
-    public TokenKlantCombinatie authoriseerKlantMetOpaakToken(Klant klant) {
+    /**
+     * Authoriseert de klant doormiddel van het refresh token. Dit token wordt
+     * in de database opgezocht. Als er als een klant-token combinatie bestaat
+     * wordt het oude token weggegooid en wordt het nieuwe token opgeslagen
+     * in de database. Dit token wordt later gebruikt bij het refreshen van
+     * het JWT acces token zodat de klant geen last heeft van het verlopen van het
+     * token
+     *
+     * @param klant
+     * @return tokenKlantCombinatie
+     * @throws JWTCreationException als er een probleem is met het "signen" van
+     * het token of als de meegegeven items niet kunnen worden omgezet naar JSON
+     */
+    public TokenKlantCombinatie authoriseerKlantMetRefreshToken(Klant klant) {
         Optional<TokenKlantCombinatie> optioneleCombinatie = tokenKlantCombinatieDao.vindTokenKlantCombinatieMetKlant(klant);
         if (optioneleCombinatie.isPresent()) {
             tokenKlantCombinatieDao.delete(optioneleCombinatie.get().getKey());
         }
-        UUID opaakToken = getKey();
-        TokenKlantCombinatie tokenMemberPair = new TokenKlantCombinatie(opaakToken, klant);
-        tokenKlantCombinatieDao.slaTokenKlantPairOp(tokenMemberPair);
-        return tokenMemberPair;
+        UUID refreshToken = genereerRefreshToken();
+        TokenKlantCombinatie tokenKlantCombinatie = new TokenKlantCombinatie(refreshToken, klant);
+        tokenKlantCombinatieDao.slaTokenKlantPairOp(tokenKlantCombinatie);
+        return tokenKlantCombinatie;
     }
 
     public static void main(String[] args) {
-        AuthorizationService authorizationSupport = new AuthorizationService(tokenKlantCombinatieDao);
-        Klant testKlant = new Klant( "Henknr1", "fdsaljkl", "Hello", 1890393, LocalDate.of(1991, 1, 12));
-        authorizationSupport.getKey();
-        String token = authorizationSupport.generateJwtToken(testKlant);
-        authorizationSupport.valideerJwtToken(token);
+        Klant test = new Klant( "HarryBeste", "210jklf", "", 101212,LocalDate.of(1991,
+                1, 12));
+
+        AuthorizationService authorizationService = new AuthorizationService(tokenKlantCombinatieDao);
+        authorizationService.genereerRefreshToken();
+        authorizationService.genereerAccessToken(test);
+
+
+
     }
+
+
+
 }

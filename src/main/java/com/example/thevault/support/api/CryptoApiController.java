@@ -50,6 +50,15 @@ public class CryptoApiController {
         }
     }
 
+
+    /**
+     * Maakt een API call naar een bepaalde meegegeven uri met de benodigde parameters
+     * dit in de HTTP request worden meegegeven.
+     *
+     * @param uri
+     * @param parameters
+     * @return response content
+     */
     public static String makeAPICall(String uri, List<NameValuePair> parameters)
             throws URISyntaxException, IOException {
         String response_content = "";

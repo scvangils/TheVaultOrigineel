@@ -1,7 +1,5 @@
-/*
- * @Author Elise Olthof
- * 12-07-2021
- * */
+// Created by E.S. Olthof
+// 20210712
 
 package com.example.thevault.support.authorization;
 

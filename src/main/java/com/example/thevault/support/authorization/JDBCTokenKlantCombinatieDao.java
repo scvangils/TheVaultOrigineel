@@ -1,7 +1,5 @@
-/*
-* @Author Elise Olthof
-* 12-07-2021
-* */
+// Created by E.S. Olthof
+// 20210712
 
 package com.example.thevault.support.authorization;
 
@@ -39,6 +37,12 @@ public class JDBCTokenKlantCombinatieDao implements TokenKlantCombinatieDao{
 
     }
 
+    /**
+     * Slaat een token met klant op in de database
+     *
+     * @param tokenKlantCombinatie
+     * return void
+     */
     @Override
     public void slaTokenKlantPairOp(TokenKlantCombinatie tokenKlantCombinatie) {
         jdbcTemplate.update(
@@ -46,17 +50,30 @@ public class JDBCTokenKlantCombinatieDao implements TokenKlantCombinatieDao{
                 tokenKlantCombinatie.getKey().toString(), tokenKlantCombinatie.getKlant().getGebruikerId());
     }
 
-
+    /**
+     * Vind een token klant combinatie op basis van een megegeven token en geeft een
+     * klant terug
+     *
+     * @param refreshToken
+     * @return klant
+    * */
     @Override
-    public Optional<TokenKlantCombinatie> vindTokenKlantPairMetKey(UUID key) {
+    public Optional<TokenKlantCombinatie> vindTokenKlantPairMetKey(UUID refreshToken) {
         List<TokenKlantCombinatie> tokenKlantCombinaties =
                 jdbcTemplate.query(
-                        "select * from refreshToken where token = ?", new ConnectionRowMapper(), key.toString());
+                        "select * from refreshToken where token = ?", new ConnectionRowMapper(), refreshToken.toString());
         if (tokenKlantCombinaties.size() == 1) {
             return Optional.of(tokenKlantCombinaties.get(0));
         }
         return Optional.empty();    }
 
+
+    /**
+     * Zoekt het refresh token op op basis van een klant als deze in de database staat
+     *
+     * @param klant
+     * @return refresh token
+     */
     @Override
     public Optional<TokenKlantCombinatie> vindTokenKlantCombinatieMetKlant(Klant klant) {
         List<TokenKlantCombinatie> tokenKlantCombinaties =
@@ -68,20 +85,25 @@ public class JDBCTokenKlantCombinatieDao implements TokenKlantCombinatieDao{
         return Optional.empty();
     }
 
+    /**
+     * Delete een token
+     *
+     * @param uuid = refresh token
+     * @return void
+    * */
     @Override
     public void delete(UUID uuid) {
-        jdbcTemplate.update("delete from refreshToken where uuid = ?", uuid.toString());
+        jdbcTemplate.update("delete from refreshToken where token = ?", uuid.toString());
         logger.info("Verwijderde uuid " + uuid.toString());
     }
 
 
-    // maak een inner class aan voor een rowmapper
     private class ConnectionRowMapper implements RowMapper<TokenKlantCombinatie> {
 
         @Override
         public TokenKlantCombinatie mapRow(ResultSet resultSet, int i) throws SQLException {
-            UUID uuid = UUID.fromString(resultSet.getString("uuid"));
-            int klantId = resultSet.getInt("klant_fk");
+            UUID uuid = UUID.fromString(resultSet.getString("token"));
+            int klantId = resultSet.getInt("gebruikerId");
             Klant klant = klantDAO.vindKlantById(klantId);
             return new TokenKlantCombinatie(uuid, klant);
         }

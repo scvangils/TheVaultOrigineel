@@ -133,8 +133,8 @@ class KlantControllerTest {
 
 
         Mockito.when(loginService.valideerLogin(loginDto2)).thenReturn(testKlant);
-        Mockito.when(authorizationService.authoriseerKlantMetOpaakToken(testKlant)).thenReturn(new TokenKlantCombinatie(UUID.randomUUID(), testKlant));
-        Mockito.when(authorizationService.generateJwtToken(testKlant)).thenReturn("testTransparentToken");
+        Mockito.when(authorizationService.authoriseerKlantMetRefreshToken(testKlant)).thenReturn(new TokenKlantCombinatie(UUID.randomUUID(), testKlant));
+        Mockito.when(authorizationService.genereerAccessToken(testKlant)).thenReturn("testTransparentToken");
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/login");
         requestBuilder.content(testInlogJson).contentType(MediaType.APPLICATION_JSON);
 
