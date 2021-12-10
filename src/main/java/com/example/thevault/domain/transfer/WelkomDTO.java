@@ -1,3 +1,6 @@
+// Created by E.S. Olthof
+// 20211012
+
 package com.example.thevault.domain.transfer;
 
 import com.example.thevault.domain.model.Asset;
