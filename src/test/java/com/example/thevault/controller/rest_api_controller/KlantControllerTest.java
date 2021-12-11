@@ -84,12 +84,6 @@ class KlantControllerTest {
 
     @Test
     void registreerKlantHandler() throws JsonProcessingException {
-//        String gehashtWachtwoord = BCryptWachtwoordHash.hashWachtwoord("testWW");
-//        Adres adres = new Adres("straat", 357, "C", "1000AA", "Amsterdam");
-//        Klant testKlant = new Klant("testKlant", gehashtWachtwoord,
-//                null, null, "Jan", adres, BSNvalidator.TESTBSN_VAN_RIVG, LocalDate.of(1975, 7, 30));
-//        testKlant.setGebruikerId(2);
-//        Rekening rekening = new Rekening("NL20INGB0006582287", 1000);
         ObjectMapper objectMapper = new ObjectMapper();
         String testKlantJson = objectMapper.writeValueAsString(testKlant);
         testKlant.setRekening(rekening);
@@ -110,15 +104,6 @@ class KlantControllerTest {
             fail();
         }
     }
-//    /*        String echteKlant = String.format("{\"gebruikerId\":2,\"gebruikersnaam\":\"testKlant\",\"" +
-//                "wachtwoord\":\"%s\",\"naam\":\"Jan\",\"adres\":{" +
-//                "\"straatnaam\":\"straat\"," +
-//                "\"huisnummer\":357," +
-//                "\"toevoeging\":\"C\"," +
-//                "\"postcode\":\"1000AA\"," +
-//                "\"plaatsnaam\":\"Amsterdam\"" +
-//                "},\"bsn\":145801354,\"rekening\":null,\"geboortedatum\":\"1975-07-30\"}", gehashtWachtwoord);
-//        assertEquals(testKlantJson, echteKlant);*/
 
     @Test
     void loginHandler() throws JsonProcessingException {
