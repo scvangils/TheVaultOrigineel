@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,7 @@ class RootRepositoryTest {
     private static KlantDAO klantDAO;
     private static AssetDAO assetDAO;
     private static RekeningDAO rekeningDAO;
+    private static CryptomuntDAO cryptomuntDAO;
     private static Klant testKlant;
     public static Asset testAsset1;
     public static Asset testAsset2;
@@ -44,16 +46,18 @@ class RootRepositoryTest {
         klantDAO = Mockito.mock(KlantDAO.class);
         assetDAO = Mockito.mock(AssetDAO.class);
         rekeningDAO = Mockito.mock(RekeningDAO.class);
-        rootRepository = new RootRepository(klantDAO, rekeningDAO, assetDAO);
+        cryptomuntDAO = Mockito.mock(CryptomuntDAO.class);
+        testKlant = new Klant();
+        rootRepository = new RootRepository(klantDAO, rekeningDAO, assetDAO, cryptomuntDAO);
         testCryptomunt1 = new Cryptomunt(1, "CarmenCrypto", "CCR", 100.0);
         testCryptomunt2 = new Cryptomunt(2, "DigiCrypto", "DIG", 75.0);
         testCryptomunt3 = new Cryptomunt(3, "Coyne", "COY", 125.0);
         testCryptomunt4 = new Cryptomunt(4,"VaultMoney","VMN",200.0);
-        testAsset1 = new Asset(testCryptomunt1, 5.1);
-        testAsset2 = new Asset(testCryptomunt2, 2.4);
-        testAsset3 = new Asset(testCryptomunt3, 3.6);
-        testAsset4 = new Asset(testCryptomunt1, 0.5);
-        testAsset5 = new Asset(testCryptomunt4, 1.3);
+        testAsset1 = new Asset(testCryptomunt1, 5.1, testKlant, LocalDateTime.now());
+        testAsset2 = new Asset(testCryptomunt2, 2.4, testKlant, LocalDateTime.now());
+        testAsset3 = new Asset(testCryptomunt3, 3.6, testKlant, LocalDateTime.now());
+        testAsset4 = new Asset(testCryptomunt1, 0.5, testKlant, LocalDateTime.now());
+        testAsset5 = new Asset(testCryptomunt4, 1.3, testKlant, LocalDateTime.now());
         portefeuille = new ArrayList<>();
         portefeuille.add(testAsset1);
         portefeuille.add(testAsset2);
@@ -128,9 +132,12 @@ class RootRepositoryTest {
 
     @Test
     void vulPortefeuilleKlant() {
-        Mockito.when(assetDAO.geefAlleAssets(testKlant.getGebruikerId())).thenReturn(portefeuille);
+        Mockito.when(assetDAO.geefAlleAssets(testKlant)).thenReturn(portefeuille);
+        Mockito.when(cryptomuntDAO.geefCryptomunt(testCryptomunt1.getId())).thenReturn(testCryptomunt1);
+        Mockito.when(cryptomuntDAO.geefCryptomunt(testCryptomunt2.getId())).thenReturn(testCryptomunt2);
+        Mockito.when(cryptomuntDAO.geefCryptomunt(testCryptomunt3.getId())).thenReturn(testCryptomunt3);
         List<Asset> expected = portefeuille;
-        List<Asset> actual = rootRepository.vulPortefeuilleKlant(testKlant.getGebruikerId());
+        List<Asset> actual = rootRepository.vulPortefeuilleKlant(testKlant);
         assertThat(actual).as("Test vullen portefeuille van testklant").isNotNull().isEqualTo(expected).
                 hasSize(3).contains(testAsset1, atIndex(0)).contains(testAsset2, atIndex(1)).
                 contains(testAsset3, atIndex(2)).doesNotContain(testAsset4).extracting(Asset::getCryptomunt).
@@ -139,22 +146,22 @@ class RootRepositoryTest {
 
     @Test
     void geefAssetVanKlant() {
-        Mockito.when(assetDAO.geefAsset(testKlant.getGebruikerId(), testAsset1.getCryptomunt().getId())).
+        Mockito.when(assetDAO.geefAsset(testKlant, testAsset1.getCryptomunt())).
                 thenReturn(testAsset1);
         Asset expected = testAsset1;
-        Asset actual = rootRepository.geefAssetVanKlant(testKlant.getGebruikerId(), testAsset1.getCryptomunt().getId());
+        Asset actual = rootRepository.geefAssetVanKlant(testKlant, testAsset1.getCryptomunt());
         assertThat(actual).as("Test asset van testklant opvragen").isNotNull().isEqualTo(expected).
                 isIn(portefeuille).hasNoNullFieldsOrProperties().asString().startsWith("Asset{").contains("5.1").
-                doesNotContain("2.4").hasSize(108);
+                doesNotContain("2.4").hasSize(293);
     }
 
     @Test
     void slaUpdateAssetVanKlantOp() {
-        Mockito.when(assetDAO.geefAsset(testKlant.getGebruikerId(), testAsset2.getCryptomunt().getId())).
+        Mockito.when(assetDAO.geefAsset(testKlant, testAsset2.getCryptomunt())).
                 thenReturn(testAsset2);
-        Mockito.when(assetDAO.updateAsset(testKlant.getGebruikerId(), testAsset2)).thenReturn(testAsset2);
+        Mockito.when(assetDAO.updateAsset(testAsset2)).thenReturn(testAsset2);
         Asset expected = testAsset2;
-        Asset actual = rootRepository.slaAssetVanKlantOp(testKlant.getGebruikerId(), testAsset2);
+        Asset actual = rootRepository.slaAssetVanKlantOp(testKlant, testAsset2);
         assertThat(actual).as("Test opslaan asset van testklant").isNotNull().isEqualTo(expected).
                 isIn(portefeuille).isNotEqualTo(testAsset5).extracting("cryptomunt").
                 extracting("name", "symbol").contains("DigiCrypto", "DIG");
@@ -162,11 +169,11 @@ class RootRepositoryTest {
 
     @Test
     void slaNieuweAssetVanKlantOp() {
-        Mockito.when(assetDAO.geefAsset(testKlant.getGebruikerId(), testAsset5.getCryptomunt().getId())).
+        Mockito.when(assetDAO.geefAsset(testKlant, testAsset5.getCryptomunt())).
                 thenReturn(null);
-        Mockito.when(assetDAO.voegNieuwAssetToeAanPortefeuille(testKlant.getGebruikerId(), testAsset5)).thenReturn(testAsset5);
+        Mockito.when(assetDAO.voegNieuwAssetToeAanPortefeuille(testAsset5)).thenReturn(testAsset5);
         Asset expected = testAsset5;
-        Asset actual = rootRepository.slaAssetVanKlantOp(testKlant.getGebruikerId(), testAsset5);
+        Asset actual = rootRepository.slaAssetVanKlantOp(testKlant, testAsset5);
         assertThat(actual).as("Test opslaan asset van testklant").isNotNull().isEqualTo(expected).
                 isNotIn(portefeuille).isNotEqualTo(testAsset2).extracting("cryptomunt").
                 extracting("name", "symbol").contains("VaultMoney", "VMN");
@@ -174,11 +181,11 @@ class RootRepositoryTest {
 
     @Test
     void wijzigAssetVanKlant() {
-        Mockito.when(assetDAO.updateAsset(testKlant.getGebruikerId(), testAsset3)).thenReturn(testAsset3);
+        Mockito.when(assetDAO.updateAsset(testAsset3)).thenReturn(testAsset3);
         Asset expected = testAsset3;
-        Asset actual = rootRepository.wijzigAssetVanKlant(testKlant.getGebruikerId(), testAsset3);
+        Asset actual = rootRepository.wijzigAssetVanKlant(testAsset3);
         assertThat(actual).as("Test wijzigen asset van testklant").isNotNull().isEqualTo(expected).
                 isIn(portefeuille).hasNoNullFieldsOrProperties().asString().startsWith("Asset{").contains("Coyne").
-                doesNotContain("BitCoin").hasSize(101);
+                doesNotContain("BitCoin").hasSize(286);
     }
 }

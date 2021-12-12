@@ -22,6 +22,14 @@ public class Cryptomunt {
         logger.info("New Cryptomunt, no args constructor");
     }
 
+    /**
+     * @Author Carmen
+     * Constructor voor het opvragen van informatie uit de database voor Asset
+     * @param cryptomuntId de identifier van de cryptomunt
+     */
+    public Cryptomunt(int cryptomuntId){
+        this(cryptomuntId, null, null, 0);
+    }
 
     public Cryptomunt (int cryptomuntId, String name, String afkorting, double price){
         this.Id = cryptomuntId;
