@@ -77,10 +77,10 @@ class AssetServiceTest {
     }
 
     @Test
-    void slaAssetOp() {
-        Mockito.when(rootRepository.slaAssetVanKlantOp(testKlant, testAsset2)).thenReturn(testAsset2);
+    void slaNieuwAssetOp() {
+        Mockito.when(rootRepository.slaNieuwAssetVanKlantOp(testAsset2)).thenReturn(testAsset2);
         Asset expected = testAsset2;
-        Asset actual = assetService.slaAssetOp(testKlant, testAsset2);
+        Asset actual = assetService.slaNieuwAssetOp(testAsset2);
         assertThat(actual).as("Test sla asset van testklant op").isNotNull().isEqualTo(expected).
                 isIn(portefeuille).isNotEqualTo(testAsset3).isNotSameAs(testAsset4);
     }

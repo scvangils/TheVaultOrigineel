@@ -14,9 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @Author: Carmen Rietdijk
  * Beschrijving: de servicelaag voor asset, waarin informatie over assets kan worden opgeslagen, aangepast en opgevraagd
@@ -56,12 +53,11 @@ public class AssetService {
 
     /**
      * Informatie over een asset van de klant wordt opgeslagen, de informatie is afkomstig uit een transactie
-     * @param klant de klant die een asset wil opslaan
      * @param asset de asset die wordt opgeslagen
      * @return Asset de asset die is opgeslagen
      */
-    public Asset slaAssetOp(Klant klant, Asset asset){
-        return rootRepository.slaAssetVanKlantOp(klant, asset);
+    public Asset slaNieuwAssetOp(Asset asset){
+        return rootRepository.slaNieuwAssetVanKlantOp(asset);
     }
 
     /**

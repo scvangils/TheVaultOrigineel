@@ -11,13 +11,17 @@ import com.example.thevault.domain.model.Asset;
 import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.model.Rekening;
+import com.example.thevault.support.exceptions.AssetNotExistsException;
 import net.minidev.json.annotate.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 @Repository
 public class RootRepository {
@@ -29,7 +33,6 @@ public class RootRepository {
     private final RekeningDAO rekeningDAO;
     private final AssetDAO assetDAO;
     private final CryptomuntDAO cryptomuntDAO;
-
 
     @Autowired
     public RootRepository(KlantDAO klantDAO, RekeningDAO rekeningDAO, AssetDAO assetDAO, CryptomuntDAO cryptomuntDAO) {
@@ -141,22 +144,17 @@ public class RootRepository {
      * @return Asset de asset (cryptomunt + aantal) waarover informatie is opgevraagd
      */
     public Asset geefAssetVanKlant(Klant klant, Cryptomunt cryptomunt){
-        return assetDAO.geefAsset(klant, cryptomunt);
+        return assetDAO.geefAsset(klant, cryptomunt).orElseThrow(AssetNotExistsException::new);
     }
 
     /**
      * Dit betreft het toevoegen van een cryptomunt die nog niet in de portefeuille zit
      * Dit gebeurt via een 'transactie', waarbij een klant crypto's koopt
-     * @param klant de klant die de cryptomunt koopt
      * @param asset de cryptomunt en het aantal dat de klant aanschaft
      * @return Asset de asset die de klant heeft toegevoegd
      */
-    public Asset slaAssetVanKlantOp(Klant klant, Asset asset){
-        if(assetDAO.geefAsset(klant, asset.getCryptomunt()) == null){
-            return assetDAO.voegNieuwAssetToeAanPortefeuille(asset);
-        } else {
-            return assetDAO.updateAsset(asset);
-        }
+    public Asset slaNieuwAssetVanKlantOp(Asset asset){
+        return assetDAO.voegNieuwAssetToeAanPortefeuille(asset);
     }
 
     /**

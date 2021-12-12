@@ -6,6 +6,8 @@ package com.example.thevault.domain.mapping.dao;
 import com.example.thevault.domain.model.Asset;
 import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.model.Klant;
+import com.example.thevault.support.exceptions.AssetNotExistsException;
+import com.example.thevault.support.exceptions.IncorrectFormatException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 /**
  * @Author: Carmen Rietdijk
@@ -31,6 +35,7 @@ public class JDBCAssetDAO implements AssetDAO{
     private final Logger logger = LoggerFactory.getLogger(JDBCAssetDAO.class);
 
     private JdbcTemplate jdbcTemplate;
+    private Supplier<AssetNotExistsException> AssetNotExistsException;
 
     @Autowired
     public JDBCAssetDAO(JdbcTemplate jdbcTemplate) {
@@ -105,7 +110,8 @@ public class JDBCAssetDAO implements AssetDAO{
      */
     @Override
     public Asset updateAsset(Asset asset) {
-        double huidigeAantal = geefAsset(asset.getKlant(), asset.getCryptomunt()).getAantal();
+        double huidigeAantal = geefAsset(asset.getKlant(), asset.getCryptomunt()).orElseThrow(AssetNotExistsException).
+                getAantal();
         double teVerhandelenAantal = asset.getAantal();
         if(huidigeAantal >= teVerhandelenAantal) {
             Asset nieuwAsset = new Asset(asset.getCryptomunt(), huidigeAantal - teVerhandelenAantal,
@@ -127,12 +133,15 @@ public class JDBCAssetDAO implements AssetDAO{
      * @return Asset de asset (cryptomunt + aantal) waarover informatie is opgevraagd
      */
     @Override
-    public Asset geefAsset(Klant klant, Cryptomunt cryptomunt){
+    public Optional<Asset> geefAsset(Klant klant, Cryptomunt cryptomunt){
         String sql = "Select * from asset where gebruikerId = ? AND cryptomuntId = ?;";
-        Asset asset = jdbcTemplate.queryForObject(sql, new JDBCAssetDAO.AssetRowMapper(), klant.getGebruikerId(),
+        List<Asset> assets = jdbcTemplate.query(sql, new JDBCAssetDAO.AssetRowMapper(), klant.getGebruikerId(),
                 cryptomunt.getId());
-        asset.setKlant(klant);
-        return asset;
+        if(assets.size() == 1){
+            assets.get(0).setKlant(klant);
+            return Optional.of(assets.get(0));
+        }
+        return Optional.empty();
     }
 
     /**

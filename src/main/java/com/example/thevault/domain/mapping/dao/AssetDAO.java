@@ -5,6 +5,7 @@ import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.model.Klant;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @Author: Carmen Rietdijk
@@ -44,7 +45,7 @@ public interface AssetDAO {
      * @param cryptomunt cryptomunt waarover informatie wordt opgevraagd
      * @return Asset de asset (cryptomunt + aantal) waarover informatie is opgevraagd
      */
-    public Asset geefAsset(Klant klant, Cryptomunt cryptomunt);
+    public Optional<Asset> geefAsset(Klant klant, Cryptomunt cryptomunt);
 
     /**
      * Dit betreft het vinden van alle cryptomunten die in de portefeuille zitten

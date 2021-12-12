@@ -5,17 +5,19 @@ import com.example.thevault.domain.model.Asset;
 import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.model.Rekening;
+import com.example.thevault.support.exceptions.AssetNotExistsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.atIndex;
+import static org.junit.jupiter.api.Assertions.fail;
 
 class RootRepositoryTest {
 
@@ -30,11 +32,13 @@ class RootRepositoryTest {
     public static Asset testAsset3;
     public static Asset testAsset4;
     public static Asset testAsset5;
+    public static Optional<Asset> testAsset6;
     public static List<Asset> portefeuille;
     public static Cryptomunt testCryptomunt1;
     public static Cryptomunt testCryptomunt2;
     public static Cryptomunt testCryptomunt3;
     public static Cryptomunt testCryptomunt4;
+    public static Cryptomunt testCryptoMunt5;
     public static Rekening rekeningOrigineelSaldo;
     public static Rekening rekeningGewijzigdSaldo;
     public static double origineelSaldo;
@@ -53,11 +57,13 @@ class RootRepositoryTest {
         testCryptomunt2 = new Cryptomunt(2, "DigiCrypto", "DIG", 75.0, LocalDateTime.now());
         testCryptomunt3 = new Cryptomunt(3, "Coyne", "COY", 125.0, LocalDateTime.now());
         testCryptomunt4 = new Cryptomunt(4,"VaultMoney","VMN",200.0, LocalDateTime.now());
+        testCryptoMunt5 = null;
         testAsset1 = new Asset(testCryptomunt1, 5.1, testKlant, LocalDateTime.now());
         testAsset2 = new Asset(testCryptomunt2, 2.4, testKlant, LocalDateTime.now());
         testAsset3 = new Asset(testCryptomunt3, 3.6, testKlant, LocalDateTime.now());
         testAsset4 = new Asset(testCryptomunt1, 0.5, testKlant, LocalDateTime.now());
         testAsset5 = new Asset(testCryptomunt4, 1.3, testKlant, LocalDateTime.now());
+        testAsset6 = Optional.empty();
         portefeuille = new ArrayList<>();
         portefeuille.add(testAsset1);
         portefeuille.add(testAsset2);
@@ -145,9 +151,9 @@ class RootRepositoryTest {
     }
 
     @Test
-    void geefAssetVanKlant() {
+    void geefBestaandeAssetVanKlant() {
         Mockito.when(assetDAO.geefAsset(testKlant, testAsset1.getCryptomunt())).
-                thenReturn(testAsset1);
+                thenReturn(java.util.Optional.ofNullable(testAsset1));
         Asset expected = testAsset1;
         Asset actual = rootRepository.geefAssetVanKlant(testKlant, testAsset1.getCryptomunt());
         assertThat(actual).as("Test asset van testklant opvragen").isNotNull().isEqualTo(expected).
@@ -156,15 +162,16 @@ class RootRepositoryTest {
     }
 
     @Test
-    void slaUpdateAssetVanKlantOp() {
-        Mockito.when(assetDAO.geefAsset(testKlant, testAsset2.getCryptomunt())).
-                thenReturn(testAsset2);
-        Mockito.when(assetDAO.updateAsset(testAsset2)).thenReturn(testAsset2);
-        Asset expected = testAsset2;
-        Asset actual = rootRepository.slaAssetVanKlantOp(testKlant, testAsset2);
-        assertThat(actual).as("Test opslaan asset van testklant").isNotNull().isEqualTo(expected).
-                isIn(portefeuille).isNotEqualTo(testAsset5).extracting("cryptomunt").
-                extracting("name", "symbol").contains("DigiCrypto", "DIG");
+    void exceptionOnbestaandeAssetVanKlant() {
+        Mockito.when(assetDAO.geefAsset(testKlant, testCryptoMunt5)).
+                thenReturn(testAsset6);
+        try {
+            rootRepository.geefAssetVanKlant(testKlant, testCryptoMunt5);
+            fail();
+        } catch (AssetNotExistsException assetNotExistsException){
+            assertThat(assetNotExistsException.getMessage()).isEqualTo("Asset bestaat niet.");
+
+        }
     }
 
     @Test
@@ -173,7 +180,7 @@ class RootRepositoryTest {
                 thenReturn(null);
         Mockito.when(assetDAO.voegNieuwAssetToeAanPortefeuille(testAsset5)).thenReturn(testAsset5);
         Asset expected = testAsset5;
-        Asset actual = rootRepository.slaAssetVanKlantOp(testKlant, testAsset5);
+        Asset actual = rootRepository.slaNieuwAssetVanKlantOp(testAsset5);
         assertThat(actual).as("Test opslaan asset van testklant").isNotNull().isEqualTo(expected).
                 isNotIn(portefeuille).isNotEqualTo(testAsset2).extracting("cryptomunt").
                 extracting("name", "symbol").contains("VaultMoney", "VMN");
