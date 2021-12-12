@@ -10,7 +10,6 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.thevault.domain.model.Klant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.el.parser.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +23,9 @@ import java.util.UUID;
 
 @Service
 public class AuthorizationService {
-    private final static String PRIVATE_KEY = "private_key";
-    private int accessExpirationDateInMs = 10;
-    private int refreshExpirationDateInMs;
+    private final static String SECRET_KEY = "secretTheVaultKey5dRQPD_sCsArU";
+    private int accessExpirationDateInMinutes = 10;
+    private int refreshExpirationDateInMinutes;
     //protected final TokenKlantCombinatieDao tokenKlantCombinatieDao;
     public static TokenKlantCombinatieDao tokenKlantCombinatieDao;
 
@@ -65,10 +64,10 @@ public class AuthorizationService {
     public String genereerAccessToken(Klant klant) {
         String accessToken = null;
         try {
-            Algorithm algorithm = Algorithm.HMAC256(PRIVATE_KEY);
+            Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
 
             Instant gemaaktOp = Instant.now().truncatedTo(ChronoUnit.SECONDS);
-            Instant verlooptOp = gemaaktOp.plus(accessExpirationDateInMs, ChronoUnit.MINUTES);
+            Instant verlooptOp = gemaaktOp.plus(accessExpirationDateInMinutes, ChronoUnit.MINUTES);
 
             logger.info("Gecreeerd op: {}", gemaaktOp);
             logger.info("Verloopt op: {}", verlooptOp);
@@ -88,8 +87,10 @@ public class AuthorizationService {
     }
 
 
-
     /**
+     * REVIEW
+     * TO DO: Wat is beter try catch of een throw exception?????
+     *
      * Valideert het access token. Deze methode kan worden gebruikt zodra de klant
      * een nieuwe request verstuurt. De validatie van de methode hangt onder andere
      * af van de vervaldatum
@@ -98,23 +99,40 @@ public class AuthorizationService {
      * @return boolean
      * @throws JWTVerificationException als het token niet gevalideerd wordt
      */
-    public boolean valideerAccessToken(String accessToken, Klant klant) {
+/*    public boolean valideerAccessToken(String accessToken, Klant klant) throws JWTVerificationException{
         try {
-            Algorithm algorithm = Algorithm.HMAC256(PRIVATE_KEY);
+            Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
             JWTVerifier verifier = JWT.require(algorithm)
                     .withSubject(klant.getGebruikersnaam())
                     .withIssuer("TVLT")
                     .build();
             DecodedJWT jwt = verifier.verify(accessToken);
-            logger.info("Token gevalideerd {}", jwt);
+            logger.info("Access token gevalideerd {}", jwt);
         } catch (JWTVerificationException exception) {
-            logger.info("JWTtoken niet gevalideerd");
+            logger.info("Access token niet gevalideerd");
+            System.out.println("Exeption bericht :" + exception);
             // Nog een andere exception toevoegen
             // moet een 401 teruggeven
             return false;
         }
         return true;
+    }*/
+
+    public boolean valideerAccessToken(String accessToken, Klant klant) throws JWTVerificationException{
+            Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
+            JWTVerifier verifier = JWT.require(algorithm)
+                    .withSubject(klant.getGebruikersnaam())
+                    .withIssuer("TVLT")
+                    .build();
+            DecodedJWT jwt = verifier.verify(accessToken);
+        if(jwt.getExpiresAt().before(new Date())) {
+            logger.info("Access token is verlopen");
+            throw new JWTVerificationException("Token verlopen");
+        }
+            logger.info("Access token gevalideerd {}", jwt);
+        return true;
     }
+
 
     /**
      * Authoriseert de klant doormiddel van het refresh token. Dit token wordt
@@ -147,6 +165,7 @@ public class AuthorizationService {
         AuthorizationService authorizationService = new AuthorizationService(tokenKlantCombinatieDao);
         authorizationService.genereerRefreshToken();
         authorizationService.genereerAccessToken(test);
+        //authorizationService.valideerAccessToken(authorizationService.genereerAccessToken(test), test);
 
 
 
