@@ -106,7 +106,7 @@ public class JDBCKlantDAO implements KlantDAO{
      * @param gebruikersnaam gebruikersnaam van een (mogelijke) klant die uniek moet zijn
      * @return klant-object op basis van gegevens uit de database of null indien gebruikersnaam niet gevonden is
      */
-    @Override //TODO uitvinden waarom dit niet kan
+    @Override
         public Klant vindKlantByGebruikersnaam(String gebruikersnaam) {
         String sql = "SELECT * FROM klant WHERE gebruikersnaam = ?;";
         Klant klant;

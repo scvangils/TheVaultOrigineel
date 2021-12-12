@@ -41,15 +41,41 @@ public class RootRepository {
         logger.info("New RootRepository");
     }
 
+    /**
+     * Deze methode slaat de gegevens van een klant op in de database
+     * op basis van een klant-object, de gebruikerId gaat van 0 naar de juiste
+     *
+     * @param klant het klant-object op basis van bij registratie ingevoerde gegevens
+     * @return het klant-object met de juiste gebruikerId
+     */
     public Klant slaKlantOp(Klant klant){
         return klantDAO.slaKlantOp(klant);
     }
 
-    public Klant vindKlantByGebruikersnaam(String username){
-        Klant klant = klantDAO.vindKlantByGebruikersnaam(username);
-        klant.setPortefeuille(vulPortefeuilleKlant(klant));
-        //TODO rekening toevoegen na database compleet
+    /**
+     * Deze methode zoekt of er in de database al een klant bestaat met deze gebruikersnaam
+     * en maakt eventueel een klant-object aan op nasis van de teruggestuurde gegevens
+     * Hier in de repository worden portefeuille en rekening toegevoegd
+     *
+     * @param gebruikersnaam gebruikersnaam van een (mogelijke) klant die uniek moet zijn
+     * @return klant-object op basis van gegevens uit de database of null indien gebruikersnaam niet gevonden is
+     */
+    public Klant vindKlantByGebruikersnaam(String gebruikersnaam){
+        Klant klant = klantDAO.vindKlantByGebruikersnaam(gebruikersnaam);
+            klant.setPortefeuille(vulPortefeuilleKlant(klant));
+            //TODO rekening toevoegen na database compleet
         return klant;
+    }
+
+    /**
+     * Deze methode zoekt of er in de database al een klant bestaat met deze gebruikerId
+     * en maakt eventueel een klant-object aan op nasis van de teruggestuurde gegevens
+     *
+     * @param gebruikerId gebruikerId van een (mogelijke) klant die uniek moet zijn
+     * @return klant-object op basis van gegevens uit de database of null indien gebruikerId niet gevonden is
+     */
+    public Klant vindKlantById(int gebruikerId){
+        return klantDAO.vindKlantById(gebruikerId);
     }
 
     /**

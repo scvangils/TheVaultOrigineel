@@ -42,6 +42,7 @@ public class KlantService {
         logger.info("New KlantService.");
     }
 
+<<<<<<< HEAD
     public Klant vindKlantByGebruikersnaam(String username){
         return rootRepository.vindKlantByGebruikersnaam(username);
         //TODO de methode 'geefNuttigePortefeuille' aanroepen om de asset objecten voor de klant op te schonen (zie onder)
@@ -63,11 +64,10 @@ public class KlantService {
         return portefeuilleVoorKlant;
     }
 
-
     /**
      * Deze methode probeert een nieuwe klant te registreren.
      * Als de gegevens correct zijn ingevuld en de gebruikersnaam nog niet bestaat,
-     * wordt het wachtwoord eerst gehasht en daarna versleuteld.
+     * wordt het wachtwoord eerst gehasht en daarna gecodeerd.
      * Vervolgens wordt de klant opgeslagen in de database.
      *
      * @param klant een Klant-object is wordt aangemaakt op basis van ingevoerde gegevens

@@ -114,23 +114,27 @@ class KlantServiceTest {
     }
 
     @Test
-    void registreerKlant() { // de a staat ervoor, zodat deze test als eerste gaat
+    void registreerKlant() {
         Mockito.when(mockRootRepository.slaKlantOp(testKlant)).thenReturn(testKlant);
         Klant expected = testKlant;
         Klant actual = klantService.registreerKlant(testKlant);
-        assertThat(actual).isNotNull().isEqualTo(expected);
+        assertThat(actual).as("Juiste klantgegevens zorgt voor goede registratie").isNotNull().isEqualTo(expected);
         testKlant.setGeboortedatum(testKlant.getGeboortedatum().plusDays(1)); // nu te jong om rekening te openen
-        assertThatThrownBy(() -> klantService.registreerKlant(testKlant)).isInstanceOf(AgeTooLowException.class);
+        assertThatThrownBy(() -> klantService.registreerKlant(testKlant)).as("AgeTooLowException getest")
+                .isInstanceOf(AgeTooLowException.class);
         testKlant.setGeboortedatum(testKlant.getGeboortedatum().minusDays(1));
         testKlant.setBsn(testKlant.getBsn() + 1);
-        assertThatThrownBy(() -> klantService.registreerKlant(testKlant)).isInstanceOf(IncorrectBSNException.class);
+        assertThatThrownBy(() -> klantService.registreerKlant(testKlant)).as("IncorrectBSNException getest")
+                .isInstanceOf(IncorrectBSNException.class);
         testKlant.setBsn(testKlant.getBsn() - 1);
         testKlant.setWachtwoord("WwMet Spatie");
         assertThat(klantService.checkWachtwoordFormat(testKlant)).isFalse();
-        assertThatThrownBy(() -> klantService.registreerKlant(testKlant)).isInstanceOf(PasswordNotSuitableException.class);
+        assertThatThrownBy(() -> klantService.registreerKlant(testKlant)).as("Wachtwoord met spatie niet toegestaan Exception getest")
+                .isInstanceOf(PasswordNotSuitableException.class);
         testKlant.setWachtwoord("Ww<8Kar");
         assertThat(klantService.checkWachtwoordLengte(testKlant)).isFalse();
-        assertThatThrownBy(() -> klantService.registreerKlant(testKlant)).isInstanceOf(PasswordNotSuitableException.class);
+        assertThatThrownBy(() -> klantService.registreerKlant(testKlant)).as("Wachtwoord minder dan 8 karakters niet toegestaan Exception getest")
+                .isInstanceOf(PasswordNotSuitableException.class);
 
     }
     @Test
