@@ -64,9 +64,9 @@ class KlantServiceTest {
          * @Author Carmen
          * Hieronder alle noodzakelijke input voor de test van portefeuille DTOs
          */
-        testCryptomunt1 = new Cryptomunt(1, "CarmenCrypto", "CCR", 100.0);
-        testCryptomunt2 = new Cryptomunt(2, "DigiCrypto", "DIG", 75.0);
-        testCryptomunt3 = new Cryptomunt(3, "Coyne", "COY", 125.0);
+        testCryptomunt1 = new Cryptomunt(1, "CarmenCrypto", "CCR", 100.0, LocalDateTime.now());
+        testCryptomunt2 = new Cryptomunt(2, "DigiCrypto", "DIG", 75.0, LocalDateTime.now());
+        testCryptomunt3 = new Cryptomunt(3, "Coyne", "COY", 125.0, LocalDateTime.now());
         testAsset1 = new Asset(testCryptomunt1, 5.1, LocalDateTime.now());
         testAsset2 = new Asset(testCryptomunt2, 2.4, LocalDateTime.now());
         testAsset3 = new Asset(testCryptomunt3, 3.6, LocalDateTime.now());

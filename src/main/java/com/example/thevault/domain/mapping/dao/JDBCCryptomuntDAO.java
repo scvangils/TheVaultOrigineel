@@ -35,7 +35,8 @@ public class JDBCCryptomuntDAO implements CryptomuntDAO{
         @Override
         public Cryptomunt mapRow(ResultSet resultSet, int rowNum) throws SQLException {
             return new Cryptomunt(resultSet.getInt("cryptomuntId"), resultSet.getString("naam"),
-                    resultSet.getString("afkorting"), resultSet.getDouble("waarde"));
+                    resultSet.getString("afkorting"), resultSet.getDouble("waarde"),
+                    LocalDateTime.parse(resultSet.getString("datum")));
         }
     }
 

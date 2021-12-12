@@ -7,7 +7,7 @@
       <x>297</x>
       <y>432</y>
       <w>117</w>
-      <h>99</h>
+      <h>108</h>
     </coordinates>
     <panel_attributes>lw=2
 CryptoMunt
@@ -15,7 +15,8 @@ CryptoMunt
 Id
 name
 symbol
-price</panel_attributes>
+price
+date</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -50,15 +51,17 @@ bezit</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>297</x>
-      <y>288</y>
+      <y>270</y>
       <w>117</w>
-      <h>72</h>
+      <h>90</h>
     </coordinates>
     <panel_attributes>lw=2
 Asset
 --
 cryptomunt
-aantal</panel_attributes>
+aantal
+klant
+datum</panel_attributes>
     <additional_attributes/>
   </element>
   <element>

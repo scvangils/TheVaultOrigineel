@@ -42,7 +42,6 @@ public class KlantService {
         logger.info("New KlantService.");
     }
 
-<<<<<<< HEAD
     public Klant vindKlantByGebruikersnaam(String username){
         return rootRepository.vindKlantByGebruikersnaam(username);
         //TODO de methode 'geefNuttigePortefeuille' aanroepen om de asset objecten voor de klant op te schonen (zie onder)

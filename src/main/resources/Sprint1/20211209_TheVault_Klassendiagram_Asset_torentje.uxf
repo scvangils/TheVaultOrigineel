@@ -29,14 +29,14 @@ model :: CryptoMunt
     <id>Relation</id>
     <coordinates>
       <x>279</x>
-      <y>819</y>
+      <y>846</y>
       <w>45</w>
-      <h>126</h>
+      <h>99</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 m2=0..n
 m1=1</panel_attributes>
-    <additional_attributes>10.0;120.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
@@ -44,13 +44,15 @@ m1=1</panel_attributes>
       <x>126</x>
       <y>657</y>
       <w>441</w>
-      <h>171</h>
+      <h>198</h>
     </coordinates>
     <panel_attributes>lw=2
 model :: Asset
 --
 - cryptomunt: Cryptomunt
 - aantal: double
+- klant: Klant
+- datum: LocalDateTime
 - logger: Logger
 
 --
@@ -85,15 +87,15 @@ AssetRowMapper implements rowMapper&lt;Asset&gt;
 innerclass}
 
 + JDBCAssetDAO(jdbcTemplate: JdbcTemplate)
-- slaAssetOpStatement(gebruikerId: int, asset: Asset, 
-connection: Connection): PreparedStatement
-- verwijderAssetStatement(gebruikerId: int, cryptomuntId: int, 
-connection: Connection): PreparedStatement
-+ voegNieuwAssetToeAanPortefeuille(gebruikerId: int, asset: Asset): Asset
-+ verwijderAssetUitPortefeuille(gebruikerId: id, asset: Asset): Asset
-+ updateAsset(gebruikerId: int, asset: Asset): Asset
-+ geefAsset(gebruikerId: int, cryptomuntId: int): Asset
-+ geefAlleAssets(gebruikerId: int): List&lt;Asset&gt;</panel_attributes>
+- slaAssetOpStatement(asset: Asset, connection: Connection): 
+PreparedStatement
+- verwijderAssetStatement(asset: Asset, connection: Connection): 
+PreparedStatement
++ voegNieuwAssetToeAanPortefeuille(asset: Asset): Asset
++ verwijderAssetUitPortefeuille(asset: Asset): Asset
++ updateAsset(asset: Asset): Asset
++ geefAsset(klant: Klant, cryptomunt: Cryptomunt): Asset
++ geefAlleAssets(klant: Klant): List&lt;Asset&gt;</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -108,11 +110,11 @@ connection: Connection): PreparedStatement
 &lt;&lt;Interface&gt;&gt;
 /dao :: AssetDAO/
 --
-/+ voegNieuwAssetToeAanPortefeuille(gebruikerId: int, asset: Asset): Asset/
-/+ verwijderAssetUitPortefeuille(gebruikerId: id, asset: Asset): Asset/
-/+ updateAsset(gebruikerId: int, asset: Asset): Asset/
-/+ geefAsset(gebruikerId: int, cryptomuntId: int): Asset/
-/+ geefAlleAssets(gebruikerId: int): List&lt;Asset&gt;/</panel_attributes>
+/+ voegNieuwAssetToeAanPortefeuille(asset: Asset): Asset/
+/+ verwijderAssetUitPortefeuille(asset: Asset): Asset/
+/+ updateAsset(asset: Asset): Asset/
+/+ geefAsset(klant: Klant, cryptomunt: Cryptomunt): Asset/
+/+ geefAlleAssets(klant: Klant): List&lt;Asset&gt;/</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -132,7 +134,7 @@ connection: Connection): PreparedStatement
       <x>720</x>
       <y>243</y>
       <w>423</w>
-      <h>288</h>
+      <h>315</h>
     </coordinates>
     <panel_attributes>lw=2
 repository :: RootRepository
@@ -141,20 +143,22 @@ repository :: RootRepository
 - klantDAO: KlantDAO
 - rekeningDAO: RekeningDAO
 - assetDAO: AssetDAO
+- cryptomuntDAO: CryptomuntDAO
 
 --
 + RootRepository(klantDAO: KlantDAO, rekeningDAO: RekeningDAO, 
-assetDAO: AssetDAO)
+assetDAO: AssetDAO, cryptomuntDAO: CryptomuntDAO)
 + slaKlantOp(klant: Klant): Klant
-+ vindKlantByGebruikersnaam(username: String): Klant
++ vindKlantByGebruikersnaam(gebruikersname: String): Klant
++ vindKlantById(gebruikerId: int): Klant
 + slaRekeningOp(rekening: Rekening): Rekening
 + vindRekeningVanKlant(klant: Klant): Rekening
 + vraagSaldoOpVanKlant(klant: Klant): double
 + wijzigSaldoVanKlant(klant: Klant, bedrag: double): Rekening
-+ vulPortefeuilleKlant(gebruikerId: int): List&lt;Asset&gt;
-+ geefAssetVanKlant(gebruikerId: int, cryptomuntId: int): Asset
-+ slaAssetVanKlantOp(gebruikerId: int, asset: Asset): Asset
-+ wijzigAssetVanKlant(gebruikerId: int, asset: Asset): Asset</panel_attributes>
++ vulPortefeuilleKlant(klant: Klant): List&lt;Asset&gt;
++ geefAssetVanKlant(klant: Klant, cryptomunt: Cryptomunt): Asset
++ slaAssetVanKlantOp(klant: Klant, asset: Asset): Asset
++ wijzigAssetVanKlant(asset: Asset): Asset</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -194,7 +198,6 @@ transfer :: AssetDto
 - name: String
 - price: double
 - aantal: double
-- logger: Logger
 
 --
 + AssetDto()
@@ -211,7 +214,7 @@ transfer :: AssetDto
       <x>720</x>
       <y>648</y>
       <w>423</w>
-      <h>162</h>
+      <h>144</h>
     </coordinates>
     <panel_attributes>lw=2
 service :: AssetService
@@ -221,32 +224,45 @@ service :: AssetService
 
 --
 + AssetService(rootRepository: RootRepository)
-+ geefInhoudPortefeuille(gebruikerId: int): List&lt;AssetDto&gt;
-+ geefCryptomunt(gebruikerId: int, cryptomuntId: int): AssetDto
-+ slaAssetOp(gebruikerId: int, asset: Asset): Asset
-+ wijzigAsset(gebruikerId: int, asset: Asset): Asset</panel_attributes>
++ geefCryptomunt(klant: Klant, cryptomunt: Cryptomunt): AssetDto
++ slaAssetOp(klant: Klant, asset: Asset): Asset
++ wijzigAsset(asset: Asset): Asset</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>936</x>
-      <y>522</y>
+      <y>549</y>
       <w>27</w>
-      <h>144</h>
+      <h>117</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;140.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;110.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>945</x>
-      <y>801</y>
+      <y>783</y>
       <w>27</w>
-      <h>117</h>
+      <h>135</h>
     </coordinates>
     <panel_attributes>lt=&lt;.</panel_attributes>
-    <additional_attributes>10.0;110.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;130.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>801</x>
+      <y>27</y>
+      <w>135</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>Author: Carmen
+
+Torentje Asset 
+begin sprint 2</panel_attributes>
+    <additional_attributes/>
   </element>
 </diagram>
