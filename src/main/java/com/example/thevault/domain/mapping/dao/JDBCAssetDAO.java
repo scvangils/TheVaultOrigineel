@@ -43,15 +43,14 @@ public class JDBCAssetDAO implements AssetDAO{
         this.jdbcTemplate = jdbcTemplate;
         logger.info("New JDBCAssetDAO");
     }
-
+        //TODO versimpelen?
     private PreparedStatement slaAssetOpStatement(Asset asset, Connection connection) throws SQLException {
-        String sql = "INSERT INTO asset (gebruikerId, cryptomuntId, aantal, datum) values " +
-                "(?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO asset (gebruikerId, cryptomuntId, aantal) values " +
+                "(?, ?, ?);";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, asset.getKlant().getGebruikerId());
         ps.setInt(2, asset.getCryptomunt().getId());
         ps.setDouble(3, asset.getAantal());
-        ps.setString(4, asset.getDatum().toString());
         return ps;
     }
 
@@ -67,8 +66,7 @@ public class JDBCAssetDAO implements AssetDAO{
         @Override
         public Asset mapRow(ResultSet resultSet, int rowNum) throws SQLException {
             Cryptomunt cryptomunt = new Cryptomunt(resultSet.getInt("cryptomuntId"));
-            return new Asset(cryptomunt, resultSet.getDouble("aantal"),
-                    LocalDateTime.parse(resultSet.getString("datum")));
+            return new Asset(cryptomunt, resultSet.getDouble("aantal"));
         }
     }
 
@@ -115,13 +113,13 @@ public class JDBCAssetDAO implements AssetDAO{
         double teVerhandelenAantal = asset.getAantal();
         if(huidigeAantal >= teVerhandelenAantal) {
             Asset nieuwAsset = new Asset(asset.getCryptomunt(), huidigeAantal - teVerhandelenAantal,
-                    asset.getKlant(), asset.getDatum());
+                    asset.getKlant());
             jdbcTemplate.update(connection -> verwijderAssetStatement(asset, connection));
             jdbcTemplate.update(connection -> slaAssetOpStatement(nieuwAsset, connection));
             return nieuwAsset;
         } else if(huidigeAantal == -teVerhandelenAantal){
             return verwijderAssetUitPortefeuille(asset);
-        }
+        } //TODO exception maken
         System.out.println("Het saldo van deze cryptomunt is te laag voor deze transactie");
         return null;
     }

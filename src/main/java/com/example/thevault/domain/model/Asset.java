@@ -21,7 +21,6 @@ public class Asset {
     private Cryptomunt cryptomunt;
     private double aantal;
     private Klant klant;
-    private LocalDateTime datum;
 
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Asset.class);
@@ -37,10 +36,9 @@ public class Asset {
     /**
      * De constructor voor Asset om gegevens uit de database te halen
      * @param aantal het aantal van de cryptomunt die in deze Asset aanwezig is
-     * @param datum het moment waarop de waarde van de cryptomunt is opgeslagen
      */
-    public Asset(Cryptomunt cryptomunt, double aantal, LocalDateTime datum) {
-        this(cryptomunt, aantal, null, datum);
+    public Asset(Cryptomunt cryptomunt, double aantal) {
+        this(cryptomunt, aantal, null);
         logger.info("Asset " + this);
     }
 
@@ -49,14 +47,12 @@ public class Asset {
      * @param cryptomunt de cryptomunt waarvoor de Asset is aangemaakt
      * @param aantal het aantal van de cryptomunt die in deze Asset aanwezig is
      * @param klant de klant die de Asset bezit
-     * @param datum het moment waarop de waarde van de cryptomunt is opgeslagen
      */
-    public Asset(Cryptomunt cryptomunt, double aantal, Klant klant, LocalDateTime datum){
+    public Asset(Cryptomunt cryptomunt, double aantal, Klant klant){
         super();
         this.cryptomunt = cryptomunt;
         this.aantal = aantal;
         this.klant = klant;
-        this.datum = datum;
         logger.info("Asset: " + this);
     }
 
@@ -71,7 +67,7 @@ public class Asset {
         if (o == null || getClass() != o.getClass()) return false;
         Asset asset = (Asset) o;
         return Double.compare(asset.aantal, aantal) == 0 && cryptomunt.equals(asset.cryptomunt) &&
-                klant.equals(asset.klant) && datum.equals(asset.datum);
+                klant.equals(asset.klant);
     }
 
     /**
@@ -80,7 +76,7 @@ public class Asset {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(cryptomunt, aantal, klant, datum);
+        return Objects.hash(cryptomunt, aantal, klant);
     }
 
     public Cryptomunt getCryptomunt() {
@@ -107,13 +103,6 @@ public class Asset {
         this.klant = klant;
     }
 
-    public LocalDateTime getDatum() {
-        return datum;
-    }
-
-    public void setDatum(LocalDateTime datum) {
-        this.datum = datum;
-    }
 
     @Override
     public String toString() {
@@ -121,7 +110,6 @@ public class Asset {
                 "cryptomunt=" + cryptomunt +
                 ", aantal=" + aantal +
                 ", klant=" + klant +
-                ", datum=" + datum +
-                '}';
+                                '}';
     }
 }

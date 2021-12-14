@@ -4,6 +4,7 @@
 package com.example.thevault.domain.transfer;
 
 import com.example.thevault.domain.model.Asset;
+import com.example.thevault.domain.model.CryptoWaarde;
 import com.example.thevault.domain.model.Cryptomunt;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
@@ -24,9 +25,9 @@ public class AssetDto {
         logger.info("New AssetDto, no args constructor");
     }
 
-    public AssetDto(Asset asset){
+    public AssetDto(Asset asset, CryptoWaarde cryptoWaarde){
         this.name = asset.getCryptomunt().getName();
-        this.price = asset.getCryptomunt().getPrice();
+        this.price = cryptoWaarde.getWaarde();
         this.aantal = asset.getAantal();
     }
 

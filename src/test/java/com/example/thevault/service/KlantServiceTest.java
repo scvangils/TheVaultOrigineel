@@ -5,6 +5,7 @@ import com.example.thevault.domain.mapping.dao.KlantDAO;
 import com.example.thevault.domain.mapping.dao.RekeningDAO;
 import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.Asset;
+import com.example.thevault.domain.model.CryptoWaarde;
 import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.transfer.AssetDto;
@@ -47,6 +48,9 @@ class KlantServiceTest {
     public static AssetDto testAssetDto2;
     public static AssetDto testAssetDto3;
     public static AssetDto testAssetDto4;
+    public static CryptoWaarde testCryptoWaarde1;
+    public static CryptoWaarde testCryptoWaarde2;
+    public static CryptoWaarde testCryptoWaarde3;
 
 
     @BeforeEach
@@ -64,17 +68,20 @@ class KlantServiceTest {
          * @Author Carmen
          * Hieronder alle noodzakelijke input voor de test van portefeuille DTOs
          */
-        testCryptomunt1 = new Cryptomunt(1, "CarmenCrypto", "CCR", 100.0, LocalDateTime.now());
-        testCryptomunt2 = new Cryptomunt(2, "DigiCrypto", "DIG", 75.0, LocalDateTime.now());
-        testCryptomunt3 = new Cryptomunt(3, "Coyne", "COY", 125.0, LocalDateTime.now());
-        testAsset1 = new Asset(testCryptomunt1, 5.1, LocalDateTime.now());
-        testAsset2 = new Asset(testCryptomunt2, 2.4, LocalDateTime.now());
-        testAsset3 = new Asset(testCryptomunt3, 3.6, LocalDateTime.now());
-        testAsset4 = new Asset(testCryptomunt1, 0.5, LocalDateTime.now());
-        testAssetDto1 = new AssetDto(testAsset1);
-        testAssetDto2 = new AssetDto(testAsset2);
-        testAssetDto3 = new AssetDto(testAsset3);
-        testAssetDto4 = new AssetDto(testAsset4);
+        testCryptomunt1 = new Cryptomunt(1, "CarmenCrypto", "CCR" );
+        testCryptoWaarde1 = new CryptoWaarde("20211214CCR", testCryptomunt1, 100.0, LocalDate.now());
+        testCryptomunt2 = new Cryptomunt(2, "DigiCrypto", "DIG");
+        testCryptoWaarde2 = new CryptoWaarde("20211214DIG", testCryptomunt1, 75.0, LocalDate.now());
+        testCryptomunt3 = new Cryptomunt(3, "Coyne", "COY");
+        testCryptoWaarde3 = new CryptoWaarde("20211214COY", testCryptomunt1, 125.0, LocalDate.now());
+        testAsset1 = new Asset(testCryptomunt1, 5.1);
+        testAsset2 = new Asset(testCryptomunt2, 2.4);
+        testAsset3 = new Asset(testCryptomunt3, 3.6);
+        testAsset4 = new Asset(testCryptomunt1, 0.5);
+        testAssetDto1 = new AssetDto(testAsset1, testCryptoWaarde1);
+        testAssetDto2 = new AssetDto(testAsset2, testCryptoWaarde2);
+        testAssetDto3 = new AssetDto(testAsset3, testCryptoWaarde3);
+        testAssetDto4 = new AssetDto(testAsset4, testCryptoWaarde1);
         portefeuille = new ArrayList<>();
         portefeuille.add(testAsset1);
         portefeuille.add(testAsset2);
@@ -104,7 +111,11 @@ class KlantServiceTest {
      */
     @Test
     void geefNuttigePortefeuille() {
-        Mockito.when(mockRootRepository.vulPortefeuilleKlant(testKlant)).thenReturn(portefeuille);
+     //   Mockito.when(mockRootRepository.vulPortefeuilleKlant(testKlant)).thenReturn(portefeuille);
+        testKlant.setPortefeuille(portefeuille);
+        Mockito.when(mockRootRepository.haalMeestRecenteCryptoWaarde(testAsset1.getCryptomunt())).thenReturn(testCryptoWaarde1);
+        Mockito.when(mockRootRepository.haalMeestRecenteCryptoWaarde(testAsset2.getCryptomunt())).thenReturn(testCryptoWaarde2);
+        Mockito.when(mockRootRepository.haalMeestRecenteCryptoWaarde(testAsset3.getCryptomunt())).thenReturn(testCryptoWaarde3);
         List<AssetDto> expected = portefeuilleDto;
         List<AssetDto> actual = klantService.geefNuttigePortefeuille(testKlant);
         assertThat(actual).as("Test geef inhoud portefeuilleDto van testklant").isNotNull().isEqualTo(expected).

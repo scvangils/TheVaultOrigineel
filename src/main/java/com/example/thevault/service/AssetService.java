@@ -5,6 +5,7 @@ package com.example.thevault.service;
 
 import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.Asset;
+import com.example.thevault.domain.model.CryptoWaarde;
 import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.transfer.AssetDto;
@@ -47,8 +48,8 @@ public class AssetService {
      * @param cryptomunt cryptomunt waarover informatie wordt opgevraagd
      * @return AssetDto de asset waarover informatie is opgevraagd, in de vorm die voor de klant meerwaarde heeft
      */
-    public AssetDto geefCryptomunt(Klant klant, Cryptomunt cryptomunt){
-        return new AssetDto(rootRepository.geefAssetVanKlant(klant, cryptomunt));
+    public AssetDto geefCryptomunt(Klant klant, Cryptomunt cryptomunt, CryptoWaarde cryptowaarde){
+        return new AssetDto(rootRepository.geefAssetVanKlant(klant, cryptomunt), cryptowaarde);
     }
 
     /**
