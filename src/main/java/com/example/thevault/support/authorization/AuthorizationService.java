@@ -99,7 +99,7 @@ public class AuthorizationService {
      * @return boolean
      * @throws JWTVerificationException als het token niet gevalideerd wordt
      */
-/*    public boolean valideerAccessToken(String accessToken, Klant klant) throws JWTVerificationException{
+    public boolean valideerAccessToken(String accessToken, Klant klant){
         try {
             Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
             JWTVerifier verifier = JWT.require(algorithm)
@@ -115,21 +115,6 @@ public class AuthorizationService {
             // moet een 401 teruggeven
             return false;
         }
-        return true;
-    }*/
-
-    public boolean valideerAccessToken(String accessToken, Klant klant) throws JWTVerificationException{
-            Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY);
-            JWTVerifier verifier = JWT.require(algorithm)
-                    .withSubject(klant.getGebruikersnaam())
-                    .withIssuer("TVLT")
-                    .build();
-            DecodedJWT jwt = verifier.verify(accessToken);
-        if(jwt.getExpiresAt().before(new Date())) {
-            logger.info("Access token is verlopen");
-            throw new JWTVerificationException("Token verlopen");
-        }
-            logger.info("Access token gevalideerd {}", jwt);
         return true;
     }
 

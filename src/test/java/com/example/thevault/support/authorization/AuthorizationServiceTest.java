@@ -7,6 +7,7 @@ import com.auth0.jwt.JWT;
 
 
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.InvalidClaimException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.thevault.domain.mapping.repository.RootRepository;
@@ -107,6 +108,23 @@ class AuthorizationServiceTest {
     }
 
     /**
+     * !!!TO DO
+     *
+     * Kijken of de methode genereerAccessToken de juiste exception vangt
+     *
+     * @return void
+     * */
+    @Test
+    void genereerAccessTokenCatchError() {
+        testAccessTokenFromService = authorizationServiceTest.genereerAccessToken(new Klant());
+        DecodedJWT decodedJwt = JWT.decode(testAccessTokenFromService);
+
+        assertThat(testAccessTokenFromService).isNotNull().isInstanceOf(String.class).contains("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9");
+
+        logger.info("testAccessTokenFromService isNotNull en bevat juiste encodering");
+    }
+
+    /**
      * De onderstaande test genereert een JWT token, controleert
      * of het token bestaat en of deze de het eerste deel bevat
      * waarin het signature van het algoritme staat en informatie
@@ -124,43 +142,46 @@ class AuthorizationServiceTest {
 
 
     /**
-     * Test of de JWTVerificationException wordt gegooit wanneer er
+     * Test of er een exception wordt gegooid wanneer er
      * een klant aan de validatieMethode wordt meegegeven waarvoor het token
      * niet bedoelt is, speciefieke exception: een InvalidClaimException.
      *
-     * @return void
-    * */
+     * Als de valideerAccessToken methode een false teruggeeft is de test geslaagd
+     *
+     **/
     @Test
     void valideerAccessTokenMetVerkeerdeKlant() {
-        try {
-            authorizationServiceTest.valideerAccessToken(testAccessTokenFromService, new Klant( "harrynr1", "Welkom01", "Henk", 1890393, LocalDate.of(1991, 1, 12)));
+            boolean returnedBooleanValue = authorizationServiceTest.valideerAccessToken(testAccessTokenFromService, new Klant( "harrynr1", "Welkom01", "Henk", 1890393, LocalDate.of(1991, 1, 12)));
             // print alle eigenschappen van het token
             DecodedJWT decodedJwt = JWT.decode(testAccessTokenFromService);
             printOutComesTokenValidation(decodedJwt);
-            fail("Moet een JWTVerificationException gooien met InvalidClaimException");
-        } catch (JWTVerificationException exception){
-            System.out.println("Test geslaagd! Exception: " + exception);
-        }
+            // als de boolean false is is de test geslaagd
+            if(!returnedBooleanValue){
+                System.out.println("test geslaagd");
+            } else {
+                fail("Moet een JWTVerificationException gooien met InvalidClaimException");
+            }
     }
 
     /**
      * Test of de methode valideerAccessToken bij een verlopen token
-     * een JWTVerificationException opgooit,
+     * een JWTVerificationException opgooit. De valideerAccessToken methode
+     * moet dus een fail teruggeven.
+     *
      * specifieke exception: TokenExpiredException
      *
      * @return void
      * */
     @Test
     void valideerAccessTokenVerlopen(){
-
-        try{
-            authorizationServiceTest.valideerAccessToken(testVerlopenAccessToken, testKlant);
-            // print alle eigenschappen van het token
-            DecodedJWT decodedJwt = JWT.decode(testVerlopenAccessToken);
-            printOutComesTokenValidation(decodedJwt);
+        boolean outcomeValidatie = authorizationServiceTest.valideerAccessToken(testVerlopenAccessToken, testKlant);
+        // print alle eigenschappen van het token
+        DecodedJWT decodedJwt = JWT.decode(testVerlopenAccessToken);
+        printOutComesTokenValidation(decodedJwt);
+        if(!outcomeValidatie){
+            System.out.println("test geslaagd");
+        } else{
             fail("Moet een JWTVerificationException gooien");
-        } catch (JWTVerificationException exception){
-            System.out.println("Test geslaagd! Exception: " + exception);
         }
     }
 
