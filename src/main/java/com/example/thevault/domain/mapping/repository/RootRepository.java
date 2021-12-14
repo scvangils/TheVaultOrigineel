@@ -3,14 +3,8 @@
 
 package com.example.thevault.domain.mapping.repository;
 
-import com.example.thevault.domain.mapping.dao.AssetDAO;
-import com.example.thevault.domain.mapping.dao.CryptomuntDAO;
-import com.example.thevault.domain.mapping.dao.KlantDAO;
-import com.example.thevault.domain.mapping.dao.RekeningDAO;
-import com.example.thevault.domain.model.Asset;
-import com.example.thevault.domain.model.Cryptomunt;
-import com.example.thevault.domain.model.Klant;
-import com.example.thevault.domain.model.Rekening;
+import com.example.thevault.domain.mapping.dao.*;
+import com.example.thevault.domain.model.*;
 import com.example.thevault.support.exceptions.AssetNotExistsException;
 import net.minidev.json.annotate.JsonIgnore;
 import org.slf4j.Logger;
@@ -20,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -33,14 +28,17 @@ public class RootRepository {
     private final RekeningDAO rekeningDAO;
     private final AssetDAO assetDAO;
     private final CryptomuntDAO cryptomuntDAO;
+    private final CryptoWaardeDAO cryptoWaardeDAO;
 
     @Autowired
-    public RootRepository(KlantDAO klantDAO, RekeningDAO rekeningDAO, AssetDAO assetDAO, CryptomuntDAO cryptomuntDAO) {
+    public RootRepository(KlantDAO klantDAO, RekeningDAO rekeningDAO, AssetDAO assetDAO, CryptomuntDAO cryptomuntDAO,
+                          CryptoWaardeDAO cryptoWaardeDAO) {
         super();
         this.rekeningDAO = rekeningDAO;
         this.klantDAO = klantDAO;
         this.assetDAO = assetDAO;
         this.cryptomuntDAO = cryptomuntDAO;
+        this.cryptoWaardeDAO = cryptoWaardeDAO;
         logger.info("New RootRepository");
     }
 
@@ -166,5 +164,10 @@ public class RootRepository {
      */
     public Asset wijzigAssetVanKlant(Asset asset){
         return assetDAO.updateAsset(asset);
+    }
+
+    //CryptoWaarde wordt eens per dag opgehaald om 00.00 uur
+    public CryptoWaarde haalMeestRecenteCryptoWaarde(Cryptomunt cryptomunt){
+        return cryptoWaardeDAO.getCryptoWaardeByCryptomuntAndDate(cryptomunt, LocalDate.now());
     }
 }

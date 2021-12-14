@@ -1,15 +1,13 @@
 package com.example.thevault.domain.mapping.repository;
 
 import com.example.thevault.domain.mapping.dao.*;
-import com.example.thevault.domain.model.Asset;
-import com.example.thevault.domain.model.Cryptomunt;
-import com.example.thevault.domain.model.Klant;
-import com.example.thevault.domain.model.Rekening;
+import com.example.thevault.domain.model.*;
 import com.example.thevault.support.exceptions.AssetNotExistsException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +24,7 @@ class RootRepositoryTest {
     private static AssetDAO assetDAO;
     private static RekeningDAO rekeningDAO;
     private static CryptomuntDAO cryptomuntDAO;
+    private static CryptoWaardeDAO cryptoWaardeDAO;
     private static Klant testKlant;
     public static Asset testAsset1;
     public static Asset testAsset2;
@@ -44,6 +43,9 @@ class RootRepositoryTest {
     public static double origineelSaldo;
     public static double teWijzigenBedrag;
     public static double gewijzigdSaldo;
+    public static CryptoWaarde testCryptoWaarde1;
+    public static CryptoWaarde testCryptoWaarde2;
+    public static CryptoWaarde testCryptoWaarde3;
 
     @BeforeEach
     void setUp() {
@@ -51,18 +53,22 @@ class RootRepositoryTest {
         assetDAO = Mockito.mock(AssetDAO.class);
         rekeningDAO = Mockito.mock(RekeningDAO.class);
         cryptomuntDAO = Mockito.mock(CryptomuntDAO.class);
+        cryptoWaardeDAO = Mockito.mock(CryptoWaardeDAO.class);
         testKlant = new Klant();
-        rootRepository = new RootRepository(klantDAO, rekeningDAO, assetDAO, cryptomuntDAO);
-        testCryptomunt1 = new Cryptomunt(1, "CarmenCrypto", "CCR", 100.0, LocalDateTime.now());
-        testCryptomunt2 = new Cryptomunt(2, "DigiCrypto", "DIG", 75.0, LocalDateTime.now());
-        testCryptomunt3 = new Cryptomunt(3, "Coyne", "COY", 125.0, LocalDateTime.now());
-        testCryptomunt4 = new Cryptomunt(4,"VaultMoney","VMN",200.0, LocalDateTime.now());
+        rootRepository = new RootRepository(klantDAO, rekeningDAO, assetDAO, cryptomuntDAO, cryptoWaardeDAO);
+        testCryptomunt1 = new Cryptomunt(1, "CarmenCrypto", "CCR" );
+        testCryptoWaarde1 = new CryptoWaarde("20211214CCR", testCryptomunt1, 100.0, LocalDate.now());
+        testCryptomunt2 = new Cryptomunt(2, "DigiCrypto", "DIG");
+        testCryptoWaarde2 = new CryptoWaarde("20211214DIG", testCryptomunt1, 75.0, LocalDate.now());
+        testCryptomunt3 = new Cryptomunt(3, "Coyne", "COY");
+        testCryptoWaarde3 = new CryptoWaarde("20211214COY", testCryptomunt1, 125.0, LocalDate.now());
+        testCryptomunt4 = new Cryptomunt(4,"VaultMoney","VMN");
         testCryptoMunt5 = null;
-        testAsset1 = new Asset(testCryptomunt1, 5.1, testKlant, LocalDateTime.now());
-        testAsset2 = new Asset(testCryptomunt2, 2.4, testKlant, LocalDateTime.now());
-        testAsset3 = new Asset(testCryptomunt3, 3.6, testKlant, LocalDateTime.now());
-        testAsset4 = new Asset(testCryptomunt1, 0.5, testKlant, LocalDateTime.now());
-        testAsset5 = new Asset(testCryptomunt4, 1.3, testKlant, LocalDateTime.now());
+        testAsset1 = new Asset(testCryptomunt1, 5.1, testKlant);
+        testAsset2 = new Asset(testCryptomunt2, 2.4, testKlant);
+        testAsset3 = new Asset(testCryptomunt3, 3.6, testKlant);
+        testAsset4 = new Asset(testCryptomunt1, 0.5, testKlant);
+        testAsset5 = new Asset(testCryptomunt4, 1.3, testKlant);
         testAsset6 = Optional.empty();
         portefeuille = new ArrayList<>();
         portefeuille.add(testAsset1);

@@ -2,6 +2,7 @@ package com.example.thevault.service;
 
 import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.Asset;
+import com.example.thevault.domain.model.CryptoWaarde;
 import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.transfer.AssetDto;
@@ -38,23 +39,29 @@ class AssetServiceTest {
     public static Cryptomunt testCryptomunt1;
     public static Cryptomunt testCryptomunt2;
     public static Cryptomunt testCryptomunt3;
+    public static CryptoWaarde testCryptoWaarde1;
+    public static CryptoWaarde testCryptoWaarde2;
+    public static CryptoWaarde testCryptoWaarde3;
 
 
     @BeforeEach
     void setUp() {
         testKlant = new Klant();
-        testCryptomunt1 = new Cryptomunt(1, "CarmenCrypto", "CCR", 100.0, LocalDateTime.now());
-        testCryptomunt2 = new Cryptomunt(2, "DigiCrypto", "DIG", 75.0, LocalDateTime.now());
-        testCryptomunt3 = new Cryptomunt(3, "Coyne", "COY", 125.0, LocalDateTime.now());
-        testAsset1 = new Asset(testCryptomunt1, 5.1, LocalDateTime.now());
-        testAsset2 = new Asset(testCryptomunt2, 2.4, LocalDateTime.now());
-        testAsset3 = new Asset(testCryptomunt3, 3.6, LocalDateTime.now());
-        testAsset4 = new Asset(testCryptomunt1, 0.5, LocalDateTime.now());
-        testAsset5 = new Asset(testCryptomunt1, 5.6, LocalDateTime.now());
-        testAssetDto1 = new AssetDto(testAsset1);
-        testAssetDto2 = new AssetDto(testAsset2);
-        testAssetDto3 = new AssetDto(testAsset3);
-        testAssetDto4 = new AssetDto(testAsset4);
+        testCryptomunt1 = new Cryptomunt(1, "CarmenCrypto", "CCR" );
+        testCryptoWaarde1 = new CryptoWaarde("20211214CCR", testCryptomunt1, 100.0, LocalDate.now());
+        testCryptomunt2 = new Cryptomunt(2, "DigiCrypto", "DIG");
+        testCryptoWaarde2 = new CryptoWaarde("20211214DIG", testCryptomunt1, 75.0, LocalDate.now());
+        testCryptomunt3 = new Cryptomunt(3, "Coyne", "COY");
+        testCryptoWaarde3 = new CryptoWaarde("20211214COY", testCryptomunt1, 125.0, LocalDate.now());
+        testAsset1 = new Asset(testCryptomunt1, 5.1);
+        testAsset2 = new Asset(testCryptomunt2, 2.4);
+        testAsset3 = new Asset(testCryptomunt3, 3.6);
+        testAsset4 = new Asset(testCryptomunt1, 0.5);
+        testAsset5 = new Asset(testCryptomunt1, 5.6);
+        testAssetDto1 = new AssetDto(testAsset1, testCryptoWaarde1);
+        testAssetDto2 = new AssetDto(testAsset2, testCryptoWaarde2);
+        testAssetDto3 = new AssetDto(testAsset3, testCryptoWaarde3);
+        testAssetDto4 = new AssetDto(testAsset4, testCryptoWaarde1);
         rootRepository = Mockito.mock(RootRepository.class);
         assetService = new AssetService(rootRepository);
         portefeuille = new ArrayList<>();
@@ -70,8 +77,8 @@ class AssetServiceTest {
     @Test
     void geefCryptomunt() {
         Mockito.when(rootRepository.geefAssetVanKlant(testKlant, testCryptomunt1)).thenReturn(testAsset1);
-        AssetDto expected = new AssetDto(testAsset1);
-        AssetDto actual = assetService.geefCryptomunt(testKlant, testCryptomunt1);
+        AssetDto expected = new AssetDto(testAsset1, testCryptoWaarde1);
+        AssetDto actual = assetService.geefCryptomunt(testKlant, testCryptomunt1, testCryptoWaarde1);
         assertThat(actual).as("Test geef specifieke AssetDto van testklant").isNotNull().isEqualTo(expected).
                 isIn(portefeuilleDto).isNotEqualTo(testAssetDto2).isNotSameAs(testAssetDto3);
     }

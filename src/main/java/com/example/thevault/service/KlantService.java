@@ -30,7 +30,7 @@ import java.util.List;
 @Service
 public class KlantService {
 
-    private RootRepository rootRepository;
+    private final RootRepository rootRepository;
     private final Logger logger = LoggerFactory.getLogger(KlantService.class);
     public final static int VOLWASSEN_LEEFTIJD = 18;
     public final static int MINIMALE_WACHTWOORDLENGTE = 8; // TODO navragen of dit public of private moet
@@ -58,7 +58,7 @@ public class KlantService {
     public List<AssetDto> geefNuttigePortefeuille(Klant klant){
         List<AssetDto> portefeuilleVoorKlant = new ArrayList<>();
         for (Asset asset : klant.getPortefeuille()) {
-            portefeuilleVoorKlant.add(new AssetDto(asset));
+            portefeuilleVoorKlant.add(new AssetDto(asset, rootRepository.haalMeestRecenteCryptoWaarde(asset.getCryptomunt())));
         }
         return portefeuilleVoorKlant;
     }
