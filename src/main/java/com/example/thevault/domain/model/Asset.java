@@ -20,6 +20,8 @@ public class Asset {
 
     private Cryptomunt cryptomunt;
     private double aantal;
+    private Klant klant;
+    private LocalDateTime datum;
 
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Asset.class);
@@ -33,13 +35,28 @@ public class Asset {
     }
 
     /**
+     * De constructor voor Asset om gegevens uit de database te halen
+     * @param aantal het aantal van de cryptomunt die in deze Asset aanwezig is
+     * @param datum het moment waarop de waarde van de cryptomunt is opgeslagen
+     */
+    public Asset(Cryptomunt cryptomunt, double aantal, LocalDateTime datum) {
+        this(cryptomunt, aantal, null, datum);
+        logger.info("Asset " + this);
+    }
+
+    /**
      * De all-args constructor voor Asset
      * @param cryptomunt de cryptomunt waarvoor de Asset is aangemaakt
      * @param aantal het aantal van de cryptomunt die in deze Asset aanwezig is
+     * @param klant de klant die de Asset bezit
+     * @param datum het moment waarop de waarde van de cryptomunt is opgeslagen
      */
-    public Asset(Cryptomunt cryptomunt, double aantal){
+    public Asset(Cryptomunt cryptomunt, double aantal, Klant klant, LocalDateTime datum){
+        super();
         this.cryptomunt = cryptomunt;
         this.aantal = aantal;
+        this.klant = klant;
+        this.datum = datum;
         logger.info("Asset: " + this);
     }
 
@@ -53,16 +70,17 @@ public class Asset {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Asset asset = (Asset) o;
-        return Double.compare(asset.aantal, aantal) == 0 && cryptomunt.equals(asset.cryptomunt);
+        return Double.compare(asset.aantal, aantal) == 0 && cryptomunt.equals(asset.cryptomunt) &&
+                klant.equals(asset.klant) && datum.equals(asset.datum);
     }
 
     /**
-     * Hashcode methode voor Asset, waarbij een hanshcode wordt gegenereerd op basis van cryptomunt en aantal
+     * Hashcode methode voor Asset, waarbij een hashcode wordt gegenereerd op basis van cryptomunt en aantal
      * @return int de hashcode voor deze Asset
      */
     @Override
     public int hashCode() {
-        return Objects.hash(cryptomunt, aantal);
+        return Objects.hash(cryptomunt, aantal, klant, datum);
     }
 
     public Cryptomunt getCryptomunt() {
@@ -81,11 +99,29 @@ public class Asset {
         this.aantal = aantal;
     }
 
+    public Klant getKlant() {
+        return klant;
+    }
+
+    public void setKlant(Klant klant) {
+        this.klant = klant;
+    }
+
+    public LocalDateTime getDatum() {
+        return datum;
+    }
+
+    public void setDatum(LocalDateTime datum) {
+        this.datum = datum;
+    }
+
     @Override
     public String toString() {
         return "Asset{" +
                 "cryptomunt=" + cryptomunt +
                 ", aantal=" + aantal +
+                ", klant=" + klant +
+                ", datum=" + datum +
                 '}';
     }
 }

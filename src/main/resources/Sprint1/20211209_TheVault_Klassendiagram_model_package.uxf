@@ -4,8 +4,8 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>603</x>
-      <y>648</y>
+      <x>423</x>
+      <y>657</y>
       <w>342</w>
       <h>171</h>
     </coordinates>
@@ -28,21 +28,21 @@ model :: CryptoMunt
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>684</x>
+      <x>504</x>
       <y>576</y>
       <w>45</w>
-      <h>90</h>
+      <h>99</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 m2=0..n
 m1=1</panel_attributes>
-    <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>486</x>
-      <y>369</y>
+      <x>306</x>
+      <y>342</y>
       <w>252</w>
       <h>63</h>
     </coordinates>
@@ -54,16 +54,18 @@ m1=0..n</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>603</x>
-      <y>414</y>
+      <x>423</x>
+      <y>387</y>
       <w>342</w>
-      <h>171</h>
+      <h>198</h>
     </coordinates>
     <panel_attributes>lw=2
 model :: Asset
 --
 - cryptomunt: Cryptomunt
 - aantal: double
+- klant: Klant
+- datum: LocalDateTime
 - logger: Logger
 
 --
@@ -77,8 +79,8 @@ model :: Asset
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>180</x>
-      <y>657</y>
+      <x>0</x>
+      <y>666</y>
       <w>252</w>
       <h>162</h>
     </coordinates>
@@ -100,21 +102,21 @@ model :: Rekening
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>342</x>
-      <y>576</y>
+      <x>162</x>
+      <y>549</y>
       <w>45</w>
-      <h>99</h>
+      <h>135</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 m2=1
 m1=1..n</panel_attributes>
-    <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;130.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>342</x>
-      <y>243</y>
+      <x>162</x>
+      <y>216</y>
       <w>45</w>
       <h>90</h>
     </coordinates>
@@ -126,8 +128,8 @@ m1=1</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>180</x>
-      <y>27</y>
+      <x>0</x>
+      <y>0</y>
       <w>315</w>
       <h>225</h>
     </coordinates>
@@ -155,8 +157,8 @@ huisnummer: int, postcode: String, plaatsnaam: String
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>423</x>
-      <y>270</y>
+      <x>243</x>
+      <y>243</y>
       <w>198</w>
       <h>63</h>
     </coordinates>
@@ -166,8 +168,8 @@ huisnummer: int, postcode: String, plaatsnaam: String
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>180</x>
-      <y>315</y>
+      <x>0</x>
+      <y>288</y>
       <w>315</w>
       <h>270</h>
     </coordinates>
@@ -197,8 +199,8 @@ geboortedatum: LocalDate)
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>756</x>
-      <y>117</y>
+      <x>576</x>
+      <y>90</y>
       <w>27</w>
       <h>63</h>
     </coordinates>
@@ -208,8 +210,8 @@ geboortedatum: LocalDate)
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>603</x>
-      <y>162</y>
+      <x>423</x>
+      <y>135</y>
       <w>342</w>
       <h>198</h>
     </coordinates>
@@ -234,8 +236,8 @@ _- default_gebruikerId: int_
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>675</x>
-      <y>27</y>
+      <x>495</x>
+      <y>0</y>
       <w>180</w>
       <h>99</h>
     </coordinates>
@@ -249,6 +251,20 @@ _+ bankcode: String_
 + Bank()
 
 </panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>936</x>
+      <y>18</y>
+      <w>189</w>
+      <h>81</h>
+    </coordinates>
+    <panel_attributes>Author: Carmen
+
+Class diagram models
+begin sprint 2</panel_attributes>
     <additional_attributes/>
   </element>
 </diagram>

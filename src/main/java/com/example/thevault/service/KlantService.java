@@ -5,7 +5,9 @@ package com.example.thevault.service;
 
 import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.Asset;
+import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.model.Klant;
+import com.example.thevault.domain.transfer.AssetDto;
 import com.example.thevault.support.BSNvalidator;
 import com.example.thevault.support.exceptions.AgeTooLowException;
 import com.example.thevault.support.exceptions.IncorrectBSNException;
@@ -22,6 +24,7 @@ import javax.security.auth.login.LoginException;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -39,16 +42,25 @@ public class KlantService {
         logger.info("New KlantService.");
     }
 
+    public Klant vindKlantByGebruikersnaam(String username){
+        return rootRepository.vindKlantByGebruikersnaam(username);
+        //TODO de methode 'geefNuttigePortefeuille' aanroepen om de asset objecten voor de klant op te schonen (zie onder)
+    }
+
     /**
-     * Deze methode zoekt of er in de database al een klant bestaat met deze gebruikersnaam
-     * en maakt eventueel een klant-object aan op nasis van de teruggestuurde gegevens
-     * Hier in de repository worden portefeuille en rekening toegevoegd
-     *
-     * @param gebruikersnaam gebruikersnaam van een (mogelijke) klant die uniek moet zijn
-     * @return klant-object op basis van gegevens uit de database of null indien gebruikersnaam niet gevonden is
+     * @Author Carmen
+     * In de portefeuille van de klant worden de assets vervangen door AssetDTO objecten, waarbij alleen de
+     * voor de klant nuttige informatie wordt doorgegeven (deze methode stond eerst in AssetService)
+     * @param klant de klant die de portefeuille oproept
+     * @return List</AssetDto> een lijst met alle assets van de klant, zijnde de portefeuille, in de vorm die voor de
+     * klant meerwaarde heeft
      */
-    public Klant vindKlantByGebruikersnaam(String gebruikersnaam){
-        return rootRepository.vindKlantByGebruikersnaam(gebruikersnaam);
+    public List<AssetDto> geefNuttigePortefeuille(Klant klant){
+        List<AssetDto> portefeuilleVoorKlant = new ArrayList<>();
+        for (Asset asset : klant.getPortefeuille()) {
+            portefeuilleVoorKlant.add(new AssetDto(asset));
+        }
+        return portefeuilleVoorKlant;
     }
 
     /**
@@ -166,23 +178,6 @@ public class KlantService {
      */
     public boolean checkWachtwoordFormat(Klant klant){
        return !klant.getWachtwoord().contains(" ");
-    }
-
-
-    public List<Asset> geefInhoudPortefeuille(int klantId) throws SQLException {
-        return rootRepository.vulPortefeuilleKlant(klantId);
-    }
-
-    public Asset geefCryptomunt(int klantId, int cryptomuntId){
-        return rootRepository.geefAssetVanKlant(klantId, cryptomuntId);
-    }
-
-    public Asset slaAssetOp(int klantId, Asset asset){
-        return rootRepository.slaAssetVanKlantOp(klantId, asset);
-    }
-
-    public Asset wijzigAsset(int klantId, Asset asset){
-        return rootRepository.wijzigAssetVanKlant(klantId, asset);
     }
 
     public RootRepository getRootRepository() {
