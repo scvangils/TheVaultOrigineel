@@ -170,7 +170,6 @@ class RootRepositoryTest {
             fail();
         } catch (AssetNotExistsException assetNotExistsException){
             assertThat(assetNotExistsException.getMessage()).isEqualTo("Asset bestaat niet.");
-
         }
     }
 
