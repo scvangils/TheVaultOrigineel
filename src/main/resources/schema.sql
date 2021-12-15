@@ -43,7 +43,7 @@ CREATE TABLE 'klant' (
                         REFERENCES 'rekening' ('rekeningId')
                         ON DELETE RESTRICT
                         ON UPDATE CASCADE)
-)
+);
 
 CREATE INDEX 'verzinZelf1_idx' ON 'klant' ('adresId' ASC) VISIBLE;
 CREATE INDEX 'verzinZelf3_idx' ON 'klant' ('rekeningId' ASC) VISIBLE;
@@ -54,7 +54,7 @@ CREATE TABLE 'cryptomunt' (
                         'naam' VARCHAR(30) NOT NULL,
                         'afkorting' VARCHAR(15) NULL,
                         PRIMARY KEY ('cryptomuntId'))
-)
+);
 
 CREATE UNIQUE INDEX 'naam_UNIQUE' ON 'cryptomunt' ('naam' ASC) VISIBLE;
 
@@ -73,7 +73,7 @@ CREATE TABLE 'asset' (
                         REFERENCES 'cryptomunt' ('cryptomuntId')
                         ON DELETE RESTRICT
                         ON UPDATE RESTRICT)
-)
+);
 
 CREATE INDEX 'verzinZelf6_idx' ON 'asset' ('gebruikerId' ASC) VISIBLE;
 
@@ -101,5 +101,36 @@ CREATE TABLE 'transactie' (
                         REFERENCES 'klant' ('gebruikerId')
                         ON DELETE RESTRICT
                         ON UPDATE CASCADE)
-)
+);
+
+CREATE INDEX 'verzinZelf10_idx' ON 'transactie' ('koperGebruikerId' ASC) VISIBLE;
+CREATE INDEX 'verzinZelf5_idx' ON 'transactie' ('cryptomuntId' ASC) VISIBLE;
+CREATE INDEX 'verzinZelf7_idx' ON 'transactie' ('verkoperGebruikerId' ASC) VISIBLE;
+
+CREATE TABLE 'refreshToken' (
+                        'token' VARCHAR(100) NOT NULL,
+                        'gebruikerId' INT NOT NULL,
+                        PRIMARY KEY ('token'),
+                        CONSTRAINT 'heeftToegangMet'
+                        FOREIGN KEY ('gebruikerId')
+                        REFERENCES 'klant' ('gebruikerId')
+                        ON DELETE CASCADE
+                        ON UPDATE CASCADE)
+);
+
+CREATE INDEX 'verzinZelf4_idx' ON 'refreshToken' ('gebruikerId' ASC) VISIBLE;
+
+CREATE TABLE dagkoersCrypto (
+                        'waardeCrypto' INT NOT NULL,
+                        'datum' DATE NOT NULL,
+                        'cryptomuntId' INT NOT NULL,
+                        PRIMARY KEY ('cryptomuntId', 'datum'),
+                        CONSTRAINT 'dagkoersenVan'
+                        FOREIGN KEY ('cryptomuntId')
+                        REFERENCES 'cryptomunt' ('cryptomuntId')
+                        ON DELETE RESTRICT
+                        ON UPDATE RESTRICT)
+);
+
+CREATE INDEX 'verzinZelf8_idx' ON 'dagkoersCrypto' ('cryptomuntId' ASC) VISIBLE;
 
