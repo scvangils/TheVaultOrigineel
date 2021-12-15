@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Repository
@@ -196,11 +197,20 @@ public class RootRepository {
 
     /**
      * methode die alle transacties die bij een klant horen teruggeeft
+     * hierbij worden eerst de koper, verkoper en cryptomunt op id uit de database
+     * gehaald en toegevoegd aan het transactie object
+     *
      * @param klant de klant waarvan alle transacties moeten worden opgezocht
      * @return lijst transacties van de klant
      */
     List<Transactie> geefTransactiesVanKlant(Klant klant){
-        return transactieDAO.geefTransactiesVanKlant(klant);
+        List<Transactie> transactiesVanKlant = transactieDAO.geefTransactiesVanKlant(klant);
+        for (Transactie transactie: transactiesVanKlant) {
+            transactie.setKoper(klantDAO.vindKlantById(transactie.getKoper().getGebruikerId()));
+            transactie.setVerkoper(klantDAO.vindKlantById(transactie.getVerkoper().getGebruikerId()));
+            transactie.setCryptomunt(cryptomuntDAO.geefCryptomunt(transactie.getCryptomunt().getId()));
+        }
+        return transactiesVanKlant;
     }
     /**
      * methode die alle transacties van de bank ophaalt
@@ -214,11 +224,13 @@ public class RootRepository {
     /**
      * methode die alle transacties die bij een klant horen die in een bepaalde
      * periode hebben plaatsgevonden teruggeeft
-     * @params klant, startDatum en eindDatum de klant waarvan alle transacties moeten
+     * @param klant
+     * @param startDatum
+     * @param eindDatum de klant waarvan alle transacties moeten
      * worden opgezocht, en data vanaf en tot wanneer de transacties plaatsvonden
      * @return lijst transacties van de klant
      */
-    List<Transactie> geefTransactiesVanKlantInPeriode(Klant klant, LocalDateTime startDatum, LocalDateTime eindDatum){
+    List<Transactie> geefTransactiesVanKlantInPeriode(Klant klant, OffsetDateTime startDatum, OffsetDateTime eindDatum){
         return transactieDAO.geefTransactiesVanKlantInPeriode(klant, startDatum, eindDatum);
     }
 
@@ -227,7 +239,7 @@ public class RootRepository {
      * @params startDatum en eindDatum periode
      * @return lijst transacties van die periode
      */
-    List<Transactie> geefAlleTransactiesInPeriode(LocalDateTime startDatum, LocalDateTime eindDatum){
+    List<Transactie> geefAlleTransactiesInPeriode(OffsetDateTime startDatum, OffsetDateTime eindDatum){
         return transactieDAO.geefAlleTransactiesInPeriode(startDatum, eindDatum);
     }
 
