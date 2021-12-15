@@ -41,13 +41,15 @@ public class JDBCTokenKlantCombinatieDao implements TokenKlantCombinatieDao{
      * Slaat een token met klant op in de database
      *
      * @param tokenKlantCombinatie
-     * return void
+     *
+     * @return de tokenKlantCombinatie die wordt opgeslagen
      */
     @Override
-    public void slaTokenKlantPairOp(TokenKlantCombinatie tokenKlantCombinatie) {
+    public TokenKlantCombinatie slaTokenKlantPairOp(TokenKlantCombinatie tokenKlantCombinatie) {
         jdbcTemplate.update(
                 "insert into refreshToken (token, gebruikerId) values (?, ?)",
                 tokenKlantCombinatie.getKey().toString(), tokenKlantCombinatie.getKlant().getGebruikerId());
+        return tokenKlantCombinatie;
     }
 
     /**
@@ -65,7 +67,8 @@ public class JDBCTokenKlantCombinatieDao implements TokenKlantCombinatieDao{
         if (tokenKlantCombinaties.size() == 1) {
             return Optional.of(tokenKlantCombinaties.get(0));
         }
-        return Optional.empty();    }
+        return Optional.empty();
+    }
 
 
     /**
@@ -92,9 +95,10 @@ public class JDBCTokenKlantCombinatieDao implements TokenKlantCombinatieDao{
      * @return void
     * */
     @Override
-    public void delete(UUID uuid) {
+    public UUID delete(UUID uuid) {
         jdbcTemplate.update("delete from refreshToken where token = ?", uuid.toString());
         logger.info("Verwijderde uuid " + uuid.toString());
+        return uuid;
     }
 
 
