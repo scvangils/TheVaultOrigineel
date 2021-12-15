@@ -21,7 +21,7 @@ public class JDBCKlantDAO implements KlantDAO{
 
     private final Logger logger = LoggerFactory.getLogger(JDBCKlantDAO.class);
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public JDBCKlantDAO(JdbcTemplate jdbcTemplate) {
         super();
@@ -38,6 +38,7 @@ public class JDBCKlantDAO implements KlantDAO{
      * @return Prepared Statement-object dat nodig is om Klant op te slaan in de database
      * @throws SQLException
      */
+    //TODO Adres toevoegen
     private PreparedStatement slaKlantOpStatement(Klant klant, Connection connection) throws SQLException {
         String sql = "INSERT INTO klant (gebruikersnaam, wachtwoord, naam, bsn, geboortedatum) values (?, ?, ?, ?, ?);";
         PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
@@ -117,6 +118,13 @@ public class JDBCKlantDAO implements KlantDAO{
         }
         return klant;
     }
+    //TODO is DELETE klant nodig?
+    @Override
+    public Klant verwijderKlant(Klant klant) {
+        String sql = "DELETE klant WHERE gebruikerId = ?;";
+        jdbcTemplate.update(sql, klant.getGebruikerId());
+        return klant;
+    }
 
     private static class KlantRowMapper implements RowMapper<Klant>{
         /**
@@ -129,7 +137,7 @@ public class JDBCKlantDAO implements KlantDAO{
          * @return Klant-object met informatie uit de database
          * @throws SQLException
          */
-        @Override //TODO nakijken of datum zo goed geconverteerd wordt
+        @Override
         public Klant mapRow(ResultSet resultSet, int rowNum) throws SQLException {
             Klant klant = new Klant(resultSet.getString("gebruikersnaam"),
                     resultSet.getString("wachtwoord"), resultSet.getString("naam"),

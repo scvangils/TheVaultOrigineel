@@ -14,4 +14,6 @@ public interface KlantDAO {
 
     Klant vindKlantByGebruikersnaam(String gebruikersnaam);
 
+    Klant verwijderKlant(Klant klant);
+
 }

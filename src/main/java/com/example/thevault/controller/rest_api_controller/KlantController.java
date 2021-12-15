@@ -3,7 +3,9 @@
 
 package com.example.thevault.controller.rest_api_controller;
 
+import com.example.thevault.domain.model.Adres;
 import com.example.thevault.domain.model.Klant;
+import com.example.thevault.domain.model.PostModel;
 import com.example.thevault.domain.transfer.RegistrationDto;
 import com.example.thevault.domain.transfer.WelkomDTO;
 import com.example.thevault.service.LoginService;
@@ -48,6 +50,7 @@ public class KlantController extends BasisApiController{
      */
     @PostMapping("/register")
     public ResponseEntity<RegistrationDto> registreerKlantHandler(@RequestBody Klant klant){
+        System.out.println(klant);
         RegistrationDto registrationDto = registrationService.registreerKlant(klant);
     return ResponseEntity.status(HttpStatus.CREATED).body(registrationDto);
     }
@@ -55,6 +58,11 @@ public class KlantController extends BasisApiController{
     public ResponseEntity<String> clientDashboardHandler(@RequestHeader("Authorization") String token, @RequestBody String inhoud){
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(inhoud);
     }
+    @PostMapping("/test")
+    public ResponseEntity<Klant> testRegistratie(@RequestBody Klant klant){
+        return ResponseEntity.status(HttpStatus.CREATED).body(klant);
+    }
+
 
     /**
     @author Wim 20211207

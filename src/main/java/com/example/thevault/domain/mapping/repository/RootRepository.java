@@ -29,16 +29,18 @@ public class RootRepository {
     private final AssetDAO assetDAO;
     private final CryptomuntDAO cryptomuntDAO;
     private final CryptoWaardeDAO cryptoWaardeDAO;
+    private final AdresDAO adresDAO;
 
     @Autowired
     public RootRepository(KlantDAO klantDAO, RekeningDAO rekeningDAO, AssetDAO assetDAO, CryptomuntDAO cryptomuntDAO,
-                          CryptoWaardeDAO cryptoWaardeDAO) {
+                          CryptoWaardeDAO cryptoWaardeDAO, AdresDAO adresDAO) {
         super();
         this.rekeningDAO = rekeningDAO;
         this.klantDAO = klantDAO;
         this.assetDAO = assetDAO;
         this.cryptomuntDAO = cryptomuntDAO;
         this.cryptoWaardeDAO = cryptoWaardeDAO;
+        this.adresDAO = adresDAO;
         logger.info("New RootRepository");
     }
 
@@ -63,9 +65,17 @@ public class RootRepository {
      */
     public Klant vindKlantByGebruikersnaam(String gebruikersnaam){
         Klant klant = klantDAO.vindKlantByGebruikersnaam(gebruikersnaam);
-            klant.setPortefeuille(vulPortefeuilleKlant(klant));
-            //TODO rekening toevoegen na database compleet
+        //TODO maakKlantCompleet aanzetten
+        //TODO nadenken of adres moet worden toegevoegd
+        /*maakKlantCompleet(klant);*/
         return klant;
+    }
+    //TODO rekening toevoegen na database compleet
+    private void maakKlantCompleet(Klant klant) {
+        if(klant != null){
+            klant.setAdres(adresDAO.getAdresByKlant(klant));
+            klant.setPortefeuille(vulPortefeuilleKlant(klant));
+        }
     }
 
     /**

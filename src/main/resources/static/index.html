@@ -3,8 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>Welcome to The Vault</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="javascript/homepage.js" defer></script>
 </head>
 <body>
-
+<div>
+<form id = "registratieOverig" method="post" action="/test">
+    <label for="naam">naam</label>
+        <input type="text" id = "naam" name = "naam" required>
+    <label for="gebruikersnaam">gebruikersnaam</label>
+        <input type="text" id = "gebruikersnaam" name = "gebruikersnaam" required>
+    <label for="geboortedatum">geboortedatum</label>
+        <input type="date" id = "geboortedatum" name = "geboortedatum">
+    <label for="bsn">BSN</label>
+        <input type="number" id = "bsn" name = "bsn" required>
+    <label for="wachtwoord">wachtwoord</label>
+        <input type="password" id = "wachtwoord" name = "wachtwoord">
+</form>
+<form id = "registratieAdres" method="post" action="/test">
+    <label for="postcode">postcode</label>
+     <input type="text" id = "postcode" name = "postcode" required>
+    <label for="huisnummer">huisnummer</label>
+   <input type="number" id = "huisnummer" name = "huisnummer" required>
+    <label for="toevoeging">toevoeging</label>
+        <input type="text" id = "toevoeging" name = "toevoeging">
+    <label for="straatnaam">straat</label>
+        <input type="text" id = "straatnaam" name = "straatnaam" required>
+    <label for="plaatsnaam">woonplaats</label>
+        <input type="text" id = "plaatsnaam" name = "plaatsnaam">
+</form>
+</div>
+<input type="button" id = "verstuur" value= "Join the Bank to the Future" onclick="registreer()">
 </body>
 </html>
