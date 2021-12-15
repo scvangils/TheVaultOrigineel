@@ -165,7 +165,7 @@ class RootRepositoryTest {
         System.out.println(actual);
         assertThat(actual).as("Test asset van testklant opvragen").isNotNull().isEqualTo(expected).
                 isIn(portefeuille).hasNoNullFieldsOrProperties().asString().startsWith("Asset{").contains("5.1").
-                doesNotContain("2.4").hasSize(316);
+                doesNotContain("2.4").hasSize(229);
     }
 
     @Test
@@ -199,6 +199,6 @@ class RootRepositoryTest {
         Asset actual = rootRepository.wijzigAssetVanKlant(testAsset3);
         assertThat(actual).as("Test wijzigen asset van testklant").isNotNull().isEqualTo(expected).
                 isIn(portefeuille).hasNoNullFieldsOrProperties().asString().startsWith("Asset{").contains("Coyne").
-                doesNotContain("BitCoin").hasSize(309);
+                doesNotContain("BitCoin").hasSize(222);
     }
 }
