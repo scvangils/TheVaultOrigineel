@@ -16,11 +16,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * @Author: Ju-Sen Cheung
+ * Beschrijving: De DAO voor Rekening, waar enkele methodes instaan voor CRUD van Rekening.
+ */
 
 @Repository
 public class JDBCRekeningDAO implements RekeningDAO {
-
-    //TODO Alle JavaDoc schrijven
 
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(JDBCKlantDAO.class);
