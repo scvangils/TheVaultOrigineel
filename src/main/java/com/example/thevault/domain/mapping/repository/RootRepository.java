@@ -10,13 +10,12 @@ import net.minidev.json.annotate.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.function.Supplier;
+import java.util.Optional;
 
 @Repository
 public class RootRepository {
@@ -29,16 +28,18 @@ public class RootRepository {
     private final AssetDAO assetDAO;
     private final CryptomuntDAO cryptomuntDAO;
     private final CryptoWaardeDAO cryptoWaardeDAO;
+    private final TransactieDAO transactieDAO;
 
     @Autowired
     public RootRepository(KlantDAO klantDAO, RekeningDAO rekeningDAO, AssetDAO assetDAO, CryptomuntDAO cryptomuntDAO,
-                          CryptoWaardeDAO cryptoWaardeDAO) {
+                          CryptoWaardeDAO cryptoWaardeDAO, TransactieDAO transactieDAO) {
         super();
         this.rekeningDAO = rekeningDAO;
         this.klantDAO = klantDAO;
         this.assetDAO = assetDAO;
         this.cryptomuntDAO = cryptomuntDAO;
         this.cryptoWaardeDAO = cryptoWaardeDAO;
+        this.transactieDAO = transactieDAO;
         logger.info("New RootRepository");
     }
 
@@ -170,4 +171,61 @@ public class RootRepository {
     public CryptoWaarde haalMeestRecenteCryptoWaarde(Cryptomunt cryptomunt){
         return cryptoWaardeDAO.getCryptoWaardeByCryptomuntAndDate(cryptomunt, LocalDate.now());
     }
+
+    /**
+     * Sla een transactie op in de transactie database tabel
+     * @param transactie de transactie die in de database moet worden toegevoegd
+     * @return transactie die is opgeslagen
+     */
+    public Transactie SlaTransactieOp(Transactie transactie){
+        return transactieDAO.slaTransactieOp(transactie);
+    }
+
+    /**
+     * methode die alle transacties die bij een klant horen teruggeeft
+     * @param klant de klant waarvan alle transacties moeten worden opgezocht
+     * @return lijst transacties van de klant
+     */
+    List<Transactie> geefTransactiesVanKlant(Klant klant){
+        return transactieDAO.geefTransactiesVanKlant(klant);
+    }
+    /**
+     * methode die alle transacties van de bank ophaalt
+     *
+     * @return lijst transacties van de bank
+     */
+    List<Transactie> geefTransactiesVanBank(){
+        return transactieDAO.geefTransactiesVanBank();
+    }
+
+    /**
+     * methode die alle transacties die bij een klant horen die in een bepaalde
+     * periode hebben plaatsgevonden teruggeeft
+     * @params klant, startDatum en eindDatum de klant waarvan alle transacties moeten
+     * worden opgezocht, en data vanaf en tot wanneer de transacties plaatsvonden
+     * @return lijst transacties van de klant
+     */
+    List<Transactie> geefTransactiesVanKlantInPeriode(Klant klant, LocalDateTime startDatum, LocalDateTime eindDatum){
+        return transactieDAO.geefTransactiesVanKlantInPeriode(klant, startDatum, eindDatum);
+    }
+
+    /**
+     * methode die alle transacties binnen een bepaalde periode teruggeeft
+     * @params startDatum en eindDatum periode
+     * @return lijst transacties van die periode
+     */
+    List<Transactie> geefAlleTransactiesInPeriode(LocalDateTime startDatum, LocalDateTime eindDatum){
+        return transactieDAO.geefAlleTransactiesInPeriode(startDatum, eindDatum);
+    }
+
+    /**
+     * methode die alle transacties die bij een klant horen met een bepaalde cryptmunt
+     * @params klant cryptomunt
+     * @return lijst transacties van de klant met de meegegeven cryptomunt
+     */
+    List<Transactie> geefTransactiesVanKlantMetCryptomunt(Klant klant, Cryptomunt cryptomunt){
+        return transactieDAO.geefTransactiesVanKlantMetCryptomunt(klant, cryptomunt);
+    }
+
+
 }
