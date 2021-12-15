@@ -111,8 +111,6 @@ public class AuthorizationService {
         } catch (JWTVerificationException exception) {
             logger.info("Access token niet gevalideerd");
             System.out.println("Exeption bericht :" + exception);
-            // Nog een andere exception toevoegen
-            // moet een 401 teruggeven
             return false;
         }
         return true;

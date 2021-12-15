@@ -12,6 +12,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.Klant;
+import com.example.thevault.support.exceptions.AssetNotExistsException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,12 +26,14 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 
 
 class AuthorizationServiceTest {
 
+    private Klant nieuweKlant;
     public Klant testKlant;
     public String testVerlopenAccessToken;
     public UUID testRefreshToken;
@@ -49,10 +52,10 @@ class AuthorizationServiceTest {
     @BeforeEach
     public void setup(){
         testKlant = new Klant( "Henknr1", "Welkom01", "Henk", 1890393, LocalDate.of(1991, 1, 12));
+        nieuweKlant = new Klant("TimoBaasnummer1", "DuinDeBeste01", "Timo", 1890393, LocalDate.of(1992, 1, 10));
         mockRepo = Mockito.mock(RootRepository.class);
         mockTokenKlantCombinatieDao = Mockito.mock(TokenKlantCombinatieDao.class);
         authorizationServiceTest = new AuthorizationService(mockTokenKlantCombinatieDao);
-        testAccessTokenFromService = authorizationServiceTest.genereerAccessToken(testKlant);
         setTestVerlopenAccessToken();
         testRefreshToken = UUID.randomUUID();
     }
@@ -62,7 +65,6 @@ class AuthorizationServiceTest {
      * tijd verstreken is, deze wordt in de methode
      * testVerlopenAccesToken aageropen
      *
-     * @return String verlopenAccessToken
      * */
     public void setTestVerlopenAccessToken (){
         // Genereer JWT token met verlopen tijd
@@ -81,26 +83,14 @@ class AuthorizationServiceTest {
 
     @Test
     void genereerRefreshToken() {
-        //TODO is deze test uberhaupt nodig,
-        // zo ja, aanpassen naar juiste test
         testRefreshToken = UUID.randomUUID();
         assertThat(testRefreshToken).isNotNull().isInstanceOf(UUID.class);
         logger.info("UUID refresh token notNull en instantie UUID");
     }
 
-    /**
-     * De onderstaande test genereert een JWT token, controleert
-     * of het token bestaat en of deze de het eerste deel bevat
-     * waarin het signature van het algoritme staat en informatie
-     * over het type token
-     *
-     * @return void
-     * */
     @Test
     void genereerAccessToken() {
         testAccessTokenFromService = authorizationServiceTest.genereerAccessToken(testKlant);
-        DecodedJWT decodedJwt = JWT.decode(testAccessTokenFromService);
-
 
         assertThat(testAccessTokenFromService).isNotNull().isInstanceOf(String.class).contains("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9");
 
@@ -120,18 +110,10 @@ class AuthorizationServiceTest {
         DecodedJWT decodedJwt = JWT.decode(testAccessTokenFromService);
 
         assertThat(testAccessTokenFromService).isNotNull().isInstanceOf(String.class).contains("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9");
-
         logger.info("testAccessTokenFromService isNotNull en bevat juiste encodering");
     }
 
-    /**
-     * De onderstaande test genereert een JWT token, controleert
-     * of het token bestaat en of deze de het eerste deel bevat
-     * waarin het signature van het algoritme staat en informatie
-     * over het type token
-     *
-     * @return void
-     * */
+
     @Test
     void valideerAccessTokenFromAuthorizationService() {
         authorizationServiceTest.valideerAccessToken(testAccessTokenFromService, testKlant);
@@ -140,15 +122,6 @@ class AuthorizationServiceTest {
         printOutComesTokenValidation(decodedJwt);
     }
 
-
-    /**
-     * Test of er een exception wordt gegooid wanneer er
-     * een klant aan de validatieMethode wordt meegegeven waarvoor het token
-     * niet bedoelt is, speciefieke exception: een InvalidClaimException.
-     *
-     * Als de valideerAccessToken methode een false teruggeeft is de test geslaagd
-     *
-     **/
     @Test
     void valideerAccessTokenMetVerkeerdeKlant() {
             boolean returnedBooleanValue = authorizationServiceTest.valideerAccessToken(testAccessTokenFromService, new Klant( "harrynr1", "Welkom01", "Henk", 1890393, LocalDate.of(1991, 1, 12)));
@@ -159,19 +132,10 @@ class AuthorizationServiceTest {
             if(!returnedBooleanValue){
                 System.out.println("test geslaagd");
             } else {
-                fail("Moet een JWTVerificationException gooien met InvalidClaimException");
+                fail("Moet een JWTVerificationException gooien met InvalidClaimException en false teruggeven");
             }
     }
 
-    /**
-     * Test of de methode valideerAccessToken bij een verlopen token
-     * een JWTVerificationException opgooit. De valideerAccessToken methode
-     * moet dus een fail teruggeven.
-     *
-     * specifieke exception: TokenExpiredException
-     *
-     * @return void
-     * */
     @Test
     void valideerAccessTokenVerlopen(){
         boolean outcomeValidatie = authorizationServiceTest.valideerAccessToken(testVerlopenAccessToken, testKlant);
@@ -181,16 +145,11 @@ class AuthorizationServiceTest {
         if(!outcomeValidatie){
             System.out.println("test geslaagd");
         } else{
-            fail("Moet een JWTVerificationException gooien");
+            fail("Moet een JWTVerificationException gooien en false teruggeven");
         }
     }
 
-    /**
-     * Methode om alle eigenschappen van een meegegeven DecodedJWT
-     * te kunnen printen
-     *
-     * @return void
-     * */
+
     public void printOutComesTokenValidation (DecodedJWT decodedAccesToken) {
         System.out.println("Header =  " + decodedAccesToken.getHeader());
         System.out.println("Algorithm =  " + decodedAccesToken.getAlgorithm());
@@ -205,31 +164,37 @@ class AuthorizationServiceTest {
         System.out.println("Subject =  " + decodedAccesToken.getSubject());
     }
 
-    /**
-     * Methode om de authorisatie van de klant het refresh token te testen
-     *
-     * TO DO moet nog verder uitgewerkt worden met database test om te zien of de
-     * database de combinatie goed opslaat, delete en vervangt. H2-database nodig.
-     *
-     * @return void
-     * */
+
     @Test
-    void authoriseerKlantMetRefreshToken() {
-        Klant nieuweKlant = new Klant("TimoBaasnummer1", "DuinDeBeste01", "Timo", 1890393, LocalDate.of(1992, 1, 10));
-        TokenKlantCombinatie startCombinatie = authorizationServiceTest.authoriseerKlantMetRefreshToken(testKlant);
-        TokenKlantCombinatie actualCombinatie = authorizationServiceTest.authoriseerKlantMetRefreshToken(testKlant);
+    void authoriseerKlantMetRefreshTokenNieuweKlant() {
 
-        // sla nieuwe klant op
-        TokenKlantCombinatie testCombinatieNieuweKlant = authorizationServiceTest.authoriseerKlantMetRefreshToken(nieuweKlant);
-        assertThat(testCombinatieNieuweKlant.getKlant().getNaam().equals("Timo"));
-        assertThat(testCombinatieNieuweKlant.getKey()).isNotNull().isInstanceOf(UUID.class);
-        logger.info("testCombinatie nieuwe klant = " + testCombinatieNieuweKlant);
+        TokenKlantCombinatie expectedTokenKlantCombinatie = new TokenKlantCombinatie (testRefreshToken, nieuweKlant);
 
-        // check of de key een UUID random gegenereerde token is
-        assertThat(actualCombinatie.getKey()).isInstanceOf(UUID.class).isNotEqualTo(startCombinatie.getKey());
+        Mockito.when(mockTokenKlantCombinatieDao.vindTokenKlantCombinatieMetKlant(nieuweKlant)).thenReturn(Optional.empty());
+        Mockito.when(mockTokenKlantCombinatieDao.slaTokenKlantPairOp(expectedTokenKlantCombinatie)).thenReturn(expectedTokenKlantCombinatie);
 
-        // check of bij de tweede check de token veranderd is
-        assertThat(startCombinatie).isNotEqualTo(actualCombinatie);
+        TokenKlantCombinatie actualTokenKlantCombinatie = authorizationServiceTest.authoriseerKlantMetRefreshToken(nieuweKlant);
+
+        assertThat(actualTokenKlantCombinatie.getKlant().getNaam().equals(expectedTokenKlantCombinatie.getKlant().getNaam()));
+        assertThat(actualTokenKlantCombinatie.getKey()).isNotNull().isInstanceOf(expectedTokenKlantCombinatie.getKey().getClass());
+    }
+
+    @Test
+    void authoriseerKlantMetRefreshTokenBestaandeKlant() {
+        // test of de refreshtoken wordt geupdated
+        TokenKlantCombinatie startTokenKlantCombinatie = new TokenKlantCombinatie (testRefreshToken, testKlant);
+
+        Mockito.when(mockTokenKlantCombinatieDao.vindTokenKlantCombinatieMetKlant(testKlant)).thenReturn(Optional.of(startTokenKlantCombinatie));
+        Mockito.when(mockTokenKlantCombinatieDao.slaTokenKlantPairOp(startTokenKlantCombinatie)).thenReturn(startTokenKlantCombinatie);
+
+        TokenKlantCombinatie updatetTokenKlantCombinatie = authorizationServiceTest.authoriseerKlantMetRefreshToken(testKlant);
+
+        //controleer of de nieuwe combinatie wel dezelfde klant bevat maar niet dezelfde key
+        assertThat(updatetTokenKlantCombinatie.getKlant().getNaam().equals(startTokenKlantCombinatie.getKlant().getNaam()));
+        assertThat(updatetTokenKlantCombinatie.getKey()).isNotNull().isNotEqualTo(startTokenKlantCombinatie.getKey());
 
     }
+
+
+
 }

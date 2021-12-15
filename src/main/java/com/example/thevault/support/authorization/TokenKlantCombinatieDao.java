@@ -11,11 +11,11 @@ import java.util.UUID;
 
 public interface TokenKlantCombinatieDao {
 
-    public void slaTokenKlantPairOp(TokenKlantCombinatie tokenKlantCombinatie);
+    public TokenKlantCombinatie slaTokenKlantPairOp(TokenKlantCombinatie tokenKlantCombinatie);
 
     public Optional<TokenKlantCombinatie> vindTokenKlantPairMetKey (UUID key);
 
     public Optional<TokenKlantCombinatie> vindTokenKlantCombinatieMetKlant(Klant klant);
 
-    public void delete(UUID uuid);
+    public UUID delete(UUID uuid);
 }
