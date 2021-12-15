@@ -54,7 +54,13 @@ public class JDBCCryptoWaardeDAO implements CryptoWaardeDAO {
         return cryptoWaarde;
     }
 
-    //TODO hier juiste id meegeven
+    /**
+     * Deze methode slaat de waarde van een cryptomunt en de datum waarop hij deze waarde heeft op
+     * in de database. Eerst wordt nog een correcte Id aangemaakt.
+     *
+     * @param cryptoWaarde het object zonder correcte Id
+     * @return cryptowaarde Het object met correcte Id
+     */
     public CryptoWaarde slaCryptoWaardeOp(CryptoWaarde cryptoWaarde) {
         String sql = "INSERT INTO cryptowaarde VALUES(?, ?, ?, ?);";
         LocalDate huidigeDatum = LocalDate.now();
@@ -65,15 +71,19 @@ public class JDBCCryptoWaardeDAO implements CryptoWaardeDAO {
         return cryptoWaarde;
     }
 
-    private String generateCryptoWaardeId(LocalDate localDate, Cryptomunt cryptomunt) {
+    /**
+     * Deze methode zorgt ervoor dat de Id van een CryptoWaarde het volgende format heeft:
+     * YYYYMMDD<Cryptomunt.symbol>
+     * @param localDate
+     * @param cryptomunt
+     * @return
+     */
+    public String generateCryptoWaardeId(LocalDate localDate, Cryptomunt cryptomunt) {
         int jaar = localDate.getYear();
         int maand = localDate.getMonthValue();
         int dag = localDate.getDayOfMonth();
-        String dagUitTweeCijfers = String.valueOf(dag);
-        if (dag < 10) {
-            dagUitTweeCijfers = "0" + dag;
-        }
-        return jaar + maand + dagUitTweeCijfers + cryptomunt.getSymbol();
+        return String.format(jaar + "%02d" + "%02d" + cryptomunt.getSymbol(), maand, dag);
+
 
     }
 

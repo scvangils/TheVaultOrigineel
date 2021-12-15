@@ -166,8 +166,24 @@ public class RootRepository {
         return assetDAO.updateAsset(asset);
     }
 
+    /**
+     * Deze methode haalt uit de database de waarde die de betreffende cryptomunt vandaag heeft
+     * zodat huidige waarde van assets kan worden berekend
+     *
+     * @param cryptomunt de cryptomunt
+     * @return CryptoWaarde-object om huidige waarde van asset te kunnen berekenen
+     */
     //CryptoWaarde wordt eens per dag opgehaald om 00.00 uur
     public CryptoWaarde haalMeestRecenteCryptoWaarde(Cryptomunt cryptomunt){
         return cryptoWaardeDAO.getCryptoWaardeByCryptomuntAndDate(cryptomunt, LocalDate.now());
+    }
+
+    /**
+     *
+     * @param cryptoWaarde
+     * @return
+     */
+    public CryptoWaarde slaCryptoWaardeOp(CryptoWaarde cryptoWaarde){
+        return cryptoWaardeDAO.slaCryptoWaardeOp(cryptoWaarde);
     }
 }
