@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class Adres {
     private int adresId;
-    private static int DEFAULT_ADRES_ID;
+    private static int DEFAULT_ADRES_ID = 0;
     private String straatnaam;
     private String toevoeging;
     private int huisnummer;
@@ -40,6 +40,7 @@ public class Adres {
     @Override
     public String toString() {
         return "Adres{" +
+                "adresId='" + adresId + '\'' +
                 "straatnaam='" + straatnaam + '\'' +
                 ", toevoeging='" + toevoeging + '\'' +
                 ", huisnummer=" + huisnummer +

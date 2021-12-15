@@ -56,6 +56,7 @@ public class RootRepository {
      * @return het klant-object met de juiste gebruikerId
      */
     public Klant slaKlantOp(Klant klant){
+        adresDAO.slaAdresOp(klant.getAdres());
         return klantDAO.slaKlantOp(klant);
     }
 

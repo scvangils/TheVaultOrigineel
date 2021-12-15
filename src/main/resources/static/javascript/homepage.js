@@ -14,6 +14,7 @@ for (const form of forms) {
 function registreer(){
     const formDataAdres = new FormData(document.getElementById('registratieAdres'));
     const adres = Object.fromEntries(formDataAdres);
+    adres.adresId = 0;
     const formData = new FormData(document.getElementById('registratieOverig'));
     const klant = Object.fromEntries(formData);
     klant.gebruikerId = 0;
