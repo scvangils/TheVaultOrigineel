@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import java.util.Objects;
 
 public class Adres {
+    private int adresId;
+    private static int DEFAULT_ADRES_ID;
     private String straatnaam;
     private String toevoeging;
     private int huisnummer;
@@ -26,6 +28,7 @@ public class Adres {
 
     public Adres(String straatnaam, int huisnummer, String toevoeging, String postcode, String plaatsnaam) {
         super();
+        this.adresId = DEFAULT_ADRES_ID;
         logger.info("New Adres");
         this.straatnaam = straatnaam;
         this.huisnummer = huisnummer;
@@ -43,6 +46,14 @@ public class Adres {
                 ", postcode='" + postcode + '\'' +
                 ", plaatsnaam='" + plaatsnaam + '\'' +
                 '}';
+    }
+
+    public int getAdresId() {
+        return adresId;
+    }
+
+    public void setAdresId(int adresId) {
+        this.adresId = adresId;
     }
 
     public String getStraatnaam() {
@@ -86,7 +97,7 @@ public class Adres {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o) { //TODO equals zonder straatnaam en plaatsnaam?
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Adres adres = (Adres) o;

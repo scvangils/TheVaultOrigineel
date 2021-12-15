@@ -21,6 +21,7 @@ public class Bank extends Gebruiker{
     private final String BANK_WACHTWOORD = "!youvegottacomebankwithme!";
     private Rekening rekening;
     private List<Asset> portefeuille;
+    private final static double BANK_FEE = 5.0;
 
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Bank.class);

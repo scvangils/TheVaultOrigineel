@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +26,7 @@ class RootRepositoryTest {
     private static CryptomuntDAO cryptomuntDAO;
     private static CryptoWaardeDAO cryptoWaardeDAO;
     private static TransactieDAO transactieDAO;
+    private static AdresDAO adresDAO;
     private static Klant testKlant;
     public static Asset testAsset1;
     public static Asset testAsset2;
@@ -54,8 +56,10 @@ class RootRepositoryTest {
         rekeningDAO = Mockito.mock(RekeningDAO.class);
         cryptomuntDAO = Mockito.mock(CryptomuntDAO.class);
         cryptoWaardeDAO = Mockito.mock(CryptoWaardeDAO.class);
+        adresDAO = Mockito.mock(AdresDAO.class);
         testKlant = new Klant();
         rootRepository = new RootRepository(klantDAO, rekeningDAO, assetDAO, cryptomuntDAO, cryptoWaardeDAO, transactieDAO);
+        rootRepository = new RootRepository(klantDAO, rekeningDAO, assetDAO, cryptomuntDAO, cryptoWaardeDAO, adresDAO);
         testCryptomunt1 = new Cryptomunt(1, "CarmenCrypto", "CCR" );
         testCryptoWaarde1 = new CryptoWaarde("20211214CCR", testCryptomunt1, 100.0, LocalDate.now());
         testCryptomunt2 = new Cryptomunt(2, "DigiCrypto", "DIG");

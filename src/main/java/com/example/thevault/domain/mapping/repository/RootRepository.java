@@ -11,11 +11,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.function.Supplier;
 
 @Repository
 public class RootRepository {
@@ -28,10 +30,12 @@ public class RootRepository {
     private final AssetDAO assetDAO;
     private final CryptomuntDAO cryptomuntDAO;
     private final CryptoWaardeDAO cryptoWaardeDAO;
+    private final AdresDAO adresDAO;
     private final TransactieDAO transactieDAO;
 
     @Autowired
     public RootRepository(KlantDAO klantDAO, RekeningDAO rekeningDAO, AssetDAO assetDAO, CryptomuntDAO cryptomuntDAO,
+                          CryptoWaardeDAO cryptoWaardeDAO, AdresDAO adresDAO) {
                           CryptoWaardeDAO cryptoWaardeDAO, TransactieDAO transactieDAO) {
         super();
         this.rekeningDAO = rekeningDAO;
@@ -39,6 +43,7 @@ public class RootRepository {
         this.assetDAO = assetDAO;
         this.cryptomuntDAO = cryptomuntDAO;
         this.cryptoWaardeDAO = cryptoWaardeDAO;
+        this.adresDAO = adresDAO;
         this.transactieDAO = transactieDAO;
         logger.info("New RootRepository");
     }
@@ -64,9 +69,17 @@ public class RootRepository {
      */
     public Klant vindKlantByGebruikersnaam(String gebruikersnaam){
         Klant klant = klantDAO.vindKlantByGebruikersnaam(gebruikersnaam);
-            klant.setPortefeuille(vulPortefeuilleKlant(klant));
-            //TODO rekening toevoegen na database compleet
+        //TODO maakKlantCompleet aanzetten
+        //TODO nadenken of adres moet worden toegevoegd
+        /*maakKlantCompleet(klant);*/
         return klant;
+    }
+    //TODO rekening toevoegen na database compleet
+    private void maakKlantCompleet(Klant klant) {
+        if(klant != null){
+            klant.setAdres(adresDAO.getAdresByKlant(klant));
+            klant.setPortefeuille(vulPortefeuilleKlant(klant));
+        }
     }
 
     /**
