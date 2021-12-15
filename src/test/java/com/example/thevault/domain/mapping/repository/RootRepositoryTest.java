@@ -24,6 +24,7 @@ class RootRepositoryTest {
     private static RekeningDAO rekeningDAO;
     private static CryptomuntDAO cryptomuntDAO;
     private static CryptoWaardeDAO cryptoWaardeDAO;
+    private static TransactieDAO transactieDAO;
     private static Klant testKlant;
     public static Asset testAsset1;
     public static Asset testAsset2;
@@ -161,6 +162,7 @@ class RootRepositoryTest {
                 thenReturn(java.util.Optional.ofNullable(testAsset1));
         Asset expected = testAsset1;
         Asset actual = rootRepository.geefAssetVanKlant(testKlant, testAsset1.getCryptomunt());
+        System.out.println(actual);
         assertThat(actual).as("Test asset van testklant opvragen").isNotNull().isEqualTo(expected).
                 isIn(portefeuille).hasNoNullFieldsOrProperties().asString().startsWith("Asset{").contains("5.1").
                 doesNotContain("2.4").hasSize(316);

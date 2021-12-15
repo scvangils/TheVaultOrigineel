@@ -7,13 +7,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 
 public class Transactie {
     private int transactieId;
     private double aantal;
-    private LocalDateTime momentTransactie;
+    private OffsetDateTime momentTransactie;
     private double bedrag;
     private Klant koper;
     private Klant verkoper;
@@ -27,10 +29,10 @@ public class Transactie {
         logger.info("lege Transactie, no args constructor");
     }
 
-    public Transactie(int transactieId, double aantal, LocalDateTime momentTransactie,
-                      Klant koper, Cryptomunt cryptomunt, double bedrag,
-                      Klant verkoper) {
-        this.transactieId = transactieId;
+
+    public Transactie(OffsetDateTime momentTransactie,
+                      Klant verkoper, Cryptomunt cryptomunt, double bedrag, double aantal,
+                      Klant koper) {
         this.aantal = aantal;
         this.momentTransactie = momentTransactie;
         this.cryptomunt = cryptomunt;
@@ -39,6 +41,7 @@ public class Transactie {
         this.verkoper = verkoper;
         logger.info("New "+ this + " aangemaakt");
     }
+
 
     public int getTransactieId() {
         return transactieId;
@@ -56,11 +59,11 @@ public class Transactie {
         this.aantal = aantal;
     }
 
-    public LocalDateTime getMomentTransactie() {
+    public OffsetDateTime getMomentTransactie() {
         return momentTransactie;
     }
 
-    public void setMomentTransactie(LocalDateTime momentTransactie) {
+    public void setMomentTransactie(OffsetDateTime momentTransactie) {
         this.momentTransactie = momentTransactie;
     }
 

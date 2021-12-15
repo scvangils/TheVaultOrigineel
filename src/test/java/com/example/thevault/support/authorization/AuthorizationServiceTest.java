@@ -41,7 +41,7 @@ class AuthorizationServiceTest {
     public RootRepository mockRepo;
     public TokenKlantCombinatieDao mockTokenKlantCombinatieDao;
     public AuthorizationService authorizationServiceTest = new AuthorizationService(mockTokenKlantCombinatieDao);
-    private int negatieveVerlooptijd = -1;
+    private final int negatieveVerlooptijd = -1;
     String testAccessTokenFromService;
 
 
@@ -116,7 +116,10 @@ class AuthorizationServiceTest {
 
     @Test
     void valideerAccessTokenFromAuthorizationService() {
+        testAccessTokenFromService = authorizationServiceTest.genereerAccessToken(new Klant());
+
         authorizationServiceTest.valideerAccessToken(testAccessTokenFromService, testKlant);
+
         // print alle eigenschappen van het acces token
         DecodedJWT decodedJwt = JWT.decode(testAccessTokenFromService);
         printOutComesTokenValidation(decodedJwt);
@@ -124,6 +127,7 @@ class AuthorizationServiceTest {
 
     @Test
     void valideerAccessTokenMetVerkeerdeKlant() {
+            testAccessTokenFromService = authorizationServiceTest.genereerAccessToken(new Klant());
             boolean returnedBooleanValue = authorizationServiceTest.valideerAccessToken(testAccessTokenFromService, new Klant( "harrynr1", "Welkom01", "Henk", 1890393, LocalDate.of(1991, 1, 12)));
             // print alle eigenschappen van het token
             DecodedJWT decodedJwt = JWT.decode(testAccessTokenFromService);
