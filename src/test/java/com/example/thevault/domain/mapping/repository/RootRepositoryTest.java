@@ -56,10 +56,11 @@ class RootRepositoryTest {
         rekeningDAO = Mockito.mock(RekeningDAO.class);
         cryptomuntDAO = Mockito.mock(CryptomuntDAO.class);
         cryptoWaardeDAO = Mockito.mock(CryptoWaardeDAO.class);
+        transactieDAO = Mockito.mock(TransactieDAO.class);
         adresDAO = Mockito.mock(AdresDAO.class);
         testKlant = new Klant();
-        rootRepository = new RootRepository(klantDAO, rekeningDAO, assetDAO, cryptomuntDAO, cryptoWaardeDAO, transactieDAO);
-        rootRepository = new RootRepository(klantDAO, rekeningDAO, assetDAO, cryptomuntDAO, cryptoWaardeDAO, adresDAO);
+        rootRepository = new RootRepository(klantDAO, rekeningDAO, assetDAO, cryptomuntDAO, cryptoWaardeDAO, adresDAO, transactieDAO);
+
         testCryptomunt1 = new Cryptomunt(1, "CarmenCrypto", "CCR" );
         testCryptoWaarde1 = new CryptoWaarde("20211214CCR", testCryptomunt1, 100.0, LocalDate.now());
         testCryptomunt2 = new Cryptomunt(2, "DigiCrypto", "DIG");

@@ -35,8 +35,8 @@ public class RootRepository {
 
     @Autowired
     public RootRepository(KlantDAO klantDAO, RekeningDAO rekeningDAO, AssetDAO assetDAO, CryptomuntDAO cryptomuntDAO,
-                          CryptoWaardeDAO cryptoWaardeDAO, AdresDAO adresDAO) {
-                          CryptoWaardeDAO cryptoWaardeDAO, TransactieDAO transactieDAO) {
+                          CryptoWaardeDAO cryptoWaardeDAO, AdresDAO adresDAO,
+                          TransactieDAO transactieDAO) {
         super();
         this.rekeningDAO = rekeningDAO;
         this.klantDAO = klantDAO;
