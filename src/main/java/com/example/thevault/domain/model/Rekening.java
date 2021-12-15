@@ -52,6 +52,10 @@ public class Rekening {
         this.saldo = saldo;
     }
 
+    public Klant getKlant() {
+        return klant;
+    }
+
     public void setKlant(Klant klant) {
         this.klant = klant;
     }
