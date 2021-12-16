@@ -146,6 +146,7 @@ class RekeningServiceTest {
     }
 
     /**
+     * TODO aanpassen naar nieuwe methode in RekeningService
      * @Author Ju-Sen Cheung
      *
      * Extra klant en rekening aangemaakt voor deze test, want als de hele RekeningServiceTest gedraaid werd failde de test
@@ -159,7 +160,7 @@ class RekeningServiceTest {
         Mockito.when(mockRepo.vindRekeningVanKlant(bestaandeKlantVoorWijzigSaldo)).thenReturn(rekeningVoorWijzigSaldoExpected);
         Mockito.when(mockRepo.wijzigSaldoVanKlant(bestaandeKlantVoorWijzigSaldo, 2000.0)).thenReturn(bestaandeKlantVoorWijzigSaldo.getRekening());
 
-        Rekening rekeningActual = rekeningServiceTest.wijzigSaldo(bestaandeKlantVoorWijzigSaldo, 2000.0);
+        Rekening rekeningActual = rekeningServiceTest.wijzigSaldo(bestaandeKlantVoorWijzigSaldo.getRekening(), 2000.0);
         System.out.println(rekeningActual);
         double expected = 2000.0;
         double actual = rekeningActual.getSaldo();
