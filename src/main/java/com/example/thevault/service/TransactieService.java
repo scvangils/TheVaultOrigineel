@@ -60,7 +60,8 @@ public class TransactieService {
 
         // maak nieuwe transactie aan
         Transactie transactie = new Transactie(OffsetDateTime.now(), verkoper, cryptomunt, prijs, aantal, koper);
-        return slaTransactieOp(transactie);
+        slaTransactieOp(transactie);
+        return transactie;
     }
 
 /*    public Transactie sluitTransactieMetBank(Klant verkoper, Cryptomunt cryptomunt,
