@@ -8,8 +8,9 @@
     <script src="javascript/homepage.js" defer></script>
 </head>
 <body>
+<!--TODO Wanneer klant wil registreren: tabel direct hieronder zichtbaar, en tabel voor inlog onzichtbaar-->
 <div>
-<form id = "registratieOverig" method="post" action="/test">
+<form id = "registratieOverig" method="post">
     <label for="naam">naam</label>
         <input type="text" id = "naam" name = "naam" required>
     <label for="gebruikersnaam">gebruikersnaam</label>
@@ -21,7 +22,7 @@
     <label for="wachtwoord">wachtwoord</label>
         <input type="password" id = "wachtwoord" name = "wachtwoord">
 </form>
-<form id = "registratieAdres" method="post" action="/test">
+<form id = "registratieAdres" method="post">
     <label for="postcode">postcode</label>
      <input type="text" id = "postcode" name = "postcode" required>
     <label for="huisnummer">huisnummer</label>
@@ -34,7 +35,18 @@
         <input type="text" id = "plaatsnaam" name = "plaatsnaam">
 </form>
 </div>
+<!--TODO Wanneer klant wil inloggen: tabel hierboven onzichtbaar maken, en tabel hieronder zichtbaar-->
+<!--TODO Form van inlog netjes bovenaan de pagina weergeven, ipv onder de andere forms-->
+<div>
+<form id="inlog" method="post">
+    <label for="gebruikersnaamInlog">gebruikersnaam</label>
+    <input type="text" id="gebruikersnaamInlog" name="gebruikersnaamInlog">
+    <label for="wachtwoordInlog">wachtwoord</label>
+    <input type="text" id="wachtwoordInlog" name="wachtwoordInlog">
+</form>
+</div>
 <input type="button" id = "verstuur" value= "Join the Bank to the Future" onclick="registreer()">
 <input type="button" id = "adresinformatie" value= "vind je straat" onclick="vindStraatnaamEnPlaatsnaam()">
+<input type="button" id = "login" value = "Log in" onclick="login()">
 </body>
 </html>

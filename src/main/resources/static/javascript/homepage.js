@@ -74,3 +74,8 @@ function vindStraatnaamEnPlaatsnaam(){
             woonplaatsVeld.value = json.city;
         })
 }
+
+/*TODO Functie Login schrijven*/
+function login(){
+    return "";
+}
