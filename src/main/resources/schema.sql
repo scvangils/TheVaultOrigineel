@@ -118,7 +118,8 @@ CREATE TABLE dagkoersCrypto (
                         waardeCrypto DOUBLE NOT NULL,
                         datum DATE NOT NULL,
                         cryptomuntId INT NOT NULL,
-                        PRIMARY KEY (cryptomuntId, datum),
+                        cryptowaardeId VARCHAR(15) NOT NULL,
+                        PRIMARY KEY (cryptowaardeId),
                         CONSTRAINT dagkoersenVan
                         FOREIGN KEY (cryptomuntId)
                         REFERENCES cryptomunt (cryptomuntId)
