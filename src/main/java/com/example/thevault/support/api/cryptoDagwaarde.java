@@ -1,14 +1,11 @@
-// Created by S.C. van Gils
-// Creation date 6-12-2021
-
 package com.example.thevault.support.api;
 
 import com.example.thevault.domain.model.CryptoWaarde;
 import com.example.thevault.domain.model.Cryptomunt;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.codec.digest.Crypt;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
 import org.apache.http.NameValuePair;
@@ -28,46 +25,46 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IndividualCryptoApiController {
+public class cryptoDagwaarde {
 
-    private final Logger logger = LoggerFactory.getLogger(IndividualCryptoApiController.class);
-
-    public IndividualCryptoApiController() {
+    public cryptoDagwaarde() {
         super();
         logger.info("New IndividualCryptoApiController");
     }
+
+
     private static HttpURLConnection connection;
     private static String apiKey = "ce1e8754-b694-41b5-99ca-dbb28dc5b68d";
+    private static double waarde;
+    @JsonIgnore
+    private final Logger logger = LoggerFactory.getLogger(cryptoDagwaarde.class);
 
+//    public static void main(String[] args) {
+//        System.out.println(cryptoDagwaarde("xrp"));
+//    }
 
-    public static void main(String[] args)  {
+    public static double cryptoDagwaarde(String cryptomunt){
         String uri = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest";
         List<NameValuePair> parameters = new ArrayList<NameValuePair>();
 
-        parameters.add(new BasicNameValuePair("slug","xrp"));
+        parameters.add(new BasicNameValuePair("slug", cryptomunt));
         parameters.add(new BasicNameValuePair("convert","EUR"));
 
-        CryptoWaarde bitcoinWaarde = new CryptoWaarde();
-        Cryptomunt ethereum = new Cryptomunt();
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(
                 DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         try { //TODO betere parsing
             String result = makeAPICall(uri, parameters);
-            System.out.println("result" + result);
-            JsonNode bitcoinNode = objectMapper.readTree(result);
-        //    bitcoinWaarde.setCryptoWaardeId(bitcoinNode.at("/data/1/id").intValue());
-        //    bitcoinWaarde.setCryptomunt(bitcoinNode.at("/data/1/name").toString());
-         //   bitcoinWaarde.setCryptomunt(bitcoinNode.at("/data/1/symbol").toString());
-            bitcoinWaarde.setWaarde(bitcoinNode.at("/data/1/quote/EUR/price").doubleValue());
-            System.out.println(bitcoinWaarde.getWaarde());
-
+            JsonNode cryptoNode = objectMapper.readTree(result);
+            waarde = (cryptoNode.at("/data/52/quote/EUR/price").doubleValue());
+            System.out.println(cryptoNode);
         } catch (IOException e) {
             System.out.println("Error: cannot access content - " + e.toString());
         } catch (URISyntaxException e) {
             System.out.println("Error: Invalid URL " + e.toString());
         }
+        return waarde;
     }
 
     public static String makeAPICall(String uri, List<NameValuePair> parameters)
@@ -94,4 +91,5 @@ public class IndividualCryptoApiController {
         }
         return response_content;
     }
+
 }
