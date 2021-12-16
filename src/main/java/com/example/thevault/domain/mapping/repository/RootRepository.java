@@ -205,7 +205,7 @@ public class RootRepository {
 
 
 
-    public Transactie SlaTransactieOp(Transactie transactie){
+    public Transactie slaTransactieOp(Transactie transactie){
         return transactieDAO.slaTransactieOp(transactie);
     }
 
@@ -265,6 +265,8 @@ public class RootRepository {
     List<Transactie> geefTransactiesVanKlantMetCryptomunt(Klant klant, Cryptomunt cryptomunt){
         return transactieDAO.geefTransactiesVanKlantMetCryptomunt(klant, cryptomunt);
     }
+
+
 
 
 

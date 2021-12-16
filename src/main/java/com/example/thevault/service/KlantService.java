@@ -64,6 +64,25 @@ public class KlantService {
     }
 
     /**
+     * Methode die zoekt naar een cryptomunt in de portefeuille van een klant
+     * en de asset daarvan teruggeeft.
+     *
+     * @param klant van de portefeuille
+     * @param cryptomunt waarnaar gezocht wordt
+     *
+     * @return asset null of met cryptomunt + aantal van klant
+     */
+    public Asset geefAssetMetCryptoMuntVanKlant(Klant klant, Cryptomunt cryptomunt){
+        for (Asset asset: klant.getPortefeuille()) {
+            if(asset.getCryptomunt()==cryptomunt){
+                return asset;
+            }
+        }
+        return null;
+    }
+
+
+    /**
      * Deze methode probeert een nieuwe klant te registreren.
      * Als de gegevens correct zijn ingevuld en de gebruikersnaam nog niet bestaat,
      * wordt het wachtwoord eerst gehasht en daarna gecodeerd.
