@@ -154,11 +154,11 @@ class RekeningServiceTest {
      * saldo gewijzigd wordt van 1000.0 naar 2000.0. Dus bij het opvragen van de saldo werd 2000.0 als het actual saldo
      * gezien i.p.v. de 1000.0.
      */
+
     @Test
     void wijzigSaldo() {
-        Mockito.when(mockRepo.vindKlantByGebruikersnaam(bestaandeKlantVoorWijzigSaldo.getGebruikersnaam())).thenReturn(bestaandeKlantVoorWijzigSaldo);
-        Mockito.when(mockRepo.vindRekeningVanKlant(bestaandeKlantVoorWijzigSaldo)).thenReturn(rekeningVoorWijzigSaldoExpected);
         Mockito.when(mockRepo.wijzigSaldoVanKlant(bestaandeKlantVoorWijzigSaldo, 2000.0)).thenReturn(bestaandeKlantVoorWijzigSaldo.getRekening());
+        Mockito.when(mockRepo.slaRekeningOp(rekeningVoorWijzigSaldoExpected)).thenReturn(rekeningVoorWijzigSaldoExpected);
 
         Rekening rekeningActual = rekeningServiceTest.wijzigSaldo(bestaandeKlantVoorWijzigSaldo.getRekening(), 2000.0);
         System.out.println(rekeningActual);
