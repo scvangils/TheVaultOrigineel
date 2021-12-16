@@ -115,10 +115,10 @@ class TransactieServiceTest {
         Mockito.when(mockRekeningDAO.wijzigSaldoVanKlant(testKlant1, 1000)).thenReturn(testRekening11);
         Mockito.when(mockRekeningDAO.vindRekeningVanKlant(testKlant1)).thenReturn(testRekening11);
 
-        Mockito.when(mockRekeningService.wijzigSaldo(testKlant1, (testKlant1.getRekening().getSaldo()-1000)))
+        Mockito.when(mockRekeningService.wijzigSaldo(testKlant1.getRekening(), (testKlant1.getRekening().getSaldo()-1000)))
                 .thenReturn(testRekening11);
 
-        Mockito.when(mockRekeningService.wijzigSaldo(testKlant2, (testKlant2.getRekening().getSaldo()+1000)))
+        Mockito.when(mockRekeningService.wijzigSaldo(testKlant2.getRekening(), (testKlant2.getRekening().getSaldo()+1000)))
                 .thenReturn(testRekening11);
         Mockito.when(mockRootRepository.slaTransactieOp(testTransactie1)).thenReturn(testTransactie1);
 

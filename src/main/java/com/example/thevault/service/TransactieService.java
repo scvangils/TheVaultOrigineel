@@ -41,27 +41,43 @@ public class TransactieService {
      *
      * @param verkoper verkoper van cryptomunt
      * @param cryptomunt het type cryptomunt
-     * @param bedrag het bedrag dat voor de cryptomunt betaald moet worden
+     * @param prijs het bedrag dat voor de cryptomunt betaald moet worden
      * @param aantal de hoeveelheid cryptomunt
      * @param koper de koper van de cryptomunt in deze transactie
      *
      * @return boolean (true als de transactie geslaagd is)
     * */
     public Transactie sluitTransactie(Klant verkoper, Cryptomunt cryptomunt,
-                                  double bedrag, double aantal, Klant koper) {
+                                  double prijs, double aantal, Klant koper) {
+
+        // handel eventuele exceptions af
+        saldoTooLowExceptionHandler(koper, prijs);
+        notEnoughCryptoExceptionHandler(verkoper, cryptomunt, aantal);
+
+        //wijzig saldo van de klanten op basis van de transactie
+        rekeningService.wijzigSaldo(koper.getRekening(), (koper.getRekening().getSaldo() - prijs));
+        rekeningService.wijzigSaldo(verkoper.getRekening(), verkoper.getRekening().getSaldo() + prijs);
+
+        // maak nieuwe transactie aan
+        Transactie transactie = new Transactie(OffsetDateTime.now(), verkoper, cryptomunt, prijs, aantal, koper);
+        return slaTransactieOp(transactie);
+    }
+
+/*    public Transactie sluitTransactieMetBank(Klant verkoper, Cryptomunt cryptomunt,
+                                      double bedrag, double aantal, Klant koper) {
 
         // handel eventuele exceptions af
         saldoTooLowExceptionHandler(koper, bedrag);
         notEnoughCryptoExceptionHandler(verkoper, cryptomunt, aantal);
 
         //wijzig saldo van de klanten op basis van de transactie
-        rekeningService.wijzigSaldo(koper, (koper.getRekening().getSaldo() - bedrag));
-        rekeningService.wijzigSaldo(verkoper, verkoper.getRekening().getSaldo() + bedrag);
+        rekeningService.wijzigSaldo(koper.getRekening(), (koper.getRekening().getSaldo() - bedrag));
+        rekeningService.wijzigSaldo(verkoper.getRekening(), verkoper.getRekening().getSaldo() + bedrag);
 
         // maak nieuwe transactie aan
         Transactie transactie = new Transactie(OffsetDateTime.now(), verkoper, cryptomunt, bedrag, aantal, koper);
         return slaTransactieOp(transactie);
-    }
+    }*/
 
     /**
      * Methode slaat transactie op
@@ -93,6 +109,7 @@ public class TransactieService {
     }
 
     /**
+     * TO DO aanpassen naar nieuwe methode wijzigSaldo
      * Controleert of het saldo van de koper toereikend is voor de
      * transactie
      *
