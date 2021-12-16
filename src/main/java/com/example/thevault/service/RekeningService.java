@@ -116,7 +116,7 @@ public class RekeningService {
      * wordt het saldo van de opgevraagde rekening gewijzigd naar het opgegeven bedrag.
      */
 
-    public Rekening wijzigSaldo(Rekening rekening, double bedrag) throws UserNotExistsException{
+    public Rekening wijzigSaldo(Rekening rekening, double bedrag) {
         rekening.setSaldo(bedrag);
         return rootRepository.slaRekeningOp(rekening);
     }
