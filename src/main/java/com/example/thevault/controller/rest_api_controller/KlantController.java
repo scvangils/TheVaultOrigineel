@@ -5,7 +5,6 @@ package com.example.thevault.controller.rest_api_controller;
 
 import com.example.thevault.domain.model.Adres;
 import com.example.thevault.domain.model.Klant;
-import com.example.thevault.domain.model.PostModel;
 import com.example.thevault.domain.transfer.RegistrationDto;
 import com.example.thevault.domain.transfer.WelkomDTO;
 import com.example.thevault.service.LoginService;
