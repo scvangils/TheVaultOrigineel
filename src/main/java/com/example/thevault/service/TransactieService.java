@@ -4,10 +4,7 @@
 package com.example.thevault.service;
 
 import com.example.thevault.domain.mapping.repository.RootRepository;
-import com.example.thevault.domain.model.Asset;
-import com.example.thevault.domain.model.Cryptomunt;
-import com.example.thevault.domain.model.Klant;
-import com.example.thevault.domain.model.Transactie;
+import com.example.thevault.domain.model.*;
 import com.example.thevault.support.exceptions.BalanceTooLowException;
 import com.example.thevault.support.exceptions.NotEnoughCryptoException;
 import net.minidev.json.annotate.JsonIgnore;
@@ -17,32 +14,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class TransactieService {
 
     private RootRepository rootRepository;
+    private KlantService klantService;
+    private RekeningService rekeningService;
 
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(RekeningService.class);
 
     @Autowired
-    public TransactieService(RootRepository rootRepository) {
+    public TransactieService(RootRepository rootRepository, KlantService klantService, RekeningService rekeningService) {
         super();
         this.rootRepository = rootRepository;
+        this.klantService = klantService;
+        this.rekeningService = rekeningService;
         logger.info("New TransactieService.");
     }
 
     /**
-     * TODO nog afmaken zodat de juiste exceptions worden gegeven en de rekening wordt geupdated
-     *
      * Maak een transactie op basis van een bedrag, cryptomunt, koper en verkoper en een datum.
      * Als de koper niet genoeg saldo heeft of wanneer de verkoper niet het aantal cryptomunten
      * heeft dat deze wilt verkopen geeft de methode een foutmelding
      *
-     * @param momentTransactie datum en tijd transactie
      * @param verkoper verkoper van cryptomunt
      * @param cryptomunt het type cryptomunt
      * @param bedrag het bedrag dat voor de cryptomunt betaald moet worden
@@ -51,22 +47,35 @@ public class TransactieService {
      *
      * @return boolean (true als de transactie geslaagd is)
     * */
-    public Transactie maakTransactie(OffsetDateTime momentTransactie, Klant verkoper, Cryptomunt cryptomunt,
+    public Transactie sluitTransactie(Klant verkoper, Cryptomunt cryptomunt,
                                   double bedrag, double aantal, Klant koper) {
-        Transactie transactie = new Transactie();
 
         // handel eventuele exceptions af
         saldoTooLowExceptionHandler(koper, bedrag);
         notEnoughCryptoExceptionHandler(verkoper, cryptomunt, aantal);
 
+        //wijzig saldo van de klanten op basis van de transactie
+        rekeningService.wijzigSaldo(koper, (koper.getRekening().getSaldo() - bedrag));
+        rekeningService.wijzigSaldo(verkoper, verkoper.getRekening().getSaldo() + bedrag);
 
-        return transactie;
+        // maak nieuwe transactie aan
+        Transactie transactie = new Transactie(OffsetDateTime.now(), verkoper, cryptomunt, bedrag, aantal, koper);
+        return slaTransactieOp(transactie);
     }
 
-
     /**
-     * TODO exceptionhandler afmaken
+     * Methode slaat transactie op
+    *
+     * @param transactie
+     * @retrun transactie die zojuist is opgeslagen
      *
+     *
+    * */
+    public Transactie slaTransactieOp(Transactie transactie){
+        return rootRepository.slaTransactieOp(transactie);
+    }
+
+    /***
      * Checkt of de verkoper genoeg cryptomunten heeft om de transactie
      * te kunnen sluiten
      *
@@ -76,18 +85,9 @@ public class TransactieService {
      *
      * */
     public void notEnoughCryptoExceptionHandler (Klant verkoper, Cryptomunt cryptomunt, double aantal) throws NotEnoughCryptoException {
-        double aantalCryptoVerkoper;
-
-        List<Asset> assetsVerkoper = verkoper.getPortefeuille();
-        for (Asset asset: assetsVerkoper) {
-            if(asset.getCryptomunt() == cryptomunt){
-                if(asset.getAantal() < aantal){
-                    throw new NotEnoughCryptoException();
-                }
-            }
-        }
-        if (!verkoper.getPortefeuille().contains(cryptomunt)) {
-            logger.info("Cryptomunt niet beschikbaar bij verkoper");
+        Asset assetVerkoper = klantService.geefAssetMetCryptoMuntVanKlant(verkoper, cryptomunt);
+        if(assetVerkoper == null || assetVerkoper.getAantal() <aantal) {
+            logger.info("Te weinig cryptomunten in bezit van verkoper voor deze transactie");
             throw new NotEnoughCryptoException();
         }
     }
@@ -96,8 +96,8 @@ public class TransactieService {
      * Controleert of het saldo van de koper toereikend is voor de
      * transactie
      *
-     * @param koper
-     * @param bedrag
+     * @param koper van de cryptomunt
+     * @param bedrag verkoopbedrag van cryptomunt
      *
     * */
     public void saldoTooLowExceptionHandler(Klant koper, Double bedrag) throws BalanceTooLowException  {
