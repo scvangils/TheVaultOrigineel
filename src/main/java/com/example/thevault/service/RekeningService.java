@@ -26,8 +26,7 @@ public class RekeningService {
     private final Logger logger = LoggerFactory.getLogger(RekeningService.class);
 
     private final Double STARTSALDO = 1000.0;
-    private double Saldo;
-    private Iban iban;
+
 
     @Autowired
     public RekeningService(RootRepository rootRepository) {
@@ -39,8 +38,8 @@ public class RekeningService {
      * @Author Wim Bultman
      * creeert IBAN, mbv org.iban4j.Iban library, zie https://github.com/arturmkrtchyan/iban4j
      */
-    public Iban creeerIban(){
-        iban = new Iban.Builder().countryCode(CountryCode.NL).bankCode("TVLT").buildRandom();
+    public static Iban creeerIban(){
+        Iban iban = new Iban.Builder().countryCode(CountryCode.NL).bankCode("TVLT").buildRandom();
         return iban;
     }
 

@@ -98,11 +98,11 @@ public class Adres {
     }
 
     @Override
-    public boolean equals(Object o) { //TODO equals zonder straatnaam en plaatsnaam?
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Adres adres = (Adres) o;
-        return huisnummer == adres.huisnummer && straatnaam.equals(adres.straatnaam) && Objects.equals(toevoeging, adres.toevoeging) && postcode.equals(adres.postcode) && plaatsnaam.equals(adres.plaatsnaam);
+        return huisnummer == adres.huisnummer && Objects.equals(toevoeging, adres.toevoeging) && postcode.equals(adres.postcode);
     }
 
     @Override
