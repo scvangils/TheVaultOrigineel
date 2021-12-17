@@ -1,6 +1,5 @@
 package com.example.thevault.support.api;
 
-import com.example.thevault.domain.model.CryptoWaarde;
 import com.example.thevault.domain.model.Cryptomunt;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -25,9 +24,9 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class cryptoDagwaarde {
+public class CryptoDagwaarde {
 
-    public cryptoDagwaarde() {
+    public CryptoDagwaarde() {
         super();
         logger.info("New IndividualCryptoApiController");
     }
@@ -37,17 +36,15 @@ public class cryptoDagwaarde {
     private static String apiKey = "ce1e8754-b694-41b5-99ca-dbb28dc5b68d";
     private static double waarde;
     @JsonIgnore
-    private final Logger logger = LoggerFactory.getLogger(cryptoDagwaarde.class);
+    private final Logger logger = LoggerFactory.getLogger(CryptoDagwaarde.class);
 
-//    public static void main(String[] args) {
-//        System.out.println(cryptoDagwaarde("xrp"));
-//    }
 
-    public static double cryptoDagwaarde(String cryptomunt){
+    public static double cryptoDagwaarde(Cryptomunt cryptomunt){
+
         String uri = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest";
         List<NameValuePair> parameters = new ArrayList<NameValuePair>();
 
-        parameters.add(new BasicNameValuePair("slug", cryptomunt));
+        parameters.add(new BasicNameValuePair("slug", cryptomunt.getName()));
         parameters.add(new BasicNameValuePair("convert","EUR"));
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -57,7 +54,7 @@ public class cryptoDagwaarde {
         try { //TODO betere parsing
             String result = makeAPICall(uri, parameters);
             JsonNode cryptoNode = objectMapper.readTree(result);
-            waarde = (cryptoNode.at("/data/52/quote/EUR/price").doubleValue());
+            waarde = (cryptoNode.at("/data/" + cryptomunt.getId() + "/quote/EUR/price").doubleValue());
             System.out.println(cryptoNode);
         } catch (IOException e) {
             System.out.println("Error: cannot access content - " + e.toString());
