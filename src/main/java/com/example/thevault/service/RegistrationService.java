@@ -44,7 +44,7 @@ public class RegistrationService {
         klant = klantService.registreerKlant(klant);
         klant.setRekening(rekeningService.creeerRekening(klant));
         System.out.println(klant.getRekening());
-        rekeningService.slaRekeningOp(klant.getRekening());
+    //    rekeningService.slaRekeningOp(klant.getRekening());
         return new RegistrationDto(klant);
     }
 

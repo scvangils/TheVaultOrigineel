@@ -55,9 +55,17 @@ public class RootRepository {
      * @param klant het klant-object op basis van bij registratie ingevoerde gegevens
      * @return het klant-object met de juiste gebruikerId
      */
-    public Klant slaKlantOp(Klant klant){
-        adresDAO.slaAdresOp(klant.getAdres());
+    public Klant slaKlantOp(Klant klant){ //TODO niet te compact?
+        klant.setAdres(adresDAO.slaAdresOp(klant.getAdres()));
         return klantDAO.slaKlantOp(klant);
+    }
+
+    //TODO netste manier?
+    public Adres slaNieuwAdresVanBestaandeKlantOp(Klant klant, Adres adres){
+        adresDAO.slaAdresOp(adres);
+        klant.setAdres(adres);
+        klantDAO.updateKlant(klant);
+        return adres;
     }
 
     /**

@@ -13,6 +13,7 @@ import com.example.thevault.domain.transfer.LoginDto;
 import com.example.thevault.service.KlantService;
 import com.example.thevault.support.authorization.AuthorizationService;
 import com.example.thevault.support.authorization.TokenKlantCombinatie;
+import com.example.thevault.support.data.DataGenerator;
 import com.example.thevault.support.exceptions.LoginFailedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.security.auth.login.LoginException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.List;
 
 @RestController
 public class KlantController extends BasisApiController{
@@ -49,7 +53,6 @@ public class KlantController extends BasisApiController{
      */
     @PostMapping("/register")
     public ResponseEntity<RegistrationDto> registreerKlantHandler(@RequestBody Klant klant){
-        System.out.println(klant);
         RegistrationDto registrationDto = registrationService.registreerKlant(klant);
     return ResponseEntity.status(HttpStatus.CREATED).body(registrationDto);
     }
@@ -58,8 +61,14 @@ public class KlantController extends BasisApiController{
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(inhoud);
     }
     @PostMapping("/test")
-    public ResponseEntity<Klant> testRegistratie(@RequestBody Klant klant){
-        return ResponseEntity.status(HttpStatus.CREATED).body(klant);
+    public ResponseEntity<String> testRegistratie(@RequestBody String opdracht) throws FileNotFoundException {
+        File data = new File("C:/Users/scvan/Documents/MakeITWork/TheVault/src/main/resources/Sprint2/datacsv.csv");
+        List<Klant> list = DataGenerator.maakLijstKlantenVanCSV(data, 2999);
+        for(Klant klant: list){
+            registrationService.registreerKlant(klant);
+        }
+        String bericht = String.format("Zoveel geïmporteerd:");
+        return ResponseEntity.status(HttpStatus.OK).body(bericht);
     }
 
 
@@ -110,5 +119,6 @@ public class KlantController extends BasisApiController{
         }
         throw new LoginFailedException();
     }
+
 
 }

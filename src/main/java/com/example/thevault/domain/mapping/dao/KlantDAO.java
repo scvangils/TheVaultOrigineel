@@ -16,4 +16,6 @@ public interface KlantDAO {
 
     Klant verwijderKlant(Klant klant);
 
+    public Klant updateKlant(Klant klant);
+
 }

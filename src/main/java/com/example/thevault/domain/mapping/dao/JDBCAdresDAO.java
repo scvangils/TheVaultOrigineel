@@ -15,6 +15,9 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 public class JDBCAdresDAO implements AdresDAO{
@@ -40,14 +43,32 @@ public class JDBCAdresDAO implements AdresDAO{
         return ps;
     }
 
+    //TODO nakijken
     @Override
     public Adres slaAdresOp(Adres adres) {
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(connection -> slaAdresOpStatement(adres, connection), keyHolder);
-        int adresId = keyHolder.getKey().intValue();
-        adres.setAdresId(adresId);
+        Adres anderAdres = vindAdresByPostcodeHuisnummerEnToevoeging(adres);
+        if(anderAdres == null) {
+            KeyHolder keyHolder = new GeneratedKeyHolder();
+            jdbcTemplate.update(connection -> slaAdresOpStatement(adres, connection), keyHolder);
+            int adresId = Objects.requireNonNull(keyHolder.getKey()).intValue();
+            adres.setAdresId(adresId);
+        }
+        else return anderAdres;
         return adres;
     }
+    public Adres vindAdresByPostcodeHuisnummerEnToevoeging(Adres adres){
+        String sql = "SELECT * FROM adres WHERE postcode = ? AND huisnummer = ? AND toevoeging = ?";
+        try {
+            jdbcTemplate.queryForObject(sql, new AdresRowMapper(),
+                    adres.getPostcode(), adres.getHuisnummer(), adres.getToevoeging());
+        }
+        catch(EmptyResultDataAccessException noResult){
+            adres = null;
+        }
+        return adres;
+
+    }
+
 
     @Override
     public Adres wijzigAdres(Adres adres) {
@@ -89,6 +110,11 @@ public class JDBCAdresDAO implements AdresDAO{
             adres = null;
         }
         return adres;
+    }
+
+    @Override
+    public Adres verwijderAdres(Adres adres) {
+        return null;
     }
 
     private static class AdresRowMapper implements RowMapper<Adres>{

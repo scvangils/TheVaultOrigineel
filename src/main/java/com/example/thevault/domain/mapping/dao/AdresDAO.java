@@ -11,4 +11,8 @@ public interface AdresDAO {
     public Adres getAdresById(int adresId);
 
     public Adres getAdresByKlant(Klant klant);
+
+    public Adres verwijderAdres(Adres adres);
+
+
 }

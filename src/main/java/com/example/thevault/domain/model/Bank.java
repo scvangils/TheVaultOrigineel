@@ -11,7 +11,7 @@ import java.util.List;
 
 public class Bank extends Gebruiker{
 
-    private static Bank instance = new Bank(null, null);
+    private static final Bank instance = new Bank(null, null);
 
     private String banknaam;
     private String bankcode;
@@ -21,13 +21,14 @@ public class Bank extends Gebruiker{
     private final String BANK_WACHTWOORD = "!youvegottacomebankwithme!";
     private Rekening rekening;
     private List<Asset> portefeuille;
+    private double fee;
     private final static double BANK_FEE = 5.0;
 
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Bank.class);
 
 
-    //TODO hoe zit dit i.c.m. Spring
+
     private Bank() {
         super();
         logger.info("New Bank");
@@ -40,6 +41,8 @@ public class Bank extends Gebruiker{
         this.bankcode = BANKCODE;
         this.rekening = rekening;
         this.portefeuille = portefeuille;
+        this.fee = BANK_FEE;
+
     }
     public static Bank getInstance(){
         return instance;
