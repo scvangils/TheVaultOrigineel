@@ -3,9 +3,11 @@
 
 package com.example.thevault.domain.mapping.dao;
 
+import com.example.thevault.domain.model.Adres;
 import com.example.thevault.domain.model.Klant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -38,15 +40,15 @@ public class JDBCKlantDAO implements KlantDAO{
      * @return Prepared Statement-object dat nodig is om Klant op te slaan in de database
      * @throws SQLException
      */
-    //TODO Adres toevoegen
     private PreparedStatement slaKlantOpStatement(Klant klant, Connection connection) throws SQLException {
-        String sql = "INSERT INTO klant (gebruikersnaam, wachtwoord, naam, bsn, geboortedatum) values (?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO klant (gebruikersnaam, wachtwoord, naam, bsn, geboortedatum, adresId) values (?, ?, ?, ?, ?, ?);";
         PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         ps.setString(1, klant.getGebruikersnaam());
         ps.setString(2, klant.getWachtwoord());
         ps.setString(3, klant.getNaam());
         ps.setLong(4, klant.getBsn());
         ps.setDate(5, Date.valueOf(klant.getGeboortedatum()));
+        ps.setInt(6, klant.getAdres().getAdresId());
         return ps;
     }
 
@@ -122,9 +124,27 @@ public class JDBCKlantDAO implements KlantDAO{
     @Override
     public Klant verwijderKlant(Klant klant) {
         String sql = "DELETE klant WHERE gebruikerId = ?;";
+        try{
         jdbcTemplate.update(sql, klant.getGebruikerId());
+        }
+        catch(DataAccessException noData){
+            logger.warn(noData.getMessage());
+        }
         return klant;
     }
+
+    //TODO speciale functie voor wachtwoord?
+    public Klant updateKlant(Klant klant){
+        String sql = "UPDATE klant SET gebruikersnaam = ?, naam = ?, adresId = ? WHERE gebruikerId = ?;";
+        try{
+            jdbcTemplate.update(sql, klant.getGebruikersnaam(), klant.getNaam(), klant.getAdres().getAdresId(),
+                    klant.getGebruikerId());
+        }
+        catch(DataAccessException noData){
+            logger.warn(noData.getMessage());
+        }
+        return klant;
+}
 
     private static class KlantRowMapper implements RowMapper<Klant>{
         /**

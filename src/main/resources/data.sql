@@ -15,4 +15,4 @@ INSERT INTO transactie VALUES (1, 1.3, '2021-12-15 12:43:21', 1, 1, 43.5, 2);
 
 INSERT INTO refreshToken VALUES ('th120857fw1380n5yvb1i4y6dg', 1);
 
-INSERT INTO dagkoersCrypto VALUES (54.1, '2021-12-15', 1);
+INSERT INTO dagkoersCrypto VALUES (54.1, '2021-12-15', 1, '20211216BCN');

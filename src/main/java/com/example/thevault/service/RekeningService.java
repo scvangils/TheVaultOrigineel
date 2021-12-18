@@ -26,8 +26,7 @@ public class RekeningService {
     private final Logger logger = LoggerFactory.getLogger(RekeningService.class);
 
     private final Double STARTSALDO = 1000.0;
-    private double Saldo;
-    private Iban iban;
+
 
     @Autowired
     public RekeningService(RootRepository rootRepository) {
@@ -39,8 +38,8 @@ public class RekeningService {
      * @Author Wim Bultman
      * creeert IBAN, mbv org.iban4j.Iban library, zie https://github.com/arturmkrtchyan/iban4j
      */
-    public Iban creeerIban(){
-        iban = new Iban.Builder().countryCode(CountryCode.NL).bankCode("TVLT").buildRandom();
+    public static Iban creeerIban(){
+        Iban iban = new Iban.Builder().countryCode(CountryCode.NL).bankCode("TVLT").buildRandom();
         return iban;
     }
 
@@ -108,17 +107,19 @@ public class RekeningService {
      * Met deze methode kan je het rekeningsaldo van de klant wijzigen als de klant
      * terug te vinden is in de database.
      *
-     * @param klant is de meegegeven klant voor wie je het rekeningsaldo op wilt wijzigen.
+     * @param rekening is de meegegeven klant voor wie je het rekeningsaldo op wilt wijzigen.
      * @param bedrag is het bedrag waarnaar je het wil wijzigen.
      * @throws UserNotExistsException als er geen klant wordt meegegeven of als de
      * gebruikersnaam niet bestaat, wordt er een exceptie gegooid.
      * @return als de gebruikersnaam overeenkomt met de gebruikersnaam in de database dan
      * wordt het saldo van de opgevraagde rekening gewijzigd naar het opgegeven bedrag.
      */
-    public Rekening wijzigSaldo(Klant klant, double bedrag) throws UserNotExistsException{
-        rootRepository.vindRekeningVanKlant(klant).setSaldo(bedrag);
-        return rootRepository.vindRekeningVanKlant(klant);
+
+    public Rekening wijzigSaldo(Rekening rekening, double bedrag) {
+        rekening.setSaldo(bedrag);
+        return rootRepository.slaRekeningOp(rekening);
     }
+
 
     public RootRepository getRootRepository() {
         return rootRepository;

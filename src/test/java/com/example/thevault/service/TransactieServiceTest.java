@@ -88,8 +88,6 @@ class TransactieServiceTest {
         mockKlantService = new KlantService(mockRootRepository);
         mockTransactieService = new TransactieService(mockRootRepository, mockKlantService, mockRekeningService);
 
-
-
     }
     /**
      * testklant1 heeft testRekening1 en is koper in transactie1 (testklant2 is verkoper)
@@ -98,6 +96,14 @@ class TransactieServiceTest {
 
     @Test
     void sluitTransactie() {
+        /*bewaren evt voor gebruik later
+        Mockito.when(mockRootRepository.vindRekeningVanKlant(testKlant1))
+                .thenReturn(testRekening1);
+        Mockito.when(mockRootRepository.slaRekeningOp(testRekening1))
+                .thenReturn(testRekening1);
+        Mockito.when(mockRootRepository.wijzigSaldoVanKlant(testKlant1, 1000)).thenReturn(testRekening11);
+        Mockito.when(mockRootRepository.slaTransactieOp(testTransactie1)).thenReturn(testTransactie1);*/
+
         testKlant1.setRekening(testRekening1);
         List<Asset> testPortefeuille1 = new ArrayList<>();
         testPortefeuille1.add(testAsset1);
@@ -107,24 +113,24 @@ class TransactieServiceTest {
         testKlant3.setRekening(testRekening3);
 
         testTransactie1 = new Transactie(OffsetDateTime.now(), testKlant1, testCryptomunt1, 1000, 1, testKlant2);
-        Mockito.when(mockRootRepository.vindRekeningVanKlant(testKlant1))
-                .thenReturn(testRekening1);
+
+        Mockito.when(mockRekeningService.wijzigSaldo(testKlant1.getRekening(), (testKlant1.getRekening().getSaldo()-1000)))
+                .thenReturn(testRekening11);
+        Mockito.when(mockRekeningService.wijzigSaldo(testKlant2.getRekening(), (testKlant2.getRekening().getSaldo()+1000)))
+                .thenReturn(testRekening22);
         Mockito.when(mockRootRepository.slaRekeningOp(testRekening1))
                 .thenReturn(testRekening1);
-        Mockito.when(mockRootRepository.wijzigSaldoVanKlant(testKlant1, 1000)).thenReturn(testRekening11);
-        Mockito.when(mockRekeningDAO.wijzigSaldoVanKlant(testKlant1, 1000)).thenReturn(testRekening11);
-        Mockito.when(mockRekeningDAO.vindRekeningVanKlant(testKlant1)).thenReturn(testRekening11);
-
-        Mockito.when(mockRekeningService.wijzigSaldo(testKlant1, (testKlant1.getRekening().getSaldo()-1000)))
-                .thenReturn(testRekening11);
-
-        Mockito.when(mockRekeningService.wijzigSaldo(testKlant2, (testKlant2.getRekening().getSaldo()+1000)))
-                .thenReturn(testRekening11);
-        Mockito.when(mockRootRepository.slaTransactieOp(testTransactie1)).thenReturn(testTransactie1);
 
         assertThat(mockTransactieService.sluitTransactie(testKlant1, testCryptomunt1,
-                1000, 1, testKlant2)).isEqualTo(testTransactie1);
-
+                1000, 1, testKlant2).getCryptomunt()).isEqualTo(testTransactie1.getCryptomunt());
+        assertThat(mockTransactieService.sluitTransactie(testKlant1, testCryptomunt1,
+                1000, 1, testKlant2).getTransactieId()).isEqualTo(testTransactie1.getCryptomunt());
+        assertThat(mockTransactieService.sluitTransactie(testKlant1, testCryptomunt1,
+                1000, 1, testKlant2).getTransactieId()).isEqualTo(testTransactie1.getCryptomunt());
+        assertThat(mockTransactieService.sluitTransactie(testKlant1, testCryptomunt1,
+                1000, 1, testKlant2).getAantal()).isEqualTo(testTransactie1.getCryptomunt());
+        assertThat(mockTransactieService.sluitTransactie(testKlant1, testCryptomunt1,
+                1000, 1, testKlant2).getAantal()).isEqualTo(testTransactie1.getCryptomunt());
     }
 
 
