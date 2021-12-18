@@ -3,7 +3,7 @@ package com.example.thevault.service;
 import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.CryptoWaarde;
 import com.example.thevault.domain.model.Cryptomunt;
-import com.example.thevault.support.api.CryptoDagwaarde;
+//import com.example.thevault.support.api.CryptoDagwaarde;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,12 +58,13 @@ public class CryptoWaardeService {
         alleCrypto.add(ethereum);
         alleCrypto.add(solana);
 
-        for (int i = 0; i < alleCrypto.size(); i++) {
-            double cryptoDagwaarde = CryptoDagwaarde.cryptoDagwaarde(alleCrypto.get(i));
-            LocalDate datum = LocalDate.now();
-            CryptoWaarde cryptoWaarde = new CryptoWaarde(alleCrypto.get(i).getSymbol(), alleCrypto.get(i), cryptoDagwaarde,datum);
-            slaCryptoWaardeOp(cryptoWaarde);
-        }
+//        for (int i = 0; i < alleCrypto.size(); i++) {
+//            double cryptoDagwaarde = Cr
+////                    CryptoDagwaarde.cryptoDagwaarde(alleCrypto.get(i));
+//            LocalDate datum = LocalDate.now();
+//            CryptoWaarde cryptoWaarde = new CryptoWaarde(alleCrypto.get(i).getSymbol(), alleCrypto.get(i), cryptoDagwaarde,datum);
+//            slaCryptoWaardeOp(cryptoWaarde);
+//        }
     }
 }
 

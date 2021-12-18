@@ -1,5 +1,6 @@
 package com.example.thevault.support.api;
 
+import com.example.thevault.domain.model.CryptoWaarde;
 import com.example.thevault.domain.model.Cryptomunt;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -24,23 +25,25 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CryptoDagwaarde {
+class cryptoDagwaarde {
 
-    public CryptoDagwaarde() {
-        super();
-        logger.info("New IndividualCryptoApiController");
-    }
+//    public cryptoDagwaarde() {
+//        super();
+//        logger.info("New IndividualCryptoApiController");
+//    }
 
 
     private static HttpURLConnection connection;
     private static String apiKey = "ce1e8754-b694-41b5-99ca-dbb28dc5b68d";
     private static double waarde;
     @JsonIgnore
-    private final Logger logger = LoggerFactory.getLogger(CryptoDagwaarde.class);
+    private final Logger logger = LoggerFactory.getLogger(cryptoDagwaarde.class);
 
+//    public static void main(String[] args) {
+//        System.out.println(cryptoDagwaarde("xrp"));
+//    }
 
     public static double cryptoDagwaarde(Cryptomunt cryptomunt){
-
         String uri = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest";
         List<NameValuePair> parameters = new ArrayList<NameValuePair>();
 
