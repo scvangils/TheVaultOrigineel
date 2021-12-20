@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 /**
  * @Author Ju-Sen m.u.v. methode creeerIban
  * Servicelaag voor rekening waarin een rekening aangemaakt kan worden en informatie over een rekening opgevraagd of aangepast kan worden.
@@ -54,7 +56,7 @@ public class RekeningService {
         String iban = creeerIban().toString();
         Rekening rekening = new Rekening(iban, STARTSALDO);
         klant.setRekening(rekening);
-        rekening.setKlant(klant);
+        rekening.setGebruiker(klant);
         return rekening;
     }
 
@@ -119,6 +121,7 @@ public class RekeningService {
         rekening.setSaldo(bedrag);
         return rootRepository.slaRekeningOp(rekening);
     }
+
 
 
     public RootRepository getRootRepository() {

@@ -11,7 +11,7 @@ CREATE TABLE adres (
 CREATE TABLE rekening (
                         rekeningId INT NOT NULL AUTO_INCREMENT,
                         iban VARCHAR(18) NOT NULL,
-                        saldo BIGINT(255) NOT NULL,
+                        saldo DECIMAL(50,10) NOT NULL,
                         PRIMARY KEY (rekeningId)
 );
 
@@ -55,7 +55,7 @@ CREATE UNIQUE INDEX naam_UNIQUE ON cryptomunt (naam ASC);
 CREATE TABLE asset (
                         gebruikerId INT NOT NULL,
                         cryptomuntId INT NOT NULL,
-                        aantal DECIMAL(50) NOT NULL,
+                        aantal DECIMAL(50,10) NOT NULL,
                         PRIMARY KEY (cryptomuntId, gebruikerId),
                         CONSTRAINT heeftInPortefeuille
                         FOREIGN KEY (gebruikerId)
@@ -73,11 +73,11 @@ CREATE INDEX verzinZelf6_idx ON asset (gebruikerId ASC);
 
 CREATE TABLE transactie (
                         transactieId INT NOT NULL AUTO_INCREMENT,
-                        aantal DECIMAL(50) NOT NULL,
+                        aantal DECIMAL(50,10) NOT NULL,
                         momentTransactie DATETIME NOT NULL,
                         koperGebruikerId INT NOT NULL,
                         cryptomuntId INT NOT NULL,
-                        bedrag DOUBLE NOT NULL,
+                        bedrag DECIMAL(50,10) NOT NULL,
                         verkoperGebruikerId INT NOT NULL,
                         PRIMARY KEY (transactieId),
                         CONSTRAINT kooptMunt
@@ -115,7 +115,7 @@ CREATE TABLE refreshToken (
 CREATE INDEX verzinZelf4_idx ON refreshToken (gebruikerId ASC);
 
 CREATE TABLE dagkoersCrypto (
-                        waardeCrypto DOUBLE NOT NULL,
+                        waardeCrypto DECIMAL(50,10) NOT NULL,
                         datum DATE NOT NULL,
                         cryptomuntId INT NOT NULL,
                         cryptowaardeId VARCHAR(15) NOT NULL,

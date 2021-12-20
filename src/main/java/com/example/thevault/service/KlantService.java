@@ -4,9 +4,8 @@
 package com.example.thevault.service;
 
 import com.example.thevault.domain.mapping.repository.RootRepository;
-import com.example.thevault.domain.model.Asset;
-import com.example.thevault.domain.model.Cryptomunt;
-import com.example.thevault.domain.model.Klant;
+
+import com.example.thevault.domain.model.*;
 import com.example.thevault.domain.transfer.AssetDto;
 import com.example.thevault.support.BSNvalidator;
 import com.example.thevault.support.exceptions.AgeTooLowException;
@@ -67,13 +66,19 @@ public class KlantService {
      * Methode die zoekt naar een cryptomunt in de portefeuille van een klant
      * en de asset daarvan teruggeeft.
      *
-     * @param klant van de portefeuille
+     * @param gebruiker van de portefeuille
      * @param cryptomunt waarnaar gezocht wordt
      *
-     * @return asset null of met cryptomunt + aantal van klant
+     * @return asset met cryptomunt + aantal van gebruiker of null
      */
-    public Asset geefAssetMetCryptoMuntVanKlant(Klant klant, Cryptomunt cryptomunt){
-        for (Asset asset: klant.getPortefeuille()) {
+    public Asset geefAssetMetCryptoMuntVanGebruiker(Gebruiker gebruiker, Cryptomunt cryptomunt){
+        List<Asset> portefeuille = null;
+        if(gebruiker instanceof Bank){
+            portefeuille = ((Bank) gebruiker).getPortefeuille();
+        } else if (gebruiker instanceof Klant){
+            portefeuille = ((Klant) gebruiker).getPortefeuille();
+        }
+        for (Asset asset: portefeuille) {
             if(asset.getCryptomunt()==cryptomunt){
                 return asset;
             }

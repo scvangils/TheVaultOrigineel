@@ -7,8 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
@@ -16,9 +15,9 @@ public class Transactie {
     private int transactieId;
     private double aantal;
     private OffsetDateTime momentTransactie;
-    private double bedrag;
-    private Klant koper;
-    private Klant verkoper;
+    private double prijs;
+    private Gebruiker koper;
+    private Gebruiker verkoper;
     private Cryptomunt cryptomunt;
 
     @JsonIgnore
@@ -31,12 +30,12 @@ public class Transactie {
 
 
     public Transactie(OffsetDateTime momentTransactie,
-                      Klant verkoper, Cryptomunt cryptomunt, double bedrag, double aantal,
-                      Klant koper) {
+                      Gebruiker verkoper, Cryptomunt cryptomunt, double prijs, double aantal,
+                      Gebruiker koper) {
         this.aantal = aantal;
         this.momentTransactie = momentTransactie;
         this.cryptomunt = cryptomunt;
-        this.bedrag = bedrag;
+        this.prijs = prijs;
         this.koper = koper;
         this.verkoper = verkoper;
         logger.info("New "+ this + " aangemaakt");
@@ -67,27 +66,27 @@ public class Transactie {
         this.momentTransactie = momentTransactie;
     }
 
-    public double getBedrag() {
-        return bedrag;
+    public double getPrijs() {
+        return prijs;
     }
 
-    public void setBedrag(double bedrag) {
-        this.bedrag = bedrag;
+    public void setPrijs(double prijs) {
+        this.prijs = prijs;
     }
 
-    public Klant getKoper() {
+    public Gebruiker getKoper() {
         return koper;
     }
 
-    public void setKoper(Klant koper) {
+    public void setKoper(Gebruiker koper) {
         this.koper = koper;
     }
 
-    public Klant getVerkoper() {
+    public Gebruiker getVerkoper() {
         return verkoper;
     }
 
-    public void setVerkoper(Klant verkoper) {
+    public void setVerkoper(Gebruiker verkoper) {
         this.verkoper = verkoper;
     }
 
@@ -105,7 +104,7 @@ public class Transactie {
                 "transactieId=" + transactieId +
                 ", aantal=" + aantal +
                 ", datumTijd=" + momentTransactie +
-                ", bedrag=" + bedrag +
+                ", prijs=" + prijs +
                 ", koper=" + koper +
                 ", verkoper=" + verkoper +
                 ", cryptomunt=" + cryptomunt +
@@ -118,18 +117,12 @@ public class Transactie {
         if (this == o) return true;
         if (!(o instanceof Transactie)) return false;
         Transactie that = (Transactie) o;
-        return getTransactieId() == that.getTransactieId()
-                && Double.compare(that.getAantal(), getAantal()) == 0
-                && Double.compare(that.getBedrag(), getBedrag()) == 0
-                && getMomentTransactie().equals(that.getMomentTransactie())
-                && getKoper().equals(that.getKoper())
-                && getVerkoper().equals(that.getVerkoper())
-                && getCryptomunt().equals(that.getCryptomunt());
+        return getTransactieId() == that.getTransactieId() && Double.compare(that.getAantal(), getAantal()) == 0 && Double.compare(that.getPrijs(), getPrijs()) == 0 && Objects.equals(getMomentTransactie(), that.getMomentTransactie()) && Objects.equals(getKoper(), that.getKoper()) && Objects.equals(getVerkoper(), that.getVerkoper()) && Objects.equals(getCryptomunt(), that.getCryptomunt());
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(getTransactieId(), getAantal(), getMomentTransactie()
-                , getBedrag(), getKoper(), getVerkoper(), getCryptomunt());
+                , getPrijs(), getKoper(), getVerkoper(), getCryptomunt());
     }
 }

@@ -4,16 +4,15 @@
 package com.example.thevault.service;
 
 import com.example.thevault.domain.mapping.repository.RootRepository;
-import com.example.thevault.domain.model.Asset;
-import com.example.thevault.domain.model.CryptoWaarde;
-import com.example.thevault.domain.model.Cryptomunt;
-import com.example.thevault.domain.model.Klant;
+import com.example.thevault.domain.model.*;
 import com.example.thevault.domain.transfer.AssetDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @Author: Carmen Rietdijk
@@ -44,12 +43,12 @@ public class AssetService {
     /**
      * Er wordt een specifieke asset in de portefeuille opgeroepen en doorgegeven, waarbij alleen de benodigde
      * informatie voor de klant wordt doorgegeven
-     * @param klant de klant die informatie opvraagt over de cryptomunt
+     * @param gebruiker de gebruiker die informatie opvraagt over de cryptomunt
      * @param cryptomunt cryptomunt waarover informatie wordt opgevraagd
      * @return AssetDto de asset waarover informatie is opgevraagd, in de vorm die voor de klant meerwaarde heeft
      */
-    public AssetDto geefCryptomunt(Klant klant, Cryptomunt cryptomunt, CryptoWaarde cryptowaarde){
-        return new AssetDto(rootRepository.geefAssetVanKlant(klant, cryptomunt), cryptowaarde);
+    public AssetDto geefCryptomunt(Gebruiker gebruiker, Cryptomunt cryptomunt, CryptoWaarde cryptowaarde){
+        return new AssetDto(rootRepository.geefAssetVanGebruiker(gebruiker, cryptomunt), cryptowaarde);
     }
 
     /**
@@ -68,6 +67,24 @@ public class AssetService {
      */
     public Asset wijzigAsset(Asset asset){
         return rootRepository.wijzigAssetVanKlant(asset);
+    }
+
+    public Asset wijzigAssetGebruiker(Asset asset){
+        List<Asset> portefeuille;
+        Gebruiker gebruikerVanAsset = asset.getGebruiker();
+        System.out.println("ASSET GEBRUIKER: " + asset.getGebruiker());
+        rootRepository.wijzigAssetVanKlant(asset);
+        if(gebruikerVanAsset instanceof Bank){
+            portefeuille = ((Bank) gebruikerVanAsset).getPortefeuille();
+        } else {
+             portefeuille = ((Klant) gebruikerVanAsset).getPortefeuille();
+        }
+        for (Asset assetInPortefeuille: portefeuille) {
+            if(asset.getCryptomunt()== assetInPortefeuille.getCryptomunt()){
+                assetInPortefeuille.setAantal(asset.getAantal());
+            }
+        }
+        return asset;
     }
 
     public RootRepository getRootRepository() {

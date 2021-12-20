@@ -1,5 +1,6 @@
 package com.example.thevault.domain.mapping.dao;
 
+import com.example.thevault.domain.model.Gebruiker;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.model.Rekening;
 
@@ -24,6 +25,9 @@ public interface RekeningDAO {
      * @return rekening waarvan je de iban en het saldo van klant kunt zien
      */
     Rekening vindRekeningVanKlant(Klant klant);
+
+
+    Rekening vindRekeningVanGebruiker(Gebruiker gebruiker);
 
     /**
      * Met deze methode kan je het saldo van de rekening opvragen als je de klant meegeeft.
