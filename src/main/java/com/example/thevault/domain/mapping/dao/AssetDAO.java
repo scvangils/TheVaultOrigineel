@@ -2,6 +2,7 @@ package com.example.thevault.domain.mapping.dao;
 
 import com.example.thevault.domain.model.Asset;
 import com.example.thevault.domain.model.Cryptomunt;
+import com.example.thevault.domain.model.Gebruiker;
 import com.example.thevault.domain.model.Klant;
 
 import java.util.List;
@@ -41,11 +42,11 @@ public interface AssetDAO {
 
     /**
      * Dit betreft het vinden van een cryptomunt die in de portefeuille zit
-     * @param klant klant die informatie opvraagt over de cryptomunt
+     * @param gebruiker gebruiker die informatie opvraagt over de cryptomunt
      * @param cryptomunt cryptomunt waarover informatie wordt opgevraagd
      * @return Asset de asset (cryptomunt + aantal) waarover informatie is opgevraagd
      */
-    public Optional<Asset> geefAsset(Klant klant, Cryptomunt cryptomunt);
+    public Optional<Asset> geefAssetGebruiker(Gebruiker gebruiker, Cryptomunt cryptomunt);
 
     /**
      * Dit betreft het vinden van alle cryptomunten die in de portefeuille zitten

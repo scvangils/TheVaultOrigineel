@@ -3,14 +3,12 @@
 
 package com.example.thevault.controller.rest_api_controller;
 
-import com.example.thevault.domain.model.Adres;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.transfer.RegistrationDto;
 import com.example.thevault.domain.transfer.WelkomDTO;
 import com.example.thevault.service.LoginService;
 import com.example.thevault.service.RegistrationService;
 import com.example.thevault.domain.transfer.LoginDto;
-import com.example.thevault.service.KlantService;
 import com.example.thevault.support.authorization.AuthorizationService;
 import com.example.thevault.support.authorization.TokenKlantCombinatie;
 import com.example.thevault.support.exceptions.LoginFailedException;
@@ -24,8 +22,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.security.auth.login.LoginException;
 
 @RestController
 public class KlantController extends BasisApiController{

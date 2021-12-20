@@ -5,9 +5,9 @@ package com.example.thevault.domain.mapping.dao;
 
 import com.example.thevault.domain.model.Asset;
 import com.example.thevault.domain.model.Cryptomunt;
+import com.example.thevault.domain.model.Gebruiker;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.support.exceptions.AssetNotExistsException;
-import com.example.thevault.support.exceptions.IncorrectFormatException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -48,7 +47,7 @@ public class JDBCAssetDAO implements AssetDAO{
         String sql = "INSERT INTO asset (gebruikerId, cryptomuntId, aantal) values " +
                 "(?, ?, ?);";
         PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, asset.getKlant().getGebruikerId());
+        ps.setInt(1, asset.getGebruiker().getGebruikerId());
         ps.setInt(2, asset.getCryptomunt().getId());
         ps.setDouble(3, asset.getAantal());
         return ps;
@@ -57,7 +56,7 @@ public class JDBCAssetDAO implements AssetDAO{
     private PreparedStatement verwijderAssetStatement(Asset asset, Connection connection) throws SQLException {
         String sql = "DELETE * FROM asset WHERE gebruikerId = ? AND cryptomuntId = ?;";
         PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, asset.getKlant().getGebruikerId());
+        ps.setInt(1, asset.getGebruiker().getGebruikerId());
         ps.setInt(2, asset.getCryptomunt().getId());
         return ps;
     }
@@ -108,12 +107,31 @@ public class JDBCAssetDAO implements AssetDAO{
      */
     @Override
     public Asset updateAsset(Asset asset) {
-        double huidigeAantal = geefAsset(asset.getKlant(), asset.getCryptomunt()).orElseThrow(AssetNotExistsException).
+        double huidigeAantal = geefAssetGebruiker(asset.getGebruiker(), asset.getCryptomunt()).orElseThrow(AssetNotExistsException).
                 getAantal();
         double teVerhandelenAantal = asset.getAantal();
         if(huidigeAantal >= teVerhandelenAantal) {
             Asset nieuwAsset = new Asset(asset.getCryptomunt(), huidigeAantal - teVerhandelenAantal,
-                    asset.getKlant());
+                    asset.getGebruiker());
+            jdbcTemplate.update(connection -> verwijderAssetStatement(asset, connection));
+            jdbcTemplate.update(connection -> slaAssetOpStatement(nieuwAsset, connection));
+
+            return nieuwAsset;
+        } else if(huidigeAantal == -teVerhandelenAantal){
+            return verwijderAssetUitPortefeuille(asset);
+        } //TODO exception maken
+        System.out.println("Het saldo van deze cryptomunt is te laag voor deze transactie");
+        return null;
+    }
+
+
+    public Asset updateAssetGebruiker(Asset asset) {
+        double huidigeAantal = geefAssetGebruiker(asset.getGebruiker(), asset.getCryptomunt()).orElseThrow(AssetNotExistsException).
+                getAantal();
+        double teVerhandelenAantal = asset.getAantal();
+        if(huidigeAantal >= teVerhandelenAantal) {
+            Asset nieuwAsset = new Asset(asset.getCryptomunt(), huidigeAantal - teVerhandelenAantal,
+                    asset.getGebruiker());
             jdbcTemplate.update(connection -> verwijderAssetStatement(asset, connection));
             jdbcTemplate.update(connection -> slaAssetOpStatement(nieuwAsset, connection));
             return nieuwAsset;
@@ -126,17 +144,18 @@ public class JDBCAssetDAO implements AssetDAO{
 
     /**
      * Dit betreft het vinden van een cryptomunt die in de portefeuille zit
-     * @param klant klant die informatie opvraagt over de cryptomunt
+     * @param gebruiker klant die informatie opvraagt over de cryptomunt
      * @param cryptomunt cryptomunt waarover informatie wordt opgevraagd
      * @return Asset de asset (cryptomunt + aantal) waarover informatie is opgevraagd
      */
+
     @Override
-    public Optional<Asset> geefAsset(Klant klant, Cryptomunt cryptomunt){
+    public Optional<Asset> geefAssetGebruiker(Gebruiker gebruiker, Cryptomunt cryptomunt) {
         String sql = "Select * from asset where gebruikerId = ? AND cryptomuntId = ?;";
-        List<Asset> assets = jdbcTemplate.query(sql, new JDBCAssetDAO.AssetRowMapper(), klant.getGebruikerId(),
+        List<Asset> assets = jdbcTemplate.query(sql, new JDBCAssetDAO.AssetRowMapper(), gebruiker.getGebruikerId(),
                 cryptomunt.getId());
         if(assets.size() == 1){
-            assets.get(0).setKlant(klant);
+            assets.get(0).setGebruiker(gebruiker);
             return Optional.of(assets.get(0));
         }
         return Optional.empty();
@@ -152,7 +171,7 @@ public class JDBCAssetDAO implements AssetDAO{
         String sql = "SELECT * FROM asset WHERE gebruikerId = ?;";
         List<Asset> assets = jdbcTemplate.query(sql, new JDBCAssetDAO.AssetRowMapper(), klant.getGebruikerId());
         for (Asset asset : assets) {
-            asset.setKlant(klant);
+            asset.setGebruiker(klant);
         }
         return assets;
     }

@@ -9,11 +9,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
-abstract class Gebruiker {
+public abstract class Gebruiker {
     protected int gebruikerId;
     protected String gebruikersnaam;
     protected String wachtwoord;
     protected static int DEFAULT_GEBRUIKERID = 0;
+
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Gebruiker.class);
 

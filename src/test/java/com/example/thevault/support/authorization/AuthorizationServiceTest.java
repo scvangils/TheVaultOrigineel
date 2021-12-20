@@ -7,12 +7,9 @@ import com.auth0.jwt.JWT;
 
 
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.InvalidClaimException;
-import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.Klant;
-import com.example.thevault.support.exceptions.AssetNotExistsException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,7 +25,6 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 
 
 class AuthorizationServiceTest {

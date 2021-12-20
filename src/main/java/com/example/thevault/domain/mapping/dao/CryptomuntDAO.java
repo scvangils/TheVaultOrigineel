@@ -1,6 +1,5 @@
 package com.example.thevault.domain.mapping.dao;
 
-import com.example.thevault.domain.model.Asset;
 import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.model.Klant;
 
