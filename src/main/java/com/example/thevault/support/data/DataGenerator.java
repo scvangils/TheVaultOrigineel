@@ -9,9 +9,13 @@ import com.example.thevault.domain.model.Klant;
 import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +29,8 @@ public class DataGenerator {
 
 
 
-    public static void main(String[] args) throws FileNotFoundException {
-        File data = new File("C:/Users/scvan/Documents/MakeITWork/TheVault/src/main/resources/Sprint2/datacsv.csv");
-    List<Klant> list = maakLijstKlantenVanCSV(data, 20);
+    public static void main(String[] args) throws IOException {
+    List<Klant> list = maakLijstKlantenVanCSV("Sprint2/datacsv.csv", 20);
         for(Klant klant: list){
             System.out.println(klant);
         }
@@ -48,7 +51,10 @@ public class DataGenerator {
 
 
 
-    public static List<Klant> maakLijstKlantenVanCSV(File file, int hoeveelKlanten) throws FileNotFoundException {
+    public static List<Klant> maakLijstKlantenVanCSV(String filename, int hoeveelKlanten) throws IOException {
+        Resource resource = new ClassPathResource(filename);
+
+        File file = resource.getFile();
         List<Klant> klantList = new ArrayList<>();
         Scanner klantenLezer;
         int counter = 0;

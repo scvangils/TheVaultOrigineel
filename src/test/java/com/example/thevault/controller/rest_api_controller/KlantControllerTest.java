@@ -1,6 +1,5 @@
 package com.example.thevault.controller.rest_api_controller;
 
-import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.Adres;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.model.Rekening;
@@ -29,7 +28,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import javax.security.auth.login.LoginException;
 import java.time.LocalDate;
 import java.util.UUID;
 
@@ -118,7 +116,7 @@ class KlantControllerTest {
 
 
         Mockito.when(loginService.valideerLogin(loginDto2)).thenReturn(testKlant);
-        Mockito.when(authorizationService.authoriseerKlantMetRefreshToken(testKlant)).thenReturn(new TokenKlantCombinatie(UUID.randomUUID(), testKlant));
+        Mockito.when(authorizationService.authoriseerIngelogdeKlantMetRefreshToken(testKlant)).thenReturn(new TokenKlantCombinatie(UUID.randomUUID(), testKlant));
         Mockito.when(authorizationService.genereerAccessToken(testKlant)).thenReturn("testTransparentToken");
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/login");
         requestBuilder.content(testInlogJson).contentType(MediaType.APPLICATION_JSON);
