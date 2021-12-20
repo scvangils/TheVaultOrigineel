@@ -40,12 +40,12 @@ class RekeningServiceTest {
         rekeningServiceTest = new RekeningService(mockRepo);
         rekeningExpected = new Rekening("INGB0001234567NL", 1000.0);
         bestaandeKlant.setRekening(rekeningExpected);
-        rekeningExpected.setKlant(bestaandeKlant);
+        rekeningExpected.setGebruiker(bestaandeKlant);
         nieuweRekening = new Rekening("NL20RABO9876543", 1000.0);
         bestaandeKlantVoorWijzigSaldo = new Klant("MarkSlegte", "456jesv", "", 5248136, LocalDate.of(1987, 2, 16));
         rekeningVoorWijzigSaldoExpected = new Rekening("INGB0001234567NL", 1000.0);
         bestaandeKlantVoorWijzigSaldo.setRekening(rekeningVoorWijzigSaldoExpected);
-        rekeningVoorWijzigSaldoExpected.setKlant(bestaandeKlantVoorWijzigSaldo);
+        rekeningVoorWijzigSaldoExpected.setGebruiker(bestaandeKlantVoorWijzigSaldo);
     }
 
     /**
@@ -154,7 +154,6 @@ class RekeningServiceTest {
      * saldo gewijzigd wordt van 1000.0 naar 2000.0. Dus bij het opvragen van de saldo werd 2000.0 als het actual saldo
      * gezien i.p.v. de 1000.0.
      */
-
     @Test
     void wijzigSaldo() {
         Mockito.when(mockRepo.wijzigSaldoVanKlant(bestaandeKlantVoorWijzigSaldo, 2000.0)).thenReturn(bestaandeKlantVoorWijzigSaldo.getRekening());

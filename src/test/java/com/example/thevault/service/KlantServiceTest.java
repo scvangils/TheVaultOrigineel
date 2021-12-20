@@ -1,8 +1,5 @@
 package com.example.thevault.service;
 
-import com.example.thevault.domain.mapping.dao.AssetDAO;
-import com.example.thevault.domain.mapping.dao.KlantDAO;
-import com.example.thevault.domain.mapping.dao.RekeningDAO;
 import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.Asset;
 import com.example.thevault.domain.model.CryptoWaarde;
@@ -14,14 +11,10 @@ import com.example.thevault.support.exceptions.AgeTooLowException;
 import com.example.thevault.support.exceptions.IncorrectBSNException;
 import com.example.thevault.support.exceptions.PasswordNotSuitableException;
 import com.example.thevault.support.hashing.BCryptWachtwoordHash;
-import com.example.thevault.support.hashing.HashHelper;
 import org.junit.jupiter.api.*;
 import org.mockito.Mockito;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 

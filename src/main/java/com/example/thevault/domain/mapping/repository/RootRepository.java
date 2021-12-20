@@ -11,13 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.function.Supplier;
 
 @Repository
 public class RootRepository {
@@ -123,6 +120,17 @@ public class RootRepository {
     }
 
     /**
+    * Methode die op gebruiker zoekt en de rekening teruggeeft
+     *
+     * @param gebruiker kan zowel een klant als een bank zijn
+     * @return rekening geeft een rekening object terug
+    * */
+    public Rekening vindRekeningVanGebuiker(Gebruiker gebruiker){
+        return rekeningDAO.vindRekeningVanGebruiker(gebruiker);
+    }
+
+
+    /**
      * Deze methode geeft het rekeningsaldo op van de klant in de database via de methode in de rekeningDAO.
      *
      * @param klant is de klant van wie het rekeningsaldo wordt opgevraagd.
@@ -160,12 +168,12 @@ public class RootRepository {
 
     /**
      * Dit betreft het vinden van een specifieke cryptomunt die in de portefeuille zit
-     * @param klant de klant die informatie opvraagt over de cryptomunt
+     * @param gebruiker de gebruiker die informatie opvraagt over de cryptomunt
      * @param cryptomunt cryptomunt waarover informatie wordt opgevraagd
      * @return Asset de asset (cryptomunt + aantal) waarover informatie is opgevraagd
      */
-    public Asset geefAssetVanKlant(Klant klant, Cryptomunt cryptomunt){
-        return assetDAO.geefAsset(klant, cryptomunt).orElseThrow(AssetNotExistsException::new);
+    public Asset geefAssetVanGebruiker(Gebruiker gebruiker, Cryptomunt cryptomunt){
+        return assetDAO.geefAssetGebruiker(gebruiker, cryptomunt).orElseThrow(AssetNotExistsException::new);
     }
 
     /**
@@ -222,11 +230,11 @@ public class RootRepository {
      * hierbij worden eerst de koper, verkoper en cryptomunt op id uit de database
      * gehaald en toegevoegd aan het transactie object
      *
-     * @param klant de klant waarvan alle transacties moeten worden opgezocht
+     * @param gebruiker de klant waarvan alle transacties moeten worden opgezocht
      * @return lijst transacties van de klant
      */
-    List<Transactie> geefTransactiesVanKlant(Klant klant){
-        List<Transactie> transactiesVanKlant = transactieDAO.geefTransactiesVanKlant(klant);
+    List<Transactie> geefTransactiesVanGebruiker(Gebruiker gebruiker){
+        List<Transactie> transactiesVanKlant = transactieDAO.geefTransactiesVanGebruiker(gebruiker);
         for (Transactie transactie: transactiesVanKlant) {
             transactie.setKoper(klantDAO.vindKlantById(transactie.getKoper().getGebruikerId()));
             transactie.setVerkoper(klantDAO.vindKlantById(transactie.getVerkoper().getGebruikerId()));
@@ -234,14 +242,7 @@ public class RootRepository {
         }
         return transactiesVanKlant;
     }
-    /**
-     * methode die alle transacties van de bank ophaalt
-     *
-     * @return lijst transacties van de bank
-     */
-    List<Transactie> geefTransactiesVanBank(){
-        return transactieDAO.geefTransactiesVanBank();
-    }
+
 
     /**
      * methode die alle transacties die bij een klant horen die in een bepaalde

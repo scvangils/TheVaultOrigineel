@@ -11,7 +11,8 @@ public class Rekening {
 
     private String iban;
     private double saldo;
-    private Klant klant;
+    private Gebruiker gebruiker;
+    //private Klant klant;
 
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Rekening.class);
@@ -30,7 +31,7 @@ public class Rekening {
      * @param saldo het bedrag wat op de rekening staat met cryptomunten te handelen
      */
     public Rekening(String iban, double saldo) {
-        this.klant = null;
+        this.gebruiker = null;
         this.iban = iban;
         this.saldo = saldo;
         logger.info("Nieuwe rekening " + this + " gemaakt");
@@ -52,12 +53,12 @@ public class Rekening {
         this.saldo = saldo;
     }
 
-    public Klant getKlant() {
-        return klant;
+    public Gebruiker getGebruiker() {
+        return gebruiker;
     }
 
-    public void setKlant(Klant klant) {
-        this.klant = klant;
+    public void setGebruiker(Gebruiker gebruiker) {
+        this.gebruiker = gebruiker;
     }
 
     @Override
