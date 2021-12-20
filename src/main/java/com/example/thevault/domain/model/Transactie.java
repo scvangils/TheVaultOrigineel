@@ -8,17 +8,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
 public class Transactie {
     private int transactieId;
     private double aantal;
-    private OffsetDateTime momentTransactie;
+    private LocalDateTime momentTransactie;
     private double prijs;
     private Gebruiker koper;
     private Gebruiker verkoper;
     private Cryptomunt cryptomunt;
+    private double bankFee;
 
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Rekening.class);
@@ -29,15 +33,16 @@ public class Transactie {
     }
 
 
-    public Transactie(OffsetDateTime momentTransactie,
+    public Transactie(LocalDateTime momentTransactie,
                       Gebruiker verkoper, Cryptomunt cryptomunt, double prijs, double aantal,
-                      Gebruiker koper) {
+                      Gebruiker koper, double bankFee) {
         this.aantal = aantal;
         this.momentTransactie = momentTransactie;
         this.cryptomunt = cryptomunt;
         this.prijs = prijs;
         this.koper = koper;
         this.verkoper = verkoper;
+        this.bankFee = bankFee;
         logger.info("New "+ this + " aangemaakt");
     }
 
@@ -58,11 +63,11 @@ public class Transactie {
         this.aantal = aantal;
     }
 
-    public OffsetDateTime getMomentTransactie() {
+    public LocalDateTime getMomentTransactie() {
         return momentTransactie;
     }
 
-    public void setMomentTransactie(OffsetDateTime momentTransactie) {
+    public void setMomentTransactie(LocalDateTime momentTransactie) {
         this.momentTransactie = momentTransactie;
     }
 

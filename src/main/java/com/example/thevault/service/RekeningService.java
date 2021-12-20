@@ -1,6 +1,7 @@
 package com.example.thevault.service;
 
 import com.example.thevault.domain.mapping.repository.RootRepository;
+import com.example.thevault.domain.model.Gebruiker;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.model.Rekening;
 import com.example.thevault.support.exceptions.UserNotExistsException;
@@ -11,8 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
 
 /**
  * @Author Ju-Sen m.u.v. methode creeerIban
@@ -109,7 +108,7 @@ public class RekeningService {
      * Met deze methode kan je het rekeningsaldo van de klant wijzigen als de klant
      * terug te vinden is in de database.
      *
-     * @param klant is de meegegeven klant voor wie je het rekeningsaldo op wilt wijzigen.
+     * @param gebruiker is de meegegeven klant voor wie je het rekeningsaldo op wilt wijzigen.
      * @param transactiebedrag is het bedrag waarnaar je het wil wijzigen.
      * @throws UserNotExistsException als er geen klant wordt meegegeven of als de
      * gebruikersnaam niet bestaat, wordt er een exceptie gegooid.
@@ -119,8 +118,8 @@ public class RekeningService {
 
     //parameter bedrag = transactiebedrag NIET saldo van rekening
     //IPV rekening geven we een klant mee
-    public Rekening wijzigSaldo(Klant klant, double transactiebedrag) {
-        return rootRepository.wijzigSaldoVanKlant(klant, transactiebedrag);
+    public Rekening wijzigSaldo(Gebruiker gebruiker, double transactiebedrag) {
+        return rootRepository.wijzigSaldoVanKlant(gebruiker, transactiebedrag);
     }
 
 

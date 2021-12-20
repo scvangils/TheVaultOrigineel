@@ -5,6 +5,7 @@ package com.example.thevault.domain.mapping.dao;
 
 import com.example.thevault.domain.model.*;
 
+import java.sql.Timestamp;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -14,11 +15,11 @@ public interface TransactieDAO {
 
     List<Transactie> geefTransactiesVanGebruiker(Gebruiker gebruiker);
 
-    List<Transactie> geefTransactiesVanKlantInPeriode(Gebruiker klant, OffsetDateTime startDatum, OffsetDateTime eindDatum);
+    List<Transactie> geefAlleTransacties();
 
-    List<Transactie> geefAlleTransactiesInPeriode(OffsetDateTime startDatum, OffsetDateTime eindDatum);
+    List<Transactie> geefTransactiesVanGebruikerInPeriode(Gebruiker gebruiker, Timestamp startDatum, Timestamp eindDatum);
 
-    List<Transactie> geefTransactiesVanKlantMetCryptomunt(Klant klant, Cryptomunt cryptomunt);
+    List<Transactie> geefAlleTransactiesInPeriode(Timestamp startDatum, Timestamp eindDatum);
 
     List<Transactie> geefTransactiesVanGebruikerMetCryptomunt(Gebruiker gebruiker, Cryptomunt cryptomunt);
 
