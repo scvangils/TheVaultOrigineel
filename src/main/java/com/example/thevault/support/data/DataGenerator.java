@@ -86,7 +86,7 @@ public class DataGenerator {
                                        String postcode, String plaatsnaam, String toevoeging) {
         Adres adresKlant = new Adres(straatnaam, huisnummer, toevoeging, postcode, plaatsnaam);
         Klant klant = new Klant(gebruikersnaam, wachtwoord,
-                null, null, naam, adresKlant, bsn, genereerRandomGeboortedatum());
+                null, null, null, naam, adresKlant, bsn, genereerRandomGeboortedatum());
         klantList.add(klant);
     }
 

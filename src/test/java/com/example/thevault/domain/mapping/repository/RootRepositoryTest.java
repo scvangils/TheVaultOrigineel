@@ -81,7 +81,7 @@ class RootRepositoryTest {
         portefeuille.add(testAsset3);
         origineelSaldo = 1000.0;
         rekeningOrigineelSaldo = new Rekening("INGB0001234567NL", origineelSaldo);
-        testKlant = new Klant("Huub", "PWHuub", portefeuille, rekeningOrigineelSaldo, "Huub", null,
+        testKlant = new Klant("Huub", "PWHuub", portefeuille, rekeningOrigineelSaldo, null, "Huub", null,
                 0, null);
         teWijzigenBedrag = 100.0;
         gewijzigdSaldo = 1100.0;
