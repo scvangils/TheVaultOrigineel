@@ -173,7 +173,7 @@ class AuthorizationServiceTest {
         Mockito.when(mockTokenKlantCombinatieDao.vindTokenKlantCombinatieMetKlant(nieuweKlant)).thenReturn(Optional.empty());
         Mockito.when(mockTokenKlantCombinatieDao.slaTokenKlantPairOp(expectedTokenKlantCombinatie)).thenReturn(expectedTokenKlantCombinatie);
 
-        TokenKlantCombinatie actualTokenKlantCombinatie = authorizationServiceTest.authoriseerKlantMetRefreshToken(nieuweKlant);
+        TokenKlantCombinatie actualTokenKlantCombinatie = authorizationServiceTest.authoriseerIngelogdeKlantMetRefreshToken(nieuweKlant);
 
         assertThat(actualTokenKlantCombinatie.getKlant().getNaam().equals(expectedTokenKlantCombinatie.getKlant().getNaam()));
         assertThat(actualTokenKlantCombinatie.getKey()).isNotNull().isInstanceOf(expectedTokenKlantCombinatie.getKey().getClass());
@@ -187,7 +187,7 @@ class AuthorizationServiceTest {
         Mockito.when(mockTokenKlantCombinatieDao.vindTokenKlantCombinatieMetKlant(testKlant)).thenReturn(Optional.of(startTokenKlantCombinatie));
         Mockito.when(mockTokenKlantCombinatieDao.slaTokenKlantPairOp(startTokenKlantCombinatie)).thenReturn(startTokenKlantCombinatie);
 
-        TokenKlantCombinatie updatetTokenKlantCombinatie = authorizationServiceTest.authoriseerKlantMetRefreshToken(testKlant);
+        TokenKlantCombinatie updatetTokenKlantCombinatie = authorizationServiceTest.authoriseerIngelogdeKlantMetRefreshToken(testKlant);
 
         //controleer of de nieuwe combinatie wel dezelfde klant bevat maar niet dezelfde key
         assertThat(updatetTokenKlantCombinatie.getKlant().getNaam().equals(startTokenKlantCombinatie.getKlant().getNaam()));

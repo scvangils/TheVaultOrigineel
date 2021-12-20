@@ -54,7 +54,7 @@ function registreer(){
             console.log('Success:', response);
         })
         .catch((error) => {
-            console.error('Error:', error);
+            console.error('*** Iets misgegaan:', error);
         });
 }
 function vindStraatnaamEnPlaatsnaam(){

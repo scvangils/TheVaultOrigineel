@@ -6,9 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/styles.css">
     <script src="javascript/homepage.js" defer></script>
+    <script src="javascript/validation.js" defer></script>
 </head>
 <body>
-<div>
+<div id = "registratie">
 <form id = "registratieOverig" method="post" action="/test">
     <label for="naam">naam</label>
         <input type="text" id = "naam" name = "naam" required>
@@ -36,5 +37,7 @@
 </div>
 <input type="button" id = "verstuur" value= "Join the Bank to the Future" onclick="registreer()">
 <input type="button" id = "adresinformatie" value= "vind je straat" onclick="vindStraatnaamEnPlaatsnaam()">
+
+
 </body>
 </html>

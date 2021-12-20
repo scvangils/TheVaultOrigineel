@@ -9,6 +9,7 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.thevault.domain.model.Klant;
+import com.example.thevault.support.exceptions.LoginFailedException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,7 @@ import java.util.UUID;
 @Service
 public class AuthorizationService {
     private final static String SECRET_KEY = "secretTheVaultKey5dRQPD_sCsArU";
-    private int accessExpirationDateInMinutes = 10;
+    private int accessExpirationDateInMinutes = 2;
     private int refreshExpirationDateInMinutes;
     //protected final TokenKlantCombinatieDao tokenKlantCombinatieDao;
     public static TokenKlantCombinatieDao tokenKlantCombinatieDao;
@@ -130,15 +131,33 @@ public class AuthorizationService {
      * @throws JWTCreationException als er een probleem is met het "signen" van
      * het token of als de meegegeven items niet kunnen worden omgezet naar JSON
      */
-    public TokenKlantCombinatie authoriseerKlantMetRefreshToken(Klant klant) {
+    public TokenKlantCombinatie authoriseerIngelogdeKlantMetRefreshToken(Klant klant) {
         Optional<TokenKlantCombinatie> optioneleCombinatie = tokenKlantCombinatieDao.vindTokenKlantCombinatieMetKlant(klant);
         if (optioneleCombinatie.isPresent()) {
             tokenKlantCombinatieDao.delete(optioneleCombinatie.get().getKey());
         }
+        return getNewTokenKlantCombinatie(klant);
+
+    }
+
+    private TokenKlantCombinatie getNewTokenKlantCombinatie(Klant klant) {
         UUID refreshToken = genereerRefreshToken();
         TokenKlantCombinatie tokenKlantCombinatie = new TokenKlantCombinatie(refreshToken, klant);
         tokenKlantCombinatieDao.slaTokenKlantPairOp(tokenKlantCombinatie);
         return tokenKlantCombinatie;
+    }
+
+    public TokenKlantCombinatie controleerRefreshToken(Klant klant, String refreshToken){
+        Optional<TokenKlantCombinatie> optioneleCombinatie = tokenKlantCombinatieDao.vindTokenKlantCombinatieMetKlant(klant);
+        if (optioneleCombinatie.isPresent()) {
+            if(!optioneleCombinatie.get().getKey().toString().equals(refreshToken)){
+                //TODO juiste exception
+                return null;
+            }
+            tokenKlantCombinatieDao.delete(optioneleCombinatie.get().getKey());
+        }
+        return getNewTokenKlantCombinatie(klant);
+
     }
 
     public static void main(String[] args) {

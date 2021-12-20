@@ -13,20 +13,18 @@ import com.example.thevault.support.authorization.AuthorizationService;
 import com.example.thevault.support.authorization.TokenKlantCombinatie;
 import com.example.thevault.support.data.DataGenerator;
 import com.example.thevault.support.exceptions.LoginFailedException;
+import com.example.thevault.support.exceptions.RefreshJWTFailedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -58,15 +56,44 @@ public class KlantController extends BasisApiController{
     public ResponseEntity<String> clientDashboardHandler(@RequestHeader("Authorization") String token, @RequestBody String inhoud){
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(inhoud);
     }
-    @PostMapping("/test")
-    public ResponseEntity<String> testRegistratie(@RequestBody String opdracht) throws FileNotFoundException {
-        File data = new File("C:/Users/scvan/Documents/MakeITWork/TheVault/src/main/resources/Sprint2/datacsv.csv");
-        List<Klant> list = DataGenerator.maakLijstKlantenVanCSV(data, 2999);
+    @PostMapping("/data")
+    public ResponseEntity<String> vulKlantEnAdresTabel(@RequestBody String opdracht) throws IOException {
+        List<Klant> list = DataGenerator.maakLijstKlantenVanCSV("Sprint2/datacsv.csv", 2999);
+        int count = 0;
         for(Klant klant: list){
             registrationService.registreerKlant(klant);
+            count ++;
         }
-        String bericht = String.format("Zoveel geïmporteerd:");
+        String bericht = String.format("Zoveel geïmporteerd: %d", count);
         return ResponseEntity.status(HttpStatus.OK).body(bericht);
+    }
+    //TODO waar gebruikersnaam vandaan halen?
+    @PostMapping("/validate/jwt")
+    public ResponseEntity<String> valideerJWT(@RequestHeader("Authorization") String accessToken, @RequestBody String gebruikersnaam){
+        accessToken = accessToken.substring(7); // Verwijder "Bearer "
+        Klant klant = loginService.vindKlantByGebruikersnaam(gebruikersnaam);
+        boolean accessAllowed = authorizationService.valideerAccessToken(accessToken, klant);
+                if(accessAllowed){
+                    return ResponseEntity.ok().header("Authorization", "Bearer " + accessToken).body("toegestaan");
+                }
+                return ResponseEntity.status(401).body("niet toegestaan");
+    }
+    //TODO return type aanpassen en dubbele code beperken
+    @PostMapping("/validate/refresh")
+    public ResponseEntity<WelkomDTO> valideerRefreshToken(@CookieValue("RefreshToken") String refreshToken, @RequestBody String gebruikersnaam){
+        Klant klant = loginService.vindKlantByGebruikersnaam(gebruikersnaam);
+        if(klant != null){
+            TokenKlantCombinatie tokenKlantCombinatie = authorizationService.controleerRefreshToken(klant, refreshToken);
+            if(tokenKlantCombinatie == null){
+                throw new RefreshJWTFailedException();
+            }
+        ResponseCookie responseCookie = getResponseCookie(tokenKlantCombinatie);
+        // genereer JWT token
+        String jwtToken = authorizationService.genereerAccessToken(klant);
+        // hier moeten de tokens worden toegevoegd aan de header
+        return getResponseEntity(klant, responseCookie, jwtToken);
+        }
+        throw new RefreshJWTFailedException();
     }
 
 
@@ -103,19 +130,27 @@ public class KlantController extends BasisApiController{
         Klant klant = loginService.valideerLogin(loginDto);
         if(klant != null){
             // haal opaak token op uit database
-            TokenKlantCombinatie tokenKlantCombinatie = authorizationService.authoriseerKlantMetRefreshToken(klant);
+            TokenKlantCombinatie tokenKlantCombinatie = authorizationService.authoriseerIngelogdeKlantMetRefreshToken(klant);
             // genereer cookie met het opgehaalde opaakToken
-            ResponseCookie responseCookie = ResponseCookie.from("RefreshToken",
-                    tokenKlantCombinatie.getKey().toString()).httpOnly(true).build();
+            ResponseCookie responseCookie = getResponseCookie(tokenKlantCombinatie);
             // genereer JWT token
             String jwtToken = authorizationService.genereerAccessToken(klant);
             // hier moeten de tokens worden toegevoegd aan de header
-            return ResponseEntity.ok()
-                    .header("Authorization", "Bearer " + jwtToken)
-                    .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                    .body(new WelkomDTO(klant));
+            return getResponseEntity(klant, responseCookie, jwtToken);
         }
         throw new LoginFailedException();
+    }
+
+    private static ResponseEntity<WelkomDTO> getResponseEntity(Klant klant, ResponseCookie responseCookie, String jwtToken) {
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + jwtToken)
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .body(new WelkomDTO(klant));
+    }
+
+    private ResponseCookie getResponseCookie(TokenKlantCombinatie tokenKlantCombinatie) {
+        return ResponseCookie.from("RefreshToken",
+                tokenKlantCombinatie.getKey().toString()).path("/validate/refresh").httpOnly(true).build();
     }
 
 }
