@@ -81,7 +81,7 @@ class TransactieServiceTest {
         testAsset1.setGebruiker(testKlant1);
         testAsset4.setGebruiker(testKlant2);
 
-        excpectedTransactie1 = new Transactie(LocalDateTime.now(), testKlant1, testCryptomunt1, 1050
+        excpectedTransactie1 = new Transactie(LocalDateTime.now(), testKlant1, testCryptomunt1, 1550
                 , 1.6, testKlant2, bankFee);
         testTransactie2 = new Transactie(LocalDateTime.now(), testKlant2, testCryptomunt2, 9000
                 , 1, testKlant1, bankFee);
