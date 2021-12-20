@@ -1,22 +1,125 @@
+* {
+    box-sizing: border-box;
+    font-family: "Century Gothic", "Century","Arial", sans-serif;
+}
 
 .grid-container {
     display: grid;
-    grid-template-columns: 300px 300px;
+    grid-template-columns: auto auto auto;
     padding: 0;
     margin-bottom: 0;
     margin-top: 0;
 }
+
 .grid-item {
     border: 1px solid rgba(0, 0, 0, 0.8);
     padding: 20px;
     font-size: 20px;
     text-align: center;
 }
-#verstuur {
-    position: relative;
-    left: 150px;
-    margin-top: 30px;
+
+.flex-container {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    align-items: flex-start;
 }
-#registratie {
-    display: none;
+
+fieldset {
+    font-size: 20px;
+    text-align: center;
+    margin: 10px;
+    padding: 30px;
 }
+
+fieldset input {
+    margin: 30px;
+    border-style: solid;
+}
+
+fieldset input:hover {
+    background-color: aliceblue;
+    color: darkgray;
+}
+
+fieldset input:focus{
+    background-color: aliceblue;
+    color: darkorchid;
+}
+
+.navigatiebalk {
+    list-style-type: none;
+    margin: 10px;
+    padding: 0;
+    display: block;
+}
+
+#navigatiebalk-registreer{
+    float: left;
+    display: block;
+    padding: 16px;
+    font-size: 30px;
+    background-color: darkorchid;
+    color: aliceblue;
+}
+
+#navigatiebalk-inlog{
+    clear-after: left;
+    display: block;
+    padding: 16px;
+    font-size: 30px;
+    background-color: darkorchid;
+    color: aliceblue;
+}
+
+.navigatiebalk-onderdeel:hover {
+    background-color: aliceblue;
+    color: darkorchid;
+}
+
+.header {
+    text-align: center;
+    margin: 10px;
+    background-color: aliceblue;
+    border-left-style: solid;
+    border-left-color: darkorchid;
+    border-left-width: 50px;
+    border-right-style: solid;
+    border-right-color: darkorchid;
+    border-right-width: 50px;
+}
+.header h1 {
+    font-size: 40px;
+    color: darkorchid;
+    margin: 0px;
+}
+
+.header h2 {
+    font-size: 25px;
+    color: white;
+    text-shadow: 2px 2px 10px darkorchid;
+    margin: 0px;
+    text-transform: uppercase;
+    font-style: italic;
+}
+
+.button {
+    text-align: center;
+    margin: 10px;
+    padding: 20px;
+    font-size: medium;
+    background-color: darkorchid;
+    color: aliceblue;
+}
+
+.label {
+    border-style: hidden;
+    text-decoration: underline;
+}
+
+/*Om de twee schermen NIET tegelijk weer te geven, gebruik display: none. Zie website
+https://www.w3schools.com/Css/css_display_visibility.asp */
+/*Via JavaScript regelen dat de schermen niet tegelijk worden weergegeven, en ook zorgen dat ze op een nette positie
+worden weergegeven*/
+/*Daar wil ik een mooie navigatiebar voor gebruiken: bij de ene selectie het ene scherm, bij de andere selectie
+de andere*/

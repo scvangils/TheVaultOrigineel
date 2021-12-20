@@ -12,48 +12,76 @@
 <!--TODO Wanneer klant wil registreren: tabel direct hieronder zichtbaar, en tabel voor inlog onzichtbaar. -->
 <!-- TODO Dit kan door via JavaScript en classes de display style op 'none' te zetten -->
 <!-- TODO Check voorbeeld: https://www.w3schools.com/html/html_classes.asp-->
-<div class="registratie" id=registratie">
-<form id = "registratieOverig" method="post" action="/test">
-    <label for="naam">naam</label>
-        <input type="text" id = "naam" name = "naam" required>
-    <label for="gebruikersnaam">gebruikersnaam</label>
-        <input type="text" id = "gebruikersnaam" name = "gebruikersnaam" required>
-    <label for="geboortedatum">geboortedatum</label>
-        <input type="date" id = "geboortedatum" name = "geboortedatum">
-    <label for="bsn">BSN</label>
-        <input type="number" id = "bsn" name = "bsn" required>
-    <label for="wachtwoord">wachtwoord</label>
-        <input type="password" id = "wachtwoord" name = "wachtwoord">
-</form>
-<form id = "registratieAdres" method="post">
-    <label for="postcode">postcode</label>
-     <input type="text" id = "postcode" name = "postcode" required>
-    <label for="huisnummer">huisnummer</label>
-   <input type="number" id = "huisnummer" name = "huisnummer" required>
-    <label for="toevoeging">toevoeging</label>
-        <input type="text" id = "toevoeging" name = "toevoeging">
-    <label for="straatnaam">straat</label>
-        <input type="text" id = "straatnaam" name = "straatnaam" required>
-    <label for="plaatsnaam">woonplaats</label>
-        <input type="text" id = "plaatsnaam" name = "plaatsnaam">
-</form>
+
+<!--Hieronder wordt een navigatiebalk gemaakt-->
+<!--Deze verwijst nu nog naar twee bookmarks voor beide invoerformulieren, maar dat kan beter-->
+<div class="header" name="header" id="header">
+    <p><h1> The Vault</h1></p>
+    <p><h2> Bank to the Future </h2></p>
 </div>
-<!--TODO Wanneer klant wil inloggen: tabel hierboven onzichtbaar maken, en tabel hieronder zichtbaar-->
-<!--TODO Form van inlog netjes bovenaan de pagina weergeven, ipv onder de andere forms-->
-<div class="inlog">
-<form id="inlogform" method="post">
+
+<ul class="navigatiebalk" name="navigatiebalk" id="navigatiebalk">
+    <li><a href=#registratie-personalia" id="navigatiebalk-registreer">Registreren</a></li>
+    <li><a href=#inlogform id="navigatiebalk-inlog">Inloggen</a></li>
+</ul>
+
+<div class="flex-container">
+
+<div class="registratie-personalia" id=registratie-personalia">
+<form id ="registratieOverig" method="post" action="/test">
     <fieldset>
-        <legend>Inloggegevens</legend>
-    <p><label for="gebruikersnaamInlog">gebruikersnaam</label></p>
-    <p><input type="text" id="gebruikersnaamInlog" name="gebruikersnaamInlog" placeholder="voer gebruikersnaam in"
-              required autofocus></p>
-    <p><label for="wachtwoordInlog">wachtwoord</label></p>
-    <p><input type="password" id="wachtwoordInlog" name="wachtwoordInlog" placeholder="voer wachtwoord in" required></p>
+        <legend>Registreer persoonsgegevens</legend>
+   <p><label class=label for="naam">naam</label></p>
+        <p><input type="text" id ="naam" name ="naam" placeholder="naam" required></p>
+    <p><label class=label for="gebruikersnaam">gebruikersnaam</label></p>
+        <p><input type="text" id ="gebruikersnaam" name ="gebruikersnaam" placeholder="gebruikersnaam"required></p>
+    <p><label class=label for="geboortedatum">geboortedatum</label></p>
+        <p><input type="date" id ="geboortedatum" name ="geboortedatum"></p>
+    <p><label class=label for="bsn">BSN</label></p>
+        <p><input type="number" id ="bsn" name ="bsn" placeholder="bsn" required></p>
+    <p><label class=label for="wachtwoord">wachtwoord</label></p>
+        <p><input type="password" id="wachtwoord" name ="wachtwoord" placeholder="wachtwoord"></p>
+    <p><input class="button" type="button" id ="verstuur" value="Join the Vault" onclick="registreer()"></p>
+    </fieldset>
+</form>
+    </div>
+    <div class="registratie-adres" is="registratie-adres">
+<form id = "registratieAdres" method="post">
+    <fieldset>
+        <legend>Registreer adresgegevens</legend>
+   <p> <label class=label for="postcode">postcode</label></p>
+     <p><input type="text" id ="postcode" name ="postcode" placeholder="postcode" required></p>
+    <p><label class=label for="huisnummer">huisnummer</label></p>
+   <p><input type="number" id ="huisnummer" name ="huisnummer" required></p>
+    <p><label class=label for="toevoeging">toevoeging</label></p>
+        <p><input type="text" id = "toevoeging" name = "toevoeging" placeholder="toevoeging"></p>
+    <p><label class=label for="straatnaam">straat</label></p>
+        <p><input type="text" id = "straatnaam" name = "straatnaam" required></p>
+    <p><label class=label for="plaatsnaam">woonplaats</label></p>
+        <p><input type="text" id = "plaatsnaam" name = "plaatsnaam"></p>
+        <p><input class="button" type="button" id ="adresinformatie" value="Vind je straat" onclick="vindStraatnaamEnPlaatsnaam()"></p>
     </fieldset>
 </form>
 </div>
-<input type="button" id = "verstuur" value= "Join the Bank to the Future" onclick="registreer()">
-<input type="button" id = "adresinformatie" value= "vind je straat" onclick="vindStraatnaamEnPlaatsnaam()">
-<input type="button" id = "login" value = "Log in" onclick="login()">
+
+<!--TODO Wanneer klant wil inloggen: tabel hierboven onzichtbaar maken, en tabel hieronder zichtbaar-->
+<!--TODO Form van inlog netjes bovenaan de pagina weergeven, ipv onder de andere forms-->
+<div class="inlog" id="inlog" name="inlogscherm">
+<form id="inlogform" method="post">
+    <fieldset>
+        <legend>Inloggegevens</legend>
+    <p><label for="gebruikersnaamInlog" class="onderdeel-inlog label">gebruikersnaam</label></p>
+    <p><input type="text" id="gebruikersnaamInlog" name="gebruikersnaamInlog" placeholder="gebruikersnaam"
+              class="onderdeel-inlog invoerveld" required autofocus></p>
+    <p><label for="wachtwoordInlog" class="onderdeel-inlog label">wachtwoord</label></p>
+    <p><input type="password" id="wachtwoordInlog" name="wachtwoordInlog" placeholder="wachtwoord"
+              class="onderdeel-inlog invoerveld"required></p>
+       <p><input class="button" type="button" id = "login" value = "Log in" onclick="login()"></p>
+    </fieldset>
+</form>
+</div>
+
+</div>
+
 </body>
 </html>
