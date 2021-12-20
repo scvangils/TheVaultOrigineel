@@ -12,7 +12,7 @@ CREATE TABLE rekening (
 					    iban VARCHAR(18) NOT NULL,
                         saldo DECIMAL(50,10) NOT NULL,
                         gebruikerId INT NOT NULL,
-                        PRIMARY KEY (rekeningId)
+                        PRIMARY KEY (iban)
 );
 
 CREATE UNIQUE INDEX iban_UNIQUE ON rekening (iban ASC);
