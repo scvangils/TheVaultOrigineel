@@ -109,15 +109,6 @@ public class RootRepository {
         return rekeningDAO.slaRekeningOp(rekening);
     }
 
-    /**
-     * Deze methode vindt de rekening van klant in de database via de methode in de rekeningDAO.
-     *
-     * @param klant is de klant van wie de rekening wordt opgevraagd.
-     * @return de rekening behorend bij de klant met klant-id
-     */
-    public Rekening vindRekeningVanKlant(Klant klant){
-        return rekeningDAO.vindRekeningVanKlant(klant);
-    }
 
     /**
     * Methode die op gebruiker zoekt en de rekening teruggeeft
@@ -137,7 +128,7 @@ public class RootRepository {
      * @return het rekeningsaldo behorend bij de klant met klant-id
      */
     public double vraagSaldoOpVanKlant(Klant klant){
-        return rekeningDAO.vraagSaldoOpVanKlant(klant);
+        return rekeningDAO.vraagSaldoOpVanGebruiker(klant);
     }
 
     /**
@@ -148,7 +139,7 @@ public class RootRepository {
      * @return het rekeningsaldo behorend bij de klant met klant-id wordt gewijzigd.
      */
     public Rekening wijzigSaldoVanKlant(Gebruiker gebruiker, double transactiebedrag){
-        return rekeningDAO.wijzigSaldoVanKlant(gebruiker, transactiebedrag);
+        return rekeningDAO.wijzigSaldoVanGebruiker(gebruiker, transactiebedrag);
     }
 
     /**

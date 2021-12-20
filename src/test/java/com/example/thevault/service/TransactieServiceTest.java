@@ -26,6 +26,7 @@ import static org.hamcrest.Matchers.closeTo;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ import java.util.List;
 
 class TransactieServiceTest {
 
+    private static double bankFee = 1.5;
     private static Klant testKlant1;
     private static Klant testKlant2;
     private static Klant testKlant3;
@@ -80,12 +82,12 @@ class TransactieServiceTest {
         testAsset1.setGebruiker(testKlant1);
         testAsset4.setGebruiker(testKlant2);
 
-        excpectedTransactie1 = new Transactie(new Timestamp(new Date().getTime()), testKlant1, testCryptomunt1, 1050
-                , 1.6, testKlant2);
-        testTransactie2 = new Transactie(new Timestamp(new Date().getTime()), testKlant2, testCryptomunt2, 9000
-                , 1, testKlant1);
-        testTransactie3 = new Transactie(new Timestamp(new Date().getTime()), testKlant1, testCryptomunt3, 10000
-                , 1, testKlant2);
+        excpectedTransactie1 = new Transactie(LocalDateTime.now(), testKlant1, testCryptomunt1, 1050
+                , 1.6, testKlant2, bankFee);
+        testTransactie2 = new Transactie(LocalDateTime.now(), testKlant2, testCryptomunt2, 9000
+                , 1, testKlant1, bankFee);
+        testTransactie3 = new Transactie(LocalDateTime.now(), testKlant1, testCryptomunt3, 10000
+                , 1, testKlant2, bankFee);
 
         testRekening1 = new Rekening("NL20RABO9876543", 10000.0);
         testRekening11 =new Rekening("NL20RABO9876543", 9000.0);
@@ -129,19 +131,18 @@ class TransactieServiceTest {
         Mockito.when(mockRootRepository.wijzigAssetVanKlant(testAsset4)).thenReturn(testAsset4);
         Mockito.when(mockRootRepository.vindRekeningVanGebuiker(testKlant1)).thenReturn(testRekening1);
         Mockito.when(mockRootRepository.vindRekeningVanGebuiker(testKlant2)).thenReturn(testRekening2);
+        Mockito.when(transactieService.slaTransactieOp(actualTransactie1)).thenReturn(actualTransactie1);
 
         Transactie actualTransactie = transactieService.sluitTransactie(testKlant1, testCryptomunt1,
                 1000, 1100, 1.6, testKlant2);
         System.out.println("EXPECTED TRANSACTIE: " + excpectedTransactie1);
         System.out.println("ACTUAL TRANSACTIE :" + actualTransactie);
-        //System.out.println("MOMENT TIME: " + actualTransactie.getMomentTransactie().getTime());
-        System.out.println("MOMENT TIME: " + actualTransactie.getMomentTransactie());
 
         assertThat(actualTransactie.getKoper().getGebruikersnaam()).isEqualTo(excpectedTransactie1.getKoper().getGebruikersnaam());
         assertThat(actualTransactie.getTransactieId()).isEqualTo(excpectedTransactie1.getTransactieId());
         assertThat(actualTransactie.getPrijs()).isEqualTo(excpectedTransactie1.getPrijs());
         assertThat(actualTransactie.getAantal()).isEqualTo(excpectedTransactie1.getAantal());
-        //assertThat( actualTransactie.getMomentTransactie().getTime()).isCloseTo(excpectedTransactie1.getMomentTransactie().getTime(), Percentage.withPercentage(0.001));
+        assertThat( actualTransactie.getMomentTransactie()).isEqualToIgnoringNanos(excpectedTransactie1.getMomentTransactie());
 
     }
 

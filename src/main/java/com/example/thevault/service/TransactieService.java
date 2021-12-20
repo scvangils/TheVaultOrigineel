@@ -58,46 +58,6 @@ public class TransactieService {
      *
      * @return transactie
     * */
-/*    public Transactie sluitTransactie(Gebruiker verkoper, Cryptomunt cryptomunt,
-                                      double prijs, double aantal, Gebruiker koper) {
-
-        saldoTooLowExceptionHandler(koper, prijs);
-        notEnoughCryptoExceptionHandler(verkoper, cryptomunt, aantal);
-
-
-        Rekening rekeningKoper = rootRepository.vindRekeningVanGebuiker(koper);
-        Rekening rekeningVerkoper = rootRepository.vindRekeningVanGebuiker( verkoper);
-        logger.info("REKENING KOPER VOOR TRANSACTIE: " + rekeningKoper);
-        logger.info("REKENING VERKOPER VOOR TRANSACTIE: " + rekeningVerkoper);
-
-        Asset assetKoper = rootRepository.geefAssetVanGebruiker(koper, cryptomunt);
-        Asset assetVerkoper = rootRepository.geefAssetVanGebruiker(verkoper, cryptomunt);
-        logger.info("ASSET KOPER VOOR TRANSACTIE: " + assetKoper);
-        logger.info("ASSET VERKOPER VOOR TRANSACTIE: " + assetVerkoper);
-
-        if (rekeningVerkoper.getGebruiker() instanceof Bank || rekeningKoper.getGebruiker() instanceof Bank) {
-            prijs =+ TRANSACTION_FEE;
-        }
-
-        rekeningService.wijzigSaldo(rekeningKoper, rekeningKoper.getSaldo() - prijs);
-        rekeningService.wijzigSaldo(rekeningVerkoper, rekeningVerkoper.getSaldo() + prijs);
-        assetKoper.setAantal(assetKoper.getAantal() + aantal);
-        assetKoper.setGebruiker(koper);
-        assetVerkoper.setAantal(assetVerkoper.getAantal() - aantal);
-        assetVerkoper.setGebruiker(verkoper);
-        assetService.wijzigAssetGebruiker(assetKoper);
-        assetService.wijzigAssetGebruiker(assetVerkoper);
-
-        // maak nieuwe transactie aan
-        Transactie transactie = new Transactie(new Timestamp(new Date().getTime()), verkoper, cryptomunt, prijs, aantal, koper);
-        logger.info("ASSET KOPER NA TRANSACTIE: " + assetKoper);
-        logger.info("ASSET VERKOPER NA TRANSACTIE: " + assetVerkoper);
-        logger.info("REKENING KOPER NA TRANSACTIE: " + rekeningKoper);
-        logger.info("REKENING VERKOPER NA TRANSACTIE: " + rekeningVerkoper);
-
-        slaTransactieOp(transactie);
-        return transactie;
-    }*/
 
     public Transactie sluitTransactie(Gebruiker verkoper, Cryptomunt cryptomunt,
                                       double vraagPrijs, double bod, double aantal, Gebruiker koper) {
@@ -134,12 +94,17 @@ public class TransactieService {
     }
 
 
+    /**
+     * Berekend de prijs wanneer direct met de bank gehandeld wordt door het aantal te verkopen of te kopen
+     * cryptomunten met de huidige koerswaarde van de cryptomunt te vermenigvuldigen en daar
+     * een transaction fee bij op te tellen.
+     *
+     * @param cryptomunt waarmee gehandeld zal worden
+     * @param aantal de hoeveelheid van de cryptomunt als double waarde
+     * @return de prijs inclusief fee
+    * */
     public double berekenPrijsTransactieMetBank (Cryptomunt cryptomunt, double aantal){
         return aantal * cryptoWaardeService.vindCryptoWaarde(cryptomunt).getWaarde() + TRANSACTION_FEE;
-    }
-
-    public Transactie sluitTransactieMetKlant(){
-        return null;
     }
 
 
