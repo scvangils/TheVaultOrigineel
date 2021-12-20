@@ -58,7 +58,7 @@ public class KlantController extends BasisApiController{
     }
     @PostMapping("/data")
     public ResponseEntity<String> vulKlantEnAdresTabel(@RequestBody String opdracht) throws IOException {
-        List<Klant> list = DataGenerator.maakLijstKlantenVanCSV("Sprint2/datacsv.csv", 2999);
+        List<Klant> list = DataGenerator.maakLijstKlantenVanCSV("Sprint2/datacsv.csv", 20);
         int count = 0;
         for(Klant klant: list){
             registrationService.registreerKlant(klant);

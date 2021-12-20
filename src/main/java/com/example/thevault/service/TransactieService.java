@@ -104,7 +104,7 @@ public class TransactieService {
      *
      * */
     public void notEnoughCryptoExceptionHandler (Klant verkoper, Cryptomunt cryptomunt, double aantal) throws NotEnoughCryptoException {
-        Asset assetVerkoper = klantService.geefAssetMetCryptoMuntVanKlant(verkoper, cryptomunt);
+        Asset assetVerkoper = klantService.geefAssetMetCryptoMuntVanGebruiker(verkoper, cryptomunt);
         if(assetVerkoper == null || assetVerkoper.getAantal() <aantal) {
             logger.info("Te weinig cryptomunten in bezit van verkoper voor deze transactie");
             throw new NotEnoughCryptoException();
