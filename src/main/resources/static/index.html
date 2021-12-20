@@ -6,13 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/styles.css">
     <script src="javascript/homepage.js" defer></script>
+    <script src="javascript/validation.js" defer></script>
 </head>
 <body>
 <!--TODO Wanneer klant wil registreren: tabel direct hieronder zichtbaar, en tabel voor inlog onzichtbaar. -->
 <!-- TODO Dit kan door via JavaScript en classes de display style op 'none' te zetten -->
 <!-- TODO Check voorbeeld: https://www.w3schools.com/html/html_classes.asp-->
-<div class="registratie">
-<form id = "registratieOverig" method="post">
+<div class="registratie" id=registratie">
+<form id = "registratieOverig" method="post" action="/test">
     <label for="naam">naam</label>
         <input type="text" id = "naam" name = "naam" required>
     <label for="gebruikersnaam">gebruikersnaam</label>

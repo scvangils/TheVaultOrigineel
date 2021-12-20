@@ -49,8 +49,8 @@ public class Rekening {
         return saldo;
     }
 
-    public void setSaldo(double saldo) {
-        this.saldo = saldo;
+    public double setSaldo(double saldo) {
+        return saldo;
     }
 
     public Gebruiker getGebruiker() {
