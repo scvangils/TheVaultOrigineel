@@ -115,7 +115,6 @@ public class JDBCAssetDAO implements AssetDAO{
                     asset.getGebruiker());
             jdbcTemplate.update(connection -> verwijderAssetStatement(asset, connection));
             jdbcTemplate.update(connection -> slaAssetOpStatement(nieuwAsset, connection));
-
             return nieuwAsset;
         } else if(huidigeAantal == -teVerhandelenAantal){
             return verwijderAssetUitPortefeuille(asset);
@@ -124,23 +123,6 @@ public class JDBCAssetDAO implements AssetDAO{
         return null;
     }
 
-
-    public Asset updateAssetGebruiker(Asset asset) {
-        double huidigeAantal = geefAssetGebruiker(asset.getGebruiker(), asset.getCryptomunt()).orElseThrow(AssetNotExistsException).
-                getAantal();
-        double teVerhandelenAantal = asset.getAantal();
-        if(huidigeAantal >= teVerhandelenAantal) {
-            Asset nieuwAsset = new Asset(asset.getCryptomunt(), huidigeAantal - teVerhandelenAantal,
-                    asset.getGebruiker());
-            jdbcTemplate.update(connection -> verwijderAssetStatement(asset, connection));
-            jdbcTemplate.update(connection -> slaAssetOpStatement(nieuwAsset, connection));
-            return nieuwAsset;
-        } else if(huidigeAantal == -teVerhandelenAantal){
-            return verwijderAssetUitPortefeuille(asset);
-        } //TODO exception maken
-        System.out.println("Het saldo van deze cryptomunt is te laag voor deze transactie");
-        return null;
-    }
 
     /**
      * Dit betreft het vinden van een cryptomunt die in de portefeuille zit

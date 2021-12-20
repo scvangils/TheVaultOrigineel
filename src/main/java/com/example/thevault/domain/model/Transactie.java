@@ -8,13 +8,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
 public class Transactie {
     private int transactieId;
     private double aantal;
-    private OffsetDateTime momentTransactie;
+    private Timestamp momentTransactie;
     private double prijs;
     private Gebruiker koper;
     private Gebruiker verkoper;
@@ -29,7 +31,7 @@ public class Transactie {
     }
 
 
-    public Transactie(OffsetDateTime momentTransactie,
+    public Transactie(Timestamp momentTransactie,
                       Gebruiker verkoper, Cryptomunt cryptomunt, double prijs, double aantal,
                       Gebruiker koper) {
         this.aantal = aantal;
@@ -58,11 +60,11 @@ public class Transactie {
         this.aantal = aantal;
     }
 
-    public OffsetDateTime getMomentTransactie() {
+    public Timestamp getMomentTransactie() {
         return momentTransactie;
     }
 
-    public void setMomentTransactie(OffsetDateTime momentTransactie) {
+    public void setMomentTransactie(Timestamp momentTransactie) {
         this.momentTransactie = momentTransactie;
     }
 

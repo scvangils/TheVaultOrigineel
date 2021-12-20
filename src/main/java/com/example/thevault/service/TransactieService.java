@@ -15,7 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-import java.time.OffsetDateTime;
+import java.sql.Timestamp;
+import java.util.Date;
 
 @Service
 public class TransactieService {
@@ -49,13 +50,14 @@ public class TransactieService {
      *
      * @param verkoper verkoper van cryptomunt
      * @param cryptomunt het type cryptomunt
-     * @param prijs het bedrag dat voor de cryptomunt betaald moet worden
+     * @param vraagPrijs het bedrag dat voor de cryptomunt gevraagd wordt
+     * @param bod het bod dat op de cryptomunt gedaan wordt
      * @param aantal de hoeveelheid cryptomunt
      * @param koper de koper van de cryptomunt in deze transactie
      *
      * @return transactie
     * */
-    public Transactie sluitTransactie(Gebruiker verkoper, Cryptomunt cryptomunt,
+/*    public Transactie sluitTransactie(Gebruiker verkoper, Cryptomunt cryptomunt,
                                       double prijs, double aantal, Gebruiker koper) {
 
         saldoTooLowExceptionHandler(koper, prijs);
@@ -86,7 +88,7 @@ public class TransactieService {
         assetService.wijzigAssetGebruiker(assetVerkoper);
 
         // maak nieuwe transactie aan
-        Transactie transactie = new Transactie(OffsetDateTime.now(), verkoper, cryptomunt, prijs, aantal, koper);
+        Transactie transactie = new Transactie(new Timestamp(new Date().getTime()), verkoper, cryptomunt, prijs, aantal, koper);
         logger.info("ASSET KOPER NA TRANSACTIE: " + assetKoper);
         logger.info("ASSET VERKOPER NA TRANSACTIE: " + assetVerkoper);
         logger.info("REKENING KOPER NA TRANSACTIE: " + rekeningKoper);
@@ -94,16 +96,16 @@ public class TransactieService {
 
         slaTransactieOp(transactie);
         return transactie;
-    }
+    }*/
 
-    public Transactie sluitTransactie1(Gebruiker verkoper, Cryptomunt cryptomunt,
+    public Transactie sluitTransactie(Gebruiker verkoper, Cryptomunt cryptomunt,
                                       double vraagPrijs, double bod, double aantal, Gebruiker koper) {
         // bepaal prijs transactie
         double prijs;
         if (koper instanceof Bank || verkoper instanceof Bank) {
             prijs = berekenPrijsTransactieMetBank(cryptomunt, aantal);
         } else {
-            prijs = vraagPrijs + bod / 2.0;
+            prijs = (vraagPrijs + bod) / 2.0;
         }
 
         // exceptions:
@@ -119,15 +121,14 @@ public class TransactieService {
         // wijzig de saldo's en assets van de verkoper en koper:
         rekeningService.wijzigSaldo(rekeningKoper, rekeningKoper.getSaldo() - prijs);
         rekeningService.wijzigSaldo(rekeningVerkoper, rekeningVerkoper.getSaldo() + prijs);
-        assetKoper.setAantal(assetKoper.getAantal() + aantal);
+       /* assetKoper.setAantal(assetKoper.getAantal() + aantal);
         assetKoper.setGebruiker(koper);
         assetVerkoper.setAantal(assetVerkoper.getAantal() - aantal);
-        assetVerkoper.setGebruiker(verkoper);
+        assetVerkoper.setGebruiker(verkoper);*/
         assetService.wijzigAssetGebruiker(assetKoper);
         assetService.wijzigAssetGebruiker(assetVerkoper);
-
         // maak nieuwe transactie aan
-        Transactie transactie = new Transactie(OffsetDateTime.now(), verkoper, cryptomunt, prijs, aantal, koper);
+        Transactie transactie = new Transactie(new Timestamp(new Date().getTime()), verkoper, cryptomunt, prijs, aantal, koper);
 
         slaTransactieOp(transactie);
         return transactie;
