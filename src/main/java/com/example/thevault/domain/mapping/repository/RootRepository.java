@@ -16,6 +16,8 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.List;
 
+import static com.example.thevault.support.data.DataGenerator.genereerRandomGetal;
+
 @Repository
 public class RootRepository {
 
@@ -274,7 +276,30 @@ public class RootRepository {
     List<Transactie> geefTransactiesVanKlantMetCryptomunt(Klant klant, Cryptomunt cryptomunt){
         return transactieDAO.geefTransactiesVanKlantMetCryptomunt(klant, cryptomunt);
     }
+    public Transactie genereerRandomTransactie(){
+        Transactie transactie = new Transactie();
+        Cryptomunt cryptomunt = this.cryptomuntDAO.geefCryptomunt(genereerRandomGetal(1,20,1));
+        transactie.setCryptomunt(cryptomunt);
+        LocalDate cryptoDatum = LocalDate.of(2021, 11, genereerRandomGetal(1, 30, 1));
+        double prijs = cryptoWaardeDAO.getCryptoWaardeByCryptomuntAndDate(cryptomunt, cryptoDatum).getWaarde();
 
+        int koperId = genereerRandomGetal(0,3000,1);
+        int verkoperId = genereerRandomGetal(0,3000,1);
+        while (koperId == verkoperId){
+            verkoperId = genereerRandomGetal(0,3000,1);
+        }
+        transactie.setVerkoper(this.klantDAO.vindKlantById(koperId));
+        transactie.setKoper(this.klantDAO.vindKlantById(verkoperId));
+        double afwijking = 0;
+        if(transactie.getKoper().getGebruikerId() != 0 && transactie.getVerkoper().getGebruikerId() != 0){
+            afwijking = genereerRandomGetal(-500000, 500000, 1) / 10000000.0; // max 5% afwijking
+        }
+        transactie.setPrijs(prijs * (1 + afwijking));
+        transactie.setAantal(genereerRandomGetal(0,2000,1) / 1000.0);
+     //   transactie.setMomentTransactie(cryptoDatum);
+     //   transactie.setBankFee(Bank.getInstance().getFee());
+        return transactie;
+    }
 
 
 

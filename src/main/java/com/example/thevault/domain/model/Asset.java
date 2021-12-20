@@ -19,7 +19,6 @@ public class Asset {
 
     private Cryptomunt cryptomunt;
     private double aantal;
-    private Klant klant;
     private Gebruiker gebruiker;
 
     @JsonIgnore
@@ -109,7 +108,7 @@ public class Asset {
         return "Asset{" +
                 "cryptomunt=" + cryptomunt +
                 ", aantal=" + aantal +
-                ", klant=" + klant +
+                ", klant=" + gebruiker +
                                 '}';
     }
 }
