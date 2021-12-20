@@ -79,4 +79,12 @@ public class Bank extends Gebruiker{
     public void setPortefeuille(List<Asset> portefeuille) {
         this.portefeuille = portefeuille;
     }
+
+    public double getFee() {
+        return fee;
+    }
+
+    public void setFee(double fee) {
+        this.fee = fee;
+    }
 }

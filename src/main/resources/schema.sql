@@ -9,38 +9,31 @@ CREATE TABLE adres (
 );
 
 CREATE TABLE rekening (
-                        rekeningId INT NOT NULL AUTO_INCREMENT,
-                        iban VARCHAR(18) NOT NULL,
+					    iban VARCHAR(18) NOT NULL,
                         saldo DECIMAL(50,10) NOT NULL,
-                        PRIMARY KEY (rekeningId)
+                        gebruikerId INT NOT NULL,
+                        PRIMARY KEY (iban)
 );
 
 CREATE UNIQUE INDEX iban_UNIQUE ON rekening (iban ASC);
 
 CREATE TABLE klant (
                         gebruikerId INT NOT NULL AUTO_INCREMENT,
-                        gebruikersNaam VARCHAR(100) NOT NULL,
-                        wachtwoord VARCHAR(100) NOT NULL,
-                        naam VARCHAR(100) NOT NULL,
-                        bsn INT(9) NOT NULL,
-                        geboortedatum DATE NOT NULL,
-                        adresId INT NOT NULL,
-                        rekeningId INT NOT NULL,
+                        gebruikersNaam VARCHAR(100),
+                        wachtwoord VARCHAR(100),
+                        naam VARCHAR(100),
+                        bsn INT(9),
+                        geboortedatum DATE,
+                        adresId INT,
                         PRIMARY KEY (gebruikerId),
                         CONSTRAINT woontOpAdres
                         FOREIGN KEY (adresId)
                         REFERENCES adres (adresId)
                         ON DELETE RESTRICT
-                        ON UPDATE CASCADE,
-                        CONSTRAINT rekeninghouder
-                        FOREIGN KEY (rekeningId)
-                        REFERENCES rekening (rekeningId)
-                        ON DELETE RESTRICT
                         ON UPDATE CASCADE
 );
 
 CREATE INDEX verzinZelf1_idx ON klant (adresId ASC);
-CREATE INDEX verzinZelf3_idx ON klant (rekeningId ASC);
 CREATE UNIQUE INDEX gebruikersNaam_UNIQUE ON klant (gebruikersNaam ASC);
 
 CREATE TABLE cryptomunt (
@@ -79,6 +72,7 @@ CREATE TABLE transactie (
                         cryptomuntId INT NOT NULL,
                         bedrag DECIMAL(50,10) NOT NULL,
                         verkoperGebruikerId INT NOT NULL,
+                        bankFee DECIMAL(50,10),
                         PRIMARY KEY (transactieId),
                         CONSTRAINT kooptMunt
                         FOREIGN KEY (koperGebruikerId)
