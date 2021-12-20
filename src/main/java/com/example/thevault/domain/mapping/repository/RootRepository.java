@@ -267,6 +267,7 @@ public class RootRepository {
     List<Transactie> geefTransactiesVanGebruikerMetCryptomunt(Gebruiker gebruiker, Cryptomunt cryptomunt){
         return transactieDAO.geefTransactiesVanGebruikerMetCryptomunt(gebruiker, cryptomunt);
     }
+
     public Transactie genereerRandomTransactie(){
         Transactie transactie = new Transactie();
         Cryptomunt cryptomunt = this.cryptomuntDAO.geefCryptomunt(genereerRandomGetal(1,20,1));

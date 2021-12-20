@@ -9,7 +9,6 @@ import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.*;
 import com.example.thevault.support.exceptions.BalanceTooLowException;
 import com.example.thevault.support.exceptions.NotEnoughCryptoException;
-import org.assertj.core.data.Percentage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

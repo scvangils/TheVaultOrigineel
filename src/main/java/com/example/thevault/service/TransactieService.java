@@ -66,7 +66,7 @@ public class TransactieService {
         if (koper instanceof Bank || verkoper instanceof Bank) {
             prijs = berekenPrijsTransactieMetBank(cryptomunt, aantal);
         } else {
-            prijs = (vraagPrijs + bod)/2;
+            prijs = vraagPrijs + bod / 2.0;
         }
 
         // exceptions:
