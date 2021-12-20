@@ -1,5 +1,6 @@
 package com.example.thevault.domain.mapping.dao;
 
+import com.example.thevault.domain.model.Gebruiker;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.model.Rekening;
 import net.minidev.json.annotate.JsonIgnore;
@@ -40,7 +41,7 @@ public class JDBCRekeningDAO implements RekeningDAO {
         String sql = "INSERT INTO rekening (gebruikerId, iban, saldo) values " +
                 "(?, ?, ?);";
         PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setInt(1, rekening.getKlant().getGebruikerId());
+        ps.setInt(1, rekening.getGebruiker().getGebruikerId());
         ps.setString(2, rekening.getIban());
         ps.setDouble(3, rekening.getSaldo());
         return ps;
@@ -82,6 +83,19 @@ public class JDBCRekeningDAO implements RekeningDAO {
         return rekening;
     }
 
+
+    @Override
+    public Rekening vindRekeningVanGebruiker(Gebruiker gebruiker) {
+        String sql = "SELECT * FROM rekening WHERE gebruikerId = ?;";
+        Rekening rekening;
+        try {
+            rekening = jdbcTemplate.queryForObject(sql, new JDBCRekeningDAO.RekeningRowMapper(), gebruiker.getGebruikerId());
+        } catch (EmptyResultDataAccessException noResult) {
+            rekening = null;
+        }
+        return rekening;
+    }
+
     /**
      * Met deze methode kan je het saldo van de rekening opvragen als je de klant meegeeft.
      * @param klant is de klant van wie het rekeningsaldo wordt opgevraagd.
@@ -98,6 +112,8 @@ public class JDBCRekeningDAO implements RekeningDAO {
         }
        return rekening.getSaldo();
     }
+
+
 
     /**
      * Met deze methode kan je het saldo van de rekening wijzigen als je de klant en het transactiebedrag meegeeft.

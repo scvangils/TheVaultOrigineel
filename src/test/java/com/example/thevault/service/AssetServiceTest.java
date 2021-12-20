@@ -10,15 +10,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.atIndex;
-import static org.junit.jupiter.api.Assertions.*;
 
 class AssetServiceTest {
 
@@ -76,7 +72,7 @@ class AssetServiceTest {
 
     @Test
     void geefCryptomunt() {
-        Mockito.when(rootRepository.geefAssetVanKlant(testKlant, testCryptomunt1)).thenReturn(testAsset1);
+        Mockito.when(rootRepository.geefAssetVanGebruiker(testKlant, testCryptomunt1)).thenReturn(testAsset1);
         AssetDto expected = new AssetDto(testAsset1, testCryptoWaarde1);
         AssetDto actual = assetService.geefCryptomunt(testKlant, testCryptomunt1, testCryptoWaarde1);
         assertThat(actual).as("Test geef specifieke AssetDto van testklant").isNotNull().isEqualTo(expected).

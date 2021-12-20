@@ -3,14 +3,12 @@
 
 package com.example.thevault.controller.rest_api_controller;
 
-import com.example.thevault.domain.model.Adres;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.transfer.RegistrationDto;
 import com.example.thevault.domain.transfer.WelkomDTO;
 import com.example.thevault.service.LoginService;
 import com.example.thevault.service.RegistrationService;
 import com.example.thevault.domain.transfer.LoginDto;
-import com.example.thevault.service.KlantService;
 import com.example.thevault.support.authorization.AuthorizationService;
 import com.example.thevault.support.authorization.TokenKlantCombinatie;
 import com.example.thevault.support.data.DataGenerator;
@@ -119,6 +117,5 @@ public class KlantController extends BasisApiController{
         }
         throw new LoginFailedException();
     }
-
 
 }
