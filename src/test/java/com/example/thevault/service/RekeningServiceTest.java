@@ -14,7 +14,6 @@ import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.*;
 
-
 class RekeningServiceTest {
 
     public static Klant bestaandeKlant;
@@ -27,10 +26,6 @@ class RekeningServiceTest {
     public static Klant bestaandeKlantVoorWijzigSaldo;
     public static Rekening rekeningVoorWijzigSaldoExpected;
 
-
-    /**
-     * @Author Ju-Sen Cheung
-     */
     @BeforeAll
     static void setUp() {
         bestaandeKlant = new Klant( "Henknr1", "fdsaljkl", "Hello", 1890393, LocalDate.of(1991, 1, 12));
@@ -43,7 +38,7 @@ class RekeningServiceTest {
         rekeningExpected.setKlant(bestaandeKlant);
         nieuweRekening = new Rekening("NL20RABO9876543", 1000.0);
         bestaandeKlantVoorWijzigSaldo = new Klant("MarkSlegte", "456jesv", "", 5248136, LocalDate.of(1987, 2, 16));
-        rekeningVoorWijzigSaldoExpected = new Rekening("INGB0001234567NL", 1000.0);
+        rekeningVoorWijzigSaldoExpected = new Rekening("INGB0001234567NL", 3000.0);
         bestaandeKlantVoorWijzigSaldo.setRekening(rekeningVoorWijzigSaldoExpected);
         rekeningVoorWijzigSaldoExpected.setKlant(bestaandeKlantVoorWijzigSaldo);
     }
@@ -124,7 +119,6 @@ class RekeningServiceTest {
         double saldoActual = rekeningServiceTest.vraagSaldoOp(bestaandeKlant);
         System.out.println(saldoActual);
         double expected = 1000.0;
-
         assertThat(saldoActual).isEqualTo(expected);
     }
 
@@ -146,23 +140,14 @@ class RekeningServiceTest {
     }
 
     /**
-     * TODO aanpassen naar nieuwe methode in RekeningService
      * @Author Ju-Sen Cheung
-     *
-     * Extra klant en rekening aangemaakt voor deze test, want als de hele RekeningServiceTest gedraaid werd failde de test
-     * vraagSaldoOp (als die apart werd gerund, slaagde hij wel), doordat de wijzigSaldo test eerst wordt gerund en het
-     * saldo gewijzigd wordt van 1000.0 naar 2000.0. Dus bij het opvragen van de saldo werd 2000.0 als het actual saldo
-     * gezien i.p.v. de 1000.0.
      */
-
     @Test
     void wijzigSaldo() {
-        Mockito.when(mockRepo.wijzigSaldoVanKlant(bestaandeKlantVoorWijzigSaldo, 2000.0)).thenReturn(bestaandeKlantVoorWijzigSaldo.getRekening());
-        Mockito.when(mockRepo.slaRekeningOp(rekeningVoorWijzigSaldoExpected)).thenReturn(rekeningVoorWijzigSaldoExpected);
+        Mockito.when(mockRepo.wijzigSaldoVanKlant(bestaandeKlant, 2000.0)).thenReturn(rekeningVoorWijzigSaldoExpected);
 
-        Rekening rekeningActual = rekeningServiceTest.wijzigSaldo(bestaandeKlantVoorWijzigSaldo.getRekening(), 2000.0);
-        System.out.println(rekeningActual);
-        double expected = 2000.0;
+        Rekening rekeningActual = rekeningServiceTest.wijzigSaldo(bestaandeKlant, 2000.0);
+        double expected = 3000.0;
         double actual = rekeningActual.getSaldo();
         assertThat(actual).isEqualTo(expected);
     }

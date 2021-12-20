@@ -2,6 +2,7 @@ package com.example.thevault.domain.mapping.dao;
 
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.model.Rekening;
+import com.example.thevault.support.exceptions.BalanceTooLowException;
 import net.minidev.json.annotate.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +44,14 @@ public class JDBCRekeningDAO implements RekeningDAO {
         ps.setInt(1, rekening.getKlant().getGebruikerId());
         ps.setString(2, rekening.getIban());
         ps.setDouble(3, rekening.getSaldo());
+        return ps;
+    }
+
+    private PreparedStatement wijzigSaldoStatement(Rekening rekening, Connection connection) throws SQLException {
+        String sql = "UPDATE rekening WHERE IBAN = ? SET saldo = ?;";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, rekening.getIban());
+        ps.setDouble(2, rekening.getSaldo());
         return ps;
     }
 
@@ -99,24 +108,36 @@ public class JDBCRekeningDAO implements RekeningDAO {
        return rekening.getSaldo();
     }
 
+
     /**
-     * Met deze methode kan je het saldo van de rekening wijzigen als je de klant en het transactiebedrag meegeeft.
+     * Met deze methode kan je het saldo van de rekening updaten als je de klant en het transactiebedrag meegeeft.
      * Het wijzigen van het saldo gebeurt doordat je een cryptomunt koopt of verkoopt via een transactie.
      * @param klant is de klant bij wie een transactie plaatsvindt.
-     * @param transactieBedrag is het bedrag dat bij het rekeningsaldo opgeteld of afgetrokken wordt.
-     * @return Als er voldoende saldo is voor de transactie, dan wordt het saldo aangepast. Zo niet, dan komt er een
+     * @param transactiebedrag is het bedrag dat bij het rekeningsaldo opgeteld of afgetrokken wordt.
+     * @return Als er voldoende saldo is voor de transactie, dan wordt het saldo geüpdatet. Zo niet, dan komt er een
      * bericht dat het saldo niet toereikend is.
      */
     @Override
-    public Rekening wijzigSaldoVanKlant(Klant klant, double transactieBedrag) {
-        double huidigeSaldo = vraagSaldoOpVanKlant(klant);
-        if(huidigeSaldo >= transactieBedrag) {
-            Rekening gewijzigdeRekening = new Rekening(klant.getRekening().getIban(), huidigeSaldo-transactieBedrag);
-            jdbcTemplate.update(connection -> slaRekeningOpStatement(gewijzigdeRekening, connection));
-            return gewijzigdeRekening;
+    public double updateSaldo(Klant klant, double transactiebedrag) throws BalanceTooLowException {
+        double huidigSaldo = vraagSaldoOpVanKlant(klant);
+        if(huidigSaldo >= transactiebedrag) {
+            return huidigSaldo+transactiebedrag;
         } else {
-            System.out.println("Het saldo van deze rekening is te laag voor deze transactie");
-            return null;
+            throw new BalanceTooLowException();
         }
+    }
+
+    /**
+     * Met deze methode kan je het nieuwe saldo in de rekening opslaan.
+     * @param klant is de klant van er wie het saldo is geüpdatet.
+     * @param transactiebedrag is het nieuwe bedrag waarmee de rekening opgeslagen moet worden.
+     * @return geüpdatete rekening.
+     */
+    @Override
+    public Rekening wijzigSaldoVanKlant(Klant klant, double transactiebedrag) {
+        double nieuwSaldo = updateSaldo(klant, transactiebedrag);
+        klant.getRekening().setSaldo(nieuwSaldo);
+        jdbcTemplate.update(connection -> wijzigSaldoStatement(klant.getRekening(), connection));
+        return klant.getRekening();
     }
 }

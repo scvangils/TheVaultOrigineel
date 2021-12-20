@@ -55,8 +55,10 @@ public class TransactieService {
         notEnoughCryptoExceptionHandler(verkoper, cryptomunt, aantal);
 
         //wijzig saldo van de klanten op basis van de transactie
-        rekeningService.wijzigSaldo(koper.getRekening(), (koper.getRekening().getSaldo() - prijs));
-        rekeningService.wijzigSaldo(verkoper.getRekening(), verkoper.getRekening().getSaldo() + prijs);
+        //rekeningService.wijzigSaldo(koper.getRekening(), (koper.getRekening().getSaldo() - prijs));
+        //rekeningService.wijzigSaldo(verkoper.getRekening(), verkoper.getRekening().getSaldo() + prijs);
+        rekeningService.wijzigSaldo(koper, (koper.getRekening().getSaldo() - prijs));
+        rekeningService.wijzigSaldo(verkoper, verkoper.getRekening().getSaldo() + prijs);
 
         // maak nieuwe transactie aan
         Transactie transactie = new Transactie(OffsetDateTime.now(), verkoper, cryptomunt, prijs, aantal, koper);

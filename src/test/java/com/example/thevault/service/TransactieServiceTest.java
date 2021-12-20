@@ -114,9 +114,18 @@ class TransactieServiceTest {
 
         testTransactie1 = new Transactie(OffsetDateTime.now(), testKlant1, testCryptomunt1, 1000, 1, testKlant2);
 
+/*
         Mockito.when(mockRekeningService.wijzigSaldo(testKlant1.getRekening(), (testKlant1.getRekening().getSaldo()-1000)))
                 .thenReturn(testRekening11);
         Mockito.when(mockRekeningService.wijzigSaldo(testKlant2.getRekening(), (testKlant2.getRekening().getSaldo()+1000)))
+                .thenReturn(testRekening22);
+        Mockito.when(mockRootRepository.slaRekeningOp(testRekening1))
+                .thenReturn(testRekening1);
+*/
+
+        Mockito.when(mockRekeningService.wijzigSaldo(testKlant1, (testKlant1.getRekening().getSaldo()-1000)))
+                .thenReturn(testRekening11);
+        Mockito.when(mockRekeningService.wijzigSaldo(testKlant2, (testKlant2.getRekening().getSaldo()+1000)))
                 .thenReturn(testRekening22);
         Mockito.when(mockRootRepository.slaRekeningOp(testRekening1))
                 .thenReturn(testRekening1);

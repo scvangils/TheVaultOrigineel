@@ -128,11 +128,11 @@ public class RootRepository {
      * Deze methode wijzigt het rekeningsaldo van de klant in de database via de methode in de rekeningDAO.
      *
      * @param klant is de klant van wie het rekeningsaldo wordt opgevraagd.
-     * @param bedrag is het bedrag waarnaar het saldo gewijzigd moet worden.
+     * @param transactiebedrag is het bedrag waarnaar het saldo gewijzigd moet worden.
      * @return het rekeningsaldo behorend bij de klant met klant-id wordt gewijzigd.
      */
-    public Rekening wijzigSaldoVanKlant(Klant klant, double bedrag){
-        return rekeningDAO.wijzigSaldoVanKlant(klant, bedrag);
+    public Rekening wijzigSaldoVanKlant(Klant klant, double transactiebedrag){
+        return rekeningDAO.wijzigSaldoVanKlant(klant, transactiebedrag);
     }
 
     /**
