@@ -135,7 +135,7 @@ class RootRepositoryTest {
     void vraagSaldoOpVanKlant() {
         Mockito.when(rekeningDAO.vraagSaldoOpVanGebruiker(testKlant)).thenReturn(rekeningOrigineelSaldo.getSaldo());
         double expected = rekeningOrigineelSaldo.getSaldo();
-        double actual = rootRepository.vraagSaldoOpVanKlant(testKlant);
+        double actual = rootRepository.vraagSaldoOpVanGebruiker(testKlant);
         assertThat(actual).as("Test vraag saldo op van testklant").isNotNull().isEqualTo(expected).
                 isNotNegative().isNotEqualTo(gewijzigdSaldo);
     }
@@ -144,7 +144,7 @@ class RootRepositoryTest {
     void wijzigSaldoVanKlant() {
         Mockito.when(rekeningDAO.wijzigSaldoVanGebruiker(testKlant, teWijzigenBedrag)).thenReturn(rekeningGewijzigdSaldo);
         Rekening expected = rekeningGewijzigdSaldo;
-        Rekening actual = rootRepository.wijzigSaldoVanKlant(testKlant, teWijzigenBedrag);
+        Rekening actual = rootRepository.wijzigSaldoVanGebruiker(testKlant, teWijzigenBedrag);
         assertThat(actual).as("Test wijzigen saldo van testklant").isNotNull().isEqualTo(expected).
                 isNotEqualTo(rekeningOrigineelSaldo).hasNoNullFieldsOrPropertiesExcept("gebruiker").
                 extracting("iban", "saldo").contains("INGB0001234567NL",1100.0);
@@ -209,5 +209,11 @@ class RootRepositoryTest {
         assertThat(actual).as("Test wijzigen asset van testklant").isNotNull().isEqualTo(expected).
                 isIn(portefeuille).hasNoNullFieldsOrProperties().asString().startsWith("Asset{").contains("Coyne").
                 doesNotContain("BitCoin").hasSize(222);
+    }
+
+
+    @Test
+    void checkRekeningNaTransactie () {
+
     }
 }

@@ -136,6 +136,7 @@ public class JDBCRekeningDAO implements RekeningDAO {
     public Rekening wijzigSaldoVanGebruiker(Gebruiker gebruiker, double transactiebedrag) {
         double nieuwSaldo = updateSaldo(gebruiker, transactiebedrag);
         gebruiker.getRekening().setSaldo(nieuwSaldo);
+        System.out.println(gebruiker.getRekening() + "  " + gebruiker.getRekening().getSaldo());
         jdbcTemplate.update(connection -> wijzigSaldoStatement(gebruiker.getRekening(), connection));
         return gebruiker.getRekening();
     }
