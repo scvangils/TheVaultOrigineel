@@ -103,6 +103,14 @@ public class Transactie {
         this.cryptomunt = cryptomunt;
     }
 
+    public Double getBankFee() {
+        return bankFee;
+    }
+
+    public void setBankFee(Double bankFee) {
+        this.bankFee = bankFee;
+    }
+
     @Override
     public String toString() {
         return "Transactie{" +
