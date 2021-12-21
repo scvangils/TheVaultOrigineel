@@ -37,33 +37,30 @@
     <p><label class=label for="gebruikersnaam">gebruikersnaam</label></p>
         <p><input type="text" id ="gebruikersnaam" name ="gebruikersnaam" placeholder="gebruikersnaam"required></p>
     <p><label class=label for="geboortedatum">geboortedatum</label></p>
-        <p><input type="date" id ="geboortedatum" name ="geboortedatum"></p>
+        <p><input id ="geboortedatum" name ="geboortedatum" placeholder="dd-mm-jjjj" onfocus="this.type = 'date'"></p>
     <p><label class=label for="bsn">BSN</label></p>
         <p><input type="number" id ="bsn" name ="bsn" placeholder="bsn" required></p>
     <p><label class=label for="wachtwoord">wachtwoord</label></p>
         <p><input type="password" id="wachtwoord" name ="wachtwoord" placeholder="wachtwoord"></p>
+
+        <form id = "registratieAdres" method="post">
+            <p> <label class=label for="postcode">postcode</label></p>
+            <p><input type="text" id ="postcode" name ="postcode" placeholder="1000AA" required></p>
+            <p><label class=label for="huisnummer">huisnummer</label></p>
+            <p><input id ="huisnummer" name ="huisnummer" placeholder="huisnummer" onfocus="this.type='number';"></p>
+            <p><label class=label for="toevoeging">toevoeging</label></p>
+            <p><input type="text" id = "toevoeging" name = "toevoeging" placeholder="toevoeging"></p>
+            <p><label class=label for="straatnaam">straat</label></p>
+            <p><input type="text" id = "straatnaam" name = "straatnaam" required></p>
+            <p><label class=label for="plaatsnaam">woonplaats</label></p>
+            <p><input type="text" id = "plaatsnaam" name = "plaatsnaam"></p>
+            <p><input class="button" type="button" id ="adresinformatie" value="Vind je straat" onclick="vindStraatnaamEnPlaatsnaam()"></p>
+        </form>
     <p><input class="button" type="button" id ="verstuur" value="Join the Vault" onclick="registreer()"></p>
     </fieldset>
 </form>
     </div>
-    <div class="registratie-adres" is="registratie-adres">
-<form id = "registratieAdres" method="post">
-    <fieldset>
-        <legend>Registreer adresgegevens</legend>
-   <p> <label class=label for="postcode">postcode</label></p>
-     <p><input type="text" id ="postcode" name ="postcode" placeholder="postcode" required></p>
-    <p><label class=label for="huisnummer">huisnummer</label></p>
-   <p><input type="number" id ="huisnummer" name ="huisnummer" required></p>
-    <p><label class=label for="toevoeging">toevoeging</label></p>
-        <p><input type="text" id = "toevoeging" name = "toevoeging" placeholder="toevoeging"></p>
-    <p><label class=label for="straatnaam">straat</label></p>
-        <p><input type="text" id = "straatnaam" name = "straatnaam" required></p>
-    <p><label class=label for="plaatsnaam">woonplaats</label></p>
-        <p><input type="text" id = "plaatsnaam" name = "plaatsnaam"></p>
-        <p><input class="button" type="button" id ="adresinformatie" value="Vind je straat" onclick="vindStraatnaamEnPlaatsnaam()"></p>
-    </fieldset>
-</form>
-</div>
+
 
 <!--TODO Wanneer klant wil inloggen: tabel hierboven onzichtbaar maken, en tabel hieronder zichtbaar-->
 <!--TODO Form van inlog netjes bovenaan de pagina weergeven, ipv onder de andere forms-->
