@@ -1,7 +1,6 @@
 package com.example.thevault.domain.mapping.dao;
 
 import com.example.thevault.domain.model.Gebruiker;
-import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.model.Rekening;
 import com.example.thevault.support.exceptions.BalanceTooLowException;
 import net.minidev.json.annotate.JsonIgnore;
@@ -80,18 +79,6 @@ public class JDBCRekeningDAO implements RekeningDAO {
      * @param gebruiker is de klant van wie de rekening wordt opgevraagd.
      * @return rekening waarvan je de iban en het saldo van klant kunt zien
      */
-/*    @Override
-    public Rekening vindRekeningVanKlant(Klant klant) {
-        String sql = "SELECT * FROM rekening WHERE gebruikerId = ?;";
-        Rekening rekening;
-        try {
-            rekening = jdbcTemplate.queryForObject(sql, new JDBCRekeningDAO.RekeningRowMapper(), klant.getGebruikerId());
-        } catch (EmptyResultDataAccessException noResult) {
-            rekening = null;
-        }
-        return rekening;
-    }*/
-
     @Override
     public Rekening vindRekeningVanGebruiker(Gebruiker gebruiker) {
         String sql = "SELECT * FROM rekening WHERE gebruikerId = ?;";
