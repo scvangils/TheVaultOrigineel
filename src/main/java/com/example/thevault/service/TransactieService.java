@@ -57,26 +57,36 @@ public class TransactieService {
 
     public Transactie sluitTransactie(Gebruiker verkoper, Cryptomunt cryptomunt,
                                       double vraagPrijs, double bod, double aantal, Gebruiker koper) {
+
+        System.out.println("SALDO koper VOOR :"+  koper.getRekening().getSaldo());
+        System.out.println("SALDO verkoper VOOR :"+  verkoper.getRekening().getSaldo());
+
         // bepaal prijs transactie
         double prijs;
         if (koper instanceof Bank || verkoper instanceof Bank) {
-            prijs = berekenPrijsTransactieMetBank(cryptomunt, aantal);
+            prijs = berekenBedragTransactieMetBank(cryptomunt);
         } else {
-            prijs = vraagPrijs + bod / 2.0;
+            prijs = (vraagPrijs + bod / 2.0) * aantal;
         }
+
         // exceptions:
-        saldoTooLowExceptionHandler(koper, (prijs*aantal)+TRANSACTION_FEE);
+        saldoTooLowExceptionHandler(koper, (prijs+TRANSACTION_FEE));
         notEnoughCryptoExceptionHandler(verkoper, cryptomunt, aantal);
 
+        double transactieBedrag = prijs + (TRANSACTION_FEE/2);
+
         // wijzig de saldo's en assets van de verkoper en koper:
-        rekeningService.wijzigSaldo(koper, ( rootRepository.vindRekeningVanGebuiker(koper).getSaldo() - (prijs +(TRANSACTION_FEE/2))));
-        rekeningService.wijzigSaldo(koper, (rootRepository.vindRekeningVanGebuiker( verkoper).getSaldo() + (prijs + (TRANSACTION_FEE/2))));
+        rekeningService.wijzigSaldo(koper, -transactieBedrag);
+        rekeningService.wijzigSaldo(verkoper, transactieBedrag);
         assetService.wijzigAssetGebruiker(rootRepository.geefAssetVanGebruiker(koper, cryptomunt));
         assetService.wijzigAssetGebruiker(rootRepository.geefAssetVanGebruiker(verkoper, cryptomunt));
 
         // maak nieuwe transactie aan
         Transactie transactie = new Transactie(LocalDateTime.now(), verkoper, cryptomunt, prijs, aantal, koper, TRANSACTION_FEE);
         slaTransactieOp(transactie);
+        System.out.println("SALDO koper NA :"+  koper.getRekening().getSaldo());
+        System.out.println("SALDO verkoper NA :"+  verkoper.getRekening().getSaldo());
+
         return transactie;
     }
 
@@ -87,11 +97,10 @@ public class TransactieService {
      * een transaction fee bij op te tellen.
      *
      * @param cryptomunt waarmee gehandeld zal worden
-     * @param aantal de hoeveelheid van de cryptomunt als double waarde
      * @return de prijs inclusief fee
     * */
-    public double berekenPrijsTransactieMetBank (Cryptomunt cryptomunt, double aantal){
-        return aantal * cryptoWaardeService.vindCryptoWaarde(cryptomunt).getWaarde() + TRANSACTION_FEE;
+    public double berekenBedragTransactieMetBank(Cryptomunt cryptomunt){
+        return cryptoWaardeService.vindCryptoWaarde(cryptomunt).getWaarde();
     }
 
 

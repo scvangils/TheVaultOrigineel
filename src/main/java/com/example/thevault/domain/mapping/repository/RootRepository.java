@@ -140,7 +140,7 @@ public class RootRepository {
      * @param transactiebedrag is het bedrag waarnaar het saldo gewijzigd moet worden.
      * @return het rekeningsaldo behorend bij de klant met klant-id wordt gewijzigd.
      */
-    public Rekening wijzigSaldoVanKlant(Gebruiker gebruiker, double transactiebedrag){
+    public Rekening wijzigSaldoVanGebruiker(Gebruiker gebruiker, double transactiebedrag){
         return rekeningDAO.wijzigSaldoVanGebruiker(gebruiker, transactiebedrag);
     }
 

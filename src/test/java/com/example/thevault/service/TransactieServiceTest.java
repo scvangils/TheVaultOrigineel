@@ -112,10 +112,14 @@ class TransactieServiceTest {
 
     @Test
     void sluitTransactie() {
-        Mockito.when(rekeningService.wijzigSaldo(testKlant1, (testKlant1.getRekening().getSaldo() - 1000)))
+/*
+        double transactiebedragVerkoper = -((1000 + 1100 / 2.0) + (bankFee/2.0));
+        double transactieBedragKoper = (1000 + 1100 / 2.0) + (bankFee/2.0);
+
+        Mockito.when(rekeningService.wijzigSaldo(testKlant1, transactiebedragVerkoper))
                 .thenReturn(testRekening11);
-        Mockito.when(rekeningService.wijzigSaldo(testKlant2, (testKlant2.getRekening().getSaldo() + 1000)))
-                .thenReturn(testRekening22);
+        Mockito.when(rekeningService.wijzigSaldo(testKlant2, transactieBedragKoper))
+                .thenReturn(testRekening22);*/
         Mockito.when(mockRootRepository.slaRekeningOp(testRekening1))
                 .thenReturn(testRekening1);
         Mockito.when(mockRootRepository.geefAssetVanGebruiker(testKlant1, testCryptomunt1)).thenReturn(testAsset1);
@@ -138,7 +142,6 @@ class TransactieServiceTest {
         assertThat(actualTransactie.getPrijs()).isEqualTo(excpectedTransactie1.getPrijs());
         assertThat(actualTransactie.getAantal()).isEqualTo(excpectedTransactie1.getAantal());
         assertThat( actualTransactie.getMomentTransactie()).isEqualToIgnoringSeconds(excpectedTransactie1.getMomentTransactie());
-
     }
 
     @Test
@@ -184,8 +187,38 @@ class TransactieServiceTest {
         }
     }
 
-    // TODO test maken waarbij 1 partij de bank is
     @Test
-    void sluitTransactieMetBank() {
+    void checkRekeningGebruikersNaTransactie() {
+        double vraagPrijs = 1000.0;
+        double bod = 1100.0;
+        double transactieBedragKoper = ((vraagPrijs + bod)/2.0) - (bankFee/2.0);
+        System.out.println(transactieBedragKoper);
+        double transactieBedragVerkoper = -((vraagPrijs + bod)/2.0) + (bankFee/2.0);
+        System.out.println(transactieBedragVerkoper);
+        testRekening1.setSaldo(transactieBedragVerkoper);
+        System.out.println("TESTREK1: "+ testRekening1.getSaldo());
+        testRekening2.setSaldo(transactieBedragKoper);
+        Mockito.when(rekeningService.wijzigSaldo(testKlant1, transactieBedragVerkoper)).thenReturn(testRekening1);
+        Mockito.when(rekeningService.wijzigSaldo(testKlant2, -transactieBedragKoper))
+                .thenReturn(testRekening2);
+        Mockito.when(mockRootRepository.slaRekeningOp(testRekening1))
+                .thenReturn(testRekening1);
+        Mockito.when(mockRootRepository.geefAssetVanGebruiker(testKlant1, testCryptomunt1)).thenReturn(testAsset1);
+        Mockito.when(mockRootRepository.geefAssetVanGebruiker(testKlant2, testCryptomunt1)).thenReturn(testAsset4);
+        Mockito.when(mockRootRepository.wijzigAssetVanKlant(testAsset1)).thenReturn(testAsset1);
+        Mockito.when(mockRootRepository.wijzigAssetVanKlant(testAsset4)).thenReturn(testAsset4);
+        Mockito.when(mockRootRepository.vindRekeningVanGebuiker(testKlant1)).thenReturn(testRekening1);
+        Mockito.when(mockRootRepository.vindRekeningVanGebuiker(testKlant2)).thenReturn(testRekening2);
+        Mockito.when(transactieService.slaTransactieOp(actualTransactie1)).thenReturn(actualTransactie1);
+        Mockito.when(transactieService.slaTransactieOp(actualTransactie)).thenReturn(actualTransactie);
+
+        double saldoVoorTransactie = testKlant1.getRekening().getSaldo();
+        System.out.println("BEFORE VERKOPER: " + saldoVoorTransactie);
+        Transactie actualTransactie = transactieService.sluitTransactie(testKlant1, testCryptomunt1,
+                vraagPrijs, bod, 1.6, testKlant2);
+        double saldoNaTransactie = testKlant1.getRekening().getSaldo();
+        System.out.println("AFTER: " + saldoNaTransactie);
+
+        assertThat(saldoVoorTransactie).isNotEqualTo(saldoNaTransactie);
     }
 }

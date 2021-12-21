@@ -144,11 +144,23 @@ class RekeningServiceTest {
      */
     @Test
     void wijzigSaldo() {
-        Mockito.when(mockRepo.wijzigSaldoVanKlant(bestaandeKlant, 2000.0)).thenReturn(rekeningVoorWijzigSaldoExpected);
+        Mockito.when(mockRepo.wijzigSaldoVanGebruiker(bestaandeKlant, 2000.0)).thenReturn(rekeningVoorWijzigSaldoExpected);
 
         Rekening rekeningActual = rekeningServiceTest.wijzigSaldo(bestaandeKlant, 2000.0);
         double expected = 3000.0;
         double actual = rekeningActual.getSaldo();
         assertThat(actual).isEqualTo(expected);
     }
+
+
+    @Test
+    void wijzigSaldoInGebruikerRekeningJava(){
+        Mockito.when(mockRepo.wijzigSaldoVanGebruiker(bestaandeKlant, 2000.0)).thenReturn(rekeningVoorWijzigSaldoExpected);
+
+        rekeningServiceTest.wijzigSaldo(bestaandeKlant, 2000.0);
+        double expected = 3000.0;
+        double actual = bestaandeKlant.getRekening().getSaldo();
+        assertThat(actual).isEqualTo(expected);
+    }
+
 }

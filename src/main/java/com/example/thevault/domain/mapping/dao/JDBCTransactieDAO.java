@@ -140,6 +140,4 @@ public class JDBCTransactieDAO implements TransactieDAO {
             return transactie;
         }
     }
-
-
 }
