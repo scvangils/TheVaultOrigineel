@@ -126,11 +126,11 @@ public class RootRepository {
     /**
      * Deze methode geeft het rekeningsaldo op van de klant in de database via de methode in de rekeningDAO.
      *
-     * @param klant is de klant van wie het rekeningsaldo wordt opgevraagd.
+     * @param gebruiker is de klant van wie het rekeningsaldo wordt opgevraagd.
      * @return het rekeningsaldo behorend bij de klant met klant-id
      */
-    public double vraagSaldoOpVanKlant(Klant klant){
-        return rekeningDAO.vraagSaldoOpVanGebruiker(klant);
+    public double vraagSaldoOpVanGebruiker(Gebruiker gebruiker){
+        return rekeningDAO.vraagSaldoOpVanGebruiker(gebruiker);
     }
 
     /**
