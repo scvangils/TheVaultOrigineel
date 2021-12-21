@@ -35,12 +35,15 @@ public class JDBCTransactieDAO implements TransactieDAO {
 
 
     private PreparedStatement slaTransactieOpStatement(Transactie transactie, Connection connection) throws SQLException {
-        String sql = "INSERT INTO transactie (aantal, momentTransactie, cryptomuntId, bedrag) values (?, ?, ?, ?);";
+        String sql = "INSERT INTO transactie (aantal, momentTransactie, koperGebruikerId, cryptomuntId, bedrag, verkoperGebruikerId, bankFee) values (?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         ps.setDouble(1, transactie.getAantal());
         ps.setDate(2, Date.valueOf(transactie.getMomentTransactie().toLocalDate()));
         ps.setInt(3, transactie.getCryptomunt().getId());
-        ps.setDouble(4, transactie.getPrijs());
+        ps.setInt(4, transactie.getKoper().getGebruikerId());
+        ps.setDouble(5, transactie.getPrijs());
+        ps.setInt(6, transactie.getVerkoper().getGebruikerId());
+        ps.setDouble(7, transactie.getBankFee());
         return ps;
     }
 
@@ -120,16 +123,19 @@ public class JDBCTransactieDAO implements TransactieDAO {
         @Override
         public Transactie mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
             LocalDateTime dateTime = resultSet.getObject("momentTransactie", LocalDateTime.class);
-            double transactionFee = resultSet.getDouble("bankFee");
             Gebruiker koper = new Klant();
             Gebruiker verkoper = new Klant();
             Cryptomunt cryptomunt = new Cryptomunt(resultSet.getInt("cryptomuntId"));
             koper.setGebruikerId(resultSet.getInt("koperGebruikerId"));
             verkoper.setGebruikerId(resultSet.getInt("verkoperGebruikerId"));
-
-            Transactie transactie = new Transactie(dateTime
-                    , verkoper, cryptomunt, resultSet.getDouble("bedrag")
-                    , resultSet.getDouble("aantal"), koper, transactionFee);
+            Transactie transactie = new Transactie(
+                    dateTime
+                    , verkoper
+                    , cryptomunt
+                    , resultSet.getDouble("bedrag")
+                    , resultSet.getDouble("aantal")
+                    , koper
+                    , resultSet.getDouble("bankFee"));
             transactie.setTransactieId(resultSet.getInt("transactieId"));
             return transactie;
         }

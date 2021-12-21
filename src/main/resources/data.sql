@@ -12,6 +12,9 @@ INSERT INTO cryptomunt VALUES (1, 'BITCOIN', 'BCN');
 INSERT INTO asset VALUES (1, 1, 4.2);
 
 INSERT INTO transactie VALUES (1, 1.3, '2021-12-15 12:43:21', 1, 1, 43.5, 2, 1.5);
+INSERT INTO transactie VALUES (2, 1.7, '2021-12-21 10:43:21', 2, 1, 10.5, 1, 1.5);
+INSERT INTO transactie VALUES (3, 0.5, '2021-11-10 22:22:22', 2, 1, 9.5, 1, 1.8);
+
 
 INSERT INTO refreshToken VALUES ('th120857fw1380n5yvb1i4y6dg', 1);
 

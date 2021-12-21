@@ -13,11 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Service
 public class TransactieService {
@@ -68,27 +64,18 @@ public class TransactieService {
         } else {
             prijs = vraagPrijs + bod / 2.0;
         }
-
         // exceptions:
         saldoTooLowExceptionHandler(koper, (prijs*aantal)+TRANSACTION_FEE);
         notEnoughCryptoExceptionHandler(verkoper, cryptomunt, aantal);
 
-        //haal informatie op uit database (asset + rekening)
-        Rekening rekeningKoper = rootRepository.vindRekeningVanGebuiker(koper);
-        Rekening rekeningVerkoper = rootRepository.vindRekeningVanGebuiker( verkoper);
-        Asset assetKoper = rootRepository.geefAssetVanGebruiker(koper, cryptomunt);
-        Asset assetVerkoper = rootRepository.geefAssetVanGebruiker(verkoper, cryptomunt);
-
         // wijzig de saldo's en assets van de verkoper en koper:
-        rekeningService.wijzigSaldo(koper, (rekeningKoper.getSaldo() - (prijs +(TRANSACTION_FEE/2))));
-        rekeningService.wijzigSaldo(koper, (rekeningVerkoper.getSaldo() + (prijs + (TRANSACTION_FEE/2))));
-
-        assetService.wijzigAssetGebruiker(assetKoper);
-        assetService.wijzigAssetGebruiker(assetVerkoper);
+        rekeningService.wijzigSaldo(koper, ( rootRepository.vindRekeningVanGebuiker(koper).getSaldo() - (prijs +(TRANSACTION_FEE/2))));
+        rekeningService.wijzigSaldo(koper, (rootRepository.vindRekeningVanGebuiker( verkoper).getSaldo() + (prijs + (TRANSACTION_FEE/2))));
+        assetService.wijzigAssetGebruiker(rootRepository.geefAssetVanGebruiker(koper, cryptomunt));
+        assetService.wijzigAssetGebruiker(rootRepository.geefAssetVanGebruiker(verkoper, cryptomunt));
 
         // maak nieuwe transactie aan
         Transactie transactie = new Transactie(LocalDateTime.now(), verkoper, cryptomunt, prijs, aantal, koper, TRANSACTION_FEE);
-
         slaTransactieOp(transactie);
         return transactie;
     }
@@ -113,7 +100,6 @@ public class TransactieService {
     *
      * @param transactie
      * @retrun transactie die zojuist is opgeslagen
-     *
     * */
     public Transactie slaTransactieOp(Transactie transactie){
         return rootRepository.slaTransactieOp(transactie);
@@ -126,7 +112,7 @@ public class TransactieService {
      * @param verkoper klant-object verkoper
      * @param cryptomunt Cryptomunt-object
      * @param aantal double hoeveelheid cryptomunt
-     *
+     * @throws NotEnoughCryptoException exception die een NOT_ACCEPTABLE http status teruggeeft
      * */
     public void notEnoughCryptoExceptionHandler (Gebruiker verkoper, Cryptomunt cryptomunt, double aantal) throws NotEnoughCryptoException {
         Asset assetVerkoper = klantService.geefAssetMetCryptoMuntVanGebruiker(verkoper, cryptomunt);
@@ -142,7 +128,7 @@ public class TransactieService {
      *
      * @param koper van de cryptomunt
      * @param bedrag verkoopbedrag van cryptomunt
-     *
+     * @throws BalanceTooLowException exception die een NOT_ACCEPTABLE hhtp status teruggeeft
     * */
     public void saldoTooLowExceptionHandler(Gebruiker koper, double bedrag) throws BalanceTooLowException  {
         double saldoGebruiker = rootRepository.vindRekeningVanGebuiker(koper).getSaldo();

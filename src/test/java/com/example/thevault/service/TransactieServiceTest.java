@@ -11,25 +11,16 @@ import com.example.thevault.support.exceptions.BalanceTooLowException;
 import com.example.thevault.support.exceptions.NotEnoughCryptoException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.model.Rekening;
-import com.example.thevault.domain.model.Gebruiker;
-import com.example.thevault.domain.model.Bank;
 
 import static com.jayway.jsonpath.internal.path.PathCompiler.fail;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.within;
-import static org.hamcrest.Matchers.closeTo;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 class TransactieServiceTest {
@@ -37,8 +28,9 @@ class TransactieServiceTest {
     private static double bankFee = 1.5;
     private static Klant testKlant1;
     private static Klant testKlant2;
-    private static Klant testKlant3;
+    private static Klant testKlantBank;
     private static Transactie testTransactie1;
+    private static Transactie actualTransactie;
     private static Transactie testTransactie2;
     private static Transactie testTransactie3;
     private static Transactie actualTransactie1;
@@ -69,7 +61,7 @@ class TransactieServiceTest {
     void setUp() {
         testKlant1 = new Klant( "Henknr1", "fdsaljkl", "Hello", 1890393, LocalDate.of(1991, 1, 12));
         testKlant2 = new Klant( "HarryBeste", "210jklf", "", 101212, LocalDate.of(1991, 1, 12));
-        testKlant3 = new Klant( "ThomasBeste", "831hgtr", "", 1528719, LocalDate.of(1990, 5, 10));
+        testKlantBank = new Klant( "TVLT", "831hgtr", "TVlT", 1001021, LocalDate.of(1990, 5, 10));
 
         testCryptomunt1 = new Cryptomunt(1, "CarmenCrypto", "CCR" );
         testCryptomunt2 = new Cryptomunt(2, "DigiCrypto", "DIG");
@@ -94,16 +86,18 @@ class TransactieServiceTest {
         testRekening22 = new Rekening("INGB0001234567NL", 20000.0);
         testRekening3 = new Rekening("INGB0001234567NL", 29000.0);
 
+
         mockRootRepository = Mockito.mock(RootRepository.class);
         rekeningService = new RekeningService(mockRootRepository);
         klantService = new KlantService(mockRootRepository);
         assetService = new AssetService(mockRootRepository);
+        cryptoWaardeService = new CryptoWaardeService();
         transactieService = new TransactieService(mockRootRepository, klantService, rekeningService, cryptoWaardeService, assetService);
 
 
         testKlant1.setRekening(testRekening1);
         testKlant2.setRekening(testRekening2);
-        testKlant3.setRekening(testRekening3);
+        testKlantBank.setRekening(testRekening3);
 
         List<Asset> testPortefeuille1 = new ArrayList<>();
         testPortefeuille1.add(testAsset1);
@@ -131,6 +125,8 @@ class TransactieServiceTest {
         Mockito.when(mockRootRepository.vindRekeningVanGebuiker(testKlant1)).thenReturn(testRekening1);
         Mockito.when(mockRootRepository.vindRekeningVanGebuiker(testKlant2)).thenReturn(testRekening2);
         Mockito.when(transactieService.slaTransactieOp(actualTransactie1)).thenReturn(actualTransactie1);
+        Mockito.when(transactieService.slaTransactieOp(actualTransactie)).thenReturn(actualTransactie);
+
 
         Transactie actualTransactie = transactieService.sluitTransactie(testKlant1, testCryptomunt1,
                 1000, 1100, 1.6, testKlant2);
@@ -141,12 +137,12 @@ class TransactieServiceTest {
         assertThat(actualTransactie.getTransactieId()).isEqualTo(excpectedTransactie1.getTransactieId());
         assertThat(actualTransactie.getPrijs()).isEqualTo(excpectedTransactie1.getPrijs());
         assertThat(actualTransactie.getAantal()).isEqualTo(excpectedTransactie1.getAantal());
-        assertThat( actualTransactie.getMomentTransactie()).isEqualToIgnoringNanos(excpectedTransactie1.getMomentTransactie());
+        assertThat( actualTransactie.getMomentTransactie()).isEqualToIgnoringSeconds(excpectedTransactie1.getMomentTransactie());
 
     }
 
     @Test
-    void controleerNotEnoughCryptoException(){
+    void notEnoughCryptoExceptionHandler(){
         Mockito.when(rekeningService.wijzigSaldo(testKlant1, (testKlant1.getRekening().getSaldo() - 1000)))
                 .thenReturn(testRekening11);
         Mockito.when(rekeningService.wijzigSaldo(testKlant2, (testKlant2.getRekening().getSaldo() + 1000)))
@@ -188,15 +184,8 @@ class TransactieServiceTest {
         }
     }
 
-
-
+    // TODO test maken waarbij 1 partij de bank is
     @Test
-    void slaTransactieOp() {
+    void sluitTransactieMetBank() {
     }
-
-    @Test
-    void notEnoughCryptoExceptionHandler() {
-    }
-
-
 }
