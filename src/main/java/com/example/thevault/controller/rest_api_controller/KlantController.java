@@ -22,8 +22,6 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -56,17 +54,7 @@ public class KlantController extends BasisApiController{
     public ResponseEntity<String> clientDashboardHandler(@RequestHeader("Authorization") String token, @RequestBody String inhoud){
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(inhoud);
     }
-    @PostMapping("/data")
-    public ResponseEntity<String> vulKlantEnAdresTabel(@RequestBody String opdracht) throws IOException {
-        List<Klant> list = DataGenerator.maakLijstKlantenVanCSV("Sprint2/datacsv.csv", 2999);
-        int count = 0;
-        for(Klant klant: list){
-            registrationService.registreerKlant(klant);
-            count ++;
-        }
-        String bericht = String.format("Zoveel geïmporteerd: %d", count);
-        return ResponseEntity.status(HttpStatus.OK).body(bericht);
-    }
+
     //TODO waar gebruikersnaam vandaan halen?
     @PostMapping("/validate/jwt")
     public ResponseEntity<String> valideerJWT(@RequestHeader("Authorization") String accessToken, @RequestBody String gebruikersnaam){

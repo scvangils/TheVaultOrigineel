@@ -21,38 +21,38 @@ public interface RekeningDAO {
 
     /**
      * Met deze methode kan je een rekening terugvinden als je de klant meegeeft.
-     * @param klant is de klant van wie de rekening wordt opgevraagd.
+     * @param gebruiker is de klant van wie de rekening wordt opgevraagd.
      * @return rekening waarvan je de iban en het saldo van klant kunt zien
      */
-    Rekening vindRekeningVanKlant(Klant klant);
+    //Rekening vindRekeningVanKlant(Klant klant);
 
 
     Rekening vindRekeningVanGebruiker(Gebruiker gebruiker);
 
     /**
      * Met deze methode kan je het saldo van de rekening opvragen als je de klant meegeeft.
-     * @param klant is de klant van wie het rekeningsaldo wordt opgevraagd.
+     * @param gebruiker is de klant van wie het rekeningsaldo wordt opgevraagd.
      * @return het saldo van de rekening.
      */
-    double vraagSaldoOpVanKlant(Klant klant);
+    double vraagSaldoOpVanGebruiker(Gebruiker gebruiker);
 
     /**
      * Met deze methode kan je het saldo van de rekening updaten als je de klant en het transactiebedrag meegeeft.
      * Het wijzigen van het saldo gebeurt doordat je een cryptomunt koopt of verkoopt via een transactie.
-     * @param klant is de klant bij wie een transactie plaatsvindt.
+     * @param gebruiker is de klant bij wie een transactie plaatsvindt.
      * @param transactiebedrag is het bedrag dat bij het rekeningsaldo opgeteld of afgetrokken wordt.
      * @return Als er voldoende saldo is voor de transactie, dan wordt het saldo geüpdatet. Zo niet, dan komt er een
      * bericht dat het saldo niet toereikend is.
      */
-    double updateSaldo(Klant klant, double transactiebedrag);
+    double updateSaldo(Gebruiker gebruiker, double transactiebedrag);
 
      /**
      * Met deze methode kan je het nieuwe saldo in de rekening opslaan.
-     * @param klant is de klant van er wie het saldo is geüpdatet.
+     * @param gebruiker is de klant van er wie het saldo is geüpdatet.
      * @param transactiebedrag is het nieuwe bedrag waarmee de rekening opgeslagen moet worden.
      * @return geüpdatete rekening.
      */
-    Rekening wijzigSaldoVanKlant(Klant klant, double transactiebedrag);
+    Rekening wijzigSaldoVanGebruiker(Gebruiker gebruiker, double transactiebedrag);
 
 
 }

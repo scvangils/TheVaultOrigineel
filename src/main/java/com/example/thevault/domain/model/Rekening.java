@@ -7,12 +7,13 @@ import net.minidev.json.annotate.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
+
 public class Rekening {
 
     private String iban;
     private double saldo;
     private Gebruiker gebruiker;
-    //private Klant klant;
 
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Rekening.class);
@@ -68,4 +69,19 @@ public class Rekening {
                 ", saldo=" + saldo +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Rekening rekening = (Rekening) o;
+        return Double.compare(rekening.saldo, saldo) == 0 && iban.equals(rekening.iban) && gebruiker.equals(rekening.gebruiker);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(iban, saldo, gebruiker);
+    }
+
+
 }

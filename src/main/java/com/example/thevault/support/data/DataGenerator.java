@@ -4,8 +4,10 @@
 package com.example.thevault.support.data;
 
 
+import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.Adres;
 import com.example.thevault.domain.model.Klant;
+import com.example.thevault.domain.model.Transactie;
 import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +26,6 @@ import java.util.Scanner;
 public class DataGenerator {
 
     private final Logger logger = LoggerFactory.getLogger(DataGenerator.class);
-
 
 
 
@@ -86,7 +87,7 @@ public class DataGenerator {
                                        String postcode, String plaatsnaam, String toevoeging) {
         Adres adresKlant = new Adres(straatnaam, huisnummer, toevoeging, postcode, plaatsnaam);
         Klant klant = new Klant(gebruikersnaam, wachtwoord,
-                null, null, naam, adresKlant, bsn, genereerRandomGeboortedatum());
+                null, null, null, naam, adresKlant, bsn, genereerRandomGeboortedatum());
         klantList.add(klant);
     }
 
@@ -135,5 +136,6 @@ public class DataGenerator {
        }
        return letter;
     }
+
 
 }

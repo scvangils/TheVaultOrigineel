@@ -1,7 +1,6 @@
 package com.example.thevault.domain.mapping.dao;
 
 import com.example.thevault.domain.model.Gebruiker;
-import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.model.Rekening;
 import com.example.thevault.support.exceptions.BalanceTooLowException;
 import net.minidev.json.annotate.JsonIgnore;
@@ -77,21 +76,9 @@ public class JDBCRekeningDAO implements RekeningDAO {
 
     /**
      * Met deze methode kan je een rekening terugvinden als je de klant meegeeft.
-     * @param klant is de klant van wie de rekening wordt opgevraagd.
+     * @param gebruiker is de klant van wie de rekening wordt opgevraagd.
      * @return rekening waarvan je de iban en het saldo van klant kunt zien
      */
-    @Override
-    public Rekening vindRekeningVanKlant(Klant klant) {
-        String sql = "SELECT * FROM rekening WHERE gebruikerId = ?;";
-        Rekening rekening;
-        try {
-            rekening = jdbcTemplate.queryForObject(sql, new JDBCRekeningDAO.RekeningRowMapper(), klant.getGebruikerId());
-        } catch (EmptyResultDataAccessException noResult) {
-            rekening = null;
-        }
-        return rekening;
-    }
-
     @Override
     public Rekening vindRekeningVanGebruiker(Gebruiker gebruiker) {
         String sql = "SELECT * FROM rekening WHERE gebruikerId = ?;";
@@ -106,15 +93,15 @@ public class JDBCRekeningDAO implements RekeningDAO {
 
     /**
      * Met deze methode kan je het saldo van de rekening opvragen als je de klant meegeeft.
-     * @param klant is de klant van wie het rekeningsaldo wordt opgevraagd.
+     * @param gebruiker is de klant van wie het rekeningsaldo wordt opgevraagd.
      * @return het saldo van de rekening.
      */
     @Override
-    public double vraagSaldoOpVanKlant(Klant klant) {
+    public double vraagSaldoOpVanGebruiker(Gebruiker gebruiker) {
         String sql = "SELECT * FROM rekening WHERE gebruikerId = ?;";
         Rekening rekening;
         try {
-            rekening = jdbcTemplate.queryForObject(sql, new JDBCRekeningDAO.RekeningRowMapper(), klant.getGebruikerId());
+            rekening = jdbcTemplate.queryForObject(sql, new JDBCRekeningDAO.RekeningRowMapper(), gebruiker.getGebruikerId());
         } catch (EmptyResultDataAccessException geenResultaatGevonden) {
             rekening = null;
         }
@@ -124,14 +111,14 @@ public class JDBCRekeningDAO implements RekeningDAO {
     /**
      * Met deze methode kan je het saldo van de rekening updaten als je de klant en het transactiebedrag meegeeft.
      * Het wijzigen van het saldo gebeurt doordat je een cryptomunt koopt of verkoopt via een transactie.
-     * @param klant is de klant bij wie een transactie plaatsvindt.
+     * @param gebruiker is de klant bij wie een transactie plaatsvindt.
      * @param transactiebedrag is het bedrag dat bij het rekeningsaldo opgeteld of afgetrokken wordt.
      * @return Als er voldoende saldo is voor de transactie, dan wordt het saldo geüpdatet. Zo niet, dan komt er een
      * bericht dat het saldo niet toereikend is.
      */
     @Override
-    public double updateSaldo(Klant klant, double transactiebedrag) throws BalanceTooLowException {
-        double huidigSaldo = vraagSaldoOpVanKlant(klant);
+    public double updateSaldo(Gebruiker gebruiker, double transactiebedrag) throws BalanceTooLowException {
+        double huidigSaldo = vraagSaldoOpVanGebruiker(gebruiker);
         if(huidigSaldo >= transactiebedrag) {
             return huidigSaldo+transactiebedrag;
         } else {
@@ -141,15 +128,15 @@ public class JDBCRekeningDAO implements RekeningDAO {
 
     /**
      * Met deze methode kan je het nieuwe saldo in de rekening opslaan.
-     * @param klant is de klant van er wie het saldo is geüpdatet.
+     * @param gebruiker is de klant van er wie het saldo is geüpdatet.
      * @param transactiebedrag is het nieuwe bedrag waarmee de rekening opgeslagen moet worden.
      * @return geüpdatete rekening.
      */
     @Override
-    public Rekening wijzigSaldoVanKlant(Klant klant, double transactiebedrag) {
-        double nieuwSaldo = updateSaldo(klant, transactiebedrag);
-        klant.getRekening().setSaldo(nieuwSaldo);
-        jdbcTemplate.update(connection -> wijzigSaldoStatement(klant.getRekening(), connection));
-        return klant.getRekening();
+    public Rekening wijzigSaldoVanGebruiker(Gebruiker gebruiker, double transactiebedrag) {
+        double nieuwSaldo = updateSaldo(gebruiker, transactiebedrag);
+        gebruiker.getRekening().setSaldo(nieuwSaldo);
+        jdbcTemplate.update(connection -> wijzigSaldoStatement(gebruiker.getRekening(), connection));
+        return gebruiker.getRekening();
     }
 }

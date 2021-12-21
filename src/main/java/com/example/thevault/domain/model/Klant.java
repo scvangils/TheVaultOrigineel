@@ -37,9 +37,9 @@ public class Klant extends Gebruiker {
     }
 
     public Klant(String gebruikersnaam, String wachtwoord,
-                 List<Asset> portefeuille, Rekening rekening,
+                 List<Asset> portefeuille , Rekening rekening, List<Transactie> transacties,
                  String naam, Adres adres, long bsn, LocalDate geboortedatum) {
-        super(gebruikersnaam, wachtwoord);
+        super(gebruikersnaam, wachtwoord,rekening, portefeuille, transacties);
         this.naam = naam;
         this.adres = adres;
         this.bsn = bsn;
@@ -50,7 +50,7 @@ public class Klant extends Gebruiker {
     }
     public Klant(String gebruikersnaam, String wachtwoord,
                  String naam, long bsn, LocalDate geboortedatum){
-        this(gebruikersnaam, wachtwoord, null, null, naam, null, bsn, geboortedatum);
+        this(gebruikersnaam, wachtwoord, null, null, null, naam, null, bsn, geboortedatum);
         logger.info("New Klant, rowMapperConstructor");
     }
     public String getNaam() {
@@ -85,21 +85,6 @@ public class Klant extends Gebruiker {
         this.geboortedatum = geboortedatum;
     }
 
-    public List<Asset> getPortefeuille() {
-        return portefeuille;
-    }
-
-    public void setPortefeuille(List<Asset> portefeuille) {
-        this.portefeuille = portefeuille;
-    }
-
-    public Rekening getRekening() {
-        return rekening;
-    }
-
-    public void setRekening(Rekening rekening) {
-        this.rekening = rekening;
-    }
 
     @Override
     public String toString() {

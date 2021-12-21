@@ -12,9 +12,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.util.List;
+
+import static com.example.thevault.support.data.DataGenerator.genereerRandomGetal;
 
 @Repository
 public class RootRepository {
@@ -109,15 +111,6 @@ public class RootRepository {
         return rekeningDAO.slaRekeningOp(rekening);
     }
 
-    /**
-     * Deze methode vindt de rekening van klant in de database via de methode in de rekeningDAO.
-     *
-     * @param klant is de klant van wie de rekening wordt opgevraagd.
-     * @return de rekening behorend bij de klant met klant-id
-     */
-    public Rekening vindRekeningVanKlant(Klant klant){
-        return rekeningDAO.vindRekeningVanKlant(klant);
-    }
 
     /**
     * Methode die op gebruiker zoekt en de rekening teruggeeft
@@ -137,18 +130,18 @@ public class RootRepository {
      * @return het rekeningsaldo behorend bij de klant met klant-id
      */
     public double vraagSaldoOpVanKlant(Klant klant){
-        return rekeningDAO.vraagSaldoOpVanKlant(klant);
+        return rekeningDAO.vraagSaldoOpVanGebruiker(klant);
     }
 
     /**
      * Deze methode wijzigt het rekeningsaldo van de klant in de database via de methode in de rekeningDAO.
      *
-     * @param klant is de klant van wie het rekeningsaldo wordt opgevraagd.
+     * @param gebruiker is de klant van wie het rekeningsaldo wordt opgevraagd.
      * @param transactiebedrag is het bedrag waarnaar het saldo gewijzigd moet worden.
      * @return het rekeningsaldo behorend bij de klant met klant-id wordt gewijzigd.
      */
-    public Rekening wijzigSaldoVanKlant(Klant klant, double transactiebedrag){
-        return rekeningDAO.wijzigSaldoVanKlant(klant, transactiebedrag);
+    public Rekening wijzigSaldoVanKlant(Gebruiker gebruiker, double transactiebedrag){
+        return rekeningDAO.wijzigSaldoVanGebruiker(gebruiker, transactiebedrag);
     }
 
     /**
@@ -247,14 +240,14 @@ public class RootRepository {
     /**
      * methode die alle transacties die bij een klant horen die in een bepaalde
      * periode hebben plaatsgevonden teruggeeft
-     * @param klant
+     * @param gebruiker
      * @param startDatum
      * @param eindDatum de klant waarvan alle transacties moeten
      * worden opgezocht, en data vanaf en tot wanneer de transacties plaatsvonden
      * @return lijst transacties van de klant
      */
-    List<Transactie> geefTransactiesVanKlantInPeriode(Klant klant, OffsetDateTime startDatum, OffsetDateTime eindDatum){
-        return transactieDAO.geefTransactiesVanKlantInPeriode(klant, startDatum, eindDatum);
+    List<Transactie> geefTransactiesVanGebruikerInPeriode(Gebruiker gebruiker, Timestamp startDatum, Timestamp eindDatum){
+        return transactieDAO.geefTransactiesVanGebruikerInPeriode(gebruiker, startDatum, eindDatum);
     }
 
     /**
@@ -262,7 +255,7 @@ public class RootRepository {
      * @params startDatum en eindDatum periode
      * @return lijst transacties van die periode
      */
-    List<Transactie> geefAlleTransactiesInPeriode(OffsetDateTime startDatum, OffsetDateTime eindDatum){
+    List<Transactie> geefAlleTransactiesInPeriode(Timestamp startDatum, Timestamp eindDatum){
         return transactieDAO.geefAlleTransactiesInPeriode(startDatum, eindDatum);
     }
 
@@ -271,10 +264,34 @@ public class RootRepository {
      * @params klant cryptomunt
      * @return lijst transacties van de klant met de meegegeven cryptomunt
      */
-    List<Transactie> geefTransactiesVanKlantMetCryptomunt(Klant klant, Cryptomunt cryptomunt){
-        return transactieDAO.geefTransactiesVanKlantMetCryptomunt(klant, cryptomunt);
+    List<Transactie> geefTransactiesVanGebruikerMetCryptomunt(Gebruiker gebruiker, Cryptomunt cryptomunt){
+        return transactieDAO.geefTransactiesVanGebruikerMetCryptomunt(gebruiker, cryptomunt);
     }
 
+    public Transactie genereerRandomTransactie(){
+        Transactie transactie = new Transactie();
+        Cryptomunt cryptomunt = this.cryptomuntDAO.geefCryptomunt(genereerRandomGetal(1,20,1));
+        transactie.setCryptomunt(cryptomunt);
+        LocalDate cryptoDatum = LocalDate.of(2021, 11, genereerRandomGetal(1, 30, 1));
+        double prijs = cryptoWaardeDAO.getCryptoWaardeByCryptomuntAndDate(cryptomunt, cryptoDatum).getWaarde();
+
+        int koperId = genereerRandomGetal(0,3000,1);
+        int verkoperId = genereerRandomGetal(0,3000,1);
+        while (koperId == verkoperId){
+            verkoperId = genereerRandomGetal(0,3000,1);
+        }
+        transactie.setVerkoper(this.klantDAO.vindKlantById(koperId));
+        transactie.setKoper(this.klantDAO.vindKlantById(verkoperId));
+        double afwijking = 0;
+        if(transactie.getKoper().getGebruikerId() != 0 && transactie.getVerkoper().getGebruikerId() != 0){
+            afwijking = genereerRandomGetal(-500000, 500000, 1) / 10000000.0; // max 5% afwijking
+        }
+        transactie.setPrijs(prijs * (1 + afwijking));
+        transactie.setAantal(genereerRandomGetal(0,2000,1) / 1000.0);
+     //   transactie.setMomentTransactie(cryptoDatum);
+     //   transactie.setBankFee(Bank.getInstance().getFee());
+        return transactie;
+    }
 
 
 

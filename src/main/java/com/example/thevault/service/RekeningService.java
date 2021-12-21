@@ -1,6 +1,7 @@
 package com.example.thevault.service;
 
 import com.example.thevault.domain.mapping.repository.RootRepository;
+import com.example.thevault.domain.model.Gebruiker;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.model.Rekening;
 import com.example.thevault.support.exceptions.UserNotExistsException;
@@ -11,8 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
 
 /**
  * @Author Ju-Sen m.u.v. methode creeerIban
@@ -81,7 +80,7 @@ public class RekeningService {
      * @return als de gebruikersnaam overeenkomt met de gebruikersnaam in de database dan
      * wordt de opgevraagde rekening teruggegeven.
      */
-    public Rekening vindRekening(Klant klant) throws UserNotExistsException {
+ /*   public Rekening vindRekening(Klant klant) throws UserNotExistsException {
         if (klant == null){
             throw new UserNotExistsException();
         }
@@ -89,27 +88,47 @@ public class RekeningService {
             throw new UserNotExistsException();
         }
         return rootRepository.vindRekeningVanKlant(klant);
+    }*/
+
+    /**
+     * Met deze methode kan je met een opgegeven klant de rekening opvragen als de klant
+     * terug te vinden is in de database.
+     *
+     * @param gebruiker is de meegegeven klant voor wie je de rekening op wilt vragen.
+     * @throws UserNotExistsException als er geen klant wordt meegegeven of als de
+     * gebruikersnaam niet bestaat, wordt er een exceptie gegooid.
+     * @return als de gebruikersnaam overeenkomt met de gebruikersnaam in de database dan
+     * wordt de opgevraagde rekening teruggegeven.
+     */
+    public Rekening vindRekening(Gebruiker gebruiker) throws UserNotExistsException {
+        if (gebruiker == null){
+            throw new UserNotExistsException();
+        }
+        if (rootRepository.vindKlantByGebruikersnaam(gebruiker.getGebruikersnaam()) == null ){
+            throw new UserNotExistsException();
+        }
+        return rootRepository.vindRekeningVanGebuiker(gebruiker);
     }
 
     /**
      * Met deze methode kan je het rekeningsaldo van de klant opvragen als de klant
      * terug te vinden is in de database.
      *
-     * @param klant is de meegegeven klant voor wie je het rekeningsaldo op wilt vragen.
+     * @param gebruiker is de meegegeven klant voor wie je het rekeningsaldo op wilt vragen.
      * @throws UserNotExistsException als er geen klant wordt meegegeven of als de
      * gebruikersnaam niet bestaat, wordt er een exceptie gegooid.
      * @return als de gebruikersnaam overeenkomt met de gebruikersnaam in de database dan
      * wordt het saldo van de opgevraagde rekening teruggegeven.
      */
-    public double vraagSaldoOp(Klant klant) throws UserNotExistsException{
-        return vindRekening(klant).getSaldo();
+    public double vraagSaldoOp(Gebruiker gebruiker) throws UserNotExistsException{
+        return vindRekening(gebruiker).getSaldo();
     }
 
     /**
      * Met deze methode kan je het rekeningsaldo van de klant wijzigen als de klant
      * terug te vinden is in de database.
      *
-     * @param klant is de meegegeven klant voor wie je het rekeningsaldo op wilt wijzigen.
+     * @param gebruiker is de meegegeven klant voor wie je het rekeningsaldo op wilt wijzigen.
      * @param transactiebedrag is het bedrag waarnaar je het wil wijzigen.
      * @throws UserNotExistsException als er geen klant wordt meegegeven of als de
      * gebruikersnaam niet bestaat, wordt er een exceptie gegooid.
@@ -119,8 +138,8 @@ public class RekeningService {
 
     //parameter bedrag = transactiebedrag NIET saldo van rekening
     //IPV rekening geven we een klant mee
-    public Rekening wijzigSaldo(Klant klant, double transactiebedrag) {
-        return rootRepository.wijzigSaldoVanKlant(klant, transactiebedrag);
+    public Rekening wijzigSaldo(Gebruiker gebruiker, double transactiebedrag) {
+        return rootRepository.wijzigSaldoVanKlant(gebruiker, transactiebedrag);
     }
 
 

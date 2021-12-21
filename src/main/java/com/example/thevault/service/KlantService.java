@@ -72,18 +72,14 @@ public class KlantService {
      * @return asset met cryptomunt + aantal van gebruiker of null
      */
     public Asset geefAssetMetCryptoMuntVanGebruiker(Gebruiker gebruiker, Cryptomunt cryptomunt){
-        List<Asset> portefeuille = null;
-        if(gebruiker instanceof Bank){
-            portefeuille = ((Bank) gebruiker).getPortefeuille();
-        } else if (gebruiker instanceof Klant){
-            portefeuille = ((Klant) gebruiker).getPortefeuille();
-        }
+        List<Asset> portefeuille = gebruiker.getPortefeuille();
+        if(portefeuille != null){
         for (Asset asset: portefeuille) {
             if(asset.getCryptomunt()==cryptomunt){
                 return asset;
             }
         }
-        return null;
+        }       return null;
     }
 
 
@@ -204,6 +200,8 @@ public class KlantService {
        return !klant.getWachtwoord().contains(" ");
     }
 
+
+    //TODO verwijderen?
     public RootRepository getRootRepository() {
         return rootRepository;
     }
