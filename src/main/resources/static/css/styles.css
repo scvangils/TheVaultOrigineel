@@ -45,6 +45,7 @@ fieldset input:hover {
 fieldset input:focus{
     background-color: aliceblue;
     color: darkorchid;
+    font-weight: bold;
 }
 
 .navigatiebalk {
@@ -54,7 +55,7 @@ fieldset input:focus{
     display: block;
 }
 
-#navigatiebalk-registreer{
+.navigatiebalk-onderdeel{
     float: left;
     display: block;
     padding: 16px;
@@ -63,13 +64,14 @@ fieldset input:focus{
     color: aliceblue;
 }
 
-#navigatiebalk-inlog{
+#navigatiebalk-vuller{
     clear-after: left;
     display: block;
     padding: 16px;
     font-size: 30px;
     background-color: darkorchid;
     color: aliceblue;
+    visibility: hidden;
 }
 
 .navigatiebalk-onderdeel:hover {
@@ -110,6 +112,18 @@ fieldset input:focus{
     font-size: medium;
     background-color: darkorchid;
     color: aliceblue;
+}
+
+.button:hover {
+    background-color: aliceblue;
+    color: darkorchid;
+}
+
+.button:focus {
+    background-color: aliceblue;
+    color: darkorchid;
+    font-size: large;
+    font-weight: bold;
 }
 
 .label {
