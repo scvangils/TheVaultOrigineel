@@ -203,11 +203,6 @@ class RootRepositoryTest {
     // TODO overleg Carmen mbt notnullfields van transacties, rekening en portefeuille
     @Test
     void wijzigAssetVanKlant() {
-        testAsset3.setGebruiker(testKlant);
-        System.out.println(testAsset3);
-        System.out.println(testAsset3.getGebruiker());
-
-
         Mockito.when(assetDAO.updateAsset(testAsset3)).thenReturn(testAsset3);
         Asset expected = testAsset3;
         Asset actual = rootRepository.wijzigAssetVanKlant(testAsset3);
