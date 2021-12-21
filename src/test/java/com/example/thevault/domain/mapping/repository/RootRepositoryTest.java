@@ -135,7 +135,7 @@ class RootRepositoryTest {
     void vraagSaldoOpVanKlant() {
         Mockito.when(rekeningDAO.vraagSaldoOpVanGebruiker(testKlant)).thenReturn(rekeningOrigineelSaldo.getSaldo());
         double expected = rekeningOrigineelSaldo.getSaldo();
-        double actual = rootRepository.vraagSaldoOpVanKlant(testKlant);
+        double actual = rootRepository.vraagSaldoOpVanGebruiker(testKlant);
         assertThat(actual).as("Test vraag saldo op van testklant").isNotNull().isEqualTo(expected).
                 isNotNegative().isNotEqualTo(gewijzigdSaldo);
     }
