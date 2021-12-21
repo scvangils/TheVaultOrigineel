@@ -3,6 +3,8 @@ package com.example.thevault.domain.mapping.dao;
 import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.model.Klant;
 
+import java.util.List;
+
 /**
  * @Author: Carmen Rietdijk
  * Beschrijving: De interface voor de DAO voor Cryptomunt, waar methodes in komen voor CRUD van de Cryptomunten
@@ -17,4 +19,5 @@ public interface CryptomuntDAO {
      * @return Cryptomunt de cryptomunt waarover informatie is opgevraagd
      */
     public Cryptomunt geefCryptomunt(int cryptomuntId);
+    public List<Cryptomunt> geefAlleCryptomunten();
 }

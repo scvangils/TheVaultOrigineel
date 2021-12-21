@@ -107,7 +107,7 @@ public class RekeningService {
         if (rootRepository.vindKlantByGebruikersnaam(gebruiker.getGebruikersnaam()) == null ){
             throw new UserNotExistsException();
         }
-        return rootRepository.vindRekeningVanGebuiker(gebruiker);
+        return rootRepository.vindRekeningVanGebruiker(gebruiker);
     }
 
     /**

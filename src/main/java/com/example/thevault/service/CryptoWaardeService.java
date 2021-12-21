@@ -20,6 +20,7 @@ public class CryptoWaardeService {
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(CryptoWaardeService.class);
 
+    private static final String DEFAULT_ID = "defaultId";
 
     /*
     roept 1x per dag de methode haalCryptoWaardes op
@@ -35,6 +36,10 @@ public class CryptoWaardeService {
         timer.schedule(tt, new Date(), TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
 
     }
+    public CryptoWaardeService(RootRepository rootRepository){
+        super();
+        this.rootRepository = rootRepository;
+    }
 
     public void slaCryptoWaardeOp(CryptoWaarde cryptoWaarde){
         rootRepository.slaCryptoWaardeOp(cryptoWaarde);
@@ -46,23 +51,23 @@ public class CryptoWaardeService {
 
     public void haalCryptoWaardes(){
         for (int i = 0; i < cryptoLijst().size(); i++) {
-            double cryptoDagwaarde = CryptoAPI.cryptoDagwaarde((Cryptomunt) cryptoLijst().get(i));
+            double cryptoDagwaarde = CryptoAPI.cryptoDagwaarde(cryptoLijst().get(i));
             LocalDate datum = LocalDate.now();
-            CryptoWaarde cryptoWaarde = new CryptoWaarde("1", (Cryptomunt) cryptoLijst().get(i), cryptoDagwaarde,datum);
+            CryptoWaarde cryptoWaarde = new CryptoWaarde(DEFAULT_ID, cryptoLijst().get(i), cryptoDagwaarde,datum);
             System.out.println(cryptoWaarde.getCryptomunt().getName() + cryptoWaarde.getWaarde());
             slaCryptoWaardeOp(cryptoWaarde);
         }
     }
 
     //TODO juiste plek voor aanmaken arraylist?
-    public ArrayList cryptoLijst(){
+    public static ArrayList<Cryptomunt> cryptoLijst(){
         Cryptomunt bitcoin = new Cryptomunt(1, "bitcoin", "BTC");
         Cryptomunt ethereum = new Cryptomunt(1027, "ethereum", "ETH");
         Cryptomunt solana = new Cryptomunt(5426, "solana", "SOL");
         Cryptomunt binance = new Cryptomunt(1839, "binance-coin", "BNB");
         Cryptomunt cardano = new Cryptomunt(2010, "cardano", "ADA");
         Cryptomunt xrp = new Cryptomunt(52, "xrp", "XRP");
-        Cryptomunt avalanche = new Cryptomunt(5808, "avalanche", "AVAX");
+        Cryptomunt avalanche = new Cryptomunt(5805, "avalanche", "AVAX");
         Cryptomunt polkadot = new Cryptomunt(6636, "polkadot", "DOT");
         Cryptomunt terra = new Cryptomunt(4172, "terra", "LUNA");
         Cryptomunt dogecoin = new Cryptomunt(74, "dogecoin", "DOGE");
@@ -80,10 +85,8 @@ public class CryptoWaardeService {
 
         List<Cryptomunt> list = Arrays.asList(bitcoin, ethereum, solana, binance, cardano, xrp, avalanche, polkadot, terra, dogecoin,
                 polygon, litecoin, terrausd, algorand, tron, bitcoin_cash, stellar, elrond, vechain, filecoin);
-        ArrayList<Cryptomunt> alleCrypto = new ArrayList<>();
-        alleCrypto.addAll(list);
 
-        return alleCrypto;
+        return new ArrayList<>(list);
 
     }
 }

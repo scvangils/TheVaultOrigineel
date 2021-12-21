@@ -8,6 +8,7 @@ import com.example.thevault.service.LoginService;
 import com.example.thevault.domain.transfer.RegistrationDto;
 import com.example.thevault.service.RegistrationService;
 import com.example.thevault.service.KlantService;
+import com.example.thevault.service.TransactieService;
 import com.example.thevault.support.BSNvalidator;
 import com.example.thevault.support.authorization.AuthorizationService;
 import com.example.thevault.support.authorization.TokenKlantCombinatie;
@@ -47,6 +48,8 @@ class KlantControllerTest {
     private LoginService loginService;
     @MockBean
     private AuthorizationService authorizationService;
+    @MockBean
+    private TransactieService transactieService;
 
     @Autowired
     public KlantControllerTest(MockMvc mockMvc){

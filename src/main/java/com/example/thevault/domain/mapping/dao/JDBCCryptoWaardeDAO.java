@@ -36,7 +36,7 @@ public class JDBCCryptoWaardeDAO implements CryptoWaardeDAO {
     //TODO CryptoWaardeDto
     @Override
     public List<CryptoWaarde> getCryptoWaardeByCryptomunt(Cryptomunt cryptomunt) {
-        String sql = "SELECT * FROM cryptowaarde WHERE cryptomuntId = ?;";
+        String sql = "SELECT * FROM dagkoersCrypto WHERE cryptomuntId = ?;";
         jdbcTemplate.query(sql, new CryptoWaardeRowMapper(), cryptomunt.getId());
         return null;
     }
@@ -44,7 +44,7 @@ public class JDBCCryptoWaardeDAO implements CryptoWaardeDAO {
     @Override
     public CryptoWaarde getCryptoWaardeByCryptomuntAndDate(Cryptomunt cryptomunt, LocalDate datum) {
         CryptoWaarde cryptoWaarde;
-        String sql = "SELECT * FROM cryptowaarde WHERE cryptomuntId = ? AND datum = ?;";
+        String sql = "SELECT * FROM dagkoersCrypto WHERE cryptomuntId = ? AND datum = ?;";
         try {
             cryptoWaarde = jdbcTemplate.queryForObject(sql, new CryptoWaardeRowMapper(), cryptomunt.getId(), Date.valueOf(datum));
         }
@@ -62,7 +62,7 @@ public class JDBCCryptoWaardeDAO implements CryptoWaardeDAO {
      * @return cryptowaarde Het object met correcte Id
      */
     public CryptoWaarde slaCryptoWaardeOp(CryptoWaarde cryptoWaarde) {
-        String sql = "INSERT INTO cryptowaarde VALUES(?, ?, ?, ?);";
+        String sql = "INSERT INTO dagkoersCrypto (cryptowaardeId, cryptomuntId, waardeCrypto, datum) VALUES (?, ?, ?, ?);";
         LocalDate huidigeDatum = LocalDate.now();
         cryptoWaarde.setDatum(huidigeDatum);
         cryptoWaarde.setCryptoWaardeId(generateCryptoWaardeId(huidigeDatum, cryptoWaarde.getCryptomunt()));
@@ -93,7 +93,7 @@ public class JDBCCryptoWaardeDAO implements CryptoWaardeDAO {
     public CryptoWaarde mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         return new CryptoWaarde(resultSet.getString("cryptoWaardeId"),
                 null,
-                resultSet.getDouble("waarde"), resultSet.getDate("datum").toLocalDate());
+                resultSet.getDouble("waardeCrypto"), resultSet.getDate("datum").toLocalDate());
     }
 }
 }

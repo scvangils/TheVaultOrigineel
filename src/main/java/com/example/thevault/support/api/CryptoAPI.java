@@ -38,9 +38,9 @@ public class CryptoAPI {
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(CryptoAPI.class);
 
-//    public static void main(String[] args) {
-//        System.out.println(cryptoDagwaarde("xrp"));
-//    }
+    public static void main(String[] args) {
+        System.out.println(cryptoDagwaarde(new Cryptomunt(5805, "avalanche", "AVAX")));
+    }
 
     public static double cryptoDagwaarde(Cryptomunt cryptomunt){
         String uri = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest";

@@ -33,9 +33,10 @@ public class JDBCTransactieDAO implements TransactieDAO {
         logger.info("New JDBCTransactieDAO");
     }
 
-
+    //TODO bedrag in prijs veranderen in database
     private PreparedStatement slaTransactieOpStatement(Transactie transactie, Connection connection) throws SQLException {
-        String sql = "INSERT INTO transactie (aantal, momentTransactie, koperGebruikerId, cryptomuntId, bedrag, verkoperGebruikerId, bankFee) values (?, ?, ?, ?, ?, ?, ?);";
+        String sql = "INSERT INTO transactie (aantal, momentTransactie, koperGebruikerId, cryptomuntId, bedrag," +
+                " verkoperGebruikerId, bankFee) values (?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         ps.setDouble(1, transactie.getAantal());
         ps.setDate(2, Date.valueOf(transactie.getMomentTransactie().toLocalDate()));

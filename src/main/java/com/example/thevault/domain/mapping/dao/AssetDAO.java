@@ -3,7 +3,6 @@ package com.example.thevault.domain.mapping.dao;
 import com.example.thevault.domain.model.Asset;
 import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.model.Gebruiker;
-import com.example.thevault.domain.model.Klant;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,10 +34,12 @@ public interface AssetDAO {
     /**
      * Dit betreft het updaten van een cryptomunt die al in de portefeuille zit
      * Dit gebeurt via een 'transactie', waarbij een klant crypto's koopt of verkoopt
-     * @param asset de asset waarin de klant handelt
+     * @param gebruiker de asset waarin de klant handelt
+     * @param cryptomunt
+     * @param aantal
      * @return Asset de asset na de update
      */
-    public Asset updateAsset(Asset asset);
+    public Asset updateAsset(Gebruiker gebruiker, Cryptomunt cryptomunt, double aantal);
 
     /**
      * Dit betreft het vinden van een cryptomunt die in de portefeuille zit
@@ -50,8 +51,8 @@ public interface AssetDAO {
 
     /**
      * Dit betreft het vinden van alle cryptomunten die in de portefeuille zitten
-     * @param klant klant die informatie opvraagt over de cryptomunten
+     * @param gebruiker klant die informatie opvraagt over de cryptomunten
      * @return List</Asset> een lijst van alle Assets in het bezit van de klant
      */
-    public List<Asset> geefAlleAssets(Klant klant);
+    public List<Asset> geefAlleAssets(Gebruiker gebruiker);
 }

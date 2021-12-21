@@ -118,7 +118,7 @@ public class RootRepository {
      * @param gebruiker kan zowel een klant als een bank zijn
      * @return rekening geeft een rekening object terug
     * */
-    public Rekening vindRekeningVanGebuiker(Gebruiker gebruiker){
+    public Rekening vindRekeningVanGebruiker(Gebruiker gebruiker){
         return rekeningDAO.vindRekeningVanGebruiker(gebruiker);
     }
 
@@ -148,13 +148,17 @@ public class RootRepository {
      * @Author Carmen
      * Dit betreft het vullen van de portefeuille met alle cryptomunten die er in zitten. Voor iedere asset
      * wordt alle informatie over de bijbehorende cryptomunt opgevraagd en meegegeven
-     * @param klant de klant die informatie opvraagt over de cryptomunt
+     * @param gebruiker de klant die informatie opvraagt over de cryptomunt
      * @return List</Asset> een lijst van alle Assets (cryptomunten + hoeveelheden) in het bezit van de klant
      */
-    public List<Asset> vulPortefeuilleKlant(Klant klant){
-        List<Asset> portefeuille = assetDAO.geefAlleAssets(klant);
+    public List<Asset> vulPortefeuilleKlant(Gebruiker gebruiker){
+        List<Asset> portefeuille = assetDAO.geefAlleAssets(gebruiker);
+        if(portefeuille != null){
         for (Asset asset: portefeuille) {
-            asset.setCryptomunt(cryptomuntDAO.geefCryptomunt(asset.getCryptomunt().getId()));
+            Cryptomunt cryptomunt = cryptomuntDAO.geefCryptomunt(asset.getCryptomunt().getId());
+            asset.setCryptomunt(cryptomunt);
+        }
+        gebruiker.setPortefeuille(portefeuille);
         }
         return portefeuille;
     }
@@ -182,12 +186,13 @@ public class RootRepository {
     /**
      * Dit betreft het wijzigen van een cryptomunt die al in de portefeuille zit
      * Dit gebeurt via een 'transactie', waarbij een klant crypto's koopt of verkoopt
-     * @param asset de asset waarin de klant handelt, met de informatie wélke cryptomunt wordt verhandeld
-     *              en hoeveel deze omhoog/omlaag gaat (oftewel: betreft het een koop of een verkoop)
+     * @param gebruiker de handelende partij
+     * @param cryptomunt de munt waarin gehandeld wordt
+     * @param aantal de hoeveelheid die verhandeld wordt
      * @return Asset de asset na de update, waarbij het nieuwe aantal wordt meegegeven
      */
-    public Asset wijzigAssetVanKlant(Asset asset){
-        return assetDAO.updateAsset(asset);
+    public Asset wijzigAssetVanKlant(Gebruiker gebruiker, Cryptomunt cryptomunt, double aantal){
+        return assetDAO.updateAsset(gebruiker, cryptomunt , aantal);
     }
 
     /**
@@ -292,7 +297,12 @@ public class RootRepository {
      //   transactie.setBankFee(Bank.getInstance().getFee());
         return transactie;
     }
-
+    public Cryptomunt geefCryptomunt(int cryptomuntId){
+        return cryptomuntDAO.geefCryptomunt(cryptomuntId);
+    }
+    public List<Cryptomunt> geefAlleCryptomunten(){
+        return cryptomuntDAO.geefAlleCryptomunten();
+    }
 
 
 

@@ -75,7 +75,7 @@ public class KlantService {
         List<Asset> portefeuille = gebruiker.getPortefeuille();
         if(portefeuille != null){
         for (Asset asset: portefeuille) {
-            if(asset.getCryptomunt()==cryptomunt){
+            if(asset.getCryptomunt().equals(cryptomunt)){
                 return asset;
             }
         }

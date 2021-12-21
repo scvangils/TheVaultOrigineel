@@ -23,6 +23,7 @@ public class Bank extends Gebruiker{
     private List<Asset> portefeuille;
     private double fee;
     private final static double BANK_FEE = 5.0;
+    private final static int ID_BANK = 0;
 
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Bank.class);
@@ -35,6 +36,7 @@ public class Bank extends Gebruiker{
     }
     private Bank(Rekening rekening, List<Asset> portefeuille){
         super();
+        this.gebruikerId = ID_BANK;
         this.gebruikersnaam = BANK_GEBRUIKERSNAAM;
         this.wachtwoord = BANK_WACHTWOORD;
         this.banknaam = BANKNAAM;
