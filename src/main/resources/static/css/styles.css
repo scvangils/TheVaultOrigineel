@@ -130,6 +130,9 @@ fieldset input:focus{
     border-style: hidden;
     text-decoration: underline;
 }
+input:placeholder-shown {
+    font-style: italic;
+}
 
 /*Om de twee schermen NIET tegelijk weer te geven, gebruik display: none. Zie website
 https://www.w3schools.com/Css/css_display_visibility.asp */

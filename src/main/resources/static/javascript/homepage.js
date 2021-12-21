@@ -1,20 +1,13 @@
-/*const labels = document.getElementsByTagName("label");
-for (const label of labels) {
-    label.classList.add("grid-item");
-}
-const inputs = document.getElementsByTagName("input");
-for (const input of inputs) {
-    input.classList.add("grid-item");
-}
-const forms = document.getElementsByTagName("form");
-for (const form of forms) {
-    form.classList.add("grid-container");
-}*/
+
+
+
 const postcodeVeld = document.getElementById("postcode");
 const huisnummerVeld = document.getElementById("huisnummer");
 const straatnaamVeld = document.getElementById("straatnaam");
 const woonplaatsVeld = document.getElementById("plaatsnaam");
 
+postcodeVeld.maxLength = 6;
+/*
 function addClassToTag(tagName, cssClass){
     const elements = document.getElementsByTagName(tagName);
     for (const element of elements) {
@@ -30,6 +23,12 @@ addClassToTag("form", "grid-container");
 addClassToTag("label", "grid-item");
 addClassToTag("input", "grid-item");
 removeClassFromElementById("verstuur", "grid-item");
+*/
+
+function checkZipCodeFormat(zipCode){
+    const pattern = /^[1-9][0-9]{3}[a-z]{2}$/;
+    return pattern.test(zipCode);
+}
 
 
 function registreer(){
