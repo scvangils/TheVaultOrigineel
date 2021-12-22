@@ -114,7 +114,6 @@ public class JDBCAssetDAO implements AssetDAO{
         Optional<Asset>  optionalAsset = geefAssetGebruiker(gebruiker, cryptomunt);
         if(optionalAsset.isPresent()){
             asset = optionalAsset.get();
-            System.out.println("*** zijn Id" + gebruiker.getGebruikerId() + " en zijn assethoeveelheid " + asset.getAantal());
             if(asset.getAantal() < aantal){
                 throw new NotEnoughCryptoException();
             }

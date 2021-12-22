@@ -68,19 +68,13 @@ public class TransactieService {
         double transactieBedragVerkoper;
         if (bankIsKoper || bankIsVerkoper) {
             prijs = berekenPrijsTransactieMetBank(cryptomunt);
-            System.out.println(aantal * prijs);
             transactieBedragKoper = (bankIsKoper) ? aantal * prijs: aantal * prijs + TRANSACTION_FEE;
-            System.out.println(transactieBedragKoper);
             transactieBedragVerkoper = (bankIsVerkoper) ? aantal * prijs: aantal * prijs - TRANSACTION_FEE;
-            System.out.println(transactieBedragVerkoper);
         }
         else {
             prijs = (vraagPrijs + bod) / VERDELING_PRIJSVERSCHIL;
-            System.out.println(aantal * prijs);
             transactieBedragKoper = aantal * prijs + TRANSACTION_FEE / 2;
-            System.out.println(transactieBedragKoper);
             transactieBedragVerkoper = aantal * prijs - TRANSACTION_FEE / 2;
-            System.out.println(transactieBedragVerkoper);
         }
         // exceptions:
         checkTransactionExceptions(verkoper, cryptomunt, aantal, koper, transactieBedragKoper);
