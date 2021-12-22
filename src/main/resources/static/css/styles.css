@@ -90,6 +90,11 @@ fieldset input:focus{
     border-right-color: darkorchid;
     border-right-width: 50px;
 }
+
+input:placeholder-shown {
+    font-style: italic;
+}
+
 .header h1 {
     font-size: 40px;
     color: darkorchid;
