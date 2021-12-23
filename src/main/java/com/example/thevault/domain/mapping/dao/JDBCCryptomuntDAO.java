@@ -21,7 +21,7 @@ import java.util.List;
 @Repository
 public class JDBCCryptomuntDAO implements CryptomuntDAO{
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(JDBCCryptomuntDAO.class);

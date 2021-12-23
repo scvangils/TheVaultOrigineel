@@ -45,7 +45,9 @@ public class KlantService {
         return rootRepository.vindKlantByGebruikersnaam(username);
         //TODO de methode 'geefNuttigePortefeuille' aanroepen om de asset objecten voor de klant op te schonen (zie onder)
     }
-
+    public Klant vindKlantById(int gebruikerId){
+        return rootRepository.vindKlantById(gebruikerId);
+    }
     /**
      * @Author Carmen
      * In de portefeuille van de klant worden de assets vervangen door AssetDTO objecten, waarbij alleen de

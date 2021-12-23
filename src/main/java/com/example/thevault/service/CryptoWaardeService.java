@@ -45,10 +45,12 @@ public class CryptoWaardeService {
         rootRepository.slaCryptoWaardeOp(cryptoWaarde);
     }
 
-    public CryptoWaarde vindCryptoWaarde(Cryptomunt cryptomunt){
+    public CryptoWaarde vindMeestRecenteCryptoWaarde(Cryptomunt cryptomunt){
         return rootRepository.haalMeestRecenteCryptoWaarde(cryptomunt);
     }
-
+    public CryptoWaarde vindCryptoWaardeOpDatum(Cryptomunt cryptomunt, LocalDate datum){
+        return rootRepository.haalCryptoWaardeOpDatum(cryptomunt, datum);
+    }
     public void haalCryptoWaardes(){
         for (int i = 0; i < cryptoLijst().size(); i++) {
             double cryptoDagwaarde = CryptoAPI.cryptoDagwaarde(cryptoLijst().get(i));

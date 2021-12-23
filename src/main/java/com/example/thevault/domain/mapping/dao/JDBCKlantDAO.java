@@ -134,6 +134,7 @@ public class JDBCKlantDAO implements KlantDAO{
     }
 
     //TODO speciale functie voor wachtwoord?
+    @Override
     public Klant updateKlant(Klant klant){
         String sql = "UPDATE klant SET gebruikersnaam = ?, naam = ?, adresId = ? WHERE gebruikerId = ?;";
         try{

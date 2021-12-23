@@ -77,14 +77,13 @@ public class RootRepository {
      */
     public Klant vindKlantByGebruikersnaam(String gebruikersnaam){
         Klant klant = klantDAO.vindKlantByGebruikersnaam(gebruikersnaam);
-        //TODO maakKlantCompleet aanzetten
-        //TODO nadenken of adres moet worden toegevoegd
-        /*maakKlantCompleet(klant);*/
+        maakKlantCompleet(klant);
         return klant;
     }
     //TODO rekening toevoegen na database compleet
     private void maakKlantCompleet(Klant klant) {
         if(klant != null){
+            klant.setRekening(vindRekeningVanGebruiker(klant));
             klant.setAdres(adresDAO.getAdresByKlant(klant));
             klant.setPortefeuille(vulPortefeuilleKlant(klant));
         }
@@ -204,9 +203,13 @@ public class RootRepository {
      */
     //CryptoWaarde wordt eens per dag opgehaald om 00.00 uur
     public CryptoWaarde haalMeestRecenteCryptoWaarde(Cryptomunt cryptomunt){
-        return cryptoWaardeDAO.getCryptoWaardeByCryptomuntAndDate(cryptomunt, LocalDate.now());
+        CryptoWaarde cryptoWaarde = cryptoWaardeDAO.getCryptoWaardeByCryptomuntAndDate(cryptomunt, LocalDate.now());
+        cryptoWaarde.setCryptomunt(cryptomunt);
+        return cryptoWaarde;
     }
-
+    public CryptoWaarde haalCryptoWaardeOpDatum(Cryptomunt cryptomunt, LocalDate datum){
+        return cryptoWaardeDAO.getCryptoWaardeByCryptomuntAndDate(cryptomunt, datum);
+    }
     /**
      *
      * @param cryptoWaarde
@@ -273,7 +276,7 @@ public class RootRepository {
         return transactieDAO.geefTransactiesVanGebruikerMetCryptomunt(gebruiker, cryptomunt);
     }
 
-    public Transactie genereerRandomTransactie(){
+/*    public Transactie genereerRandomTransactie(){
         Transactie transactie = new Transactie();
         Cryptomunt cryptomunt = this.cryptomuntDAO.geefCryptomunt(genereerRandomGetal(1,20,1));
         transactie.setCryptomunt(cryptomunt);
@@ -296,7 +299,8 @@ public class RootRepository {
      //   transactie.setMomentTransactie(cryptoDatum);
      //   transactie.setBankFee(Bank.getInstance().getFee());
         return transactie;
-    }
+    }*/
+
     public Cryptomunt geefCryptomunt(int cryptomuntId){
         return cryptomuntDAO.geefCryptomunt(cryptomuntId);
     }
