@@ -107,24 +107,25 @@ public class JDBCAssetDAO implements AssetDAO{
      * @param aantal
      * @return Asset de asset na de update, waarbij het nieuwe aantal wordt meegegeven
      */
-    @Override
+    @Override // aantal is positief voor koper en negatief voor verkoper
     public Asset updateAsset(Gebruiker gebruiker, Cryptomunt cryptomunt, double aantal) {
         Asset asset;
         String sql = "UPDATE asset SET aantal = ? WHERE gebruikerId = ? AND cryptomuntId = ?;";
         Optional<Asset>  optionalAsset = geefAssetGebruiker(gebruiker, cryptomunt);
-        if(optionalAsset.isPresent()){
-            asset = optionalAsset.get();
-            if(asset.getAantal() < aantal){
+        if(aantal < 0) { // kijk of verkoper asset bezit en genoeg ervan heeft
+            if (optionalAsset.isEmpty() || optionalAsset.get().getAantal() < -aantal) {
                 throw new NotEnoughCryptoException();
             }
-            jdbcTemplate.update(sql, (asset.getAantal() + aantal), gebruiker.getGebruikerId(), cryptomunt.getId());
-            return asset;
         }
-        else return voegNieuwAssetToeAanPortefeuille(new Asset(cryptomunt, aantal, gebruiker));
-/*        } else if(huidigeAantal == -teVerhandelenAantal){
-            return verwijderAssetUitPortefeuille(asset);
-        } //TODO exception maken*/
-    }
+        else {
+            if(optionalAsset.isEmpty()) { //koper heeft nog niets van deze asset
+                return voegNieuwAssetToeAanPortefeuille(new Asset(cryptomunt, aantal, gebruiker));
+            }
+            }
+        jdbcTemplate.update(sql, (optionalAsset.get().getAantal() + aantal), gebruiker.getGebruikerId(), cryptomunt.getId());
+            return optionalAsset.get();
+        }
+
 
 
     /**

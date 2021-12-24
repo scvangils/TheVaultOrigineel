@@ -74,7 +74,7 @@ public class KlantService {
      * @return asset met cryptomunt + aantal van gebruiker of null
      */
     public Asset geefAssetMetCryptoMuntVanGebruiker(Gebruiker gebruiker, Cryptomunt cryptomunt){
-        List<Asset> portefeuille = gebruiker.getPortefeuille();
+        List<Asset> portefeuille = rootRepository.vulPortefeuilleKlant(gebruiker);
         if(portefeuille != null){
         for (Asset asset: portefeuille) {
             if(asset.getCryptomunt().equals(cryptomunt)){

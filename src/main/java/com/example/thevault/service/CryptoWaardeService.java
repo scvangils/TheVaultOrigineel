@@ -60,7 +60,14 @@ public class CryptoWaardeService {
             slaCryptoWaardeOp(cryptoWaarde);
         }
     }
-
+    public List<CryptoWaarde> haalMeestRecenteCryptoWaardes(){
+        List<Cryptomunt>  cryptomuntList = CryptoWaardeService.cryptoLijst();
+        List<CryptoWaarde> cryptoWaardeList = new ArrayList<>();
+        for(Cryptomunt cryptomunt: cryptomuntList){
+            cryptoWaardeList.add(vindMeestRecenteCryptoWaarde(cryptomunt));
+        }
+        return cryptoWaardeList;
+    }
     //TODO juiste plek voor aanmaken arraylist?
     public static ArrayList<Cryptomunt> cryptoLijst(){
         Cryptomunt bitcoin = new Cryptomunt(1, "bitcoin", "BTC");

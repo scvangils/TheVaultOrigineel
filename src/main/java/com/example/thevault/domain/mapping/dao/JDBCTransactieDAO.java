@@ -39,9 +39,10 @@ public class JDBCTransactieDAO implements TransactieDAO {
                 " verkoperGebruikerId, bankFee) values (?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         ps.setDouble(1, transactie.getAantal());
-        ps.setDate(2, Date.valueOf(transactie.getMomentTransactie().toLocalDate()));
-        ps.setInt(3, transactie.getCryptomunt().getId());
-        ps.setInt(4, transactie.getKoper().getGebruikerId());
+        System.out.println("*** Dit is de datum: " + transactie.getMomentTransactie());
+        ps.setTimestamp(2, Timestamp.valueOf(transactie.getMomentTransactie()));
+        ps.setInt(3, transactie.getKoper().getGebruikerId());
+        ps.setInt(4, transactie.getCryptomunt().getId());
         ps.setDouble(5, transactie.getPrijs());
         ps.setInt(6, transactie.getVerkoper().getGebruikerId());
         ps.setDouble(7, transactie.getBankFee());

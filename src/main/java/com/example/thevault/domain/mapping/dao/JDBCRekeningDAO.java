@@ -118,11 +118,11 @@ public class JDBCRekeningDAO implements RekeningDAO {
      * @return Als er voldoende saldo is voor de transactie, dan wordt het saldo geüpdatet. Zo niet, dan komt er een
      * bericht dat het saldo niet toereikend is.
      */
-    @Override
+    @Override // transactiebedrag is negatief bij koper
     public double updateSaldo(Gebruiker gebruiker, double transactiebedrag) throws BalanceTooLowException {
         Rekening rekening = vindRekeningVanGebruiker(gebruiker);
         double huidigSaldo = rekening.getSaldo();
-        if(huidigSaldo > transactiebedrag) {
+        if(huidigSaldo > - transactiebedrag) {
             return huidigSaldo+transactiebedrag;
         } else {
             throw new BalanceTooLowException();

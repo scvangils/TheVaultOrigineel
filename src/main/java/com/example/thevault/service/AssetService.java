@@ -67,14 +67,10 @@ public class AssetService {
      * @param aantal de hoeveelheid die verhandeld wordt
      * @return Asset de asset die is aangepast
      */
-/*    public Asset wijzigAsset(Asset asset){
-        return rootRepository.wijzigAssetVanKlant(asset);
-    }*/
 
     public Asset wijzigAssetGebruiker(Gebruiker gebruiker, Cryptomunt cryptomunt, double aantal){
         List<Asset> portefeuille = vulPortefeuilleVanGebruiker(gebruiker);
         if(portefeuille != null) {
-            System.out.println("ASSET GEBRUIKER: " + gebruiker);
         return rootRepository.wijzigAssetVanKlant(gebruiker, cryptomunt, aantal);
         }
         return null;

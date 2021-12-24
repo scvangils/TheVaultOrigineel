@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
-public class Transactie {
+public class Transactie{
     private int transactieId;
     private double aantal;
     private LocalDateTime momentTransactie;
