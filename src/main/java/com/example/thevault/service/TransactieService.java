@@ -60,10 +60,9 @@ public class TransactieService {
                                       double vraagPrijs, double bod, double aantal, Gebruiker koper, LocalDateTime datumEnTijd) {
         boolean bankIsKoper = (koper instanceof Bank);
         boolean bankIsVerkoper = (verkoper instanceof Bank);
+
+        double prijs, transactieBedragKoper, transactieBedragVerkoper;
         // bepaal prijs transactie en transactiebedragen
-        double prijs;
-        double transactieBedragKoper;
-        double transactieBedragVerkoper;
         if (bankIsKoper || bankIsVerkoper) {
             prijs = berekenPrijsTransactieMetBank(cryptomunt, datumEnTijd);
             transactieBedragKoper = (bankIsKoper) ? aantal * prijs: aantal * prijs + TRANSACTION_FEE;
