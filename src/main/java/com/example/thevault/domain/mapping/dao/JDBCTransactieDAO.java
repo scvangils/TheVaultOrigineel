@@ -62,7 +62,7 @@ public class JDBCTransactieDAO implements TransactieDAO {
     @Override
     public List<Transactie> geefAlleTransacties(){
         String sql = "SELECT * FROM transactie;";
-        return jdbcTemplate.query(sql, new JDBCTransactieDAO.TransactieRowMapper());
+        return jdbcTemplate.query(sql, new TransactieRowMapper());
     }
 
     @Override
@@ -70,7 +70,7 @@ public class JDBCTransactieDAO implements TransactieDAO {
         String sql = "SELECT * FROM transactie WHERE verkoperGerbuikerId = ? OR koperGebruikerId = ?;";
         List<Transactie> transactiesGebruiker = null;
         try {
-            transactiesGebruiker = jdbcTemplate.query(sql, new JDBCTransactieDAO.TransactieRowMapper()
+            transactiesGebruiker = jdbcTemplate.query(sql, new TransactieRowMapper()
                     , gebruiker.getGebruikerId(), gebruiker.getGebruikerId());
         } catch (EmptyResultDataAccessException exception){
             System.out.println("Geen data gevonden, exceptie: " + exception);
@@ -83,7 +83,7 @@ public class JDBCTransactieDAO implements TransactieDAO {
         String sql = "SELECT * FROM transactie WHERE verkoperGerbuikerId = ? AND koperGebruikerId = ? AND momentTransactie BETWEEN ? AND ?;";
         List<Transactie> transactiesGebruiker = null;
         try {
-            transactiesGebruiker = jdbcTemplate.query(sql, new JDBCTransactieDAO.TransactieRowMapper()
+            transactiesGebruiker = jdbcTemplate.query(sql, new TransactieRowMapper()
                     , gebruiker.getGebruikerId(), gebruiker.getGebruikerId()
                     , startDatum, eindDatum);
         } catch (EmptyResultDataAccessException exception){
@@ -97,7 +97,7 @@ public class JDBCTransactieDAO implements TransactieDAO {
         String sql = "SELECT * FROM transactie WHERE momentTransactie BETWEEN ? AND ?;";
         List<Transactie> transactiesInPeriode = null;
         try {
-            transactiesInPeriode = jdbcTemplate.query(sql, new JDBCTransactieDAO.TransactieRowMapper()
+            transactiesInPeriode = jdbcTemplate.query(sql, new TransactieRowMapper()
                     , startDatum, eindDatum);
         } catch (EmptyResultDataAccessException exception){
             System.out.println("Geen data gevonden, exceptie: " + exception);
@@ -107,11 +107,11 @@ public class JDBCTransactieDAO implements TransactieDAO {
 
     @Override
     public List<Transactie> geefTransactiesVanGebruikerMetCryptomunt(Gebruiker gebruiker, Cryptomunt cryptomunt) {
-        String sql = "SELECT * FROM transactie WHERE verkoperGerbuikerId = ? AND koperGebruikerId = ? AND cryptomuntId = ?;";
+        String sql = "SELECT * FROM transactie WHERE verkoperGebruikerId = ? AND koperGebruikerId = ? AND cryptomuntId = ?;";
 
         List<Transactie> transactiesGebruiker = null;
         try {
-            transactiesGebruiker = jdbcTemplate.query(sql, new JDBCTransactieDAO.TransactieRowMapper()
+            transactiesGebruiker = jdbcTemplate.query(sql, new TransactieRowMapper()
                     , gebruiker.getGebruikerId(), gebruiker.getGebruikerId()
                     , cryptomunt.getId());
         } catch (EmptyResultDataAccessException exception){
@@ -120,8 +120,20 @@ public class JDBCTransactieDAO implements TransactieDAO {
         return transactiesGebruiker;
     }
 
+    @Override
+    public Transactie verwijderTransactie(Transactie transactie) {
+        String sql = "DELETE FROM transactie WHERE transactieId = ?";
 
-    private class TransactieRowMapper implements RowMapper<Transactie> {
+        int amountOfRows = jdbcTemplate.update(sql, transactie.getTransactieId());
+        if(amountOfRows == 0){
+            // TODO bedenk exception
+        }
+        return transactie;
+
+    }
+
+
+    private static class TransactieRowMapper implements RowMapper<Transactie> {
         @Override
         public Transactie mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
             LocalDateTime dateTime = resultSet.getObject("momentTransactie", LocalDateTime.class);

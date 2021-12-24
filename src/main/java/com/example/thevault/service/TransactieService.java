@@ -95,9 +95,16 @@ public class TransactieService {
         return transactie;
     }
 
+    // TODO transactie terugdraaien indien er iets fout gaat
     private void setRekeningEnPortefeuilleNaTransactie(Gebruiker verkoper, Cryptomunt cryptomunt,
                                                        Gebruiker koper, double bedragKoper, double bedragVerkoper, double aantal) {
+        try{
         koper.setRekening(rekeningService.wijzigSaldo(koper, -bedragKoper));
+        }
+        catch(Exception exception){
+            // TODO insert delete Transactie
+        }
+        // idem omkering hier enzovoorts bv. rekeningService.wijzigSaldo(koper, bedragKoper)
         verkoper.setRekening(rekeningService.wijzigSaldo(verkoper, bedragVerkoper));
         rekeningService.wijzigSaldo(Bank.getInstance(), TRANSACTION_FEE);
         assetService.wijzigAssetGebruiker(verkoper, cryptomunt, -aantal);
