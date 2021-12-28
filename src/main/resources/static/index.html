@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Welcome to The Vault</title>
+
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/styles.css">
     <script src="javascript/homepage.js" defer></script>
     <script src="javascript/validation.js" defer></script>
+    <link rel = "icon" href = "http://localhost:63342/vault/src/main/resources/Sprint2/favicon.ico" type="image/x-icon"/>
 </head>
 <body>
 
@@ -33,33 +36,30 @@
     <p><label class=label for="gebruikersnaam">gebruikersnaam</label></p>
         <p><input type="text" id ="gebruikersnaam" name ="gebruikersnaam" placeholder="gebruikersnaam"required></p>
     <p><label class=label for="geboortedatum">geboortedatum</label></p>
-        <p><input type="date" id ="geboortedatum" name ="geboortedatum"></p>
+        <p><input id ="geboortedatum" name ="geboortedatum" placeholder="dd-mm-jjjj" onfocus="this.type = 'date'"></p>
     <p><label class=label for="bsn">BSN</label></p>
         <p><input type="number" id ="bsn" name ="bsn" placeholder="bsn" required></p>
     <p><label class=label for="wachtwoord">wachtwoord</label></p>
         <p><input type="password" id="wachtwoord" name ="wachtwoord" placeholder="wachtwoord"></p>
+
+        <form id = "registratieAdres" method="post">
+            <p> <label class=label for="postcode">postcode</label></p>
+            <p><input type="text" id ="postcode" name ="postcode" placeholder="1000AA" required></p>
+            <p><label class=label for="huisnummer">huisnummer</label></p>
+            <p><input id ="huisnummer" name ="huisnummer" placeholder="huisnummer" onfocus="this.type='number';"></p>
+            <p><label class=label for="toevoeging">toevoeging</label></p>
+            <p><input type="text" id = "toevoeging" name = "toevoeging" placeholder="toevoeging"></p>
+            <p><label class=label for="straatnaam">straat</label></p>
+            <p><input type="text" id = "straatnaam" name = "straatnaam" required></p>
+            <p><label class=label for="plaatsnaam">woonplaats</label></p>
+            <p><input type="text" id = "plaatsnaam" name = "plaatsnaam"></p>
+            <p><input class="button" type="button" id ="adresinformatie" value="Vind je straat" onclick="vindStraatnaamEnPlaatsnaam()"></p>
+        </form>
     <p><input class="button" type="button" id ="verstuur" value="Join the Vault" onclick="registreer()"></p>
     </fieldset>
 </form>
     </div>
-    <div class="registratie-adres" is="registratie-adres">
-<form id = "registratieAdres" method="post">
-    <fieldset>
-        <legend>Registreer adresgegevens</legend>
-   <p> <label class=label for="postcode">postcode</label></p>
-     <p><input type="text" id ="postcode" name ="postcode" placeholder="postcode" required></p>
-    <p><label class=label for="huisnummer">huisnummer</label></p>
-   <p><input type="number" id ="huisnummer" name ="huisnummer" required></p>
-    <p><label class=label for="toevoeging">toevoeging</label></p>
-        <p><input type="text" id = "toevoeging" name = "toevoeging" placeholder="toevoeging"></p>
-    <p><label class=label for="straatnaam">straat</label></p>
-        <p><input type="text" id = "straatnaam" name = "straatnaam" required></p>
-    <p><label class=label for="plaatsnaam">woonplaats</label></p>
-        <p><input type="text" id = "plaatsnaam" name = "plaatsnaam"></p>
-        <p><input class="button" type="button" id ="adresinformatie" value="Vind je straat" onclick="vindStraatnaamEnPlaatsnaam()"></p>
-    </fieldset>
-</form>
-</div>
+
 
 <div class="inlog" id="inlog" name="inlogscherm">
 <form name="inlogform" id="inlogform" method="post">

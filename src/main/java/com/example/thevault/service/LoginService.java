@@ -45,7 +45,7 @@ public class LoginService {
      */
     public Klant valideerLogin (LoginDto loginDto){
         Klant klant = vindKlantByGebruikersnaam(loginDto.getGebruikersnaam());
-        if(!klant.equals(null)) {
+        if(klant != null) {
 
             String encodedWachtwoord = klant.getWachtwoord();
             String wachtwoord = new String(Base64.decodeBase64(encodedWachtwoord));
@@ -58,13 +58,11 @@ public class LoginService {
     }
 
     public Klant vindKlantByGebruikersnaam(String username){
-        Klant klant = rootRepository.vindKlantByGebruikersnaam(username);
-        System.out.println("Rootrepository: " + klant);
-        //tijdelijke oplossing
+/*        Klant klant = rootRepository.vindKlantByGebruikersnaam(username);
         if(klant != null){
-        Rekening rekening = rekeningService.creeerRekening(klant);
-        klant.setRekening(rekening);}
-        return klant;
+        Rekening rekening = rekeningService.vindRekening(klant);
+        klant.setRekening(rekening);}*/
+        return rootRepository.vindKlantByGebruikersnaam(username);
     }
 
 

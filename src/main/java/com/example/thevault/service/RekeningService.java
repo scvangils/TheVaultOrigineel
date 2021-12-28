@@ -107,7 +107,7 @@ public class RekeningService {
         if (rootRepository.vindKlantByGebruikersnaam(gebruiker.getGebruikersnaam()) == null ){
             throw new UserNotExistsException();
         }
-        return rootRepository.vindRekeningVanGebuiker(gebruiker);
+        return rootRepository.vindRekeningVanGebruiker(gebruiker);
     }
 
     /**
@@ -139,7 +139,7 @@ public class RekeningService {
     //parameter bedrag = transactiebedrag NIET saldo van rekening
     //IPV rekening geven we een klant mee
     public Rekening wijzigSaldo(Gebruiker gebruiker, double transactiebedrag) {
-        return rootRepository.wijzigSaldoVanKlant(gebruiker, transactiebedrag);
+        return rootRepository.wijzigSaldoVanGebruiker(gebruiker, transactiebedrag);
     }
 
 

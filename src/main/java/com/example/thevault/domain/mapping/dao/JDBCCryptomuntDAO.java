@@ -16,11 +16,12 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 public class JDBCCryptomuntDAO implements CryptomuntDAO{
 
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(JDBCCryptomuntDAO.class);
@@ -28,16 +29,10 @@ public class JDBCCryptomuntDAO implements CryptomuntDAO{
     @Autowired
     public JDBCCryptomuntDAO(JdbcTemplate jdbcTemplate) {
         super();
+        this.jdbcTemplate = jdbcTemplate;
         logger.info("New JDBCCryptomuntDAO");
     }
 
-    private static class CryptomuntRowMapper implements RowMapper<Cryptomunt> {
-        @Override
-        public Cryptomunt mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-            return new Cryptomunt(resultSet.getInt("cryptomuntId"), resultSet.getString("naam"),
-                    resultSet.getString("afkorting"));
-        }
-    }
 
     /**
      * Methode die de informatie over een specifieke cryptomunt uit de database haalt
@@ -49,4 +44,17 @@ public class JDBCCryptomuntDAO implements CryptomuntDAO{
         String sql = "Select * from cryptomunt where cryptomuntId = ?;";
         return jdbcTemplate.queryForObject(sql, new JDBCCryptomuntDAO.CryptomuntRowMapper(), cryptomuntId);
     }
+    @Override
+    public List<Cryptomunt> geefAlleCryptomunten(){
+        String sql = "SELECT * FROM cryptomunt;";
+        return jdbcTemplate.query(sql, new CryptomuntRowMapper());
+    }
+    private static class CryptomuntRowMapper implements RowMapper<Cryptomunt> {
+        @Override
+        public Cryptomunt mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+            return new Cryptomunt(resultSet.getInt("cryptomuntId"), resultSet.getString("naam"),
+                    resultSet.getString("afkorting"));
+        }
+    }
+
 }

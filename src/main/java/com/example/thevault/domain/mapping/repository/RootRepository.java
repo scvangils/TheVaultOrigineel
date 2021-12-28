@@ -77,14 +77,13 @@ public class RootRepository {
      */
     public Klant vindKlantByGebruikersnaam(String gebruikersnaam){
         Klant klant = klantDAO.vindKlantByGebruikersnaam(gebruikersnaam);
-        //TODO maakKlantCompleet aanzetten
-        //TODO nadenken of adres moet worden toegevoegd
-        /*maakKlantCompleet(klant);*/
+        maakKlantCompleet(klant);
         return klant;
     }
     //TODO rekening toevoegen na database compleet
     private void maakKlantCompleet(Klant klant) {
         if(klant != null){
+            klant.setRekening(vindRekeningVanGebruiker(klant));
             klant.setAdres(adresDAO.getAdresByKlant(klant));
             klant.setPortefeuille(vulPortefeuilleKlant(klant));
         }
@@ -118,7 +117,7 @@ public class RootRepository {
      * @param gebruiker kan zowel een klant als een bank zijn
      * @return rekening geeft een rekening object terug
     * */
-    public Rekening vindRekeningVanGebuiker(Gebruiker gebruiker){
+    public Rekening vindRekeningVanGebruiker(Gebruiker gebruiker){
         return rekeningDAO.vindRekeningVanGebruiker(gebruiker);
     }
 
@@ -126,11 +125,11 @@ public class RootRepository {
     /**
      * Deze methode geeft het rekeningsaldo op van de klant in de database via de methode in de rekeningDAO.
      *
-     * @param klant is de klant van wie het rekeningsaldo wordt opgevraagd.
+     * @param gebruiker is de klant van wie het rekeningsaldo wordt opgevraagd.
      * @return het rekeningsaldo behorend bij de klant met klant-id
      */
-    public double vraagSaldoOpVanKlant(Klant klant){
-        return rekeningDAO.vraagSaldoOpVanGebruiker(klant);
+    public double vraagSaldoOpVanGebruiker(Gebruiker gebruiker){
+        return rekeningDAO.vraagSaldoOpVanGebruiker(gebruiker);
     }
 
     /**
@@ -140,7 +139,7 @@ public class RootRepository {
      * @param transactiebedrag is het bedrag waarnaar het saldo gewijzigd moet worden.
      * @return het rekeningsaldo behorend bij de klant met klant-id wordt gewijzigd.
      */
-    public Rekening wijzigSaldoVanKlant(Gebruiker gebruiker, double transactiebedrag){
+    public Rekening wijzigSaldoVanGebruiker(Gebruiker gebruiker, double transactiebedrag){
         return rekeningDAO.wijzigSaldoVanGebruiker(gebruiker, transactiebedrag);
     }
 
@@ -148,13 +147,17 @@ public class RootRepository {
      * @Author Carmen
      * Dit betreft het vullen van de portefeuille met alle cryptomunten die er in zitten. Voor iedere asset
      * wordt alle informatie over de bijbehorende cryptomunt opgevraagd en meegegeven
-     * @param klant de klant die informatie opvraagt over de cryptomunt
+     * @param gebruiker de klant die informatie opvraagt over de cryptomunt
      * @return List</Asset> een lijst van alle Assets (cryptomunten + hoeveelheden) in het bezit van de klant
      */
-    public List<Asset> vulPortefeuilleKlant(Klant klant){
-        List<Asset> portefeuille = assetDAO.geefAlleAssets(klant);
+    public List<Asset> vulPortefeuilleKlant(Gebruiker gebruiker){
+        List<Asset> portefeuille = assetDAO.geefAlleAssets(gebruiker);
+        if(portefeuille != null){
         for (Asset asset: portefeuille) {
-            asset.setCryptomunt(cryptomuntDAO.geefCryptomunt(asset.getCryptomunt().getId()));
+            Cryptomunt cryptomunt = cryptomuntDAO.geefCryptomunt(asset.getCryptomunt().getId());
+            asset.setCryptomunt(cryptomunt);
+        }
+        gebruiker.setPortefeuille(portefeuille);
         }
         return portefeuille;
     }
@@ -182,12 +185,13 @@ public class RootRepository {
     /**
      * Dit betreft het wijzigen van een cryptomunt die al in de portefeuille zit
      * Dit gebeurt via een 'transactie', waarbij een klant crypto's koopt of verkoopt
-     * @param asset de asset waarin de klant handelt, met de informatie wélke cryptomunt wordt verhandeld
-     *              en hoeveel deze omhoog/omlaag gaat (oftewel: betreft het een koop of een verkoop)
+     * @param gebruiker de handelende partij
+     * @param cryptomunt de munt waarin gehandeld wordt
+     * @param aantal de hoeveelheid die verhandeld wordt
      * @return Asset de asset na de update, waarbij het nieuwe aantal wordt meegegeven
      */
-    public Asset wijzigAssetVanKlant(Asset asset){
-        return assetDAO.updateAsset(asset);
+    public Asset wijzigAssetVanKlant(Gebruiker gebruiker, Cryptomunt cryptomunt, double aantal){
+        return assetDAO.updateAsset(gebruiker, cryptomunt , aantal);
     }
 
     /**
@@ -199,9 +203,13 @@ public class RootRepository {
      */
     //CryptoWaarde wordt eens per dag opgehaald om 00.00 uur
     public CryptoWaarde haalMeestRecenteCryptoWaarde(Cryptomunt cryptomunt){
-        return cryptoWaardeDAO.getCryptoWaardeByCryptomuntAndDate(cryptomunt, LocalDate.now());
+        CryptoWaarde cryptoWaarde = cryptoWaardeDAO.getCryptoWaardeByCryptomuntAndDate(cryptomunt, LocalDate.now());
+        cryptoWaarde.setCryptomunt(cryptomunt);
+        return cryptoWaarde;
     }
-
+    public CryptoWaarde haalCryptoWaardeOpDatum(Cryptomunt cryptomunt, LocalDate datum){
+        return cryptoWaardeDAO.getCryptoWaardeByCryptomuntAndDate(cryptomunt, datum);
+    }
     /**
      *
      * @param cryptoWaarde
@@ -268,7 +276,7 @@ public class RootRepository {
         return transactieDAO.geefTransactiesVanGebruikerMetCryptomunt(gebruiker, cryptomunt);
     }
 
-    public Transactie genereerRandomTransactie(){
+/*    public Transactie genereerRandomTransactie(){
         Transactie transactie = new Transactie();
         Cryptomunt cryptomunt = this.cryptomuntDAO.geefCryptomunt(genereerRandomGetal(1,20,1));
         transactie.setCryptomunt(cryptomunt);
@@ -291,8 +299,14 @@ public class RootRepository {
      //   transactie.setMomentTransactie(cryptoDatum);
      //   transactie.setBankFee(Bank.getInstance().getFee());
         return transactie;
-    }
+    }*/
 
+    public Cryptomunt geefCryptomunt(int cryptomuntId){
+        return cryptomuntDAO.geefCryptomunt(cryptomuntId);
+    }
+    public List<Cryptomunt> geefAlleCryptomunten(){
+        return cryptomuntDAO.geefAlleCryptomunten();
+    }
 
 
 

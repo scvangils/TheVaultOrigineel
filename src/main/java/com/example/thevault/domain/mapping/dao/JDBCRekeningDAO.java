@@ -48,10 +48,10 @@ public class JDBCRekeningDAO implements RekeningDAO {
     }
 
     private PreparedStatement wijzigSaldoStatement(Rekening rekening, Connection connection) throws SQLException {
-        String sql = "UPDATE rekening WHERE IBAN = ? SET saldo = ?;";
+        String sql = "UPDATE rekening SET saldo = ? WHERE IBAN = ? ;";
         PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setString(1, rekening.getIban());
-        ps.setDouble(2, rekening.getSaldo());
+        ps.setDouble(1, rekening.getSaldo());
+        ps.setString(2, rekening.getIban());
         return ps;
     }
 
@@ -84,7 +84,8 @@ public class JDBCRekeningDAO implements RekeningDAO {
         String sql = "SELECT * FROM rekening WHERE gebruikerId = ?;";
         Rekening rekening;
         try {
-            rekening = jdbcTemplate.queryForObject(sql, new JDBCRekeningDAO.RekeningRowMapper(), gebruiker.getGebruikerId());
+            rekening = jdbcTemplate.queryForObject(sql, new RekeningRowMapper(), gebruiker.getGebruikerId());
+            gebruiker.setRekening(rekening);
         } catch (EmptyResultDataAccessException noResult) {
             rekening = null;
         }
@@ -102,8 +103,9 @@ public class JDBCRekeningDAO implements RekeningDAO {
         Rekening rekening;
         try {
             rekening = jdbcTemplate.queryForObject(sql, new JDBCRekeningDAO.RekeningRowMapper(), gebruiker.getGebruikerId());
+            //TODO nadenken over nullPointer
         } catch (EmptyResultDataAccessException geenResultaatGevonden) {
-            rekening = null;
+            return 0.0;
         }
        return rekening.getSaldo();
     }
@@ -116,10 +118,11 @@ public class JDBCRekeningDAO implements RekeningDAO {
      * @return Als er voldoende saldo is voor de transactie, dan wordt het saldo geüpdatet. Zo niet, dan komt er een
      * bericht dat het saldo niet toereikend is.
      */
-    @Override
+    @Override // transactiebedrag is negatief bij koper
     public double updateSaldo(Gebruiker gebruiker, double transactiebedrag) throws BalanceTooLowException {
-        double huidigSaldo = vraagSaldoOpVanGebruiker(gebruiker);
-        if(huidigSaldo >= transactiebedrag) {
+        Rekening rekening = vindRekeningVanGebruiker(gebruiker);
+        double huidigSaldo = rekening.getSaldo();
+        if(huidigSaldo > - transactiebedrag) {
             return huidigSaldo+transactiebedrag;
         } else {
             throw new BalanceTooLowException();
@@ -136,6 +139,7 @@ public class JDBCRekeningDAO implements RekeningDAO {
     public Rekening wijzigSaldoVanGebruiker(Gebruiker gebruiker, double transactiebedrag) {
         double nieuwSaldo = updateSaldo(gebruiker, transactiebedrag);
         gebruiker.getRekening().setSaldo(nieuwSaldo);
+        System.out.println(gebruiker.getRekening() + "  " + gebruiker.getRekening().getSaldo());
         jdbcTemplate.update(connection -> wijzigSaldoStatement(gebruiker.getRekening(), connection));
         return gebruiker.getRekening();
     }

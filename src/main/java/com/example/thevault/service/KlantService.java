@@ -45,7 +45,9 @@ public class KlantService {
         return rootRepository.vindKlantByGebruikersnaam(username);
         //TODO de methode 'geefNuttigePortefeuille' aanroepen om de asset objecten voor de klant op te schonen (zie onder)
     }
-
+    public Klant vindKlantById(int gebruikerId){
+        return rootRepository.vindKlantById(gebruikerId);
+    }
     /**
      * @Author Carmen
      * In de portefeuille van de klant worden de assets vervangen door AssetDTO objecten, waarbij alleen de
@@ -72,10 +74,10 @@ public class KlantService {
      * @return asset met cryptomunt + aantal van gebruiker of null
      */
     public Asset geefAssetMetCryptoMuntVanGebruiker(Gebruiker gebruiker, Cryptomunt cryptomunt){
-        List<Asset> portefeuille = gebruiker.getPortefeuille();
+        List<Asset> portefeuille = rootRepository.vulPortefeuilleKlant(gebruiker);
         if(portefeuille != null){
         for (Asset asset: portefeuille) {
-            if(asset.getCryptomunt()==cryptomunt){
+            if(asset.getCryptomunt().equals(cryptomunt)){
                 return asset;
             }
         }

@@ -83,7 +83,7 @@ class RekeningServiceTest {
     @Test
     void vindRekeningVanKlant() {
         Mockito.when(mockRepo.vindKlantByGebruikersnaam(bestaandeKlant.getGebruikersnaam())).thenReturn(bestaandeKlant);
-        Mockito.when(mockRepo.vindRekeningVanGebuiker(bestaandeKlant)).thenReturn(rekeningExpected);
+        Mockito.when(mockRepo.vindRekeningVanGebruiker(bestaandeKlant)).thenReturn(rekeningExpected);
 
         Rekening actual = rekeningServiceTest.vindRekening(bestaandeKlant);
         System.out.println(actual);
@@ -97,7 +97,7 @@ class RekeningServiceTest {
     @Test
     void vindRekeningVanNietBestaandeKlant() {
         Mockito.when(mockRepo.vindKlantByGebruikersnaam(bestaandeKlant.getGebruikersnaam())).thenReturn(bestaandeKlant);
-        Mockito.when(mockRepo.vindRekeningVanGebuiker(bestaandeKlant)).thenReturn(rekeningExpected);
+        Mockito.when(mockRepo.vindRekeningVanGebruiker(bestaandeKlant)).thenReturn(rekeningExpected);
 
         try{
             rekeningServiceTest.vraagSaldoOp(nietBestaandeKlant);
@@ -113,8 +113,8 @@ class RekeningServiceTest {
     @Test
     void vraagSaldoOp() {
         Mockito.when(mockRepo.vindKlantByGebruikersnaam(bestaandeKlant.getGebruikersnaam())).thenReturn(bestaandeKlant);
-        Mockito.when(mockRepo.vindRekeningVanGebuiker(bestaandeKlant)).thenReturn(rekeningExpected);
-        Mockito.when(mockRepo.vraagSaldoOpVanKlant(bestaandeKlant)).thenReturn(bestaandeKlant.getRekening().getSaldo());
+        Mockito.when(mockRepo.vindRekeningVanGebruiker(bestaandeKlant)).thenReturn(rekeningExpected);
+        Mockito.when(mockRepo.vraagSaldoOpVanGebruiker(bestaandeKlant)).thenReturn(bestaandeKlant.getRekening().getSaldo());
 
         double saldoActual = rekeningServiceTest.vraagSaldoOp(bestaandeKlant);
         System.out.println(saldoActual);
@@ -128,8 +128,8 @@ class RekeningServiceTest {
     @Test
     void vraagSaldoOpVanNietBestaandeKlant() {
         Mockito.when(mockRepo.vindKlantByGebruikersnaam(bestaandeKlant.getGebruikersnaam())).thenReturn(bestaandeKlant);
-        Mockito.when(mockRepo.vindRekeningVanGebuiker(bestaandeKlant)).thenReturn(rekeningExpected);
-        Mockito.when(mockRepo.vraagSaldoOpVanKlant(bestaandeKlant)).thenReturn(bestaandeKlant.getRekening().getSaldo());
+        Mockito.when(mockRepo.vindRekeningVanGebruiker(bestaandeKlant)).thenReturn(rekeningExpected);
+        Mockito.when(mockRepo.vraagSaldoOpVanGebruiker(bestaandeKlant)).thenReturn(bestaandeKlant.getRekening().getSaldo());
 
         try{
             rekeningServiceTest.vraagSaldoOp(nietBestaandeKlant);
@@ -144,11 +144,23 @@ class RekeningServiceTest {
      */
     @Test
     void wijzigSaldo() {
-        Mockito.when(mockRepo.wijzigSaldoVanKlant(bestaandeKlant, 2000.0)).thenReturn(rekeningVoorWijzigSaldoExpected);
+        Mockito.when(mockRepo.wijzigSaldoVanGebruiker(bestaandeKlant, 2000.0)).thenReturn(rekeningVoorWijzigSaldoExpected);
 
         Rekening rekeningActual = rekeningServiceTest.wijzigSaldo(bestaandeKlant, 2000.0);
         double expected = 3000.0;
         double actual = rekeningActual.getSaldo();
         assertThat(actual).isEqualTo(expected);
     }
+
+
+    @Test
+    void wijzigSaldoInGebruikerRekeningJava(){
+        Mockito.when(mockRepo.wijzigSaldoVanGebruiker(bestaandeKlant, 2000.0)).thenReturn(rekeningVoorWijzigSaldoExpected);
+
+        rekeningServiceTest.wijzigSaldo(bestaandeKlant, 2000.0);
+        double expected = 3000.0;
+        double actual = bestaandeKlant.getRekening().getSaldo();
+        assertThat(actual).isEqualTo(expected);
+    }
+
 }

@@ -6,8 +6,8 @@ package com.example.thevault.domain.mapping.dao;
 import com.example.thevault.domain.model.Asset;
 import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.model.Gebruiker;
-import com.example.thevault.domain.model.Klant;
 import com.example.thevault.support.exceptions.AssetNotExistsException;
+import com.example.thevault.support.exceptions.NotEnoughCryptoException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +54,7 @@ public class JDBCAssetDAO implements AssetDAO{
     }
 
     private PreparedStatement verwijderAssetStatement(Asset asset, Connection connection) throws SQLException {
-        String sql = "DELETE * FROM asset WHERE gebruikerId = ? AND cryptomuntId = ?;";
+        String sql = "DELETE FROM asset WHERE gebruikerId = ? AND cryptomuntId = ?;";
         PreparedStatement ps = connection.prepareStatement(sql);
         ps.setInt(1, asset.getGebruiker().getGebruikerId());
         ps.setInt(2, asset.getCryptomunt().getId());
@@ -101,27 +101,31 @@ public class JDBCAssetDAO implements AssetDAO{
     /**
      * Dit betreft het updaten van een cryptomunt die al in de portefeuille zit
      * Dit gebeurt via een 'transactie', waarbij een klant crypto's koopt of verkoopt
-     * @param asset de asset waarin de klant handelt, met de informatie wélke cryptomunt wordt verhandeld
+     * @param gebruiker de asset waarin de klant handelt, met de informatie wélke cryptomunt wordt verhandeld
      *              en hoeveel deze omhoog/omlaag gaat (oftewel: betreft het een koop of een verkoop)
+     * @param cryptomunt
+     * @param aantal
      * @return Asset de asset na de update, waarbij het nieuwe aantal wordt meegegeven
      */
-    @Override
-    public Asset updateAsset(Asset asset) {
-        double huidigeAantal = geefAssetGebruiker(asset.getGebruiker(), asset.getCryptomunt()).orElseThrow(AssetNotExistsException).
-                getAantal();
-        double teVerhandelenAantal = asset.getAantal();
-        if(huidigeAantal >= teVerhandelenAantal) {
-            Asset nieuwAsset = new Asset(asset.getCryptomunt(), huidigeAantal - teVerhandelenAantal,
-                    asset.getGebruiker());
-            jdbcTemplate.update(connection -> verwijderAssetStatement(asset, connection));
-            jdbcTemplate.update(connection -> slaAssetOpStatement(nieuwAsset, connection));
-            return nieuwAsset;
-        } else if(huidigeAantal == -teVerhandelenAantal){
-            return verwijderAssetUitPortefeuille(asset);
-        } //TODO exception maken
-        System.out.println("Het saldo van deze cryptomunt is te laag voor deze transactie");
-        return null;
-    }
+    @Override // aantal is positief voor koper en negatief voor verkoper
+    public Asset updateAsset(Gebruiker gebruiker, Cryptomunt cryptomunt, double aantal) {
+        Asset asset;
+        String sql = "UPDATE asset SET aantal = ? WHERE gebruikerId = ? AND cryptomuntId = ?;";
+        Optional<Asset>  optionalAsset = geefAssetGebruiker(gebruiker, cryptomunt);
+        if(aantal < 0) { // kijk of verkoper asset bezit en genoeg ervan heeft
+            if (optionalAsset.isEmpty() || optionalAsset.get().getAantal() < -aantal) {
+                throw new NotEnoughCryptoException();
+            }
+        }
+        else {
+            if(optionalAsset.isEmpty()) { //koper heeft nog niets van deze asset
+                return voegNieuwAssetToeAanPortefeuille(new Asset(cryptomunt, aantal, gebruiker));
+            }
+            }
+        jdbcTemplate.update(sql, (optionalAsset.get().getAantal() + aantal), gebruiker.getGebruikerId(), cryptomunt.getId());
+            return optionalAsset.get();
+        }
+
 
 
     /**
@@ -145,15 +149,17 @@ public class JDBCAssetDAO implements AssetDAO{
 
     /**
      * Dit betreft het vinden van alle cryptomunten die in de portefeuille zitten
-     * @param klant klant die informatie opvraagt over de cryptomunt
+     * @param gebruiker klant die informatie opvraagt over de cryptomunt
      * @return List</Asset> een lijst van alle Assets (cryptomunten + hoeveelheden) in het bezit van de klant
      */
     @Override
-    public List<Asset> geefAlleAssets(Klant klant){
+    public List<Asset> geefAlleAssets(Gebruiker gebruiker){
         String sql = "SELECT * FROM asset WHERE gebruikerId = ?;";
-        List<Asset> assets = jdbcTemplate.query(sql, new JDBCAssetDAO.AssetRowMapper(), klant.getGebruikerId());
-        for (Asset asset : assets) {
-            asset.setGebruiker(klant);
+        List<Asset> assets = jdbcTemplate.query(sql, new JDBCAssetDAO.AssetRowMapper(), gebruiker.getGebruikerId());
+        if(assets.size() != 0) {
+            for (Asset asset : assets) {
+                asset.setGebruiker(gebruiker);
+            }
         }
         return assets;
     }

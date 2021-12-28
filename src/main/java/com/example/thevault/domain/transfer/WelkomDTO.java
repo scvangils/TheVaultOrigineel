@@ -24,7 +24,7 @@ public class WelkomDTO {
         super();
         logger.info("New WelkomDTO, no args constructor");
     }
-
+    //TODO StackOverflowError wegwerken
     public WelkomDTO(Klant klant){
         super();
         this.saldo = klant.getRekening().getSaldo();

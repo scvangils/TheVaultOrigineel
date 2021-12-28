@@ -125,7 +125,7 @@ class RootRepositoryTest {
     void vindRekeningVanKlant() {
         Mockito.when(rekeningDAO.vindRekeningVanGebruiker(testKlant)).thenReturn(rekeningOrigineelSaldo);
         Rekening expected = rekeningOrigineelSaldo;
-        Rekening actual = rootRepository.vindRekeningVanGebuiker(testKlant);
+        Rekening actual = rootRepository.vindRekeningVanGebruiker(testKlant);
         assertThat(actual).as("Test vind rekening van testklant").isNotNull().isEqualTo(expected).
                 hasNoNullFieldsOrPropertiesExcept("gebruiker").extracting("iban", "saldo").
                 contains("INGB0001234567NL",1000.0);
@@ -135,7 +135,7 @@ class RootRepositoryTest {
     void vraagSaldoOpVanKlant() {
         Mockito.when(rekeningDAO.vraagSaldoOpVanGebruiker(testKlant)).thenReturn(rekeningOrigineelSaldo.getSaldo());
         double expected = rekeningOrigineelSaldo.getSaldo();
-        double actual = rootRepository.vraagSaldoOpVanKlant(testKlant);
+        double actual = rootRepository.vraagSaldoOpVanGebruiker(testKlant);
         assertThat(actual).as("Test vraag saldo op van testklant").isNotNull().isEqualTo(expected).
                 isNotNegative().isNotEqualTo(gewijzigdSaldo);
     }
@@ -144,7 +144,7 @@ class RootRepositoryTest {
     void wijzigSaldoVanKlant() {
         Mockito.when(rekeningDAO.wijzigSaldoVanGebruiker(testKlant, teWijzigenBedrag)).thenReturn(rekeningGewijzigdSaldo);
         Rekening expected = rekeningGewijzigdSaldo;
-        Rekening actual = rootRepository.wijzigSaldoVanKlant(testKlant, teWijzigenBedrag);
+        Rekening actual = rootRepository.wijzigSaldoVanGebruiker(testKlant, teWijzigenBedrag);
         assertThat(actual).as("Test wijzigen saldo van testklant").isNotNull().isEqualTo(expected).
                 isNotEqualTo(rekeningOrigineelSaldo).hasNoNullFieldsOrPropertiesExcept("gebruiker").
                 extracting("iban", "saldo").contains("INGB0001234567NL",1100.0);
@@ -200,14 +200,20 @@ class RootRepositoryTest {
                 extracting("name", "symbol").contains("VaultMoney", "VMN");
     }
 
-    // TODO overleg Carmen mbt notnullfields van transacties, rekening en portefeuille
+/*    // TODO overleg Carmen mbt notnullfields van transacties, rekening en portefeuille
     @Test
     void wijzigAssetVanKlant() {
-        Mockito.when(assetDAO.updateAsset(testAsset3)).thenReturn(testAsset3);
+        Mockito.when(assetDAO.updateAsset(testAsset3, , )).thenReturn(testAsset3);
         Asset expected = testAsset3;
         Asset actual = rootRepository.wijzigAssetVanKlant(testAsset3);
         assertThat(actual).as("Test wijzigen asset van testklant").isNotNull().isEqualTo(expected).
                 isIn(portefeuille).hasNoNullFieldsOrProperties().asString().startsWith("Asset{").contains("Coyne").
                 doesNotContain("BitCoin").hasSize(222);
+    }*/
+
+
+    @Test
+    void checkRekeningNaTransactie () {
+
     }
 }

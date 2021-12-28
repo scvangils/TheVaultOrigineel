@@ -33,14 +33,19 @@ public class JDBCTransactieDAO implements TransactieDAO {
         logger.info("New JDBCTransactieDAO");
     }
 
-
+    //TODO bedrag in prijs veranderen in database
     private PreparedStatement slaTransactieOpStatement(Transactie transactie, Connection connection) throws SQLException {
-        String sql = "INSERT INTO transactie (aantal, momentTransactie, cryptomuntId, bedrag) values (?, ?, ?, ?);";
+        String sql = "INSERT INTO transactie (aantal, momentTransactie, koperGebruikerId, cryptomuntId, bedrag," +
+                " verkoperGebruikerId, bankFee) values (?, ?, ?, ?, ?, ?, ?);";
         PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         ps.setDouble(1, transactie.getAantal());
-        ps.setDate(2, Date.valueOf(transactie.getMomentTransactie().toLocalDate()));
-        ps.setInt(3, transactie.getCryptomunt().getId());
-        ps.setDouble(4, transactie.getPrijs());
+        System.out.println("*** Dit is de datum: " + transactie.getMomentTransactie());
+        ps.setTimestamp(2, Timestamp.valueOf(transactie.getMomentTransactie()));
+        ps.setInt(3, transactie.getKoper().getGebruikerId());
+        ps.setInt(4, transactie.getCryptomunt().getId());
+        ps.setDouble(5, transactie.getPrijs());
+        ps.setInt(6, transactie.getVerkoper().getGebruikerId());
+        ps.setDouble(7, transactie.getBankFee());
         return ps;
     }
 
@@ -57,7 +62,7 @@ public class JDBCTransactieDAO implements TransactieDAO {
     @Override
     public List<Transactie> geefAlleTransacties(){
         String sql = "SELECT * FROM transactie;";
-        return jdbcTemplate.query(sql, new JDBCTransactieDAO.TransactieRowMapper());
+        return jdbcTemplate.query(sql, new TransactieRowMapper());
     }
 
     @Override
@@ -65,7 +70,7 @@ public class JDBCTransactieDAO implements TransactieDAO {
         String sql = "SELECT * FROM transactie WHERE verkoperGerbuikerId = ? OR koperGebruikerId = ?;";
         List<Transactie> transactiesGebruiker = null;
         try {
-            transactiesGebruiker = jdbcTemplate.query(sql, new JDBCTransactieDAO.TransactieRowMapper()
+            transactiesGebruiker = jdbcTemplate.query(sql, new TransactieRowMapper()
                     , gebruiker.getGebruikerId(), gebruiker.getGebruikerId());
         } catch (EmptyResultDataAccessException exception){
             System.out.println("Geen data gevonden, exceptie: " + exception);
@@ -78,7 +83,7 @@ public class JDBCTransactieDAO implements TransactieDAO {
         String sql = "SELECT * FROM transactie WHERE verkoperGerbuikerId = ? AND koperGebruikerId = ? AND momentTransactie BETWEEN ? AND ?;";
         List<Transactie> transactiesGebruiker = null;
         try {
-            transactiesGebruiker = jdbcTemplate.query(sql, new JDBCTransactieDAO.TransactieRowMapper()
+            transactiesGebruiker = jdbcTemplate.query(sql, new TransactieRowMapper()
                     , gebruiker.getGebruikerId(), gebruiker.getGebruikerId()
                     , startDatum, eindDatum);
         } catch (EmptyResultDataAccessException exception){
@@ -92,7 +97,7 @@ public class JDBCTransactieDAO implements TransactieDAO {
         String sql = "SELECT * FROM transactie WHERE momentTransactie BETWEEN ? AND ?;";
         List<Transactie> transactiesInPeriode = null;
         try {
-            transactiesInPeriode = jdbcTemplate.query(sql, new JDBCTransactieDAO.TransactieRowMapper()
+            transactiesInPeriode = jdbcTemplate.query(sql, new TransactieRowMapper()
                     , startDatum, eindDatum);
         } catch (EmptyResultDataAccessException exception){
             System.out.println("Geen data gevonden, exceptie: " + exception);
@@ -102,11 +107,11 @@ public class JDBCTransactieDAO implements TransactieDAO {
 
     @Override
     public List<Transactie> geefTransactiesVanGebruikerMetCryptomunt(Gebruiker gebruiker, Cryptomunt cryptomunt) {
-        String sql = "SELECT * FROM transactie WHERE verkoperGerbuikerId = ? AND koperGebruikerId = ? AND cryptomuntId = ?;";
+        String sql = "SELECT * FROM transactie WHERE verkoperGebruikerId = ? AND koperGebruikerId = ? AND cryptomuntId = ?;";
 
         List<Transactie> transactiesGebruiker = null;
         try {
-            transactiesGebruiker = jdbcTemplate.query(sql, new JDBCTransactieDAO.TransactieRowMapper()
+            transactiesGebruiker = jdbcTemplate.query(sql, new TransactieRowMapper()
                     , gebruiker.getGebruikerId(), gebruiker.getGebruikerId()
                     , cryptomunt.getId());
         } catch (EmptyResultDataAccessException exception){
@@ -115,25 +120,38 @@ public class JDBCTransactieDAO implements TransactieDAO {
         return transactiesGebruiker;
     }
 
+    @Override
+    public Transactie verwijderTransactie(Transactie transactie) {
+        String sql = "DELETE FROM transactie WHERE transactieId = ?";
 
-    private class TransactieRowMapper implements RowMapper<Transactie> {
+        int amountOfRows = jdbcTemplate.update(sql, transactie.getTransactieId());
+        if(amountOfRows == 0){
+            // TODO bedenk exception
+        }
+        return transactie;
+
+    }
+
+
+    private static class TransactieRowMapper implements RowMapper<Transactie> {
         @Override
         public Transactie mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
             LocalDateTime dateTime = resultSet.getObject("momentTransactie", LocalDateTime.class);
-            double transactionFee = resultSet.getDouble("bankFee");
             Gebruiker koper = new Klant();
             Gebruiker verkoper = new Klant();
             Cryptomunt cryptomunt = new Cryptomunt(resultSet.getInt("cryptomuntId"));
             koper.setGebruikerId(resultSet.getInt("koperGebruikerId"));
             verkoper.setGebruikerId(resultSet.getInt("verkoperGebruikerId"));
-
-            Transactie transactie = new Transactie(dateTime
-                    , verkoper, cryptomunt, resultSet.getDouble("bedrag")
-                    , resultSet.getDouble("aantal"), koper, transactionFee);
+            Transactie transactie = new Transactie(
+                    dateTime
+                    , verkoper
+                    , cryptomunt
+                    , resultSet.getDouble("bedrag")
+                    , resultSet.getDouble("aantal")
+                    , koper
+                    , resultSet.getDouble("bankFee"));
             transactie.setTransactieId(resultSet.getInt("transactieId"));
             return transactie;
         }
     }
-
-
 }

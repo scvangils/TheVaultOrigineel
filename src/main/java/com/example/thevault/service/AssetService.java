@@ -62,32 +62,28 @@ public class AssetService {
 
     /**
      * De klant wil informatie over een asset in zijn/haar portefeuille aanpassen, op basis van een transactie
-     * @param asset de asset die moet worden aangepast
+     * @param gebruiker de handelende partij
+     * @param cryptomunt de munt waarin gehandeld wordt
+     * @param aantal de hoeveelheid die verhandeld wordt
      * @return Asset de asset die is aangepast
      */
-    public Asset wijzigAsset(Asset asset){
-        return rootRepository.wijzigAssetVanKlant(asset);
+
+    public Asset wijzigAssetGebruiker(Gebruiker gebruiker, Cryptomunt cryptomunt, double aantal){
+        List<Asset> portefeuille = vulPortefeuilleVanGebruiker(gebruiker);
+        if(portefeuille != null) {
+        return rootRepository.wijzigAssetVanKlant(gebruiker, cryptomunt, aantal);
+        }
+        return null;
+    }
+    public List<Asset> vulPortefeuilleVanGebruiker(Gebruiker gebruiker){
+        return rootRepository.vulPortefeuilleKlant(gebruiker);
     }
 
-    public Asset wijzigAssetGebruiker(Asset asset){
-        List<Asset> portefeuille;
-        Gebruiker gebruikerVanAsset = asset.getGebruiker();
-        System.out.println("ASSET GEBRUIKER: " + asset.getGebruiker());
-        rootRepository.wijzigAssetVanKlant(asset);
-        if(gebruikerVanAsset instanceof Bank){
-            portefeuille = ((Bank) gebruikerVanAsset).getPortefeuille();
-        } else {
-             portefeuille = ((Klant) gebruikerVanAsset).getPortefeuille();
-        }
-        for (Asset assetInPortefeuille: portefeuille) {
-            if(asset.getCryptomunt()== assetInPortefeuille.getCryptomunt()){
-                assetInPortefeuille.setAantal(asset.getAantal());
-            }
-        }
-        return asset;
+    public Cryptomunt geefCryptomunt(int cryptomuntId){
+        return rootRepository.geefCryptomunt(cryptomuntId);
+    }
+    public List<Cryptomunt> geefAlleCryptomunten(){
+        return rootRepository.geefAlleCryptomunten();
     }
 
-    public RootRepository getRootRepository() {
-        return rootRepository;
-    }
 }

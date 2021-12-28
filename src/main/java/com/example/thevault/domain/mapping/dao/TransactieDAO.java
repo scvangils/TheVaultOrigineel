@@ -23,5 +23,6 @@ public interface TransactieDAO {
 
     List<Transactie> geefTransactiesVanGebruikerMetCryptomunt(Gebruiker gebruiker, Cryptomunt cryptomunt);
 
+    Transactie verwijderTransactie(Transactie transactie);
 
 }
