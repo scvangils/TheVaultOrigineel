@@ -15,18 +15,12 @@
 <!-- TODO Check voorbeeld: https://www.w3schools.com/html/html_classes.asp-->
 <!-- TODO Form van inlog netjes bovenaan de pagina weergeven, ipv onder de andere forms-->
 
-<!--Hieronder wordt een navigatiebalk gemaakt-->
-<!--Deze verwijst nu nog naar twee bookmarks voor beide invoerformulieren, maar dat kan beter-->
+<!-- TODO Kan de DOM kleiner? Dat maakt de website sneller. Dan moeten we meer JavaScript gebruiken om de elementen te vullen-->
+
 <div class="header" name="header" id="header">
     <p><h1> The Vault</h1></p>
     <p><h2> Bank to the Future </h2></p>
 </div>
-
-<ul class="navigatiebalk" name="navigatiebalk" id="navigatiebalk">
-    <li><a href=#registratie-personalia" id="navigatiebalk-registreer" class="navigatiebalk-onderdeel">Registreren</a></li>
-    <li><a href=#inlogform id="navigatiebalk-inlog" class="navigatiebalk-onderdeel">Inloggen</a></li>
-    <li><a href=# id="navigatiebalk-vuller">LEGE TEKST</a></li>
-</ul>
 
 <div class="flex-container">
 
@@ -68,7 +62,7 @@
 </div>
 
 <div class="inlog" id="inlog" name="inlogscherm">
-<form id="inlogform" method="post">
+<form name="inlogform" id="inlogform" method="post">
     <fieldset>
         <legend>Inloggegevens</legend>
     <p><label for="gebruikersnaamInlog" class="onderdeel-inlog label">gebruikersnaam</label></p>
@@ -77,12 +71,10 @@
     <p><label for="wachtwoordInlog" class="onderdeel-inlog label">wachtwoord</label></p>
     <p><input type="password" id="wachtwoordInlog" name="wachtwoordInlog" placeholder="wachtwoord"
               class="onderdeel-inlog invoerveld"required></p>
-       <p><input class="button" type="button" id = "login" value = "Log in" onclick="login()"></p>
+       <p><input class="button" type="button" id = "loginbutton" value = "Log in" onclick="login()"></p>
     </fieldset>
 </form>
 </div>
-
 </div>
-
 </body>
 </html>
