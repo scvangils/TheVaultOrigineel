@@ -109,24 +109,30 @@ public class JDBCAssetDAO implements AssetDAO{
      */
     @Override // aantal is positief voor koper en negatief voor verkoper
     public Asset updateAsset(Gebruiker gebruiker, Cryptomunt cryptomunt, double aantal) {
-        Asset asset;
         String sql = "UPDATE asset SET aantal = ? WHERE gebruikerId = ? AND cryptomuntId = ?;";
         Optional<Asset>  optionalAsset = geefAssetGebruiker(gebruiker, cryptomunt);
-        if(aantal < 0) { // kijk of verkoper asset bezit en genoeg ervan heeft
+        // kijk of verkoper asset bezit en genoeg ervan heeft
+        genoegCrypto(aantal, optionalAsset);
+        //controleer of koper deze asset al bezit
+        if(optionalAsset.isEmpty()) {
+            return voegNieuwAssetToeAanPortefeuille(new Asset(cryptomunt, aantal, gebruiker));
+        }
+        jdbcTemplate.update(sql, (optionalAsset.get().getAantal() + aantal), gebruiker.getGebruikerId(), cryptomunt.getId());
+        return optionalAsset.get();
+    }
+
+    /**
+     * Dit betreft een controle of een verkoper voldoende cryptomunt bezit om de transactie door te zetten
+     * @param aantal het aantal cryptomunten dat de klant wil verkopen
+     * @param Optional<Asset> de asset die de verkoper wil verkopen
+     */
+    private void genoegCrypto(double aantal, Optional<Asset> optionalAsset) {
+        if(aantal < 0) {
             if (optionalAsset.isEmpty() || optionalAsset.get().getAantal() < -aantal) {
                 throw new NotEnoughCryptoException();
             }
         }
-        else {
-            if(optionalAsset.isEmpty()) { //koper heeft nog niets van deze asset
-                return voegNieuwAssetToeAanPortefeuille(new Asset(cryptomunt, aantal, gebruiker));
-            }
-            }
-        jdbcTemplate.update(sql, (optionalAsset.get().getAantal() + aantal), gebruiker.getGebruikerId(), cryptomunt.getId());
-            return optionalAsset.get();
-        }
-
-
+    }
 
     /**
      * Dit betreft het vinden van een cryptomunt die in de portefeuille zit
@@ -155,7 +161,8 @@ public class JDBCAssetDAO implements AssetDAO{
     @Override
     public List<Asset> geefAlleAssets(Gebruiker gebruiker){
         String sql = "SELECT * FROM asset WHERE gebruikerId = ?;";
-        List<Asset> assets = jdbcTemplate.query(sql, new JDBCAssetDAO.AssetRowMapper(), gebruiker.getGebruikerId());
+        List<Asset> assets;
+        assets = jdbcTemplate.query(sql, new JDBCAssetDAO.AssetRowMapper(), gebruiker.getGebruikerId());
         if(assets.size() != 0) {
             for (Asset asset : assets) {
                 asset.setGebruiker(gebruiker);
@@ -163,5 +170,4 @@ public class JDBCAssetDAO implements AssetDAO{
         }
         return assets;
     }
-
 }

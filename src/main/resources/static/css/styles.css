@@ -48,37 +48,6 @@ fieldset input:focus{
     font-weight: bold;
 }
 
-.navigatiebalk {
-    list-style-type: none;
-    margin: 10px;
-    padding: 0;
-    display: block;
-}
-
-.navigatiebalk-onderdeel{
-    float: left;
-    display: block;
-    padding: 16px;
-    font-size: 30px;
-    background-color: darkorchid;
-    color: aliceblue;
-}
-
-#navigatiebalk-vuller{
-    clear-after: left;
-    display: block;
-    padding: 16px;
-    font-size: 30px;
-    background-color: darkorchid;
-    color: aliceblue;
-    visibility: hidden;
-}
-
-.navigatiebalk-onderdeel:hover {
-    background-color: aliceblue;
-    color: darkorchid;
-}
-
 .header {
     text-align: center;
     margin: 10px;
@@ -135,6 +104,7 @@ input:placeholder-shown {
     border-style: hidden;
     text-decoration: underline;
 }
+
 input:placeholder-shown {
     font-style: italic;
 }

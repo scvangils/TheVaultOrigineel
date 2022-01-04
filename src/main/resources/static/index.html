@@ -11,12 +11,8 @@
     <script src="javascript/validation.js" defer></script>
     <link rel = "icon" href = "http://localhost:63342/vault/src/main/resources/Sprint2/favicon.ico" type="image/x-icon"/>
 </head>
-<body>
-
-<!-- TODO Wanneer klant wil registreren: tabel direct hieronder zichtbaar, en tabel voor inlog onzichtbaar. -->
-<!-- TODO Dit kan door via JavaScript en classes de display style op 'none' te zetten -->
-<!-- TODO Check voorbeeld: https://www.w3schools.com/html/html_classes.asp-->
-<!-- TODO Form van inlog netjes bovenaan de pagina weergeven, ipv onder de andere forms-->
+<!--Het inlogform is onzichtbaar bij het laden van de website, het registreerdform is bereikbaar via een knop-->
+<body onload="loginScreen()">
 
 <!-- TODO Kan de DOM kleiner? Dat maakt de website sneller. Dan moeten we meer JavaScript gebruiken om de elementen te vullen-->
 
@@ -27,7 +23,7 @@
 
 <div class="flex-container">
 
-<div class="registratie-personalia" id=registratie-personalia">
+<div class="registratie-personalia" id="registratie-personalia">
 <form id ="registratieOverig" method="post" action="/test">
     <fieldset>
         <legend>Registreer persoonsgegevens</legend>
@@ -60,21 +56,22 @@
 </form>
     </div>
 
+    <div class="inlog" id="inlog" name="inlogscherm">
+        <form name="inlogform" id="inlogform" method="post">
+            <fieldset>
+                <legend>Inloggegevens</legend>
+                <p><label for="gebruikersnaamInlog" class="onderdeel-inlog label">gebruikersnaam</label></p>
+                <p><input type="text" id="gebruikersnaamInlog" name="gebruikersnaam" placeholder="gebruikersnaam"
+                          class="onderdeel-inlog invoerveld" required autofocus></p>
+                <p><label for="wachtwoordInlog" class="onderdeel-inlog label">wachtwoord</label></p>
+                <p><input type="password" id="wachtwoordInlog" name="wachtwoord" placeholder="wachtwoord"
+                          class="onderdeel-inlog invoerveld"required></p>
+                <p><input class="button" type="button" id = "loginbutton" value = "Log in" onclick="login()"></p>
+            </fieldset>
+            <p><input class="button" type="button" id = "nieuweklantbutton" value = "Ik wil klant worden" onclick="registreerScreen()"></p>
+        </form>
+    </div>
 
-<div class="inlog" id="inlog" name="inlogscherm">
-<form name="inlogform" id="inlogform" method="post">
-    <fieldset>
-        <legend>Inloggegevens</legend>
-    <p><label for="gebruikersnaamInlog" class="onderdeel-inlog label">gebruikersnaam</label></p>
-    <p><input type="text" id="gebruikersnaamInlog" name="gebruikersnaamInlog" placeholder="gebruikersnaam"
-              class="onderdeel-inlog invoerveld" required autofocus></p>
-    <p><label for="wachtwoordInlog" class="onderdeel-inlog label">wachtwoord</label></p>
-    <p><input type="password" id="wachtwoordInlog" name="wachtwoordInlog" placeholder="wachtwoord"
-              class="onderdeel-inlog invoerveld"required></p>
-       <p><input class="button" type="button" id = "loginbutton" value = "Log in" onclick="login()"></p>
-    </fieldset>
-</form>
-</div>
 </div>
 </body>
 </html>

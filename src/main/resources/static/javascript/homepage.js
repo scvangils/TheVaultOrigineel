@@ -1,5 +1,15 @@
 "use strict";
 
+function loginScreen(){
+    document.getElementById("registratie-personalia").style.visibility="hidden";
+    document.getElementById("inlog").style.visibility="visible";
+}
+
+function registreerScreen(){
+    document.getElementById("registratie-personalia").style.visibility="visible";
+    document.getElementById("inlog").style.visibility="hidden";
+}
+
 const postcodeVeld = document.getElementById("postcode");
 const huisnummerVeld = document.getElementById("huisnummer");
 const straatnaamVeld = document.getElementById("straatnaam");
@@ -104,27 +114,30 @@ function vindStraatnaamEnPlaatsnaam(){
 }
 
 /*TODO Functie Login schrijven*/
-/* 1- Gegevens van website ophalen */
-/* 2- Gegevens doorsturen naar het juiste endpoint */
 /* 3- Vanuit het endpoint moet een check worden uitgevoerd op naam en wachtwoord */
 /* 3a-Hier staat informatie over de authenticate header: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/WWW-Authenticate*/
-/* 3a-Moet ik hiervoor het schema HMAC256 gebruiken? Zie ook 'Authorization' header van vindstraatenplaatsnaam. */
+/* 3a-Moet ik hiervoor het schema HMAC256 gebruiken (is de manier waarop we Tokens maken)? Of 'base64' (zie loginService --> valideerLogin)? Zie ook 'Authorization' header van vindstraatenplaatsnaam. */
 /* 4a-Als 'valid' dan moet gebruiker worden doorgestuurd naar dashboard */
 /* 4b-En er moet een token worden meegegeven die wordt opgeslagen, via sessionStorage.setItem("sessietoken", "token")? */
 
 function login(){
     const formDataInlog = new FormData(document.getElementById("inlogform"));
     const inlogGegevens = Object.fromEntries(formDataInlog);
+    console.log("Hier zijn de inloggegevens " + JSON.stringify(inlogGegevens));
 
-    /*Hoe werkt deze fetch? Hoe weet ik of de API werkt?*/
-    fetch('/inlog', {
+    /*Hoe werkt deze fetch? Hoe weet ik of de API werkt? */
+    /*Check KlantController PostMapping Login om te zien wat ik ermee kan*/
+    fetch('/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        /*Is dit zo veilig? Via 'FormData' zouden de gegevens al encoded moeten zijn, is dat voldoende?*/
+        /*Ik kan de informatie via json versturen, maar is dat veilig genoeg? DataForm zou de info al moeten encoden...*/
+        /* En gaat het zo werken, of werkt serverside alleen/beter via x-www-form-urlencoded? Moet ik iets doen aan de serverside om de JSON op te vangen? */
         body: JSON.stringify(inlogGegevens),
     })
+        /*In de WelkomDTO zitten: saldo (double), portefeuille (List<Asset>), IBAN (String)*/
+        /*Worden die er nu op de juiste manier uitgehaald? We willen die gebruiken in het Dashboard*/
         .then((response) => {
             console.log('Success:', response);
         })
@@ -142,3 +155,4 @@ function login(){
 /* Closures in JavaScript: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures */
 /* Simpele uitleg closures: https://dmitripavlutin.com/simple-explanation-of-javascript-closures/*/
 /* Asymetrisch met promise en await: https://www.w3schools.com/js/js_async.asp*/
+/* Voorbeeld hoe we de juiste schermpjes zichtbaar/onzichtbaar maken met buttons: https://www.w3schools.com/js/tryit.asp?filename=tryjs_visibility*/

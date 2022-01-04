@@ -152,7 +152,7 @@ public class RootRepository {
      */
     public List<Asset> vulPortefeuilleKlant(Gebruiker gebruiker){
         List<Asset> portefeuille = assetDAO.geefAlleAssets(gebruiker);
-        if(portefeuille != null){
+        if(portefeuille.size() != 0){
         for (Asset asset: portefeuille) {
             Cryptomunt cryptomunt = cryptomuntDAO.geefCryptomunt(asset.getCryptomunt().getId());
             asset.setCryptomunt(cryptomunt);

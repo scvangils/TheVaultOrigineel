@@ -3,6 +3,7 @@
 
 package com.example.thevault.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ public class Asset {
 
     private Cryptomunt cryptomunt;
     private double aantal;
+    @JsonBackReference
     private Gebruiker gebruiker;
 
     @JsonIgnore

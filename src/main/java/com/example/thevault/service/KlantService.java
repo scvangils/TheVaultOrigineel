@@ -76,12 +76,13 @@ public class KlantService {
     public Asset geefAssetMetCryptoMuntVanGebruiker(Gebruiker gebruiker, Cryptomunt cryptomunt){
         List<Asset> portefeuille = rootRepository.vulPortefeuilleKlant(gebruiker);
         if(portefeuille != null){
-        for (Asset asset: portefeuille) {
-            if(asset.getCryptomunt().equals(cryptomunt)){
-                return asset;
+            for (Asset asset: portefeuille) {
+                if(asset.getCryptomunt().equals(cryptomunt)){
+                    return asset;
+                }
             }
         }
-        }       return null;
+        return null;
     }
 
 
