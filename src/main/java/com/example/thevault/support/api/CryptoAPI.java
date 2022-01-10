@@ -26,21 +26,11 @@ import java.util.List;
 
 public class CryptoAPI {
 
-//    public cryptoDagwaarde() {
-//        super();
-//        logger.info("New IndividualCryptoApiController");
-//    }
-
-
     private static HttpURLConnection connection;
     private static String apiKey = "ce1e8754-b694-41b5-99ca-dbb28dc5b68d";
     private static double waarde;
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(CryptoAPI.class);
-
-    public static void main(String[] args) {
-        System.out.println(cryptoDagwaarde(new Cryptomunt(5805, "avalanche", "AVAX")));
-    }
 
     public static double cryptoDagwaarde(Cryptomunt cryptomunt){
         String uri = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest";
