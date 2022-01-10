@@ -80,7 +80,6 @@ public class RootRepository {
         maakKlantCompleet(klant);
         return klant;
     }
-    //TODO rekening toevoegen na database compleet
     private void maakKlantCompleet(Klant klant) {
         if(klant != null){
             klant.setRekening(vindRekeningVanGebruiker(klant));
@@ -219,6 +218,9 @@ public class RootRepository {
         return cryptoWaardeDAO.slaCryptoWaardeOp(cryptoWaarde);
     }
 
+    public List<CryptoWaarde> haalAlleCryptoWaardesVanCryptomunt(Cryptomunt cryptomunt){
+        return cryptoWaardeDAO.getCryptoWaardeByCryptomunt(cryptomunt);
+    }
 
 
 
@@ -276,30 +278,8 @@ public class RootRepository {
         return transactieDAO.geefTransactiesVanGebruikerMetCryptomunt(gebruiker, cryptomunt);
     }
 
-/*    public Transactie genereerRandomTransactie(){
-        Transactie transactie = new Transactie();
-        Cryptomunt cryptomunt = this.cryptomuntDAO.geefCryptomunt(genereerRandomGetal(1,20,1));
-        transactie.setCryptomunt(cryptomunt);
-        LocalDate cryptoDatum = LocalDate.of(2021, 11, genereerRandomGetal(1, 30, 1));
-        double prijs = cryptoWaardeDAO.getCryptoWaardeByCryptomuntAndDate(cryptomunt, cryptoDatum).getWaarde();
+    //TODO Transacties compleet maken op juiste wijze
 
-        int koperId = genereerRandomGetal(0,3000,1);
-        int verkoperId = genereerRandomGetal(0,3000,1);
-        while (koperId == verkoperId){
-            verkoperId = genereerRandomGetal(0,3000,1);
-        }
-        transactie.setVerkoper(this.klantDAO.vindKlantById(koperId));
-        transactie.setKoper(this.klantDAO.vindKlantById(verkoperId));
-        double afwijking = 0;
-        if(transactie.getKoper().getGebruikerId() != 0 && transactie.getVerkoper().getGebruikerId() != 0){
-            afwijking = genereerRandomGetal(-500000, 500000, 1) / 10000000.0; // max 5% afwijking
-        }
-        transactie.setPrijs(prijs * (1 + afwijking));
-        transactie.setAantal(genereerRandomGetal(0,2000,1) / 1000.0);
-     //   transactie.setMomentTransactie(cryptoDatum);
-     //   transactie.setBankFee(Bank.getInstance().getFee());
-        return transactie;
-    }*/
 
     public Cryptomunt geefCryptomunt(int cryptomuntId){
         return cryptomuntDAO.geefCryptomunt(cryptomuntId);
@@ -307,7 +287,6 @@ public class RootRepository {
     public List<Cryptomunt> geefAlleCryptomunten(){
         return cryptomuntDAO.geefAlleCryptomunten();
     }
-
 
 
 }

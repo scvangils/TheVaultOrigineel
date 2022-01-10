@@ -37,8 +37,8 @@ public class JDBCCryptoWaardeDAO implements CryptoWaardeDAO {
     @Override
     public List<CryptoWaarde> getCryptoWaardeByCryptomunt(Cryptomunt cryptomunt) {
         String sql = "SELECT * FROM dagkoersCrypto WHERE cryptomuntId = ?;";
-        jdbcTemplate.query(sql, new CryptoWaardeRowMapper(), cryptomunt.getId());
-        return null;
+    return jdbcTemplate.query(sql, new CryptoWaardeRowMapper(), cryptomunt.getId());
+
     }
     //vooral handig voor laatste waarde
     @Override

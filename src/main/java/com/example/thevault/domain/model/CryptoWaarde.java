@@ -71,4 +71,14 @@ public class CryptoWaarde {
     public void setDatum(LocalDate datum) {
         this.datum = datum;
     }
+
+    @Override
+    public String toString() {
+        return "CryptoWaarde{" +
+                "cryptoWaardeId='" + cryptoWaardeId + '\'' +
+                ", cryptomunt=" + cryptomunt +
+                ", waarde=" + waarde +
+                ", datum=" + datum +
+                '}';
+    }
 }

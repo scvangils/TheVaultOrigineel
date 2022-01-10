@@ -25,6 +25,8 @@ public class Trigger {
     private double triggerPrijs;
     private double aantal;
     private boolean koper; // TODO juiste aanpak?
+    // Datum nodig?
+    // Id nodig?
 
     public Trigger() {
         super();

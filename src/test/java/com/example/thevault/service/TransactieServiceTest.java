@@ -74,11 +74,11 @@ class TransactieServiceTest {
         testAsset4.setGebruiker(testKlant2);
 
         excpectedTransactie1 = new Transactie(LocalDateTime.now(), testKlant1, testCryptomunt1, 1050
-                , 1.6, testKlant2, bankFee);
+                , 1.6, testKlant2);
         testTransactie2 = new Transactie(LocalDateTime.now(), testKlant2, testCryptomunt2, 9000
-                , 1, testKlant1, bankFee);
+                , 1, testKlant1);
         testTransactie3 = new Transactie(LocalDateTime.now(), testKlant1, testCryptomunt3, 10000
-                , 1, testKlant2, bankFee);
+                , 1, testKlant2);
 
         testRekening1 = new Rekening("NL20RABO9876543", 10000.0);
         testRekening11 =new Rekening("NL20RABO9876543", 9000.0);

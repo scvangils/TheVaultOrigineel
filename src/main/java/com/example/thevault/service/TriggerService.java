@@ -31,10 +31,12 @@ public class TriggerService {
     
     public Trigger slaTriggerOp(Trigger trigger){
         // eerst kijken of iemand in staat is om mogelijke transactie te betalen
+        // dan wel of iemand genoeg van een asset heeft om te verkopen
+        // TODO eerst in javascript al nakijken
         
         // sla trigger op
         
-        return null;
+        return trigger;
     }
     
     public void zoekNaarMatch(Trigger trigger){
@@ -44,11 +46,37 @@ public class TriggerService {
         // vergelijk met triggerPrijs
 
         // vergelijk met aantal (alleen bij perfecte match?)
+
+        // triggers weghalen van klanten die trigger niet meer kunnen betalen?
     }
 
     public void sluitTransactieAf(Trigger trigger){
         // via transactionService proberen transactie af te sluiten
         
         // wat te doen als dit niet kan? Trigger verwijderen?
+    }
+
+    public Trigger vergelijkTriggerMetSaldo(Trigger trigger){
+
+        return trigger;
+    }
+    public Trigger vergelijkTriggerMetAsset(Trigger trigger){
+
+        return trigger;
+    }
+    // moet dit periodieke functie worden?
+    public void vergelijkAlleTriggersMetBeschikbareFondsen(){
+        // Lijst van alle triggers binnenhalen
+
+        // bovenstaande methodes in loop langsgaan
+    }
+
+    // Nodig?
+    public Trigger maakBankTrigger(Trigger klantTrigger){
+        // haal huidige koers van betreffende cryptomunt
+
+        // zet aantal op aantal van klant
+
+        return null;
     }
 }

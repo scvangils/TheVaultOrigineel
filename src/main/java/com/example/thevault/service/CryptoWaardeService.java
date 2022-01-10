@@ -7,6 +7,7 @@ import com.example.thevault.support.api.CryptoAPI;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -21,10 +22,12 @@ public class CryptoWaardeService {
     private final Logger logger = LoggerFactory.getLogger(CryptoWaardeService.class);
 
     private static final String DEFAULT_ID = "defaultId";
+    private static final String CRON_ELKE_DAG_OM_MIDDERNACHT = "0 0 0 * * *";
+    private static final String CRON_NEDERLANDSE_TIJDZONE = "Europe/Paris";
 
-    /*
+/*    *//*
     roept 1x per dag de methode haalCryptoWaardes op
-     */
+     *//*
     public void main(String[] args) {
         Timer timer = new Timer();
         TimerTask tt = new TimerTask() {
@@ -35,10 +38,18 @@ public class CryptoWaardeService {
         };
         timer.schedule(tt, new Date(), TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
 
-    }
+    }*/
     public CryptoWaardeService(RootRepository rootRepository){
         super();
         this.rootRepository = rootRepository;
+    }
+
+    //TODO Arraymaker-methode schrijven
+    public CryptoWaarde[] maakCryptoWaardeArray(Cryptomunt cryptomunt){
+        // bepalen wat voor soort array moet geschreven worden
+        List<CryptoWaarde> cryptoWaardeList = rootRepository.haalAlleCryptoWaardesVanCryptomunt(cryptomunt);
+        // eventueel in json-string veranderen
+        return null;
     }
 
     public void slaCryptoWaardeOp(CryptoWaarde cryptoWaarde){
@@ -51,6 +62,7 @@ public class CryptoWaardeService {
     public CryptoWaarde vindCryptoWaardeOpDatum(Cryptomunt cryptomunt, LocalDate datum){
         return rootRepository.haalCryptoWaardeOpDatum(cryptomunt, datum);
     }
+    @Scheduled(cron = CRON_ELKE_DAG_OM_MIDDERNACHT, zone = CRON_NEDERLANDSE_TIJDZONE)
     public void haalCryptoWaardes(){
         for (int i = 0; i < cryptoLijst().size(); i++) {
             double cryptoDagwaarde = CryptoAPI.cryptoDagwaarde(cryptoLijst().get(i));

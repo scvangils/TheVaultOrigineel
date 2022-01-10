@@ -24,6 +24,8 @@ public class Transactie{
     private Cryptomunt cryptomunt;
     private double bankFee;
 
+
+
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Rekening.class);
 
@@ -31,21 +33,44 @@ public class Transactie{
         super();
         logger.info("lege Transactie, no args constructor");
     }
+    //TODO navragen of dit betere code is
+    public Transactie(LocalDateTime momentTransactie,
+                      Trigger triggerKoper, Trigger triggerVerkoper) {
+        this.momentTransactie = momentTransactie;
+        this.aantal = triggerKoper.getAantal();
+        this.cryptomunt = triggerKoper.getCryptomunt();
+        this.prijs = getPrijsViaTrigger(triggerKoper, triggerVerkoper);
+        this.koper = triggerKoper.getGebruiker();
+        this.verkoper = triggerVerkoper.getGebruiker();
+        this.bankFee = Bank.getInstance().getFee();
+        logger.info("New "+ this + " aangemaakt");
+    }
+
+    public double getPrijsViaTrigger(Trigger triggerKoper, Trigger triggerVerkoper){
+        return triggerKoper.getTriggerPrijs() - triggerVerkoper.getTriggerPrijs();
+    }
 
 
+
+
+
+    //TODO navragen of fee zo doen correct is
     public Transactie(LocalDateTime momentTransactie,
                       Gebruiker verkoper, Cryptomunt cryptomunt, double prijs, double aantal,
-                      Gebruiker koper, double bankFee) {
+                      Gebruiker koper) {
         this.aantal = aantal;
         this.momentTransactie = momentTransactie;
         this.cryptomunt = cryptomunt;
         this.prijs = prijs;
         this.koper = koper;
         this.verkoper = verkoper;
-        this.bankFee = bankFee;
+        this.bankFee = Bank.getInstance().getFee();
         logger.info("New "+ this + " aangemaakt");
     }
-
+    public Transactie(LocalDateTime momentTransactie,
+                      double prijs, double aantal,
+                       double bankFee){
+    }
 
     public int getTransactieId() {
         return transactieId;

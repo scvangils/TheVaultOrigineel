@@ -53,13 +53,17 @@ public class JDBCAdresDAO implements AdresDAO{
             int adresId = Objects.requireNonNull(keyHolder.getKey()).intValue();
             adres.setAdresId(adresId);
         }
-        else return anderAdres;
+        else {
+            System.out.println("**** Hij heeft hetzelfde adres: " + anderAdres);
+            return anderAdres;
+        }
         return adres;
     }
+    //TODO misschien andere inputs?
     public Adres vindAdresByPostcodeHuisnummerEnToevoeging(Adres adres){
         String sql = "SELECT * FROM adres WHERE postcode = ? AND huisnummer = ? AND toevoeging = ?";
         try {
-            jdbcTemplate.queryForObject(sql, new AdresRowMapper(),
+        adres = jdbcTemplate.queryForObject(sql, new AdresRowMapper(),
                     adres.getPostcode(), adres.getHuisnummer(), adres.getToevoeging());
         }
         catch(EmptyResultDataAccessException noResult){
@@ -123,7 +127,10 @@ public class JDBCAdresDAO implements AdresDAO{
         public Adres mapRow(ResultSet rs, int rowNum) throws SQLException {
             Adres adres = new Adres(rs.getString("straatnaam"), rs.getInt("huisnummer"), rs.getString("toevoeging"),
                     rs.getString("postcode"), rs.getString("plaatsnaam"));
-            adres.setAdresId(rs.getInt("adresId"));
+            int adresId = rs.getInt("adresId");
+            System.out.println("**** dit is het adresId: " + adresId);
+            adres.setAdresId(adresId);
+            System.out.println("***** is het hier aangepast?: " + adres.getAdresId());
             return adres;
         }
     }

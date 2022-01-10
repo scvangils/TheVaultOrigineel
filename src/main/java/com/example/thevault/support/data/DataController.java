@@ -1,6 +1,10 @@
 // Created by S.C. van Gils
 // Creation date 20-12-2021
 
+/**
+ * Deze klasse is bedoeld om de database te kunnen vullen met random gegenereerde data
+ */
+
 package com.example.thevault.support.data;
 
 import com.example.thevault.domain.model.*;
@@ -30,6 +34,8 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
 
     public static final int BITCOIN_ID = 1;
     public static final int ETHEREUM_ID = 1027;
+    public static final String BESTANDSNAAM_RANDOM_DATASET = "Sprint2/datacsv.csv"; // gebruikt om huidige database te vullen
+    public static final int UITGANGSJAAR = 2021;
     private final Logger logger = LoggerFactory.getLogger(DataController.class);
     private final AssetService assetService;
     private final CryptoWaardeService cryptoWaardeService;
@@ -59,21 +65,23 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         // gebruik hier onderstaande functies om data te genereren
+    //    cryptoWaardeService.haalCryptoWaardes();
 
     }
-    public void vulKlantAdresEnRekeningTabel(int hoeveelKlanten) throws IOException {
-        List<Klant> list = DataGenerator.maakLijstKlantenVanCSV("Sprint2/datacsv.csv", hoeveelKlanten);
+
+
+
+    public void vulKlantAdresEnRekeningTabel(int hoeveelKlanten, String bestandsnaam) throws IOException {
+        List<Klant> list = DataGenerator.maakLijstKlantenVanCSV(bestandsnaam, hoeveelKlanten);
         for (Klant klant : list) {
             registrationService.registreerKlant(klant);
         }
     }
 
-    public void slaRandomTransactiesOp(int hoeveelTransacties, int aantalGebruikers,
-                                       boolean bankAlsKoper, boolean bankAlsVerkoper, int maand, double maxAantal){
-        List<Transactie> transactiesMetBankAlsVerkoper = genereerRandomTransacties(hoeveelTransacties, aantalGebruikers,
-                bankAlsKoper, bankAlsVerkoper, maand, maxAantal);
-        transactiesMetBankAlsVerkoper.sort(new TransactieComparator());
-        for(Transactie transactie: transactiesMetBankAlsVerkoper){
+    public void slaRandomTransactiesOp(RandomDataInput randomDataInput){
+        List<Transactie> transacties = genereerRandomTransacties(randomDataInput);
+        transacties.sort(new TransactieComparator());
+        for(Transactie transactie: transacties){
             try {
                 transactieService.sluitTransactie(transactie.getVerkoper(), transactie.getCryptomunt(),
                         transactie.getPrijs(), transactie.getPrijs(), transactie.getAantal(), transactie.getKoper(),
@@ -85,42 +93,44 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         }
     }
 
-    public List<Transactie> genereerRandomTransacties(int hoeveelTransacties, int aantalGebruikers, boolean bankAlsKoper,
-                                                      boolean bankAlsVerkoper, int maand, double maxAantal){
-        List<Transactie> transactieList = new ArrayList<>();
-        Gebruiker bank = Bank.getInstance();
+    public List<Transactie> genereerRandomTransacties(RandomDataInput randomDataInput){
         List<Cryptomunt> cryptomuntList = assetService.geefAlleCryptomunten();
+        return creeerTransactieLijst(randomDataInput, cryptomuntList);
+    }
 
-        creeerTransactieLijst(hoeveelTransacties, aantalGebruikers, bankAlsKoper, bankAlsVerkoper, maand, transactieList, bank, cryptomuntList, maxAantal);
+    private List<Transactie> creeerTransactieLijst(RandomDataInput randomDataInput, List<Cryptomunt> cryptomuntList) {
+        List<Transactie> transactieList = new ArrayList<>();
+        for (int i = 0; i < randomDataInput.getHoeveelTransacties(); i++) {
+            Transactie transactie = getRandomTransactie(randomDataInput, cryptomuntList);
+            transactieList.add(transactie);
+        }
         return transactieList;
     }
 
-    private void creeerTransactieLijst(int hoeveelTransacties, int aantalGebruikers, boolean bankAlsKoper, boolean bankAlsVerkoper,
-                                       int maand, List<Transactie> transactieList, Gebruiker bank, List<Cryptomunt> cryptomuntList, double maxAantal) {
-        for (int i = 0; i < hoeveelTransacties; i++) {
-
-            Cryptomunt cryptomunt = cryptomuntList.get((genereerRandomGetal(0, cryptomuntList.size(), 1)));
-            LocalDate cryptoDatum = LocalDate.of(2021, maand, genereerRandomGetal(1, 30, 1));
-            double prijs = cryptoWaardeService.vindCryptoWaardeOpDatum(cryptomunt, cryptoDatum).getWaarde();
-            int koperId = getRandomGebruikerId(aantalGebruikers, bankAlsKoper);
-            int verkoperId = getRandomGebruikerId(aantalGebruikers, bankAlsVerkoper);
-            verkoperId = getVerkoperId(koperId, verkoperId);
-            double afwijking = getAfwijking(koperId, verkoperId);
-            double randomAantal = getRandomAantal(cryptomunt, maxAantal);
-            Gebruiker koper = getTransactiepartij(bank, koperId);
-            Gebruiker verkoper = getTransactiepartij(bank, verkoperId);
-            LocalDateTime randomDatumTijd = LocalDateTime.of(cryptoDatum, genereerRandomTijdstip());
-            Transactie transactie = setTransactie(prijs, koper, verkoper, cryptomunt, afwijking, randomAantal, randomDatumTijd);
-            transactieList.add(transactie);
-        }
+    private Transactie getRandomTransactie(RandomDataInput randomDataInput, List<Cryptomunt> cryptomuntList) {
+        Cryptomunt cryptomunt = cryptomuntList.get((genereerRandomGetal(0, cryptomuntList.size(), 1)));
+        LocalDate cryptoDatum = LocalDate.of(UITGANGSJAAR, randomDataInput.getTransactieDataRange().getMaand(),
+                genereerRandomGetal(1, 30, 1));
+        double prijs = cryptoWaardeService.vindCryptoWaardeOpDatum(cryptomunt, cryptoDatum).getWaarde();
+        int koperId = getRandomGebruikerId(randomDataInput.getTransactieDataRange().getAantalGebruikers(),
+                randomDataInput.getBankAlsTransactiePartij().isBankAlsKoper());
+        int verkoperId = getRandomGebruikerId(randomDataInput.getTransactieDataRange().getAantalGebruikers(),
+                randomDataInput.getBankAlsTransactiePartij().isBankAlsVerkoper());
+        verkoperId = getVerkoperId(koperId, verkoperId);
+        double afwijking = getAfwijkingPrijs(koperId, verkoperId, randomDataInput.getRandomTransactieRange().getMaxAfwijkingPrijs());
+        double randomAantal = getRandomAantal(cryptomunt, randomDataInput.getRandomTransactieRange().getMaxAantal());
+        Gebruiker koper = getTransactiepartij(koperId);
+        Gebruiker verkoper = getTransactiepartij(verkoperId);
+        LocalDateTime randomDatumTijd = LocalDateTime.of(cryptoDatum, genereerRandomTijdstip());
+        return setTransactie(prijs, koper, verkoper, cryptomunt, afwijking, randomAantal, randomDatumTijd);
     }
 
-    private int getRandomGebruikerId(int aantalGebruikers, boolean bankAlsVerkoper) {
-        int verkoperId = genereerRandomGetal(0, aantalGebruikers, 1);
-        if (bankAlsVerkoper) {
-            verkoperId = 0;
+    private int getRandomGebruikerId(int aantalGebruikers, boolean bankAlsKoperOfVerkoper) {
+        int gebruikerId = genereerRandomGetal(0, aantalGebruikers, 1);
+        if (bankAlsKoperOfVerkoper) {
+            gebruikerId = 0;
         }
-        return verkoperId;
+        return gebruikerId;
     }
 
     private Transactie setTransactie(double prijs, Gebruiker koper, Gebruiker verkoper, Cryptomunt cryptomunt,
@@ -136,10 +146,11 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         return transactie;
     }
 
-    private double getAfwijking(int koperId, int verkoperId) {
+    private double getAfwijkingPrijs(int koperId, int verkoperId, int maxAfwijkingsPercentage) {
         double afwijking = 0;
         if (koperId != 0 && verkoperId != 0) {
-            afwijking = genereerRandomGetal(-500000, 500000, 1) / 10000000.0; // max 5% afwijking
+            afwijking = genereerRandomGetal(-100000 * maxAfwijkingsPercentage,
+                    100000 * maxAfwijkingsPercentage, 1) / 10000000.0;
 
         }
         return afwijking;
@@ -160,10 +171,10 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         return verkoperId;
     }
 
-    private Gebruiker getTransactiepartij(Gebruiker bank, int gebruikerId) {
+    private Gebruiker getTransactiepartij(int gebruikerId) {
         Gebruiker verkoper;
         if (gebruikerId == 0) {
-            verkoper = bank;
+            verkoper = Bank.getInstance();
         } else verkoper = klantService.vindKlantById(gebruikerId);
         return verkoper;
     }
@@ -186,17 +197,25 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         }
     }
 
+
+    /**
+     *
+     * @param cryptoWaarde de echte cryptowaarde die als startpunt wordt gebruikt
+     * @param hoeveelWaarden er wordt per dag een cryptowaarde gegenereerd, dit bepaalt hoeveel dagwaarden je genereert
+     * @param afwijkingsPercentage hoeveel schommelt de koers per dag maximaal
+     * @return een lijst van gegenereerde cryptowaardes
+     */
     public List<CryptoWaarde> genereerHistorischeCryptoWaardesVanEenCryptomunt(CryptoWaarde cryptoWaarde, int hoeveelWaarden, int afwijkingsPercentage){
         List<CryptoWaarde> cryptoWaardeList = new ArrayList<>();
         double afwijking = 0;
         double waarde = cryptoWaarde.getWaarde();
         for (int i = 0; i < hoeveelWaarden; i++) {
-            afwijking = genereerRandomGetal(-100000 + afwijkingsPercentage, 100000 * afwijkingsPercentage, 1) / 10000000.0; // max 1% afwijking
+            afwijking = genereerRandomGetal(-100000 + afwijkingsPercentage, 100000 * afwijkingsPercentage, 1) / 10000000.0;
             CryptoWaarde oudereCryptoWaarde = new CryptoWaarde();
             oudereCryptoWaarde.setCryptomunt(cryptoWaarde.getCryptomunt());
             oudereCryptoWaarde.setWaarde(waarde * (1 + afwijking));
             oudereCryptoWaarde.setCryptoWaardeId("default");
-            oudereCryptoWaarde.setDatum(cryptoWaarde.getDatum().minusDays(i + 2)); // 1 dag eerder per loop, beginnen op 1e ontbrekende dag
+            oudereCryptoWaarde.setDatum(cryptoWaarde.getDatum().minusDays(i + 1));
             cryptoWaardeList.add(oudereCryptoWaarde);
         }
 
@@ -219,8 +238,8 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
             assetService.slaNieuwAssetOp(asset);
         }
         assetService.vulPortefeuilleVanGebruiker(bank);
-        bank.getPortefeuille().forEach(System.out::println);
     }
+
     public void integratieTestSluitTransactie(){
         Gebruiker klant = loginService.vindKlantByGebruikersnaam("LavernRoman");
         Gebruiker andereKlant = loginService.vindKlantByGebruikersnaam("ColumbusMccoy");
@@ -231,7 +250,10 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         Cryptomunt bitcoin = cryptomuntList.get(0);
         CryptoWaarde bitcoinWaarde = cryptoWaardeService.vindMeestRecenteCryptoWaarde(bitcoin);
         transactieService.sluitTransactie(bank, bitcoin, bitcoinWaarde.getWaarde(), bitcoinWaarde.getWaarde(), 0.001, klant, LocalDateTime.now());
-        transactieService.sluitTransactie(bank, bitcoin, bitcoinWaarde.getWaarde(), bitcoinWaarde.getWaarde() + (1 + 0.02), 0.001, klant, LocalDateTime.now());
+        // trigger met bank als tegenpartij
+        transactieService.sluitTransactie(bank, bitcoin, bitcoinWaarde.getWaarde(), bitcoinWaarde.getWaarde() * (1 + 0.02), 0.001, klant, LocalDateTime.now());
+        // trigger met andere klant als tegenpartij
+        transactieService.sluitTransactie(klant, bitcoin, bitcoinWaarde.getWaarde() * (1 - 0.02) , bitcoinWaarde.getWaarde() * (1 + 0.01), 0.001, andereKlant, LocalDateTime.now());
 
     }
 }
