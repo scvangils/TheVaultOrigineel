@@ -4,7 +4,6 @@
 
 package com.example.thevault.domain.mapping.dao;
 
-import com.example.thevault.domain.model.Adres;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.model.Transactie;
 import org.junit.jupiter.api.BeforeEach;

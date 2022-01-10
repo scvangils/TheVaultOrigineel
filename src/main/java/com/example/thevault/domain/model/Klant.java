@@ -35,9 +35,9 @@ public class Klant extends Gebruiker {
         super();
         logger.info("Lege klant, no args constructor");
     }
-
+    //TODO navragen of all-args eigenlijk wel nodig is
     public Klant(String gebruikersnaam, String wachtwoord,
-                 List<Asset> portefeuille , Rekening rekening, List<Transactie> transacties,
+                 List<Asset> portefeuille, Rekening rekening, List<Transactie> transacties,
                  String naam, Adres adres, long bsn, LocalDate geboortedatum) {
         super(gebruikersnaam, wachtwoord,rekening, portefeuille, transacties);
         this.naam = naam;

@@ -20,4 +20,5 @@ public interface CryptomuntDAO {
      */
     public Cryptomunt geefCryptomunt(int cryptomuntId);
     public List<Cryptomunt> geefAlleCryptomunten();
+
 }

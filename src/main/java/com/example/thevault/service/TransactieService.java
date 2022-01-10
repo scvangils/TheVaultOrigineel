@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 
 @Service
@@ -22,8 +24,11 @@ public class TransactieService {
     private final  KlantService klantService;
     private final  RekeningService rekeningService;
     private final  AssetService assetService;
-    private final double TRANSACTION_FEE = 1.50;
-    private final double VERDELING_PRIJSVERSCHIL = 2.0;
+    private final double TRANSACTION_FEE = Bank.getInstance().getFee();
+    private final double DEEL_PRIJSVERSCHIL_KOPER = 0.5;
+    private final double DEEL_PRIJSVERSCHIL_VERKOPER = 1 - DEEL_PRIJSVERSCHIL_KOPER;
+    private final double DEEL_TRANSACTION_FEE_KOPER = 0.5;
+    private final double DEEL_TRANSACTION_FEE_VERKOPER = 1 - DEEL_TRANSACTION_FEE_KOPER;
 
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(TransactieService.class);
@@ -41,7 +46,6 @@ public class TransactieService {
     }
 
     /**
-     * TODO afronden!!!
      * Maak een transactie op basis van een bedrag, cryptomunt, koper en verkoper en een datum.
      * Als de koper niet genoeg saldo heeft of wanneer de verkoper niet het aantal cryptomunten
      * heeft dat deze wilt verkopen geeft de methode een foutmelding
@@ -56,31 +60,62 @@ public class TransactieService {
      * @return transactie
     * */
 
+    //TODO check voor negatief aantal toevoegen
+    //TODO triggers gebruiken als input? Dan zouden ook de bijbehorende triggers verwijderd moeten worden uit de database
+    //TODO check dat triggeraantallen gelijk zijn en bod groter of gelijk is aan vraagprijs
+    //TODO prijsformule hier of elders?
     public Transactie sluitTransactie(Gebruiker verkoper, Cryptomunt cryptomunt,
                                       double vraagPrijs, double bod, double aantal, Gebruiker koper, LocalDateTime datumEnTijd) {
         boolean bankIsKoper = (koper instanceof Bank);
         boolean bankIsVerkoper = (verkoper instanceof Bank);
-
         double prijs, transactieBedragKoper, transactieBedragVerkoper;
-        // bepaal prijs transactie en transactiebedragen
-        if (bankIsKoper || bankIsVerkoper) {
+
+/*        if (bankIsKoper || bankIsVerkoper) {
             prijs = berekenPrijsTransactieMetBank(cryptomunt, datumEnTijd);
-            transactieBedragKoper = (bankIsKoper) ? aantal * prijs: aantal * prijs + TRANSACTION_FEE;
-            transactieBedragVerkoper = (bankIsVerkoper) ? aantal * prijs: aantal * prijs - TRANSACTION_FEE;
+            transactieBedragKoper = getBedragKoperMetBankAlsVerkoper(aantal, bankIsKoper, prijs);
+            transactieBedragVerkoper = getBedragVerkoperMetBankAlsKoper(aantal, bankIsVerkoper, prijs);
         }
         else {
-            prijs = (vraagPrijs + bod) / VERDELING_PRIJSVERSCHIL; // als klanten met elkaar handelen delen ze het prijsverschil
-            transactieBedragKoper = aantal * prijs + TRANSACTION_FEE / 2; // en de transaction-fee
-            transactieBedragVerkoper = aantal * prijs - TRANSACTION_FEE / 2;
-        }
-        // exceptions:
+            prijs = vraagPrijs * DEEL_PRIJSVERSCHIL_VERKOPER + bod * DEEL_PRIJSVERSCHIL_KOPER;
+            transactieBedragKoper = getBedragKoperBijKlantTransactie(aantal, prijs);
+            transactieBedragVerkoper = getBedragVerkoperBijKlantTransactie(aantal, prijs);
+        }*/
+        prijs = (bankIsKoper || bankIsVerkoper) ? berekenPrijsTransactieMetBank(cryptomunt, datumEnTijd):
+                vraagPrijs * DEEL_PRIJSVERSCHIL_VERKOPER + bod * DEEL_PRIJSVERSCHIL_KOPER;
+        transactieBedragKoper = (bankIsKoper || bankIsVerkoper) ? getBedragKoperMetBankAlsVerkoper(aantal, bankIsKoper, prijs):
+                getBedragKoperBijKlantTransactie(aantal, prijs);
+        transactieBedragVerkoper = (bankIsKoper || bankIsVerkoper) ? getBedragVerkoperMetBankAlsKoper(aantal, bankIsVerkoper, prijs):
+                getBedragVerkoperBijKlantTransactie(aantal, prijs);
+
         checkTransactionExceptions(verkoper, cryptomunt, aantal, koper, transactieBedragKoper);
-        // maak nieuwe transactie aan
-        Transactie transactie = setTransactie(verkoper, cryptomunt, aantal, koper, prijs, datumEnTijd);
-        // wijzig de saldo's en assets van de verkoper en koper:
-        setRekeningEnPortefeuilleNaTransactie(verkoper, cryptomunt, koper, transactieBedragKoper, transactieBedragVerkoper, aantal);
+        Transactie transactie = new Transactie(datumEnTijd, verkoper, cryptomunt, prijs, aantal, koper);
+        slaAlleAspectenVanTransactieOp(transactie, transactieBedragKoper, transactieBedragVerkoper);
 
         return transactie;
+    }
+
+    private double getBedragVerkoperBijKlantTransactie(double aantal, double prijs) {
+        double transactieBedragVerkoper;
+        transactieBedragVerkoper = aantal * prijs - TRANSACTION_FEE * DEEL_TRANSACTION_FEE_VERKOPER;
+        return transactieBedragVerkoper;
+    }
+
+    private double getBedragKoperBijKlantTransactie(double aantal, double prijs) {
+        double transactieBedragKoper;
+        transactieBedragKoper = aantal * prijs + TRANSACTION_FEE * DEEL_TRANSACTION_FEE_KOPER;
+        return transactieBedragKoper;
+    }
+
+    private double getBedragVerkoperMetBankAlsKoper(double aantal, boolean bankIsVerkoper, double prijs) {
+        double transactieBedragVerkoper;
+        transactieBedragVerkoper = (bankIsVerkoper) ? aantal * prijs: aantal * prijs - TRANSACTION_FEE;
+        return transactieBedragVerkoper;
+    }
+
+    private double getBedragKoperMetBankAlsVerkoper(double aantal, boolean bankIsKoper, double prijs) {
+        double transactieBedragKoper;
+        transactieBedragKoper = (bankIsKoper) ? aantal * prijs: aantal * prijs + TRANSACTION_FEE;
+        return transactieBedragKoper;
     }
 
     private void checkTransactionExceptions(Gebruiker verkoper, Cryptomunt cryptomunt, double aantal, Gebruiker koper, double transactieBedragKoper) {
@@ -88,26 +123,26 @@ public class TransactieService {
         notEnoughCryptoExceptionHandler(verkoper, cryptomunt, aantal);
     }
 
-    private Transactie setTransactie(Gebruiker verkoper, Cryptomunt cryptomunt, double aantal, Gebruiker koper, double prijs, LocalDateTime datumEnTijd) {
-        Transactie transactie = new Transactie(datumEnTijd, verkoper, cryptomunt, prijs, aantal, koper, TRANSACTION_FEE);
-        slaTransactieOp(transactie);
-        return transactie;
-    }
+    // TODO kijken of @Transactional werkt
 
-    // TODO transactie terugdraaien indien er iets fout gaat
-    private void setRekeningEnPortefeuilleNaTransactie(Gebruiker verkoper, Cryptomunt cryptomunt,
-                                                       Gebruiker koper, double bedragKoper, double bedragVerkoper, double aantal) {
-        try{
-        koper.setRekening(rekeningService.wijzigSaldo(koper, -bedragKoper));
-        }
-        catch(Exception exception){
-            // TODO insert delete Transactie
-        }
-        // idem omkering hier enzovoorts bv. rekeningService.wijzigSaldo(koper, bedragKoper)
-        verkoper.setRekening(rekeningService.wijzigSaldo(verkoper, bedragVerkoper));
-        rekeningService.wijzigSaldo(Bank.getInstance(), TRANSACTION_FEE);
-        assetService.wijzigAssetGebruiker(verkoper, cryptomunt, -aantal);
-        assetService.wijzigAssetGebruiker(koper, cryptomunt, aantal);
+    /**
+     * Deze methode zorgt ervoor dat de transactie opgeslagen wordt en alle relevante rekeningen en
+     * portefeuilles worden bijgewerkt.
+     * Door de annotatie @Transactional zorgt Spring Boot ervoor dat alle aspecten van deze transactie
+     * moeten slagen, anders wordt niets uitgevoerd (Atomisch)
+     * @param transactie
+     * @param bedragKoper
+     * @param bedragVerkoper
+     */
+    @Transactional
+    public void slaAlleAspectenVanTransactieOp(Transactie transactie,
+                                        double bedragKoper, double bedragVerkoper) {
+        slaTransactieOp(transactie);
+        transactie.getKoper().setRekening(rekeningService.wijzigSaldo(transactie.getKoper(), -bedragKoper));
+        transactie.getVerkoper().setRekening(rekeningService.wijzigSaldo(transactie.getVerkoper(), bedragVerkoper));
+        rekeningService.wijzigSaldo(Bank.getInstance(), transactie.getBankFee());
+        assetService.wijzigAssetGebruiker(transactie.getKoper(), transactie.getCryptomunt(), -transactie.getAantal());
+        assetService.wijzigAssetGebruiker(transactie.getVerkoper(), transactie.getCryptomunt(), transactie.getAantal());
 
     }
 
