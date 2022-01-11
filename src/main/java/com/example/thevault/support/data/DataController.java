@@ -65,10 +65,9 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         // gebruik hier onderstaande functies om data te genereren
-    //    cryptoWaardeService.haalCryptoWaardes();
+        cryptoWaardeService.haalCryptoWaardes();
 
     }
-
 
 
     public void vulKlantAdresEnRekeningTabel(int hoeveelKlanten, String bestandsnaam) throws IOException {

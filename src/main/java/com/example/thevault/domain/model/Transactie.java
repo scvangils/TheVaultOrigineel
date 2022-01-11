@@ -51,9 +51,6 @@ public class Transactie{
     }
 
 
-
-
-
     //TODO navragen of fee zo doen correct is
     public Transactie(LocalDateTime momentTransactie,
                       Gebruiker verkoper, Cryptomunt cryptomunt, double prijs, double aantal,

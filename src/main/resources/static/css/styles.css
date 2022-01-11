@@ -2,27 +2,20 @@
     box-sizing: border-box;
     font-family: "Century Gothic", "Century","Arial", sans-serif;
 }
-
-.grid-container {
-    display: grid;
-    grid-template-columns: auto auto auto;
-    padding: 0;
-    margin-bottom: 0;
-    margin-top: 0;
-}
-
-.grid-item {
-    border: 1px solid rgba(0, 0, 0, 0.8);
-    padding: 20px;
-    font-size: 20px;
-    text-align: center;
+.flexBasis {
+    display: flex;
 }
 
 .flex-container {
-    display: flex;
+ /*   display: flex;
     flex-flow: row wrap;
     justify-content: space-around;
-    align-items: flex-start;
+    align-items: flex-start;*/
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
 }
 
 fieldset {
@@ -37,16 +30,52 @@ fieldset input {
     border-style: solid;
 }
 
-fieldset input:hover {
+#wachtwoord {
+    margin: 0 auto;
+    border: none;
+    background-color: transparent;
+}
+
+#passwordDiv {
+    display: flex;
+    margin: 30px;
+    border-style: solid;
+
+
+}
+#toonWachtwoord {
+    border-color: transparent;
+    margin: 0 auto;
+    background: transparent url("../assets/images/oogDoorzichtig.png") no-repeat right center;
+    background-size: contain;
+    background-origin: content-box;
+
+}
+#toonWachtwoord:hover {
+    background: transparent url("../assets/images/oogDoorzichtigDicht.png") no-repeat right center;
+    background-size: contain;
+    background-origin: content-box;
+}
+
+fieldset input:hover, #passwordDiv:hover{
     background-color: aliceblue;
     color: darkgray;
 }
 
-fieldset input:focus{
+fieldset input:focus:not(#wachtwoord){
     background-color: aliceblue;
     color: darkorchid;
     font-weight: bold;
 }
+#passwordDiv:focus {
+    background-color: aliceblue;
+}
+#wachtwoord{
+    background-color: transparent;
+    /*noodzakelijk om div goede focus te geven*/
+    outline: none;
+}
+
 
 .header {
     text-align: center;
