@@ -123,9 +123,10 @@ public class JDBCKlantDAO implements KlantDAO{
     //TODO is DELETE klant nodig?
     @Override
     public Klant verwijderKlant(Klant klant) {
-        String sql = "DELETE klant WHERE gebruikerId = ?;";
+        String sql = "DELETE FROM klant WHERE gebruikerId = ?;";
         try{
-        jdbcTemplate.update(sql, klant.getGebruikerId());
+        int affectedRows = jdbcTemplate.update(sql, klant.getGebruikerId());
+            System.out.println("Zoveel aangepast: " + affectedRows);
         }
         catch(DataAccessException noData){
             logger.warn(noData.getMessage());
@@ -145,7 +146,7 @@ public class JDBCKlantDAO implements KlantDAO{
             logger.warn(noData.getMessage());
         }
         return klant;
-}
+    }
 
     private static class KlantRowMapper implements RowMapper<Klant>{
         /**

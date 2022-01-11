@@ -23,7 +23,8 @@ public class Transactie{
     private Gebruiker verkoper;
     private Cryptomunt cryptomunt;
     private double bankFee;
-
+    public static final double DEEL_PRIJSVERSCHIL_KOPER = 0.5;
+    public static final double DEEL_PRIJSVERSCHIL_VERKOPER = 1 - DEEL_PRIJSVERSCHIL_KOPER;
 
 
     @JsonIgnore
@@ -46,8 +47,8 @@ public class Transactie{
         logger.info("New "+ this + " aangemaakt");
     }
 
-    public double getPrijsViaTrigger(Trigger triggerKoper, Trigger triggerVerkoper){
-        return triggerKoper.getTriggerPrijs() - triggerVerkoper.getTriggerPrijs();
+    public static double getPrijsViaTrigger(Trigger triggerKoper, Trigger triggerVerkoper){
+        return triggerKoper.getTriggerPrijs() * DEEL_PRIJSVERSCHIL_KOPER + triggerVerkoper.getTriggerPrijs() * DEEL_PRIJSVERSCHIL_VERKOPER;
     }
 
 

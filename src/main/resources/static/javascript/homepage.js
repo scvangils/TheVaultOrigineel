@@ -2,12 +2,12 @@
 
 function loginScreen(){
     document.getElementById("registratie-personalia").style.display = "none";
-    document.getElementById("inlog").style.visibility="visible";
+    document.getElementById("inlog").style.display = "block";
 }
 
 function registreerScreen(){
     document.getElementById("registratie-personalia").style.display = "block";
-    document.getElementById("inlog").style.visibility="hidden";
+    document.getElementById("inlog").style.display = "none";
 }
 
 
