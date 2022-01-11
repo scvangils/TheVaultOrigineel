@@ -25,8 +25,8 @@ public class TransactieService {
     private final  RekeningService rekeningService;
     private final  AssetService assetService;
     private final double TRANSACTION_FEE = Bank.getInstance().getFee();
-    private final double DEEL_PRIJSVERSCHIL_KOPER = 0.5;
-    private final double DEEL_PRIJSVERSCHIL_VERKOPER = 1 - DEEL_PRIJSVERSCHIL_KOPER;
+    public final double DEEL_PRIJSVERSCHIL_KOPER = 0.5;
+    public final double DEEL_PRIJSVERSCHIL_VERKOPER = 1 - DEEL_PRIJSVERSCHIL_KOPER;
     private final double DEEL_TRANSACTION_FEE_KOPER = 0.5;
     private final double DEEL_TRANSACTION_FEE_VERKOPER = 1 - DEEL_TRANSACTION_FEE_KOPER;
 
@@ -50,27 +50,21 @@ public class TransactieService {
      * Als de koper niet genoeg saldo heeft of wanneer de verkoper niet het aantal cryptomunten
      * heeft dat deze wilt verkopen geeft de methode een foutmelding
      *
-     * @param verkoper verkoper van cryptomunt
-     * @param cryptomunt het type cryptomunt
-     * @param vraagPrijs het bedrag dat voor de cryptomunt gevraagd wordt
-     * @param bod het bod dat op de cryptomunt gedaan wordt
-     * @param aantal de hoeveelheid cryptomunt
-     * @param koper de koper van de cryptomunt in deze transactie
      *
      * @return transactie
     * */
 
-    //TODO check voor negatief aantal toevoegen
-    //TODO triggers gebruiken als input? Dan zouden ook de bijbehorende triggers verwijderd moeten worden uit de database
-    //TODO check dat triggeraantallen gelijk zijn en bod groter of gelijk is aan vraagprijs
-    //TODO prijsformule hier of elders?
-    public Transactie sluitTransactie(Gebruiker verkoper, Cryptomunt cryptomunt,
-                                      double vraagPrijs, double bod, double aantal, Gebruiker koper, LocalDateTime datumEnTijd) {
+
+    /*public Transactie sluitTransactie(Gebruiker verkoper, Cryptomunt cryptomunt,
+                                      double vraagPrijs, double bod, double aantal, Gebruiker koper, LocalDateTime datumEnTijd){*/
+/*      public Transactie sluitTransactie(Trigger verkoopTrigger, Trigger koopTrigger, LocalDateTime datumEnTijd){
+
         boolean bankIsKoper = (koper instanceof Bank);
         boolean bankIsVerkoper = (verkoper instanceof Bank);
         double prijs, transactieBedragKoper, transactieBedragVerkoper;
 
-/*        if (bankIsKoper || bankIsVerkoper) {
+
+      if (bankIsKoper || bankIsVerkoper) {
             prijs = berekenPrijsTransactieMetBank(cryptomunt, datumEnTijd);
             transactieBedragKoper = getBedragKoperMetBankAlsVerkoper(aantal, bankIsKoper, prijs);
             transactieBedragVerkoper = getBedragVerkoperMetBankAlsKoper(aantal, bankIsVerkoper, prijs);
@@ -80,18 +74,40 @@ public class TransactieService {
             transactieBedragKoper = getBedragKoperBijKlantTransactie(aantal, prijs);
             transactieBedragVerkoper = getBedragVerkoperBijKlantTransactie(aantal, prijs);
         }*/
-        prijs = (bankIsKoper || bankIsVerkoper) ? berekenPrijsTransactieMetBank(cryptomunt, datumEnTijd):
-                vraagPrijs * DEEL_PRIJSVERSCHIL_VERKOPER + bod * DEEL_PRIJSVERSCHIL_KOPER;
-        transactieBedragKoper = (bankIsKoper || bankIsVerkoper) ? getBedragKoperMetBankAlsVerkoper(aantal, bankIsKoper, prijs):
-                getBedragKoperBijKlantTransactie(aantal, prijs);
-        transactieBedragVerkoper = (bankIsKoper || bankIsVerkoper) ? getBedragVerkoperMetBankAlsKoper(aantal, bankIsVerkoper, prijs):
-                getBedragVerkoperBijKlantTransactie(aantal, prijs);
 
-        checkTransactionExceptions(verkoper, cryptomunt, aantal, koper, transactieBedragKoper);
-        Transactie transactie = new Transactie(datumEnTijd, verkoper, cryptomunt, prijs, aantal, koper);
+    //TODO check voor negatief aantal toevoegen
+    //TODO Bijbehorende triggers verwijderen uit de database
+    //TODO check dat triggeraantallen gelijk zijn en bod groter of gelijk is aan vraagprijs
+            public Transactie sluitTransactie(Trigger verkoopTrigger, Trigger koopTrigger, LocalDateTime datumEnTijd){
+            Gebruiker koper = koopTrigger.getGebruiker();
+            Gebruiker verkoper = verkoopTrigger.getGebruiker();
+            double aantal = koopTrigger.getAantal();
+            boolean bankIsKoper = (koper instanceof Bank);
+            boolean bankIsVerkoper = (verkoper instanceof Bank);
+
+            double prijs = Transactie.getPrijsViaTrigger(koopTrigger, verkoopTrigger);
+            double transactieBedragKoper = getTransactieBedragKoper(aantal, bankIsKoper, bankIsVerkoper, prijs);
+            double transactieBedragVerkoper = getTransactieBedragVerkoper(aantal, bankIsKoper, bankIsVerkoper, prijs);
+
+            checkTransactionExceptions(verkoopTrigger, koopTrigger, transactieBedragKoper);
+        Transactie transactie = new Transactie(datumEnTijd, koopTrigger, verkoopTrigger);
         slaAlleAspectenVanTransactieOp(transactie, transactieBedragKoper, transactieBedragVerkoper);
 
         return transactie;
+    }
+
+    private double getTransactieBedragVerkoper(double aantal, boolean bankIsKoper, boolean bankIsVerkoper, double prijs) {
+        double transactieBedragVerkoper;
+        transactieBedragVerkoper = (bankIsKoper || bankIsVerkoper) ? getBedragVerkoperMetBankAlsKoper(aantal, bankIsVerkoper, prijs):
+        getBedragVerkoperBijKlantTransactie(aantal, prijs);
+        return transactieBedragVerkoper;
+    }
+
+    private double getTransactieBedragKoper(double aantal, boolean bankIsKoper, boolean bankIsVerkoper, double prijs) {
+        double transactieBedragKoper;
+        transactieBedragKoper = (bankIsKoper || bankIsVerkoper) ? getBedragKoperMetBankAlsVerkoper(aantal, bankIsKoper, prijs):
+                getBedragKoperBijKlantTransactie(aantal, prijs);
+        return transactieBedragKoper;
     }
 
     private double getBedragVerkoperBijKlantTransactie(double aantal, double prijs) {
@@ -118,7 +134,11 @@ public class TransactieService {
         return transactieBedragKoper;
     }
 
-    private void checkTransactionExceptions(Gebruiker verkoper, Cryptomunt cryptomunt, double aantal, Gebruiker koper, double transactieBedragKoper) {
+    private void checkTransactionExceptions(Trigger verkoopTrigger, Trigger koopTrigger, double transactieBedragKoper) {
+        Gebruiker koper = koopTrigger.getGebruiker();
+        Gebruiker verkoper = verkoopTrigger.getGebruiker();
+        Cryptomunt cryptomunt = koopTrigger.getCryptomunt();
+        double aantal = koopTrigger.getAantal();
         saldoTooLowExceptionHandler(koper, transactieBedragKoper);
         notEnoughCryptoExceptionHandler(verkoper, cryptomunt, aantal);
     }

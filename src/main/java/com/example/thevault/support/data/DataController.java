@@ -65,7 +65,7 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         // gebruik hier onderstaande functies om data te genereren
-        cryptoWaardeService.haalCryptoWaardes();
+     //   cryptoWaardeService.haalCryptoWaardes();
 
     }
 
@@ -76,8 +76,9 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
             registrationService.registreerKlant(klant);
         }
     }
+// TODO trigger incorporeren
 
-    public void slaRandomTransactiesOp(RandomDataInput randomDataInput){
+/*    public void slaRandomTransactiesOp(RandomDataInput randomDataInput){
         List<Transactie> transacties = genereerRandomTransacties(randomDataInput);
         transacties.sort(new TransactieComparator());
         for(Transactie transactie: transacties){
@@ -90,7 +91,7 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
                 System.out.println(transactie);
             }
         }
-    }
+    }*/
 
     public List<Transactie> genereerRandomTransacties(RandomDataInput randomDataInput){
         List<Cryptomunt> cryptomuntList = assetService.geefAlleCryptomunten();
@@ -238,7 +239,7 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         }
         assetService.vulPortefeuilleVanGebruiker(bank);
     }
-
+/*
     public void integratieTestSluitTransactie(){
         Gebruiker klant = loginService.vindKlantByGebruikersnaam("LavernRoman");
         Gebruiker andereKlant = loginService.vindKlantByGebruikersnaam("ColumbusMccoy");
@@ -254,5 +255,5 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         // trigger met andere klant als tegenpartij
         transactieService.sluitTransactie(klant, bitcoin, bitcoinWaarde.getWaarde() * (1 - 0.02) , bitcoinWaarde.getWaarde() * (1 + 0.01), 0.001, andereKlant, LocalDateTime.now());
 
-    }
+    }*/
 }
