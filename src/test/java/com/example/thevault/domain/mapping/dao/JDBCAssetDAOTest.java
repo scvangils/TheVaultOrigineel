@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
@@ -22,6 +23,7 @@ import static org.mockito.Mockito.doCallRealMethod;
 class JDBCAssetDAOTest {
 
     private AssetDAO testAssetDAO;
+    @MockBean
     private AssetDAO mockAssetDAO;
     private static Gebruiker testKlant1;
     private static Gebruiker testKlant2;
@@ -51,7 +53,6 @@ class JDBCAssetDAOTest {
 
     @BeforeEach
     void setup() {
-        mockAssetDAO = Mockito.mock(AssetDAO.class);
         testKlant1 = new Klant("Jolien", "BeterWachtwoord",
                 null, null, null, "Jolien",null,
                 987654321, LocalDate.parse("1985-10-14"));
