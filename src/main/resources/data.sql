@@ -8,8 +8,10 @@ INSERT INTO klant VALUES (1, 'Carmen', 'GoedWachtwoord', 'Carmen', 123456789, '1
 INSERT INTO klant VALUES (2, 'Jolien', 'BeterWachtwoord', 'Jolien', 987654321, '1985-10-14', 2);
 
 INSERT INTO cryptomunt VALUES (1, 'BITCOIN', 'BCN');
+INSERT INTO cryptomunt VALUES (2, 'LITECOIN', 'LCN');
 
 INSERT INTO asset VALUES (1, 1, 4.2);
+INSERT INTO asset VALUES (1, 2, 3.5);
 
 INSERT INTO transactie VALUES (1, 1.3, '2021-12-15 12:43:21', 1, 1, 43.5, 2, 1.5);
 INSERT INTO transactie VALUES (2, 1.7, '2021-12-21 10:43:21', 2, 1, 10.5, 1, 1.5);
