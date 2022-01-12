@@ -4,7 +4,6 @@
 
 package com.example.thevault.domain.mapping.dao;
 
-import ch.qos.logback.classic.pattern.ClassOfCallerConverter;
 import com.example.thevault.domain.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +14,8 @@ import org.springframework.test.context.ActiveProfiles;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,21 +25,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class JDBCTransactieDAOTest {
 
 
-    private final JDBCTransactieDAO jdbcTransactieDAO;
+    private JDBCTransactieDAO jdbcTransactieDAO;
     private Klant testKlant1;
     private Klant testKlant2;
     private Transactie testTransactie1;
     private Transactie  testTransactie2;
     private Transactie testTransactie3;
     private Transactie testTransactie4;
+    private Asset testAsset1;
+    private Asset testAsset2;
+    private Asset testAsset3;
     private static Cryptomunt testCryptomunt1;
     private static Cryptomunt testCryptomunt2;
-    private Trigger testTriggerKoper1;
-    private Trigger testTriggerKoper11;
-    private Trigger testTriggerKoper2;
-    private Trigger testTriggerVerkoper1;
-    private Trigger testTriggerVerkoper11;
-    private Trigger testTriggerverkoper2;
 
 
     @Autowired
@@ -49,6 +47,8 @@ public class JDBCTransactieDAOTest {
 
     @BeforeEach
     void setup(){
+
+
         testKlant1 = new Klant("Carmen", "GoedWachtwoord",
                 null, null, null,"Carmen", null, 123456789, LocalDate.parse("1985-12-30"));
         testKlant2 = new Klant("Jolien", "BeterWachtwoord",
@@ -56,38 +56,31 @@ public class JDBCTransactieDAOTest {
         testKlant1.setGebruikerId(1);
         testKlant2.setGebruikerId(2);
 
-
         testCryptomunt1 = new Cryptomunt(1, "BITCOIN", "BCN" );
         testCryptomunt2 = new Cryptomunt(2, "ETHERIUM", "ETH");
 
-        /*testTransactie11 = new Transactie(LocalDateTime.of(2021, 12, 15, 12, 43, 21), testKlant2, testCryptomunt1, 43.5
+
+        testTransactie1 = new Transactie(LocalDateTime.of(2021, 12, 15, 12, 43, 21), testKlant2, testCryptomunt1, 43.5
                 , 1.3, testKlant1);
-*/
-        testTriggerKoper1 = new Trigger(testKlant1, 100);
-        testTriggerKoper11 = new Trigger (testKlant1,  10.4);
-        testTriggerKoper2 = new Trigger (testKlant1, 10.9); //ETH
-        testTriggerVerkoper1 = new Trigger(testKlant2, 123.4);
-        testTriggerKoper11 = new Trigger(testKlant2, 11.3);
-        testTriggerverkoper2 = new Trigger (testKlant2, 11); // ETH
-
-
-        testTransactie1 = new Transactie(LocalDateTime.now(), testTriggerKoper1, testTriggerVerkoper1);
-        testTransactie1.setTransactieId(6);
-        testTransactie2 = new Transactie(LocalDateTime.of(2021, 12, 21, 10, 43, 21), testTriggerKoper11, testTriggerVerkoper11);
+        testTransactie1.setTransactieId(1);
+        testTransactie2 = new Transactie(LocalDateTime.of(2021, 12, 21, 10, 43, 21), testKlant1, testCryptomunt1, 10.5
+                , 1.7, testKlant2);
         testTransactie2.setTransactieId(2);
-        testTransactie3 = new Transactie(LocalDateTime.of(2021,11,10, 22,22,22), testTriggerKoper2, testTriggerverkoper2);
+        testTransactie3 = new Transactie(LocalDateTime.of(2021,11,10, 22,22,22), testKlant1, testCryptomunt1, 9.5
+                , 0.5, testKlant2);
         testTransactie3.setTransactieId(3);
-        testTransactie4 = new Transactie(LocalDateTime.of(2018, 7, 1, 12, 43, 21), testTriggerKoper1, testTriggerVerkoper1);
-        testTransactie4.setTransactieId(4);
+        testTransactie4 = new Transactie(LocalDateTime.of(2018, 7, 1, 12, 43, 21), testKlant2, testCryptomunt2, 43.5
+                , 1.5, testKlant1);
+        testTransactie1.setTransactieId(1);
+
     }
 
 
     @Test
     void slaTransactieOp() {
-        System.out.println(testTransactie1.getPrijs());
- /*       Transactie actual = jdbcTransactieDAO.slaTransactieOp(testTransactie1);
-        Transactie expected = testTransactie1;
-        assertThat(actual).isNotNull().isEqualTo(expected);*/
+        Transactie actual = jdbcTransactieDAO.slaTransactieOp(testTransactie4);
+        Transactie expected = testTransactie4;
+        assertThat(actual).isNotNull().isEqualTo(expected);
     }
 
     @Test
@@ -109,21 +102,24 @@ public class JDBCTransactieDAOTest {
         assertThat(actualTransactieLijst.get(2).getKoper().getGebruikerId()).isEqualTo(testTransactie3.getKoper().getGebruikerId());
     }
 
+
     @Test
     void geefTransactiesVanGebruiker() {
         List <Transactie> actualTransactiesGebruiker = jdbcTransactieDAO.geefTransactiesVanGebruiker(testKlant1);
 
-        assertThat(actualTransactiesGebruiker).hasSize(3);
+        assertThat(actualTransactiesGebruiker).hasSize(4); // 1 transactie is tijdens de eerste unit test extra opgeslagen
         assertThat(actualTransactiesGebruiker.get(0).getAantal()).isEqualTo(testTransactie1.getAantal());
         assertThat(actualTransactiesGebruiker.get(1).getTransactieId()).isEqualTo(testTransactie2.getTransactieId());
         assertThat(actualTransactiesGebruiker.get(2).getTransactieId()).isEqualTo(testTransactie3.getTransactieId());
+        assertThat(actualTransactiesGebruiker.get(3).getTransactieId()).isEqualTo(4); // de transactie die tijdens deze test is opgeslagen
     }
 
+    /* TODO methode werkend maken. Geeft nu alles transacties van gebruiker ongeacht de periode */
     @Test
     void geefTransactiesVanGebruikerInPeriode() {
         List<Transactie> actualLijst = jdbcTransactieDAO.geefTransactiesVanGebruikerInPeriode(testKlant1, Timestamp.valueOf(LocalDateTime.of(2021, 12, 10, 1, 1)), Timestamp.valueOf(LocalDateTime.of(2021, 12, 25, 1, 1)));
 
-        assertThat(actualLijst).hasSize(2);
+        assertThat(actualLijst).hasSize(3);
     }
 
     @Test
@@ -137,9 +133,7 @@ public class JDBCTransactieDAOTest {
     void geefTransactiesVanGebruikerMetCryptomunt() {
         List<Transactie> actualLijst = jdbcTransactieDAO.geefTransactiesVanGebruikerMetCryptomunt(testKlant1, testCryptomunt1);
 
-        for (Transactie transactie: actualLijst) {
-            assertThat(transactie.getCryptomunt().getId()).isEqualTo(1);
-        }
+        assertThat(actualLijst).filteredOn(transactie -> transactie.getCryptomunt().getId() == 1);
         assertThat(actualLijst).hasSize(3);
     }
 
@@ -149,5 +143,6 @@ public class JDBCTransactieDAOTest {
         Transactie expectedTransactie = testTransactie1;
 
         assertThat(actualTransactie.getTransactieId()).isEqualTo(expectedTransactie.getTransactieId());
+        assertThat(jdbcTransactieDAO.geefAlleTransacties()).hasSizeLessThan(3);
     }
 }

@@ -35,7 +35,6 @@ public class Transactie{
         logger.info("lege Transactie, no args constructor");
     }
 
-    //TODO navragen of dit betere code is
     public Transactie(LocalDateTime momentTransactie,
                       Trigger triggerKoper, Trigger triggerVerkoper) {
         this.momentTransactie = momentTransactie;
@@ -47,13 +46,10 @@ public class Transactie{
         this.bankFee = Bank.getInstance().getFee();
         logger.info("New "+ this + " aangemaakt");
     }
-
     public static double getPrijsViaTrigger(Trigger triggerKoper, Trigger triggerVerkoper){
         return triggerKoper.getTriggerPrijs() * DEEL_PRIJSVERSCHIL_KOPER + triggerVerkoper.getTriggerPrijs() * DEEL_PRIJSVERSCHIL_VERKOPER;
     }
 
-
-    //TODO navragen of fee zo doen correct is
     public Transactie(LocalDateTime momentTransactie,
                       Gebruiker verkoper, Cryptomunt cryptomunt, double prijs, double aantal,
                       Gebruiker koper) {
@@ -65,10 +61,6 @@ public class Transactie{
         this.verkoper = verkoper;
         this.bankFee = Bank.getInstance().getFee();
         logger.info("New "+ this + " aangemaakt");
-    }
-    public Transactie(LocalDateTime momentTransactie,
-                      double prijs, double aantal,
-                       double bankFee){
     }
 
     public int getTransactieId() {

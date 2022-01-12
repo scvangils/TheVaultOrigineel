@@ -25,8 +25,6 @@ public class TransactieService {
     private final  RekeningService rekeningService;
     private final  AssetService assetService;
     private final double TRANSACTION_FEE = Bank.getInstance().getFee();
-    public final double DEEL_PRIJSVERSCHIL_KOPER = 0.5;
-    public final double DEEL_PRIJSVERSCHIL_VERKOPER = 1 - DEEL_PRIJSVERSCHIL_KOPER;
     private final double DEEL_TRANSACTION_FEE_KOPER = 0.5;
     private final double DEEL_TRANSACTION_FEE_VERKOPER = 1 - DEEL_TRANSACTION_FEE_KOPER;
 
@@ -54,26 +52,6 @@ public class TransactieService {
      * @return transactie
     * */
 
-
-    /*public Transactie sluitTransactie(Gebruiker verkoper, Cryptomunt cryptomunt,
-                                      double vraagPrijs, double bod, double aantal, Gebruiker koper, LocalDateTime datumEnTijd){*/
-/*      public Transactie sluitTransactie(Trigger verkoopTrigger, Trigger koopTrigger, LocalDateTime datumEnTijd){
-
-        boolean bankIsKoper = (koper instanceof Bank);
-        boolean bankIsVerkoper = (verkoper instanceof Bank);
-        double prijs, transactieBedragKoper, transactieBedragVerkoper;
-
-
-      if (bankIsKoper || bankIsVerkoper) {
-            prijs = berekenPrijsTransactieMetBank(cryptomunt, datumEnTijd);
-            transactieBedragKoper = getBedragKoperMetBankAlsVerkoper(aantal, bankIsKoper, prijs);
-            transactieBedragVerkoper = getBedragVerkoperMetBankAlsKoper(aantal, bankIsVerkoper, prijs);
-        }
-        else {
-            prijs = vraagPrijs * DEEL_PRIJSVERSCHIL_VERKOPER + bod * DEEL_PRIJSVERSCHIL_KOPER;
-            transactieBedragKoper = getBedragKoperBijKlantTransactie(aantal, prijs);
-            transactieBedragVerkoper = getBedragVerkoperBijKlantTransactie(aantal, prijs);
-        }*/
 
     //TODO check voor negatief aantal toevoegen
     //TODO Bijbehorende triggers verwijderen uit de database

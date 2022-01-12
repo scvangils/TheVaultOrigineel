@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.thevault.support.data.DataGenerator.genereerRandomGetal;
@@ -275,7 +276,13 @@ public class RootRepository {
      * @return lijst transacties van de klant met de meegegeven cryptomunt
      */
     List<Transactie> geefTransactiesVanGebruikerMetCryptomunt(Gebruiker gebruiker, Cryptomunt cryptomunt){
-        return transactieDAO.geefTransactiesVanGebruikerMetCryptomunt(gebruiker, cryptomunt);
+        List<Transactie> transactieList = transactieDAO.geefTransactiesVanGebruikerMetCryptomunt(gebruiker, cryptomunt);
+        for (Transactie transactie : transactieList) {
+            transactie.setCryptomunt(cryptomunt);
+            transactie.setKoper(vindKlantById(transactie.getKoper().getGebruikerId()));
+            transactie.setVerkoper(vindKlantById(transactie.getVerkoper().getGebruikerId()));
+        }
+        return transactieList;
     }
 
     //TODO Transacties compleet maken op juiste wijze
