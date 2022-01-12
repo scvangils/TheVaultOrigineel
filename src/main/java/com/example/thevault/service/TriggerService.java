@@ -4,8 +4,7 @@
 package com.example.thevault.service;
 
 import com.example.thevault.domain.mapping.repository.RootRepository;
-import com.example.thevault.domain.model.CryptoWaarde;
-import com.example.thevault.domain.model.Trigger;
+import com.example.thevault.domain.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -50,10 +49,56 @@ public class TriggerService {
         // triggers weghalen van klanten die trigger niet meer kunnen betalen?
     }
 
-    public void sluitTransactieAf(Trigger triggerKoper, Trigger triggerVerkoper){
+    public Transactie sluitTransactieAf(Trigger triggerKoper, Trigger triggerVerkoper){
         // via transactionService proberen transactie af te sluiten
-        
         // wat te doen als dit niet kan? Trigger verwijderen?
+        vergelijkTriggerMetSaldo(triggerKoper);
+        vergelijkTriggerMetAsset(triggerVerkoper);
+        checkTriggers(triggerKoper, triggerVerkoper);
+
+
+        return null;
+    }
+    public void checkTriggers(Trigger triggerKoper, Trigger triggerVerkoper){
+        checkKoper(triggerKoper);
+        checkVerkoper(triggerVerkoper);
+        checkAantalGelijk(triggerKoper, triggerVerkoper);
+        checkCryptomuntGelijk(triggerKoper, triggerVerkoper);
+        checkAantalPositief(triggerKoper, triggerVerkoper);
+        checkPrijs(triggerKoper, triggerVerkoper);
+
+    }
+
+    public void checkVerkoper(Trigger triggerVerkoper) {
+        if(isKoper(triggerVerkoper)){
+            // throw exception
+        }
+    }
+    public void checkKoper(Trigger triggerKoper) {
+        if(!(isKoper(triggerKoper))){
+            // throw exception
+        }
+    }
+
+    public void checkAantalGelijk(Trigger triggerKoper, Trigger triggerVerkoper){
+        if(triggerKoper.getAantal() != triggerVerkoper.getAantal()){
+            // throw exception
+        }
+    }
+    public void checkCryptomuntGelijk(Trigger triggerKoper, Trigger triggerVerkoper){
+        if(!triggerKoper.getCryptomunt().equals(triggerVerkoper.getCryptomunt())){
+            // throw exception
+        }
+    }
+    public void checkAantalPositief(Trigger triggerKoper, Trigger triggerVerkoper){
+        if(triggerKoper.getAantal() <= 0 || triggerVerkoper.getAantal() <= 0){
+            // throw exception
+        }
+    }
+    public void checkPrijs(Trigger triggerKoper, Trigger triggerVerkoper){
+        if(triggerKoper.getTriggerPrijs() < triggerVerkoper.getTriggerPrijs()){
+            // throw exception
+        }
     }
 
     public Trigger vergelijkTriggerMetSaldo(Trigger trigger){
@@ -71,12 +116,19 @@ public class TriggerService {
         // bovenstaande methodes in loop langsgaan
     }
 
-    // Nodig?
     public Trigger maakBankTrigger(Trigger klantTrigger){
-        // haal huidige koers van betreffende cryptomunt
-
-        // zet aantal op aantal van klant
-
-        return null;
+        double prijs = rootRepository.haalMeestRecenteCryptoWaarde(klantTrigger.getCryptomunt()).getWaarde();
+        double aantal = klantTrigger.getAantal();
+        Cryptomunt cryptomunt = klantTrigger.getCryptomunt();
+        if(isKoper(klantTrigger)){
+            return new TriggerVerkoper(Bank.getInstance(), cryptomunt, prijs, aantal);
+        }
+        return new TriggerKoper(Bank.getInstance(), cryptomunt, prijs, aantal);
+    }
+    public boolean isKoper(Trigger trigger){
+        if(trigger instanceof TriggerKoper){
+            return true;
+        }
+        else return false;
     }
 }

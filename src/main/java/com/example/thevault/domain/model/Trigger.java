@@ -15,8 +15,6 @@ import org.slf4j.LoggerFactory;
 
 public abstract class Trigger {
 
-
-
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Trigger.class);
 
@@ -24,8 +22,6 @@ public abstract class Trigger {
     protected  Cryptomunt cryptomunt;
     protected  double triggerPrijs;
     protected  double aantal;
-    // Datum nodig?
-    // Id nodig?
 
     public Trigger() {
         super();

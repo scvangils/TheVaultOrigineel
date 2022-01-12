@@ -65,7 +65,7 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         // gebruik hier onderstaande functies om data te genereren
-       cryptoWaardeService.haalCryptoWaardes();
+    //   cryptoWaardeService.haalCryptoWaardes();
 
       Gebruiker  testKlant1 = new Klant("Carmen", "GoedWachtwoord",
               null, null, null,"Carmen", null, 123456789, LocalDate.parse("1985-12-30"));
