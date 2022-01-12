@@ -50,7 +50,7 @@ public class TriggerService {
         // triggers weghalen van klanten die trigger niet meer kunnen betalen?
     }
 
-    public void sluitTransactieAf(Trigger trigger){
+    public void sluitTransactieAf(Trigger triggerKoper, Trigger triggerVerkoper){
         // via transactionService proberen transactie af te sluiten
         
         // wat te doen als dit niet kan? Trigger verwijderen?

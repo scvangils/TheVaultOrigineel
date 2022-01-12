@@ -141,8 +141,8 @@ public class JDBCTransactieDAO implements TransactieDAO {
             Cryptomunt cryptomunt = new Cryptomunt(resultSet.getInt("cryptomuntId"));
             koper.setGebruikerId(resultSet.getInt("koperGebruikerId"));
             verkoper.setGebruikerId(resultSet.getInt("verkoperGebruikerId"));
-            Trigger triggerKoper = new Trigger(koper, cryptomunt, resultSet.getDouble("bedrag"),resultSet.getDouble("aantal"), true);
-            Trigger triggerVerkoper = new Trigger(verkoper, cryptomunt, resultSet.getDouble("bedrag"),resultSet.getDouble("aantal"), false);
+            Trigger triggerKoper = new TriggerKoper(koper, cryptomunt, resultSet.getDouble("bedrag"),resultSet.getDouble("aantal"));
+            Trigger triggerVerkoper = new TriggerVerkoper(verkoper, cryptomunt, resultSet.getDouble("bedrag"),resultSet.getDouble("aantal"));
             Transactie transactie = new Transactie(dateTime, triggerKoper,  triggerVerkoper);
             transactie.setTransactieId(resultSet.getInt("transactieId"));
             transactie.setBankFee(resultSet.getDouble("bankFee"));

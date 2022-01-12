@@ -65,8 +65,21 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         // gebruik hier onderstaande functies om data te genereren
-     //   cryptoWaardeService.haalCryptoWaardes();
+       cryptoWaardeService.haalCryptoWaardes();
 
+      Gebruiker  testKlant1 = new Klant("Carmen", "GoedWachtwoord",
+              null, null, null,"Carmen", null, 123456789, LocalDate.parse("1985-12-30"));
+        Gebruiker      testKlant2 = new Klant("Jolien", "BeterWachtwoord",
+                null, null, null, "Jolien",null, 987654321, LocalDate.parse("1985-10-14"));
+        testKlant1.setGebruikerId(1);
+        testKlant2.setGebruikerId(2);
+
+      Cryptomunt  testCryptomunt1 = new Cryptomunt(1, "BITCOIN", "BCN" );
+      Cryptomunt  testCryptomunt2 = new Cryptomunt(2, "ETHERIUM", "ETH");
+        Trigger triggerKoper = new TriggerKoper(testKlant1, testCryptomunt1, 1000.0, 2.0);
+        Trigger triggerVerkoper = new TriggerVerkoper(testKlant2, testCryptomunt1, 950.0, 2.0);
+        Transactie transactie = new Transactie(LocalDateTime.now(), triggerKoper, triggerVerkoper);
+        System.out.println(transactie.getPrijs());
     }
 
 
@@ -120,6 +133,7 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         double afwijking = getAfwijkingPrijs(koperId, verkoperId, randomDataInput.getRandomTransactieRange().getMaxAfwijkingPrijs());
         double randomAantal = getRandomAantal(cryptomunt, randomDataInput.getRandomTransactieRange().getMaxAantal());
         Gebruiker koper = getTransactiepartij(koperId);
+        Trigger triggerKoper = new TriggerKoper(koper, cryptomunt, afwijking, randomAantal);
         Gebruiker verkoper = getTransactiepartij(verkoperId);
         LocalDateTime randomDatumTijd = LocalDateTime.of(cryptoDatum, genereerRandomTijdstip());
         return setTransactie(prijs, koper, verkoper, cryptomunt, afwijking, randomAantal, randomDatumTijd);
