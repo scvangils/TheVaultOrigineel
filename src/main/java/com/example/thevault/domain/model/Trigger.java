@@ -24,7 +24,7 @@ public class Trigger {
     private Cryptomunt cryptomunt;
     private double triggerPrijs;
     private double aantal;
-    private boolean koper; // TODO juiste aanpak?
+    private boolean isKoper; // TODO juiste aanpak?
     // Datum nodig?
     // Id nodig?
 
@@ -32,14 +32,17 @@ public class Trigger {
         super();
         logger.info("New Trigger");
     }
-    public Trigger(Gebruiker gebruiker, double triggerPrijs){
+    public Trigger(Gebruiker gebruiker, Cryptomunt cryptomunt, double triggerPrijs, double aantal, boolean isKoper){
         super();
         this.gebruiker = gebruiker;
+        this.cryptomunt = cryptomunt;
         this.triggerPrijs = triggerPrijs;
+        this.aantal = aantal;
+        this.isKoper = isKoper;
         logger.info("New Trigger, all-args constructor");
     }
-    public Trigger(double triggerPrijs) {
-        this(null, triggerPrijs);
+    public Trigger(double triggerPrijs, double aantal, boolean isKoper) {
+        this(null, null, triggerPrijs,aantal, isKoper );
         logger.info("New Trigger, RowMapper constructor");
     }
 

@@ -132,8 +132,6 @@ public class JDBCTransactieDAO implements TransactieDAO {
 
     }
 
-
-    // TODO navragen of dit de plek is of dat koper en verkoper in de root-repository geset moeten worden
     private static class TransactieRowMapper implements RowMapper<Transactie> {
         @Override
         public Transactie mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
@@ -143,8 +141,9 @@ public class JDBCTransactieDAO implements TransactieDAO {
             Cryptomunt cryptomunt = new Cryptomunt(resultSet.getInt("cryptomuntId"));
             koper.setGebruikerId(resultSet.getInt("koperGebruikerId"));
             verkoper.setGebruikerId(resultSet.getInt("verkoperGebruikerId"));
-            Transactie transactie = new Transactie(dateTime, verkoper, cryptomunt, resultSet.getDouble("bedrag"),
-                    resultSet.getDouble("aantal"), koper);
+            Trigger triggerKoper = new Trigger(koper, cryptomunt, resultSet.getDouble("bedrag"),resultSet.getDouble("aantal"), true);
+            Trigger triggerVerkoper = new Trigger(verkoper, cryptomunt, resultSet.getDouble("bedrag"),resultSet.getDouble("aantal"), false);
+            Transactie transactie = new Transactie(dateTime, triggerKoper,  triggerVerkoper);
             transactie.setTransactieId(resultSet.getInt("transactieId"));
             transactie.setBankFee(resultSet.getDouble("bankFee"));
             return transactie;

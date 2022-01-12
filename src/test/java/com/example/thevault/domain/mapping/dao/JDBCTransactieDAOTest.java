@@ -73,7 +73,6 @@ public class JDBCTransactieDAOTest {
                 , 1.5, testKlant1);
         testTransactie1.setTransactieId(1);
 
-
     }
 
 
