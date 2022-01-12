@@ -8,14 +8,7 @@ CREATE TABLE adres (
                          PRIMARY KEY (adresId)
 );
 
-CREATE TABLE rekening (
-					    iban VARCHAR(18) NOT NULL,
-                        saldo DECIMAL(50,10) NOT NULL,
-                        gebruikerId INT NOT NULL,
-                        PRIMARY KEY (iban)
-);
 
-CREATE UNIQUE INDEX iban_UNIQUE ON rekening (iban ASC);
 
 CREATE TABLE klant (
                         gebruikerId INT NOT NULL AUTO_INCREMENT,
@@ -35,6 +28,22 @@ CREATE TABLE klant (
 
 CREATE INDEX verzinZelf1_idx ON klant (adresId ASC);
 CREATE UNIQUE INDEX gebruikersNaam_UNIQUE ON klant (gebruikersNaam ASC);
+
+CREATE TABLE rekening (
+                          iban VARCHAR(18) NOT NULL,
+                          saldo DECIMAL(50,10) NOT NULL,
+                          gebruikerId INT NOT NULL,
+                          PRIMARY KEY (iban),
+                          CONSTRAINT rekeningVan
+                              FOREIGN KEY (gebruikerId)
+                                  REFERENCES klant (gebruikerId)
+                                  ON DELETE RESTRICT
+                                  ON UPDATE CASCADE
+
+);
+
+CREATE UNIQUE INDEX iban_UNIQUE ON rekening (iban ASC);
+CREATE INDEX foreign_Key_rekening_gebruiker_idx ON rekening (gebruikerId ASC);
 
 CREATE TABLE cryptomunt (
                         cryptomuntId INT NOT NULL AUTO_INCREMENT,

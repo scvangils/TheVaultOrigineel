@@ -37,12 +37,16 @@ function login(){
         /*In de WelkomDTO zitten: saldo (double), portefeuille (List<Asset>), IBAN (String)*/
         /*Worden die er nu op de juiste manier uitgehaald? We willen die gebruiken in het Dashboard*/
         .then((response) => {
+            if(response.status === 200){
+
+            }
             console.log('Success:', response);
         })
         .catch((error) => {
             console.error('*** Iets misgegaan:', error);
         });
 }
+
 
 /*TODO (Singleton?) Mediator schrijven voor gebruiken login vs registratie? Zie voorbeeld*/
 /* https://refactoring.guru/design-patterns/mediator */
