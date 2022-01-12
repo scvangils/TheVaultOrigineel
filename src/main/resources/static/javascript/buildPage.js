@@ -232,17 +232,20 @@ if(checkAllInputs()){
 }
 }
 openModalButton.addEventListener("click", gegevensHandler);
-
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
+function registratieModalDicht(){
     modal.style.display = "none";
 }
+
+// When the user clicks on <span> (x), close the modal
+span.addEventListener("click", registratieModalDicht);
+
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
     if (event.target === modal) {
-        modal.style.display = "none";
+        registratieModalDicht();
     }
 }
+
 //modal laten vullen door inputvelden via flex-box-tabelstructuur
 //wachtwoord niet laten zien
 function fillModalBody(inputArray){
@@ -415,10 +418,10 @@ function maakCompleetKlantObject(){
                     return response.json()
                         // Toon "gelukt" o.i.d. in modal
                         // Sluit modal en toon inlog
-                        .then((json) => console.log(json))
+                        .then((json) => showWelcomeMessage(json))
                 else return response.json()
                     .then((json) => {
-                        const modalFout = toonFoutmelding();
+                        const modalFout = toonMelding();
                         modalFout.textContent = json.message;
                     })
             })
@@ -427,11 +430,28 @@ function maakCompleetKlantObject(){
             });
     }
 
-function toonFoutmelding(){
+//
+function showWelcomeMessage(json){
+        loginScreen();
     maakModalBodyLeeg();
-    const waarschuwing = document.createElement("label");
-    modalBody.appendChild(waarschuwing);
-    return waarschuwing;
+    document.getElementById("modalText").textContent = "Welkom bij The Vault!";
+    document.getElementById("verstuur").value = "Naar de Inlogpagina";
+    //TODO dit oplossen
+    document.getElementById("verstuur").removeEventListener("click", registreer);
+    document.getElementById("verstuur").addEventListener("click", registratieModalDicht);
+    const waarden = Object.values(json);
+    for(let waarde of waarden){
+        console.log(waarde);
+    const modalTekst = toonMelding();
+    modalTekst.textContent = waarde;
+    }
+}
+
+function toonMelding(){
+
+    const melding = document.createElement("div");
+    modalBody.appendChild(melding);
+    return melding;
 }
 /*
 function addClassToTag(tagName, cssClass){

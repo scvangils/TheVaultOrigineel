@@ -13,7 +13,7 @@ public interface KlantDAO {
 
     Klant vindKlantByGebruikersnaam(String gebruikersnaam);
 
-    Klant verwijderKlant(Klant klant);
+    int verwijderKlant(Klant klant);
 
     public Klant updateKlant(Klant klant);
 

@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.test.context.ActiveProfiles;
 import static org.assertj.core.api.Assertions.*;
@@ -96,6 +97,7 @@ public class JDBCKlantDAOTest {
         expected.setGebruikersnaam("Jolie");
         assertThat(actual).as("Gebruikersnaam aangepast, horen niet meer gelijk te zijn").isNotNull().isNotEqualTo(expected);
     }
+
     @Test
     void vindNietBestaandeKlantByGebruikersnaam(){
         Gebruiker actual = jdbcKlantDAOTest.vindKlantByGebruikersnaam("Steven");
@@ -106,13 +108,23 @@ public class JDBCKlantDAOTest {
     @Test
     void verwijderKlant() {
         testKlant1.setGebruikerId(1);
-       Gebruiker actual = jdbcKlantDAOTest.verwijderKlant((Klant) testKlant1);
-       Gebruiker expected = testKlant1;
-        assertThat(actual).as("Ze moeten hetzelfde zijn").isNotNull().isEqualTo(expected);
-        actual = jdbcKlantDAOTest.vindKlantByGebruikersnaam(testKlant1.getGebruikersnaam());
-        expected = null;
-        assertThat(actual).as("Deze klant is niet geregistreerd.").isNull();
+       int actual = jdbcKlantDAOTest.verwijderKlant((Klant) testKlant1);
+       int expected = 0;
+        assertThat(actual).as("Deze klant mag niet verwijderd worden vanwege Foreign Key restricties.").isNotNull().isEqualTo(expected);
+        Gebruiker actualKlant = jdbcKlantDAOTest.vindKlantByGebruikersnaam(testKlant1.getGebruikersnaam());
+        Gebruiker expectedKlant = testKlant1;
+        assertThat(actualKlant).as("Deze klant is niet verwijderd worden vanwege Foreign Key restricties.").isNotNull().isEqualTo(expectedKlant);
     }
+    @Test
+    void verwijderKlantCatchException() {
+        try {
+            jdbcKlantDAOTest.verwijderKlant((Klant) testKlant1);
+        }
+        catch(Exception exception){
+            fail("Er is toch een exception niet opgevangen door het catch-blok van de methode");
+        }
+    }
+
 
     @Test
     void updateKlant() {

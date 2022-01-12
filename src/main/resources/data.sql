@@ -1,11 +1,11 @@
 INSERT INTO adres (straatnaam, huisnummer, toevoeging, postcode, plaatsnaam) VALUES ('Hoofdstraat', 4, null, '1234AB', 'Hellevoetsluis');
 INSERT INTO adres (straatnaam, huisnummer, toevoeging, postcode, plaatsnaam) VALUES ('Zijstraat', 6, 'a', '9876CD', 'Groessen');
 
-INSERT INTO rekening VALUES ('NL01INGB0056210575', 41908, 1);
-INSERT INTO rekening VALUES ('NL05RABO0957285205', 57313, 2);
-
 INSERT INTO klant VALUES (1, 'Carmen', 'GoedWachtwoord', 'Carmen', 123456789, '1985-12-30', 1);
 INSERT INTO klant VALUES (2, 'Jolien', 'BeterWachtwoord', 'Jolien', 987654321, '1985-10-14', 2);
+
+INSERT INTO rekening VALUES ('NL01INGB0056210575', 41908, 1);
+INSERT INTO rekening VALUES ('NL05RABO0957285205', 57313, 2);
 
 INSERT INTO cryptomunt VALUES (1, 'BITCOIN', 'BCN');
 INSERT INTO cryptomunt VALUES (2, 'ETHERIUM', 'ETH');

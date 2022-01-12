@@ -5,6 +5,7 @@ package com.example.thevault.domain.mapping.dao;
 
 import com.example.thevault.domain.model.Adres;
 import com.example.thevault.domain.model.Klant;
+import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -120,18 +121,19 @@ public class JDBCKlantDAO implements KlantDAO{
         }
         return klant;
     }
-    //TODO is DELETE klant nodig?
+
     @Override
-    public Klant verwijderKlant(Klant klant) {
+    public int verwijderKlant(Klant klant) {
         String sql = "DELETE FROM klant WHERE gebruikerId = ?;";
+        int affectedRows = 0;
         try{
-        int affectedRows = jdbcTemplate.update(sql, klant.getGebruikerId());
-            System.out.println("Zoveel aangepast: " + affectedRows);
+        affectedRows = jdbcTemplate.update(sql, klant.getGebruikerId());
         }
         catch(DataAccessException noData){
-            logger.warn(noData.getMessage());
+            logger.warn("het is niet goed gegaan: " + noData.getMessage());
         }
-        return klant;
+
+        return affectedRows;
     }
 
     //TODO speciale functie voor wachtwoord?

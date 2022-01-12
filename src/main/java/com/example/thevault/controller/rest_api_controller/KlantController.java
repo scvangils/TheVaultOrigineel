@@ -3,6 +3,7 @@
 
 package com.example.thevault.controller.rest_api_controller;
 
+import com.example.thevault.domain.model.CryptoWaarde;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.transfer.RegistrationDto;
 import com.example.thevault.domain.transfer.WelkomDTO;
@@ -141,5 +142,6 @@ public class KlantController extends BasisApiController{
         return ResponseCookie.from("RefreshToken",
                 tokenKlantCombinatie.getKey().toString()).path("/validate/refresh").httpOnly(true).build();
     }
+
 
 }
