@@ -86,14 +86,12 @@ class TransactieServiceTest {
         testRekening22 = new Rekening("INGB0001234567NL", 21000.0);
         testRekening3 = new Rekening("INGB0001234567NL", 29000.0);
 
-
         mockRootRepository = Mockito.mock(RootRepository.class);
         rekeningService = new RekeningService(mockRootRepository);
         klantService = new KlantService(mockRootRepository);
         assetService = new AssetService(mockRootRepository);
         cryptoWaardeService = new CryptoWaardeService(mockRootRepository);
         transactieService = new TransactieService(mockRootRepository, klantService, rekeningService, assetService);
-
 
         testKlant1.setRekening(testRekening1);
         testKlant2.setRekening(testRekening2);
@@ -221,4 +219,48 @@ class TransactieServiceTest {
 
         assertThat(saldoVoorTransactie).isNotEqualTo(saldoNaTransactie);
     }*/
+
+   /* public void slaAlleAspectenVanTransactieOp(Transactie transactie,
+                                               double bedragKoper, double bedragVerkoper) {
+        slaTransactieOp(transactie);
+        transactie.getKoper().setRekening(rekeningService.wijzigSaldo(transactie.getKoper(), -bedragKoper));
+        transactie.getVerkoper().setRekening(rekeningService.wijzigSaldo(transactie.getVerkoper(), bedragVerkoper));
+        rekeningService.wijzigSaldo(Bank.getInstance(), transactie.getBankFee());
+        assetService.wijzigAssetGebruiker(transactie.getKoper(), transactie.getCryptomunt(), -transactie.getAantal());
+        assetService.wijzigAssetGebruiker(transactie.getVerkoper(), transactie.getCryptomunt(), transactie.getAantal());
+
+    }*/
+
+    @Test
+    void slaAlleAspectenVanTransactieOp() {
+
+    }
+
+    @Test
+    void SlaTransactieOp() {
+        Transactie expectedTransactie = new Transactie (LocalDateTime.of(2022, 1, 12, 14, 45, 0), testKlant1, testCryptomunt1, 55, 2.3, testKlant2);
+        Transactie actualTransactie = transactieService.slaTransactieOp(expectedTransactie);
+
+
+
+/*
+        Mockito.when(rekeningService.wijzigSaldo(testKlant1, bedragKoperTestTransactie1))
+                .thenReturn(testRekening11);
+        Mockito.when(rekeningService.wijzigSaldo(testKlant2, bedragVerkoperTestTransactie1))
+                .thenReturn(testRekening22);
+        Mockito.when(mockRootRepository.slaRekeningOp(testRekening1))
+                .thenReturn(testRekening1);
+        Mockito.when(mockRootRepository.geefAssetVanGebruiker(testKlant1, testCryptomunt1)).thenReturn(testAsset1);
+        Mockito.when(mockRootRepository.geefAssetVanGebruiker(testKlant2, testCryptomunt1)).thenReturn(testAsset4);
+        Mockito.when(mockRootRepository.wijzigAssetVanKlant(testAsset1)).thenReturn(testAsset1);
+        Mockito.when(mockRootRepository.wijzigAssetVanKlant(testAsset4)).thenReturn(testAsset4);
+        Mockito.when(mockRootRepository.vindRekeningVanGebruiker(testKlant1)).thenReturn(testRekening1);
+        Mockito.when(mockRootRepository.vindRekeningVanGebruiker(testKlant2)).thenReturn(testRekening2);
+        Mockito.when(transactieService.slaTransactieOp(actualTransactie1)).thenReturn(actualTransactie1);
+        Mockito.when(transactieService.slaTransactieOp(actualTransactie)).thenReturn(actualTransactie);
+        Transactie actualTransactie = transactieService.sluitTransactie(testKlant1, testCryptomunt1,
+                1000, 1100, 1.6, testKlant2);*/
+
+        assertThat(expectedTransactie.getCryptomunt()).isEqualTo(actualTransactie.getCryptomunt());
+    }
 }

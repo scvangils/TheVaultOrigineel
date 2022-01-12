@@ -34,6 +34,7 @@ public class Transactie{
         super();
         logger.info("lege Transactie, no args constructor");
     }
+
     //TODO navragen of dit betere code is
     public Transactie(LocalDateTime momentTransactie,
                       Trigger triggerKoper, Trigger triggerVerkoper) {
