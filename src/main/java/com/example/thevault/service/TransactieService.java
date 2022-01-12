@@ -60,7 +60,7 @@ public class TransactieService {
             Gebruiker koper = koopTrigger.getGebruiker();
             Gebruiker verkoper = verkoopTrigger.getGebruiker();
             double aantal = koopTrigger.getAantal();
-            boolean bankIsKoper = (koper instanceof Bank);
+                boolean bankIsKoper = (koper instanceof Bank);
             boolean bankIsVerkoper = (verkoper instanceof Bank);
 
             double prijs = Transactie.getPrijsViaTrigger(koopTrigger, verkoopTrigger);

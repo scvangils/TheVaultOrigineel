@@ -13,36 +13,31 @@ import org.slf4j.LoggerFactory;
  * met een bepaalde gevraagde of aangeboden hoeveelheid
  */
 
-public class Trigger {
-
-
+public abstract class Trigger {
 
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Trigger.class);
 
-    private Gebruiker gebruiker;
-    private Cryptomunt cryptomunt;
-    private double triggerPrijs;
-    private double aantal;
-    private boolean isKoper; // TODO juiste aanpak?
-    // Datum nodig?
-    // Id nodig?
+    protected Gebruiker gebruiker;
+    protected  Cryptomunt cryptomunt;
+    protected  double triggerPrijs;
+    protected  double aantal;
 
     public Trigger() {
         super();
         logger.info("New Trigger");
     }
-    public Trigger(Gebruiker gebruiker, Cryptomunt cryptomunt, double triggerPrijs, double aantal, boolean isKoper){
+    public Trigger(Gebruiker gebruiker, Cryptomunt cryptomunt, double triggerPrijs, double aantal){
         super();
         this.gebruiker = gebruiker;
         this.cryptomunt = cryptomunt;
         this.triggerPrijs = triggerPrijs;
         this.aantal = aantal;
-        this.isKoper = isKoper;
+
         logger.info("New Trigger, all-args constructor");
     }
-    public Trigger(double triggerPrijs, double aantal, boolean isKoper) {
-        this(null, null, triggerPrijs,aantal, isKoper );
+    public Trigger(double triggerPrijs, double aantal) {
+        this(null, null, triggerPrijs,aantal);
         logger.info("New Trigger, RowMapper constructor");
     }
 

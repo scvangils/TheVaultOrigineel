@@ -22,18 +22,21 @@ public class RegistrationDto {
     private String naam;
     private String gebruikersnaam;
     private String iban;
-    private String postcodeEnHuisnummer;
+
+    private final String WELKOM = "Welkom, %s, bij The Vault";
+    private final String LET_OP = "Onthoud je gebruikersnaam, %s, goed!";
+    private final String IBAN = "Dit is je IBAN: %s.";
+
 
     public RegistrationDto() {
         super();
         logger.info("New RegistrationDto no args");
     }
     public RegistrationDto(Klant klant){
-        this.naam = klant.getNaam();
-        this.gebruikersnaam = klant.getGebruikersnaam();
-        this.iban = klant.getRekening().getIban();
-        this.postcodeEnHuisnummer = klant.getAdres().getPostcode() + " / "
-                + klant.getAdres().getHuisnummer() + klant.getAdres().getToevoeging();
+        this.naam = String.format(WELKOM, klant.getNaam());
+        this.gebruikersnaam = String.format(LET_OP, klant.getGebruikersnaam());
+        this.iban = String.format(IBAN, klant.getRekening().getIban());
+
     }
 
     public String getNaam() {
@@ -60,13 +63,6 @@ public class RegistrationDto {
         this.iban = iban;
     }
 
-    public String getPostcodeEnHuisnummer() {
-        return postcodeEnHuisnummer;
-    }
-
-    public void setPostcodeEnHuisnummer(String postcodeEnHuisnummer) {
-        this.postcodeEnHuisnummer = postcodeEnHuisnummer;
-    }
 
     @Override
     public String toString() {
@@ -74,7 +70,6 @@ public class RegistrationDto {
                 "naam='" + naam + '\'' +
                 ", gebruikersnaam='" + gebruikersnaam + '\'' +
                 ", iban='" + iban + '\'' +
-                ", postcodeEnHuisnummer='" + postcodeEnHuisnummer + '\'' +
                 '}';
     }
 
@@ -83,11 +78,11 @@ public class RegistrationDto {
         if (this == o) return true;
         if (!(o instanceof RegistrationDto)) return false;
         RegistrationDto registrationDto = (RegistrationDto) o;
-        return naam.equals(registrationDto.naam) && gebruikersnaam.equals(registrationDto.gebruikersnaam) && iban.equals(registrationDto.iban) && postcodeEnHuisnummer.equals(registrationDto.postcodeEnHuisnummer);
+        return naam.equals(registrationDto.naam) && gebruikersnaam.equals(registrationDto.gebruikersnaam) && iban.equals(registrationDto.iban) ;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(naam, gebruikersnaam, iban, postcodeEnHuisnummer);
+        return Objects.hash(naam, gebruikersnaam, iban);
     }
 }
