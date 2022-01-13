@@ -38,6 +38,12 @@ function login(){
         /*Worden die er nu op de juiste manier uitgehaald? We willen die gebruiken in het Dashboard*/
         .then((response) => {
             console.log('Success:', response);
+
+//TODO op een andere locatie zetten
+            return response.json();
+        })
+        .then((json) => {
+            vulCryptoGegevens(json)
         })
         .catch((error) => {
             console.error('*** Iets misgegaan:', error);
