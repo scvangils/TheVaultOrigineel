@@ -23,22 +23,19 @@ import static org.mockito.Mockito.doCallRealMethod;
 class JDBCAssetDAOTest {
 
     private AssetDAO testAssetDAO;
-    @MockBean
-    private AssetDAO mockAssetDAO;
     private static Gebruiker testKlant1;
     private static Gebruiker testKlant2;
     private static Cryptomunt testCryptomunt1;
     private static Cryptomunt testCryptomunt2;
     private static Cryptomunt testCryptomunt3;
+    private static Cryptomunt testCryptomunt4;
     private static Asset testAsset1;
     private static Asset testAsset2;
     private static Asset testAsset3;
     private static Asset testAsset4;
     private static Asset testAsset5;
     private static List<Asset> testAsset6;
-
-    private static Gebruiker mockKlant;
-    private Cryptomunt mockCrypto;
+    private static Asset testAsset7;
 
     @Autowired
     public JDBCAssetDAOTest(AssetDAO testAssetDAO) {
@@ -64,17 +61,16 @@ class JDBCAssetDAOTest {
         testCryptomunt1 = new Cryptomunt(1, "Bitcoin", "BCN");
         testCryptomunt2 = new Cryptomunt(1, null, null);
         testCryptomunt3 = new Cryptomunt(2, null, null);
+        testCryptomunt4 = new Cryptomunt(2, "LITECOIN", "LCN");
         testAsset1 = new Asset(testCryptomunt1, 3.4, testKlant1);
         testAsset2 = new Asset(testCryptomunt1, 4.2, testKlant2);
-        testAsset3 = new Asset(testCryptomunt2, 5.3, testKlant2);
+        testAsset3 = new Asset(testCryptomunt1, 5.3, testKlant2);
         testAsset4 = new Asset(testCryptomunt2, 4.2, testKlant2);
         testAsset5 = new Asset(testCryptomunt3, 3.5, testKlant2);
         testAsset6 = new ArrayList<>();
         testAsset6.add(testAsset4);
         testAsset6.add(testAsset5);
-
-        mockKlant = Mockito.mock(Gebruiker.class);
-        mockCrypto = Mockito.mock(Cryptomunt.class);
+        testAsset7 = new Asset(testCryptomunt1, 100, testKlant2);
     }
 
     @Test
@@ -96,38 +92,33 @@ class JDBCAssetDAOTest {
     }
 
     //TODO Carmen: Uitvinden hoe ik een integratietest kan maken voor deze method, gevraagd aan Huub
-    /*@Test
-    void updateAssetAankoop() {
-        doCallRealMethod().when(mockAssetDAO).updateAsset(testKlant2, testCryptomunt1, 1.1);
-        Mockito.when(mockAssetDAO.geefAssetGebruiker(testKlant2, testCryptomunt1)).
-                thenReturn(Optional.ofNullable(testAsset2));
-        Asset actual = mockAssetDAO.updateAsset(testKlant2, testCryptomunt1, 1.1);
-        Asset expected = testAsset3;
-        assertThat(actual).as("Test asset aankoop").isNotNull().isEqualTo(expected);
-
-        doCallRealMethod().when(mockAssetDAO).updateAsset(mockKlant, mockCrypto, 1.1);
-        Mockito.when(mockAssetDAO.geefAssetGebruiker(mockKlant, mockCrypto)).
-                thenReturn(Optional.ofNullable(testAsset2));
-        Asset actual = mockAssetDAO.updateAsset(mockKlant, mockCrypto, 1.1);
-        Asset expected = testAsset3;
-        assertThat(actual).as("Test asset aankoop").isNotNull().isEqualTo(expected);
-    }
-
+    //Staat het goed in de database? Wordt het object goed geupdate teruggegeven?
+    //Hoe kan ik controleren of de nieuwe informatie goed in de database staat?
     @Test
+    void updateAssetAankoop() {
+        Asset actual = testAssetDAO.updateAsset(testKlant2, testCryptomunt1, 1.1);
+        Asset expected = testAsset3;
+        assertThat(actual.getAantal()).isEqualTo(expected.getAantal());
+        }
+
+   /* @Test
     void updateAssetVerkoop() {
-        Asset actual = testAssetDAO.updateAsset(testKlant2, testCryptomunt1, 1);
+        Asset actual = testAssetDAO.updateAsset(testKlant2, testCryptomunt1, -1);
     }
 
     @Test
     void updateAssetVerkoopTekortAanCrypto() {
-        Asset actual = testAssetDAO.updateAsset(testKlant2, testCryptomunt1, 1);
-    }
-*/
+        Asset actual = testAssetDAO.updateAsset(testKlant2, testCryptomunt1, -10);
+    }*/
+
     @Test
     void geefAanwezigAsset() {
         Optional<Asset> actual = testAssetDAO.geefAssetGebruiker(testKlant2, testCryptomunt1);
+        Asset actualUitgepakt = actual.orElse(testAsset7);
         Asset expected = testAsset4;
-        assertThat(actual).as("Test geef 1 asset van gebruiker").isNotEmpty().contains(expected);
+        Asset unexpected = testAsset7;
+        assertThat(actualUitgepakt.getAantal()).as("Test geef 1 asset van gebruiker: aantal").isNotNull().
+                isEqualTo(expected.getAantal()).isNotEqualTo(unexpected.getAantal());
     }
 
     @Test
@@ -140,8 +131,22 @@ class JDBCAssetDAOTest {
     void geefAlleAssets() {
         List<Asset> actual = testAssetDAO.geefAlleAssets(testKlant2);
         List<Asset> expected = testAsset6;
-        assertThat(actual).as("Test ophalen alle assets van gebruiker").isNotNull().contains(expected.get(0)).
-                contains(expected.get(1));
+        assertThat(actual.get(0).getGebruiker().getGebruikerId()).
+                as("Test ophalen alle assets van gebruiker: gebruiker 1").isNotNull().
+                isEqualTo(expected.get(0).getGebruiker().getGebruikerId());
+        assertThat(actual.get(1).getGebruiker().getGebruikerId()).
+                as("Test ophalen alle assets van gebruiker: gebruiker 2").isNotNull().
+                isEqualTo(expected.get(1).getGebruiker().getGebruikerId());
+        assertThat(actual.get(0).getCryptomunt().getId()).
+                as("Test ophalen alle assets van gebruiker: crypto 1").isNotNull().
+                isEqualTo(expected.get(0).getCryptomunt().getId());
+        assertThat(actual.get(1).getCryptomunt().getId()).
+                as("Test ophalen alle assets van gebruiker: crypto 2").isNotNull().
+                isEqualTo(expected.get(1).getCryptomunt().getId());
+        assertThat(actual.get(0).getAantal()).as("Test ophalen alle assets van gebruiker: aantal 1").
+                isNotNull().isEqualTo(expected.get(0).getAantal());
+        assertThat(actual.get(1).getAantal()).as("Test ophalen alle assets van gebruiker: aantal 1").
+                isNotNull().isEqualTo(expected.get(1).getAantal());
     }
 
     @Test

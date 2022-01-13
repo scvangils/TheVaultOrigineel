@@ -51,7 +51,6 @@ public class JDBCKlantDAOTest {
         testAdres1 = new Adres("Hoofdstraat", 4, null, "1234AB", "Hellevoetsluis");
         testAdres1.setAdresId(1);
         nieuweKlant = new Klant("StevenVG", "StevenPW", "Steven van Gils", 1010101010, LocalDate.parse("1975-12-30"));
-
  }
 
 

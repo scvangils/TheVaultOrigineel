@@ -163,7 +163,9 @@ public class JDBCAssetDAO implements AssetDAO{
         String sql = "SELECT * FROM asset WHERE gebruikerId = ?;";
         List<Asset> assets;
         assets = jdbcTemplate.query(sql, new JDBCAssetDAO.AssetRowMapper(), gebruiker.getGebruikerId());
-        if(assets.size() != 0) {
+        if(assets.size() == 0) {
+            return assets;
+            } else {
             for (Asset asset : assets) {
                 asset.setGebruiker(gebruiker);
             }
