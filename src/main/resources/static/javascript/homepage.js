@@ -41,6 +41,12 @@ function login(){
 
             }
             console.log('Success:', response);
+
+//TODO op een andere locatie zetten
+            return response.json();
+        })
+        .then((json) => {
+            vulCryptoGegevens(json)
         })
         .catch((error) => {
             console.error('*** Iets misgegaan:', error);
