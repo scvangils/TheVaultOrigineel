@@ -6,6 +6,11 @@ package com.example.thevault.support.data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Deze klasse bundelt het mmximum aantal cryptomunten dat in de random transactie verhandeld wordt
+ * met de maximum afwijking van de dagkoers
+ */
+
 public class RandomTransactieRange {
 
     private final Logger logger = LoggerFactory.getLogger(RandomTransactieRange.class);

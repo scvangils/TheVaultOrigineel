@@ -79,6 +79,7 @@ public class AssetService {
         return rootRepository.vulPortefeuilleKlant(gebruiker);
     }
 
+    //TODO hoort dit hier
     public Cryptomunt geefCryptomunt(int cryptomuntId){
         return rootRepository.geefCryptomunt(cryptomuntId);
     }

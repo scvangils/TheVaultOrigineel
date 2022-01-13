@@ -7,6 +7,7 @@ import com.example.thevault.domain.model.Adres;
 import com.example.thevault.domain.model.Klant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -43,7 +44,13 @@ public class JDBCAdresDAO implements AdresDAO{
         return ps;
     }
 
-    //TODO nakijken
+    /**
+     * Deze methode kijkt of het adres al in de database staat en, zo niet,
+     * slaat het adres op en zet de adresId op de door de database gegenereerde waarde
+     *
+     * @param adres Het adres dat moet worden opgeslagen
+     * @return Het opgeslagen adres of het adres dat al werd gevonden in de database
+     */
     @Override
     public Adres slaAdresOp(Adres adres) {
         Adres anderAdres = vindAdresByPostcodeHuisnummerEnToevoeging(adres);
@@ -54,12 +61,19 @@ public class JDBCAdresDAO implements AdresDAO{
             adres.setAdresId(adresId);
         }
         else {
-            System.out.println("**** Hij heeft hetzelfde adres: " + anderAdres);
             return anderAdres;
         }
         return adres;
     }
-    //TODO misschien andere inputs?
+
+    /**
+     * Deze methode zoekt een adres op basis van postcode, huisnummer en toevoeging in de database op.
+     * Deze methode wordt gebruikt om te zien of een adres al in de database aanwezig is.
+     *
+     * @param adres het adres waarmee vergeleken wordt
+     * @return het adres of null als het niet gevonden wordt.
+     */
+
     public Adres vindAdresByPostcodeHuisnummerEnToevoeging(Adres adres){
         String sql = "SELECT * FROM adres WHERE postcode = ? AND huisnummer = ? AND toevoeging = ?";
         try {
@@ -73,7 +87,7 @@ public class JDBCAdresDAO implements AdresDAO{
 
     }
 
-
+// TODO verwijderen?
     @Override
     public Adres wijzigAdres(Adres adres) {
         String sql = "UPDATE adres SET straatnaam = ?, huisnummer = ?, toevoeging = ?, postcode = ?, plaatsnaam = ?" +
@@ -82,6 +96,13 @@ public class JDBCAdresDAO implements AdresDAO{
                 adres.getPostcode(), adres.getPlaatsnaam(), adres.getAdresId());
         return adres;
     }
+
+    /**
+     * Deze methode zoekt een adres in de database op met de gegeven id.
+     *
+     * @param adresId het id dat bij een adres moet horen
+     * @return het adres of null als het niet gevonden wordt.
+     */
 
     @Override
     public Adres getAdresById(int adresId){
@@ -116,9 +137,18 @@ public class JDBCAdresDAO implements AdresDAO{
         return adres;
     }
 
+
     @Override
-    public Adres verwijderAdres(Adres adres) {
-        return null;
+    public int verwijderAdres(Adres adres) {
+        int affectedRows = 0;
+        String sql = "DELETE FROM adres WHERE adresId = ?;";
+        try {
+            affectedRows = jdbcTemplate.update(sql, adres.getAdresId());
+        }
+        catch(DataAccessException noData){
+            logger.warn("het is niet goed gegaan: " + noData.getMessage());
+        }
+        return affectedRows;
     }
 
     private static class AdresRowMapper implements RowMapper<Adres>{
@@ -128,9 +158,7 @@ public class JDBCAdresDAO implements AdresDAO{
             Adres adres = new Adres(rs.getString("straatnaam"), rs.getInt("huisnummer"), rs.getString("toevoeging"),
                     rs.getString("postcode"), rs.getString("plaatsnaam"));
             int adresId = rs.getInt("adresId");
-            System.out.println("**** dit is het adresId: " + adresId);
             adres.setAdresId(adresId);
-            System.out.println("***** is het hier aangepast?: " + adres.getAdresId());
             return adres;
         }
     }

@@ -8,7 +8,6 @@
 package com.example.thevault.support.data;
 
 import com.example.thevault.domain.model.*;
-import com.example.thevault.domain.transfer.AssetDto;
 import com.example.thevault.service.*;
 import com.example.thevault.support.authorization.AuthorizationService;
 import com.example.thevault.support.exceptions.BalanceTooLowException;
@@ -29,6 +28,10 @@ import java.util.Comparator;
 import java.util.List;
 
 import static com.example.thevault.support.data.DataGenerator.genereerRandomGetal;
+
+/**
+ * Deze klasse is bedoeld om data te genereren voor de database en end-to-end tests uit te voeren
+ */
 
 @Component
  public class DataController implements ApplicationListener<ContextRefreshedEvent> {
@@ -51,7 +54,6 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
     public DataController(RegistrationService registrationService,
                           AuthorizationService authorizationService, LoginService loginService, TransactieService transactieService,
                           AssetService assetService, CryptoWaardeService cryptoWaardeService, KlantService klantService, TriggerService triggerService) {
-    //    super(registrationService, authorizationService, loginService, transactieService);
         this.registrationService = registrationService;
         this.authorizationService = authorizationService;
         this.transactieService = transactieService;
@@ -63,29 +65,32 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         logger.info("New DataController");
     }
 
-
-
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         // gebruik hier onderstaande functies om data te genereren
     //   cryptoWaardeService.haalCryptoWaardes();
 
-/*      Gebruiker  testKlant1 = new Klant("Carmen", "GoedWachtwoord",
-              null, null, null,"Carmen", null, 123456789, LocalDate.parse("1985-12-30"));
-        Gebruiker      testKlant2 = new Klant("Jolien", "BeterWachtwoord",
-                null, null, null, "Jolien",null, 987654321, LocalDate.parse("1985-10-14"));
-        testKlant1.setGebruikerId(1);
-        testKlant2.setGebruikerId(2);
 
-      Cryptomunt  testCryptomunt1 = new Cryptomunt(1, "BITCOIN", "BCN" );
-      Cryptomunt  testCryptomunt2 = new Cryptomunt(2, "ETHEREUM", "ETH");
-        Trigger triggerKoper = new TriggerKoper(testKlant1, testCryptomunt1, 1000.0, 2.0);
-        Trigger triggerVerkoper = new TriggerVerkoper(testKlant2, testCryptomunt1, 950.0, 2.0);
-        Transactie transactie = new Transactie(LocalDateTime.now(), triggerKoper, triggerVerkoper);
-        System.out.println(transactie.getPrijs());*/
+
+/*        TransactieDataRange transactieDataRange = new TransactieDataRange(60, 11);
+        RandomTransactieRange randomTransactieRange = new RandomTransactieRange(2, 5);
+        BankAlsTransactiePartij bankAlsTransactiePartij = new BankAlsTransactiePartij(false, false);
+
+        RandomDataInput randomDataInput = new RandomDataInput(200, transactieDataRange, bankAlsTransactiePartij, randomTransactieRange);
+        List<Transactie> transactieList = genereerRandomTransacties(randomDataInput);
+        transactieList.forEach(System.out::println);*/
 
     }
 
+
+    /**
+     * Deze methode slaat klanten op die gegenereerd worden op basis van een csv-bestand en methodes uit Datagenerator
+     *
+     * @param hoeveelKlanten Bepaalt hoeveel klanten er worden opgeslagen,
+     *                      zodat je niet vast zit aan de grootte van het bestand
+     * @param bestandsnaam de naam van het csv-bestand
+     * @throws IOException
+     */
 
     public void vulKlantAdresEnRekeningTabel(int hoeveelKlanten, String bestandsnaam) throws IOException {
         List<Klant> list = DataGenerator.maakLijstKlantenVanCSV(bestandsnaam, hoeveelKlanten);
@@ -93,29 +98,50 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
             registrationService.registreerKlant(klant);
         }
     }
-// TODO trigger incorporeren
 
-/*    public void slaRandomTransactiesOp(RandomDataInput randomDataInput){
+    /**
+     * Deze methode genereert random transacties en slaat ze op
+     * Het catch-block zorgt ervoor dat een transactie die niet slaagt niet meteen het hele proces stopt
+     *
+     * @param randomDataInput
+     */
+    public void slaRandomTransactiesOp(RandomDataInput randomDataInput){
         List<Transactie> transacties = genereerRandomTransacties(randomDataInput);
         transacties.sort(new TransactieComparator());
         for(Transactie transactie: transacties){
             try {
-                transactieService.sluitTransactie(transactie.getVerkoper(), transactie.getCryptomunt(),
-                        transactie.getPrijs(), transactie.getPrijs(), transactie.getAantal(), transactie.getKoper(),
-                        transactie.getMomentTransactie());
+                Trigger triggerKoper = new TriggerKoper(transactie.getKoper(), transactie.getCryptomunt(), transactie.getPrijs(), transactie.getAantal());
+                Trigger triggerVerkoper = new TriggerVerkoper(transactie.getVerkoper(), transactie.getCryptomunt(), transactie.getPrijs(), transactie.getAantal());
+                transactieService.sluitTransactie(
+                        transactie.getMomentTransactie(), triggerKoper, triggerVerkoper);
             }
             catch (NotEnoughCryptoException | BalanceTooLowException notEnoughCryptoException){
                 System.out.println(transactie);
             }
         }
-    }*/
+    }
 
-    public List<Transactie> genereerRandomTransacties(RandomDataInput randomDataInput){
+    /**
+     * Deze methode genereert een List random transacties door eerst een lijst
+     * van mogelijke cryptomunten die gebruikt worden in de transacties
+     * binnen te halen.
+     *
+     * @param randomDataInput Een object dat de gewenste restricties aan de dataset meegeeft
+     * @return Een List van Transactie-objecten
+     */
+     public List<Transactie> genereerRandomTransacties(RandomDataInput randomDataInput){
         List<Cryptomunt> cryptomuntList = assetService.geefAlleCryptomunten();
         return creeerTransactieLijst(randomDataInput, cryptomuntList);
     }
 
-    private List<Transactie> creeerTransactieLijst(RandomDataInput randomDataInput, List<Cryptomunt> cryptomuntList) {
+    /**
+     * Deze methode genereert een List van random transacties
+     *
+     * @param randomDataInput Een object dat de gewenste restricties aan de dataset meegeeft
+     * @param cryptomuntList De lijst van mogelijke cryptomunten die gebruikt worden in de transacties
+     * @return Een List van Transactie-objecten
+     */
+     private List<Transactie> creeerTransactieLijst(RandomDataInput randomDataInput, List<Cryptomunt> cryptomuntList) {
         List<Transactie> transactieList = new ArrayList<>();
         for (int i = 0; i < randomDataInput.getHoeveelTransacties(); i++) {
             Transactie transactie = getRandomTransactie(randomDataInput, cryptomuntList);
@@ -124,44 +150,83 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         return transactieList;
     }
 
+    /**
+     * Deze methode genereert een random Transactie-object op basis van meegegeven restricties
+     *
+     * @param randomDataInput Een object dat de gewenste restricties aan de dataset meegeeft
+     * @param cryptomuntList De lijst van mogelijke cryptomunten die gebruikt worden in de transacties
+     * @return Een random gegenereerd Transactie-object
+     */
     private Transactie getRandomTransactie(RandomDataInput randomDataInput, List<Cryptomunt> cryptomuntList) {
-        Cryptomunt cryptomunt = cryptomuntList.get((genereerRandomGetal(0, cryptomuntList.size(), 1)));
+        Cryptomunt cryptomunt = cryptomuntList.get((genereerRandomGetal(0, cryptomuntList.size() - 1, 1)));
         LocalDate cryptoDatum = LocalDate.of(UITGANGSJAAR, randomDataInput.getTransactieDataRange().getMaand(),
                 genereerRandomGetal(1, 30, 1));
         double prijs = cryptoWaardeService.vindCryptoWaardeOpDatum(cryptomunt, cryptoDatum).getWaarde();
-        int koperId = getRandomGebruikerId(randomDataInput.getTransactieDataRange().getAantalGebruikers(),
-                randomDataInput.getBankAlsTransactiePartij().isBankAlsKoper());
-        int verkoperId = getRandomGebruikerId(randomDataInput.getTransactieDataRange().getAantalGebruikers(),
-                randomDataInput.getBankAlsTransactiePartij().isBankAlsVerkoper());
-        verkoperId = getVerkoperId(koperId, verkoperId);
-        double afwijking = getAfwijkingPrijs(koperId, verkoperId, randomDataInput.getRandomTransactieRange().getMaxAfwijkingPrijs());
+        int koperId = getRandomGebruikerId(randomDataInput.getTransactieDataRange().getGebruikerIdMinimum(),
+                randomDataInput.getTransactieDataRange().getGebruikerIdMaximum(), randomDataInput.getBankAlsTransactiePartij().isBankAlsKoper());
+        int verkoperId = setVerkoperId(randomDataInput, koperId);
+        prijs  = prijs * getAfwijkingPrijs(koperId, verkoperId, randomDataInput.getRandomTransactieRange().getMaxAfwijkingPrijs());
         double randomAantal = getRandomAantal(cryptomunt, randomDataInput.getRandomTransactieRange().getMaxAantal());
-        Gebruiker koper = getTransactiepartij(koperId);
-        Trigger triggerKoper = new TriggerKoper(koper, cryptomunt, afwijking, randomAantal);
-        Gebruiker verkoper = getTransactiepartij(verkoperId);
+        Trigger triggerKoper = getTriggerKoper(cryptomunt, prijs, koperId, randomAantal);
+        Trigger triggerVerkoper = getTriggerVerkoper(cryptomunt, prijs, verkoperId, randomAantal);
         LocalDateTime randomDatumTijd = LocalDateTime.of(cryptoDatum, genereerRandomTijdstip());
-        return setTransactie(prijs, koper, verkoper, cryptomunt, afwijking, randomAantal, randomDatumTijd);
+        return new Transactie(randomDatumTijd, triggerKoper, triggerVerkoper);
     }
 
-    private int getRandomGebruikerId(int aantalGebruikers, boolean bankAlsKoperOfVerkoper) {
-        int gebruikerId = genereerRandomGetal(0, aantalGebruikers, 1);
+    /**
+     * Maakt een TriggerVerkoper aan op basis van de random gegenereerde data
+     * dat gebruikt wordt als input voor de Transactie-constructor
+     *
+     * @param cryptomunt De gebruikte cryptomunt
+     * @param prijs De gegenereerde prijs
+     * @param verkoperId  De gegenereerde gebruikerId van de verkoper
+     * @param randomAantal Het gegenereerde aantal van de cryptomunt dat verhandeld wordt
+     * @return Een TriggerVerkoper-object
+     */
+    private Trigger getTriggerVerkoper(Cryptomunt cryptomunt, double prijs, int verkoperId, double randomAantal) {
+        Gebruiker verkoper = getTransactiepartij(verkoperId);
+        return new TriggerVerkoper(verkoper, cryptomunt, prijs, randomAantal);
+    }
+    /**
+     * Maakt een TriggerKoper aan op basis van de random gegenereerde data
+     * dat gebruikt wordt als input voor de Transactie-constructor
+     *
+     * @param cryptomunt De gebruikte cryptomunt
+     * @param prijs De gegenereerde prijs
+     * @param koperId  De gegenereerde gebruikerId van de koper
+     * @param randomAantal Het gegenereerde aantal van de cryptomunt dat verhandeld wordt
+     * @return Een TriggerKoper-object
+     */
+    private Trigger getTriggerKoper(Cryptomunt cryptomunt, double prijs, int koperId, double randomAantal) {
+        Gebruiker koper = getTransactiepartij(koperId);
+        return new TriggerKoper(koper, cryptomunt, prijs, randomAantal);
+    }
+
+    /**
+     * Deze methode maakt op basis van restricties een random gebruikerId voor de verkoper aan,
+     * zodat deze niet gelijk is aan de gebruikerId van de koper
+     *
+     * @param randomDataInput Een object dat de gewenste restricties aan de dataset meegeeft
+     * @param koperId De gebruikerId van de koper
+     * @return
+     */
+    private int setVerkoperId(RandomDataInput randomDataInput, int koperId) {
+        int verkoperId = 0;
+        do {
+            verkoperId = getRandomGebruikerId(randomDataInput.getTransactieDataRange().getGebruikerIdMinimum(),
+                    randomDataInput.getTransactieDataRange().getGebruikerIdMaximum(),
+                    randomDataInput.getBankAlsTransactiePartij().isBankAlsVerkoper());
+        }
+        while(koperId == verkoperId);
+        return verkoperId;
+    }
+
+    private int getRandomGebruikerId(int gebruikerIdMinimum, int gebruikerIdMaximum, boolean bankAlsKoperOfVerkoper) {
+        int gebruikerId = genereerRandomGetal(gebruikerIdMinimum, gebruikerIdMaximum, 1);
         if (bankAlsKoperOfVerkoper) {
             gebruikerId = 0;
         }
         return gebruikerId;
-    }
-
-    private Transactie setTransactie(double prijs, Gebruiker koper, Gebruiker verkoper, Cryptomunt cryptomunt,
-                                     double afwijking, double randomAantal, LocalDateTime randomDatumTijd) {
-        Transactie transactie = new Transactie();
-        transactie.setKoper(koper);
-        transactie.setVerkoper(verkoper);
-        transactie.setCryptomunt(cryptomunt);
-        transactie.setPrijs(prijs * (1 + afwijking));
-        transactie.setAantal(randomAantal);
-        transactie.setMomentTransactie(randomDatumTijd);
-        transactie.setBankFee(Bank.getInstance().getFee());
-        return transactie;
     }
 
     private double getAfwijkingPrijs(int koperId, int verkoperId, int maxAfwijkingsPercentage) {
@@ -174,19 +239,19 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         return afwijking;
     }
 
+    /**
+     * Deze methode genereert een random aantal voor de transactie, maar houdt rekening met de koers per eenheid
+     *
+     * @param cryptomunt De betreffende cryptomunt
+     * @param maxAantal Het maximum aantal dat gegenereerd mag worden
+     * @return Een random aantal voor de transactie
+     */
     private double getRandomAantal(Cryptomunt cryptomunt, double maxAantal) {
         double randomAantal = genereerRandomGetal(0, (int) maxAantal * 1000, 1) / 1000.0;
         if(cryptomunt.getId() == BITCOIN_ID || cryptomunt.getId() == ETHEREUM_ID){ // bedrag wordt snel te hoog met deze munten
             randomAantal = genereerRandomGetal(0, 10, 1) / 1000.0;
         }
         return randomAantal;
-    }
-
-    private int getVerkoperId(int koperId, int verkoperId) {
-        while (koperId == verkoperId) {
-            verkoperId = genereerRandomGetal(1, 60, 1);
-        }
-        return verkoperId;
     }
 
     private Gebruiker getTransactiepartij(int gebruikerId) {
@@ -204,6 +269,14 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         return LocalTime.of(randomUur, randomMinuut, randomSeconde);
     }
 
+    /**
+     * Deze methode haalt een List binnen van verschillende cryptomunten met hun meest recente koers
+     * Op basis van die koers genereert hij historische koersen en slaat die op.
+     *
+     * @param hoeveelWaarden er wordt per dag een cryptoWaarde gegenereerd, dit bepaalt hoeveel dagwaarden je genereert
+     * @param afwijkingsPercentage hoeveel schommelt de koers per dag maximaal
+     */
+
     public void slaHistorischeCryptoWaardenOp(int hoeveelWaarden, int afwijkingsPercentage){
         List<CryptoWaarde> cryptoWaardeList = cryptoWaardeService.haalMeestRecenteCryptoWaardes();
         for(CryptoWaarde cryptoWaarde: cryptoWaardeList){
@@ -215,8 +288,9 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         }
     }
 
-
     /**
+     * Deze methode gebruikt een echte koers van een cryptomunt en gaat steeds een dag terug in de tijd
+     * en genereert een eerdere dagkoers op basis van meegegeven restricties
      *
      * @param cryptoWaarde de echte cryptowaarde die als startpunt wordt gebruikt
      * @param hoeveelWaarden er wordt per dag een cryptowaarde gegenereerd, dit bepaalt hoeveel dagwaarden je genereert
@@ -247,6 +321,12 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
             return o1.getMomentTransactie().compareTo(o2.getMomentTransactie());
         }
     }
+
+    /**
+     * Deze methode creeert een basisportefeuille voor de bank zodat deze kan handelen en slaat deze op.
+     * Deze portefeuille bevat 20 verschillende cryptomunten
+     */
+
     public void creeerPortefeuilleVoorBank(){
         Gebruiker bank = Bank.getInstance();
         List<Cryptomunt> cryptomuntList = assetService.geefAlleCryptomunten();

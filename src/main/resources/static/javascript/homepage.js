@@ -3,11 +3,19 @@
 function loginScreen(){
     document.getElementById("registratie-personalia").style.display = "none";
     document.getElementById("inlog").style.display = "block";
+    document.getElementById("dashboard").style.display = "none";
 }
 
 function registreerScreen(){
     document.getElementById("registratie-personalia").style.display = "block";
     document.getElementById("inlog").style.display = "none";
+    document.getElementById("dashboard").style.display = "none";
+}
+
+function dashboardScreen(){
+    document.getElementById("registratie-personalia").style.display = "none";
+    document.getElementById("inlog").style.display = "none";
+    document.getElementById("dashboard").style.display = "block";
 }
 
 
@@ -38,9 +46,15 @@ function login(){
         /*Worden die er nu op de juiste manier uitgehaald? We willen die gebruiken in het Dashboard*/
         .then((response) => {
             if(response.status === 200){
-
+                dashboardScreen();
             }
             console.log('Success:', response);
+            return response.json();
+        })
+        .then((json) => {
+            vulCryptoGegevens(json);
+            vulCryptoAantal(json);
+            vulRekeningGegevens(json);
         })
         .catch((error) => {
             console.error('*** Iets misgegaan:', error);
