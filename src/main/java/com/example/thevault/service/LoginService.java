@@ -8,6 +8,7 @@ import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.model.Rekening;
 import com.example.thevault.domain.transfer.LoginDto;
 import com.example.thevault.support.authorization.AuthorizationService;
+import com.example.thevault.support.hashing.BCryptWachtwoordHash;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
