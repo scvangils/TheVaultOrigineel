@@ -56,7 +56,7 @@ public class TransactieService {
     //TODO check voor negatief aantal toevoegen
     //TODO Bijbehorende triggers verwijderen uit de database
     //TODO check dat triggeraantallen gelijk zijn en bod groter of gelijk is aan vraagprijs
-            public Transactie sluitTransactie(Trigger verkoopTrigger, Trigger koopTrigger, LocalDateTime datumEnTijd){
+            public Transactie sluitTransactie (LocalDateTime datumEnTijd,Trigger koopTrigger, Trigger verkoopTrigger ){
             Gebruiker koper = koopTrigger.getGebruiker();
             Gebruiker verkoper = verkoopTrigger.getGebruiker();
             double aantal = koopTrigger.getAantal();
@@ -139,8 +139,8 @@ public class TransactieService {
         transactie.getKoper().setRekening(rekeningService.wijzigSaldo(transactie.getKoper(), -bedragKoper));
         transactie.getVerkoper().setRekening(rekeningService.wijzigSaldo(transactie.getVerkoper(), bedragVerkoper));
         rekeningService.wijzigSaldo(Bank.getInstance(), transactie.getBankFee());
-        assetService.wijzigAssetGebruiker(transactie.getKoper(), transactie.getCryptomunt(), -transactie.getAantal());
-        assetService.wijzigAssetGebruiker(transactie.getVerkoper(), transactie.getCryptomunt(), transactie.getAantal());
+        assetService.wijzigAssetGebruiker(transactie.getKoper(), transactie.getCryptomunt(), transactie.getAantal());
+        assetService.wijzigAssetGebruiker(transactie.getVerkoper(), transactie.getCryptomunt(), -transactie.getAantal());
 
     }
 

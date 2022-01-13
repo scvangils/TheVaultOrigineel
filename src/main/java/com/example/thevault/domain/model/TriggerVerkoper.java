@@ -23,4 +23,9 @@ public class TriggerVerkoper extends Trigger{
         super(triggerPrijs, aantal);
     }
 
+    @Override
+    public String toString() {
+        return "TriggerVerkoper: " + super.toString();
+    }
+
 }

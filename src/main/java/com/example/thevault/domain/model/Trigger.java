@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
+
 /**
  * Een trigger is een waarde die een actie inzet:
  * In dit geval een maximale koopprijs of een minimale verkoopprijs van een specifieke cryptomunt
@@ -71,5 +73,28 @@ public abstract class Trigger {
 
     public void setAantal(double aantal) {
         this.aantal = aantal;
+    }
+
+    @Override
+    public String toString() {
+        return "Trigger{" +
+                "gebruiker=" + gebruiker +
+                ", cryptomunt=" + cryptomunt +
+                ", triggerPrijs=" + triggerPrijs +
+                ", aantal=" + aantal +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Trigger)) return false;
+        Trigger trigger = (Trigger) o;
+        return Double.compare(trigger.triggerPrijs, triggerPrijs) == 0 && Double.compare(trigger.aantal, aantal) == 0 && Objects.equals(gebruiker, trigger.gebruiker) && Objects.equals(cryptomunt, trigger.cryptomunt);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(gebruiker, cryptomunt, triggerPrijs, aantal);
     }
 }

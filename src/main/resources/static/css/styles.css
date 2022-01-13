@@ -26,8 +26,11 @@ fieldset {
 }
 
 fieldset input {
+    outline: none;
+    max-width: 149px;
     margin: 30px;
     border-style: solid;
+    border-color: lightgrey;
 }
 
 #wachtwoord {
@@ -37,6 +40,7 @@ fieldset input {
 }
 
 #passwordDiv {
+    border-color: lightgrey;
     display: flex;
     margin: 30px;
     border-style: solid;
@@ -66,6 +70,7 @@ fieldset input:focus:not(#wachtwoord){
     background-color: aliceblue;
     color: darkorchid;
     font-weight: bold;
+    border-color: blue;
 }
 #passwordDiv:focus {
     background-color: aliceblue;
