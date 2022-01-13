@@ -54,6 +54,10 @@ function login(){
                 dashboardScreen();
             }
             console.log('Success:', response);
+            return response.json();
+        })
+        .then((json) => {
+            vulCryptoGegevens(json);
         })
         .catch((error) => {
             console.error('*** Iets misgegaan:', error);
