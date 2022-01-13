@@ -22,4 +22,9 @@ public class TriggerKoper extends Trigger{
     public TriggerKoper(double triggerPrijs, double aantal) {
         super(triggerPrijs, aantal);
     }
+
+    @Override
+    public String toString() {
+        return "TriggerKoper:" + super.toString();
+    }
 }
