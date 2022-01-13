@@ -122,6 +122,13 @@ public class JDBCKlantDAO implements KlantDAO{
         return klant;
     }
 
+    /**
+     * Deze functie zorgt ervoor dat een klant uit de database verwijderd kan worden.
+     *
+     * @param klant De te verwijderen klant
+     * @return het aantal veranderde rijen, in dit geval 0 of 1
+     */
+
     @Override
     public int verwijderKlant(Klant klant) {
         String sql = "DELETE FROM klant WHERE gebruikerId = ?;";
@@ -136,7 +143,7 @@ public class JDBCKlantDAO implements KlantDAO{
         return affectedRows;
     }
 
-    //TODO speciale functie voor wachtwoord?
+
     @Override
     public int updateKlant(Klant klant){
         int affectedRows = 0;

@@ -143,9 +143,6 @@ input:placeholder-shown {
     font-style: italic;
 }
 
-/*Om de twee schermen NIET tegelijk weer te geven, gebruik display: none. Zie website
-https://www.w3schools.com/Css/css_display_visibility.asp */
-/*Via JavaScript regelen dat de schermen niet tegelijk worden weergegeven, en ook zorgen dat ze op een nette positie
-worden weergegeven*/
-/*Daar wil ik een mooie navigatiebar voor gebruiken: bij de ene selectie het ene scherm, bij de andere selectie
-de andere*/
+.flex-container#portefeuille {
+    flex-direction: row;
+}

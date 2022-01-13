@@ -53,9 +53,8 @@ public class TransactieService {
     * */
 
 
-    //TODO check voor negatief aantal toevoegen
+
     //TODO Bijbehorende triggers verwijderen uit de database
-    //TODO check dat triggeraantallen gelijk zijn en bod groter of gelijk is aan vraagprijs
             public Transactie sluitTransactie (LocalDateTime datumEnTijd,Trigger koopTrigger, Trigger verkoopTrigger ){
             Gebruiker koper = koopTrigger.getGebruiker();
             Gebruiker verkoper = verkoopTrigger.getGebruiker();
@@ -74,38 +73,79 @@ public class TransactieService {
         return transactie;
     }
 
+    /**
+     * Deze methode bepaalt het bedrag dat de verkoper krijgt voor de transactie
+     *
+     * @param aantal hoeveel er van de betreffende cryptomunt verhandeld wordt
+     * @param bankIsKoper of de bank de koper is
+     * @param bankIsVerkoper of de bank de verkoper is
+     * @param prijs de prijs per eenheid die voor deze cryptomunt in deze transactie wordt betaald
+     * @return
+     */
     private double getTransactieBedragVerkoper(double aantal, boolean bankIsKoper, boolean bankIsVerkoper, double prijs) {
         double transactieBedragVerkoper;
         transactieBedragVerkoper = (bankIsKoper || bankIsVerkoper) ? getBedragVerkoperMetBankAlsKoper(aantal, bankIsVerkoper, prijs):
         getBedragVerkoperBijKlantTransactie(aantal, prijs);
         return transactieBedragVerkoper;
     }
-
+    /**
+     * Deze methode bepaalt het bedrag dat de koper moet betalen voor de transactie
+     *
+     * @param aantal hoeveel er van de betreffende cryptomunt verhandeld wordt
+     * @param bankIsKoper of de bank de koper is
+     * @param bankIsVerkoper of de bank de verkoper is
+     * @param prijs de prijs per eenheid die voor deze cryptomunt in deze transactie wordt betaald
+     * @return
+     */
     private double getTransactieBedragKoper(double aantal, boolean bankIsKoper, boolean bankIsVerkoper, double prijs) {
         double transactieBedragKoper;
         transactieBedragKoper = (bankIsKoper || bankIsVerkoper) ? getBedragKoperMetBankAlsVerkoper(aantal, bankIsKoper, prijs):
                 getBedragKoperBijKlantTransactie(aantal, prijs);
         return transactieBedragKoper;
     }
-
+    /**
+     * Deze methode bepaalt het bedrag dat de verkoper krijgt voor de transactie als de bank geen partij is
+     *
+     * @param aantal hoeveel er van de betreffende cryptomunt verhandeld wordt
+     * @param prijs de prijs per eenheid die voor deze cryptomunt in deze transactie wordt betaald
+     * @return
+     */
     private double getBedragVerkoperBijKlantTransactie(double aantal, double prijs) {
         double transactieBedragVerkoper;
         transactieBedragVerkoper = aantal * prijs - TRANSACTION_FEE * DEEL_TRANSACTION_FEE_VERKOPER;
         return transactieBedragVerkoper;
     }
-
+    /**
+     * Deze methode bepaalt het bedrag dat de koper moet betalen voor de transactie als de bank geen partij is
+     *
+     * @param aantal hoeveel er van de betreffende cryptomunt verhandeld wordt
+     * @param prijs de prijs per eenheid die voor deze cryptomunt in deze transactie wordt betaald
+     * @return
+     */
     private double getBedragKoperBijKlantTransactie(double aantal, double prijs) {
         double transactieBedragKoper;
         transactieBedragKoper = aantal * prijs + TRANSACTION_FEE * DEEL_TRANSACTION_FEE_KOPER;
         return transactieBedragKoper;
     }
-
+    /**
+     * Deze methode bepaalt het bedrag dat de verkoper krijgt voor de transactie als de bank de koper is
+     *
+     * @param aantal hoeveel er van de betreffende cryptomunt verhandeld wordt
+     * @param prijs de prijs per eenheid die voor deze cryptomunt in deze transactie wordt betaald
+     * @return
+     */
     private double getBedragVerkoperMetBankAlsKoper(double aantal, boolean bankIsVerkoper, double prijs) {
         double transactieBedragVerkoper;
         transactieBedragVerkoper = (bankIsVerkoper) ? aantal * prijs: aantal * prijs - TRANSACTION_FEE;
         return transactieBedragVerkoper;
     }
-
+    /**
+     * Deze methode bepaalt het bedrag dat de verkoper krijgt voor de transactie als de bank de verkoper is
+     *
+     * @param aantal hoeveel er van de betreffende cryptomunt verhandeld wordt
+     * @param prijs de prijs per eenheid die voor deze cryptomunt in deze transactie wordt betaald
+     * @return
+     */
     private double getBedragKoperMetBankAlsVerkoper(double aantal, boolean bankIsKoper, double prijs) {
         double transactieBedragKoper;
         transactieBedragKoper = (bankIsKoper) ? aantal * prijs: aantal * prijs + TRANSACTION_FEE;
@@ -121,16 +161,15 @@ public class TransactieService {
         notEnoughCryptoExceptionHandler(verkoper, cryptomunt, aantal);
     }
 
-    // TODO kijken of @Transactional werkt
 
     /**
      * Deze methode zorgt ervoor dat de transactie opgeslagen wordt en alle relevante rekeningen en
      * portefeuilles worden bijgewerkt.
      * Door de annotatie @Transactional zorgt Spring Boot ervoor dat alle aspecten van deze transactie
      * moeten slagen, anders wordt niets uitgevoerd (Atomisch)
-     * @param transactie
-     * @param bedragKoper
-     * @param bedragVerkoper
+     * @param transactie De betreffende transactie
+     * @param bedragKoper Het bedrag dat de koper moet betalen
+     * @param bedragVerkoper Het bedrag dat de verkoper krijgt
      */
     @Transactional
     public void slaAlleAspectenVanTransactieOp(Transactie transactie,

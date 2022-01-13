@@ -17,17 +17,17 @@ import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
 
-import javax.security.auth.login.LoginException;
 import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class KlantService {
+public class KlantService implements ApplicationListener<ContextRefreshedEvent> {
 
     private final RootRepository rootRepository;
     private final Logger logger = LoggerFactory.getLogger(KlantService.class);
@@ -41,10 +41,31 @@ public class KlantService {
         logger.info("New KlantService.");
     }
 
-    public Klant vindKlantByGebruikersnaam(String username){
-        return rootRepository.vindKlantByGebruikersnaam(username);
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        // hier kan het dus ook
+    }
+
+
+    /**
+     * Deze methode zoekt of er in de database al een klant bestaat met deze gebruikersnaam
+     * en maakt eventueel een klant-object aan op nasis van de teruggestuurde gegevens
+     *
+     * @param gebruikersnaam gebruikersnaam van een (mogelijke) klant die uniek moet zijn
+     * @return klant-object op basis van gegevens uit de database of null indien gebruikersnaam niet gevonden is
+     */
+    public Klant vindKlantByGebruikersnaam(String gebruikersnaam){
+        return rootRepository.vindKlantByGebruikersnaam(gebruikersnaam);
         //TODO de methode 'geefNuttigePortefeuille' aanroepen om de asset objecten voor de klant op te schonen (zie onder)
     }
+
+    /**
+     * Deze methode zoekt of er in de database al een klant bestaat met deze gebruikerId
+     * en maakt eventueel een klant-object aan op basis van de teruggestuurde gegevens
+     *
+     * @param gebruikerId gebruikerId van een (mogelijke) klant die uniek moet zijn
+     * @return klant-object op basis van gegevens uit de database of null indien gebruikerId niet gevonden is
+     */
     public Klant vindKlantById(int gebruikerId){
         return rootRepository.vindKlantById(gebruikerId);
     }
@@ -99,7 +120,7 @@ public class KlantService {
     public Klant registreerKlant(Klant klant){
         bsnExceptionHandler(klant);
         wachtWoordExceptionHandler(klant);
-        minumumLeeftijdExceptionHandler(klant);
+        minimumLeeftijdExceptionHandler(klant);
         gebruikersnaamExceptionHandler(klant);
         String teHashenWachtwoord = klant.getWachtwoord();
         String gehashtWachtwoord = BCryptWachtwoordHash.hashWachtwoord(teHashenWachtwoord); // hash wachtwoord
@@ -124,7 +145,7 @@ public class KlantService {
      *
      * @param klant de ingevoerde klantgegevens in objectvorm
      */
-    private void minumumLeeftijdExceptionHandler(Klant klant) {
+    private void minimumLeeftijdExceptionHandler(Klant klant) {
         if(!checkVolwassen(klant)){
             String message = String.format("Je moet %d zijn om een rekening te openen.", VOLWASSEN_LEEFTIJD);
             throw new AgeTooLowException(message);
@@ -208,4 +229,6 @@ public class KlantService {
     public RootRepository getRootRepository() {
         return rootRepository;
     }
+
+
 }

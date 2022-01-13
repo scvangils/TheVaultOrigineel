@@ -64,9 +64,6 @@ public class JDBCCryptoWaardeDAO implements CryptoWaardeDAO {
     @Override
     public CryptoWaarde slaCryptoWaardeOp(CryptoWaarde cryptoWaarde) {
         String sql = "INSERT INTO dagkoersCrypto (cryptowaardeId, cryptomuntId, waardeCrypto, datum) VALUES (?, ?, ?, ?);";
-        //TODO datum toch flexibel maken?
-        LocalDate huidigeDatum = LocalDate.now();
-        cryptoWaarde.setDatum(huidigeDatum);
         cryptoWaarde.setCryptoWaardeId(generateCryptoWaardeId(cryptoWaarde.getDatum(), cryptoWaarde.getCryptomunt()));
         jdbcTemplate.update(sql, cryptoWaarde.getCryptoWaardeId(), cryptoWaarde.getCryptomunt().getId(),
                 cryptoWaarde.getWaarde(), Date.valueOf(cryptoWaarde.getDatum()));

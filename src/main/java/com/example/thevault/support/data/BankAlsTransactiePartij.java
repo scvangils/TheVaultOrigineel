@@ -7,6 +7,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Deze klasse bundelt de mogelijkheid om vast te leggen dat de bank een partij in de transactie is
+ */
+
+
 public class BankAlsTransactiePartij {
 
     @JsonIgnore
