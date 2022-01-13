@@ -66,19 +66,20 @@
     </div>
 
     <div class="dashboard" id="dashboard">
-        <div>
-            <fieldset>
+        <form id = cryptoGegevens>
+            <fieldset class="flex-container" id="portefeuille">
                 <legend>Portefeuille</legend>
-                <div id ="cryptoNaam"></div>
-                <div id = "cryptoAantal"></div>
+                <div id ="cryptoNaam" class = "row"><label class = "col"></label></div>
+                <div id = "cryptoAantal" class = "row"><label class = "col"></label></div>
             </fieldset>
-        </div>
+        </form>
+
         <div class="rekening" id="rekening" name="rekeningWeergave">
             <fieldset class="fieldsetRekening" id="fieldsetRekening">
                 <legend>Rekening</legend>
-                <p><label for="iban"></label></p>
+                <div><label for="iban"></label></div>
                     <div id="iban"></div>
-                <p><label for="saldo"></label></p>
+                <div><label for="saldo"></label></div>
                     <div id="saldo"></div>
             </fieldset>
         </div>
