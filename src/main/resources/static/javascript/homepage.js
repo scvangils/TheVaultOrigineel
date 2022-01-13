@@ -48,9 +48,6 @@ function login(){
         /*Worden die er nu op de juiste manier uitgehaald? We willen die gebruiken in het Dashboard*/
         .then((response) => {
             if(response.status === 200){
-                // Code die je naar je dashboard stuurt
-                document.getElementById("iban").textContent
-                document.getElementById("saldo").innerText(response.body.getReader().read())
                 dashboardScreen();
             }
             console.log('Success:', response);
@@ -58,6 +55,9 @@ function login(){
         })
         .then((json) => {
             vulCryptoGegevens(json);
+        })
+        .then((json) => {
+            vulRekeningGegevens(json);
         })
         .catch((error) => {
             console.error('*** Iets misgegaan:', error);
