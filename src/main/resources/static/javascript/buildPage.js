@@ -22,12 +22,14 @@ const inputArrayAdres = [
 ]
 const NEDERLANDSE_POSTCODE_LENGTE = 6;
 const STATUS_CODE_CREATED = 201;
+
 // ***** HIER NIEUWE FILE
 
 function createElementWithClassAndId(parent, tag, elementClass, elementId){
     const element = document.createElement(tag);
     element.classList.add(elementClass);
     element.setAttribute("id", elementId);
+    parent.appendChild(element);
     return element;
 }
 
@@ -39,6 +41,7 @@ function createElementAtParent(element, type, parent, idName, naam) {
     parent.appendChild(createdElement);
     return createdElement;
 }
+
 function createLabel(parent, forInput, tekst){
     const newLabel = document.createElement("label");
     newLabel.htmlFor = forInput;
@@ -51,7 +54,7 @@ function createLabelAndInputAtParent(parent, inputMetLabel){
     createElementAtParent("input", inputMetLabel.type, parent, inputMetLabel.id, inputMetLabel.naam);
 }
 
-//zoek de parent-div
+// zoek de parent-div
 const hoofdFormulier = document.getElementById("registratie-personalia");
 
 function createFieldSetForm(parent, legendText, formId, fieldsetId){
@@ -66,12 +69,12 @@ function createFieldSetForm(parent, legendText, formId, fieldsetId){
     registratieForm.appendChild(fieldSetOfForm);
     parent.appendChild(registratieForm);
 }
+// maak het registratieformulier
 createFieldSetForm(hoofdFormulier,  "vul hier uw Gegevens in", "registratieOverig", "fieldSetVanForm");
 
 const fieldSetOfForm = document.getElementById("fieldSetVanForm");
 
-
-// Deze functie wordt nu gebruikt om het formulier te maken
+// Deze functie wordt nu gebruikt om het formulier te vullen
 function fillFormColumn(parent, inputArray, colName){
         const divColumn = document.createElement("div");
         divColumn.classList.add("row");
@@ -112,6 +115,10 @@ const openModalButton = createElementAtParent("button", "button", fieldSetOfForm
 openModalButton.innerHTML = "Registreer";
 openModalButton.classList.add("button");
 
+const backToLogin = createElementWithClassAndId(hoofdFormulier, "div", "flexBasis", "backToLoginDiv");
+const backToLoginButton = createElementWithClassAndId(backToLogin, "button", "button", "backToLoginButton");
+backToLoginButton.textContent = "Al klant?";
+backToLoginButton.addEventListener("click", loginScreen);
 
 
 // TODO Modal in javascript bouwen
@@ -135,7 +142,7 @@ const span = document.getElementsByClassName("close")[0];
 
  const modalBody = document.getElementById("modalBody");
 
-//TODO onfocus van input vervolgen
+
 //TODO magic word verwijderen
 //checkt of alle noodzakelijke velden zijn ingevuld
 function checkInput(inputElement){
@@ -169,7 +176,6 @@ for(const element of document.getElementsByTagName("input")){
 function changeBorderColor(element, borderColor) {
     element.style.borderColor = borderColor;
 }
-
 
 function changeInput(element, borderColor, placeholderText){
     element.style.borderColor = borderColor;

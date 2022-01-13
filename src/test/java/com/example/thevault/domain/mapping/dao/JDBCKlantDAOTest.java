@@ -9,9 +9,11 @@ import com.example.thevault.domain.model.Klant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import static org.assertj.core.api.Assertions.*;
 
@@ -21,9 +23,11 @@ import java.util.List;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 public class JDBCKlantDAOTest {
 
-    private JDBCKlantDAO jdbcKlantDAOTest;
+    private final JDBCKlantDAO jdbcKlantDAOTest;
     private static Gebruiker testKlant1;
     private static Gebruiker testKlant2;
     private static Gebruiker testKlant3;
@@ -55,7 +59,6 @@ public class JDBCKlantDAOTest {
         testAdres1.setAdresId(1);
         testAdres2.setAdresId(2);
         nieuweKlant = new Klant("StevenVG", "StevenPW", "Steven van Gils", 1010101010, LocalDate.parse("1975-12-30"));
-
  }
 
 

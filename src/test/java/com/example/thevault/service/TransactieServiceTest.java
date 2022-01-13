@@ -239,6 +239,7 @@ class TransactieServiceTest {
     @Test
     void SlaTransactieOp() {
         Transactie expectedTransactie = new Transactie (LocalDateTime.of(2022, 1, 12, 14, 45, 0), testKlant1, testCryptomunt1, 55, 2.3, testKlant2);
+        Mockito.when(mockRootRepository.slaTransactieOp(expectedTransactie)).thenReturn(expectedTransactie);
         Transactie actualTransactie = transactieService.slaTransactieOp(expectedTransactie);
 
 
@@ -261,6 +262,6 @@ class TransactieServiceTest {
         Transactie actualTransactie = transactieService.sluitTransactie(testKlant1, testCryptomunt1,
                 1000, 1100, 1.6, testKlant2);*/
 
-        assertThat(expectedTransactie.getCryptomunt()).isEqualTo(actualTransactie.getCryptomunt());
+        assertThat(expectedTransactie.getCryptomunt().getId()).isEqualTo(actualTransactie.getCryptomunt().getId());
     }
 }
