@@ -80,7 +80,7 @@ public class JDBCTransactieDAO implements TransactieDAO {
 
     @Override
     public List<Transactie> geefTransactiesVanGebruikerInPeriode(Gebruiker gebruiker, Timestamp startDatum, Timestamp eindDatum) {
-        String sql = "SELECT * FROM transactie WHERE verkoperGebruikerId = ? AND koperGebruikerId = ? AND momentTransactie BETWEEN ? AND ?;";
+        String sql = "SELECT * FROM transactie WHERE (verkoperGebruikerId = ? OR koperGebruikerId = ?) AND momentTransactie BETWEEN ? AND ?;";
         List<Transactie> transactiesGebruiker = null;
         try {
             transactiesGebruiker = jdbcTemplate.query(sql, new TransactieRowMapper()
@@ -107,7 +107,7 @@ public class JDBCTransactieDAO implements TransactieDAO {
 
     @Override
     public List<Transactie> geefTransactiesVanGebruikerMetCryptomunt(Gebruiker gebruiker, Cryptomunt cryptomunt) {
-        String sql = "SELECT * FROM transactie WHERE verkoperGebruikerId = ? AND koperGebruikerId = ? AND cryptomuntId = ?;";
+        String sql = "SELECT * FROM transactie WHERE (verkoperGebruikerId = ? OR koperGebruikerId = ?) AND cryptomuntId = ?;";
 
         List<Transactie> transactiesGebruiker = null;
         try {
@@ -132,8 +132,6 @@ public class JDBCTransactieDAO implements TransactieDAO {
 
     }
 
-
-    // TODO navragen of dit de plek is of dat koper en verkoper in de root-repository geset moeten worden
     private static class TransactieRowMapper implements RowMapper<Transactie> {
         @Override
         public Transactie mapRow(ResultSet resultSet, int rowNumber) throws SQLException {
@@ -143,8 +141,9 @@ public class JDBCTransactieDAO implements TransactieDAO {
             Cryptomunt cryptomunt = new Cryptomunt(resultSet.getInt("cryptomuntId"));
             koper.setGebruikerId(resultSet.getInt("koperGebruikerId"));
             verkoper.setGebruikerId(resultSet.getInt("verkoperGebruikerId"));
-            Transactie transactie = new Transactie(dateTime, verkoper, cryptomunt, resultSet.getDouble("bedrag"),
-                    resultSet.getDouble("aantal"), koper);
+            Trigger triggerKoper = new TriggerKoper(koper, cryptomunt, resultSet.getDouble("bedrag"),resultSet.getDouble("aantal"));
+            Trigger triggerVerkoper = new TriggerVerkoper(verkoper, cryptomunt, resultSet.getDouble("bedrag"),resultSet.getDouble("aantal"));
+            Transactie transactie = new Transactie(dateTime, triggerKoper,  triggerVerkoper);
             transactie.setTransactieId(resultSet.getInt("transactieId"));
             transactie.setBankFee(resultSet.getDouble("bankFee"));
             return transactie;

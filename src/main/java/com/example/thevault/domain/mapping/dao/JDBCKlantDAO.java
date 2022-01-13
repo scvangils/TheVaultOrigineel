@@ -5,6 +5,7 @@ package com.example.thevault.domain.mapping.dao;
 
 import com.example.thevault.domain.model.Adres;
 import com.example.thevault.domain.model.Klant;
+import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -120,32 +121,34 @@ public class JDBCKlantDAO implements KlantDAO{
         }
         return klant;
     }
-    //TODO is DELETE klant nodig?
+
     @Override
-    public Klant verwijderKlant(Klant klant) {
+    public int verwijderKlant(Klant klant) {
         String sql = "DELETE FROM klant WHERE gebruikerId = ?;";
+        int affectedRows = 0;
         try{
-        int affectedRows = jdbcTemplate.update(sql, klant.getGebruikerId());
-            System.out.println("Zoveel aangepast: " + affectedRows);
+        affectedRows = jdbcTemplate.update(sql, klant.getGebruikerId());
         }
         catch(DataAccessException noData){
-            logger.warn(noData.getMessage());
+            logger.warn("het is niet goed gegaan: " + noData.getMessage());
         }
-        return klant;
+
+        return affectedRows;
     }
 
     //TODO speciale functie voor wachtwoord?
     @Override
-    public Klant updateKlant(Klant klant){
+    public int updateKlant(Klant klant){
+        int affectedRows = 0;
         String sql = "UPDATE klant SET gebruikersnaam = ?, naam = ?, adresId = ? WHERE gebruikerId = ?;";
         try{
-            jdbcTemplate.update(sql, klant.getGebruikersnaam(), klant.getNaam(), klant.getAdres().getAdresId(),
+         affectedRows = jdbcTemplate.update(sql, klant.getGebruikersnaam(), klant.getNaam(), klant.getAdres().getAdresId(),
                     klant.getGebruikerId());
         }
         catch(DataAccessException noData){
             logger.warn(noData.getMessage());
         }
-        return klant;
+        return affectedRows;
     }
 
     private static class KlantRowMapper implements RowMapper<Klant>{
@@ -165,6 +168,9 @@ public class JDBCKlantDAO implements KlantDAO{
                     resultSet.getString("wachtwoord"), resultSet.getString("naam"),
                     resultSet.getLong("bsn"),resultSet.getDate("geboortedatum").toLocalDate());
             klant.setGebruikerId(resultSet.getInt("gebruikerId"));
+            Adres adres = new Adres();
+            adres.setAdresId(resultSet.getInt("adresId"));
+            klant.setAdres(adres);
             return klant;
         }
     }

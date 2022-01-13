@@ -94,6 +94,7 @@ class JDBCAssetDAOTest {
     //TODO Carmen: Uitvinden hoe ik een integratietest kan maken voor deze method, gevraagd aan Huub
     //Staat het goed in de database? Wordt het object goed geupdate teruggegeven?
     //Hoe kan ik controleren of de nieuwe informatie goed in de database staat?
+    //LITECOIN VERANDEREN IN ETHEREUM
     @Test
     void updateAssetAankoop() {
         Asset actual = testAssetDAO.updateAsset(testKlant2, testCryptomunt1, 1.1);

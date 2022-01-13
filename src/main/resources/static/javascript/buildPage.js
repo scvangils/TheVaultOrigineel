@@ -7,7 +7,6 @@ class InputMetLabel{
   }
 }
 
-// TODO combineren tot 1 inputArray
 const inputArrayPersoon = [new InputMetLabel("naam", "naam", "text"),
     new InputMetLabel("gebruikersnaam", "gebruikersnaam", "text"),
     new InputMetLabel("geboortedatum", "geboortedatum", "date"),
@@ -22,6 +21,7 @@ const inputArrayAdres = [
     new InputMetLabel("plaatsnaam", "plaatsnaam","text")
 ]
 const NEDERLANDSE_POSTCODE_LENGTE = 6;
+const STATUS_CODE_CREATED = 201;
 // ***** HIER NIEUWE FILE
 
 function createElementWithClassAndId(parent, tag, elementClass, elementId){
@@ -50,7 +50,7 @@ function createLabelAndInputAtParent(parent, inputMetLabel){
     createLabel(parent, inputMetLabel.id, inputMetLabel.id);
     createElementAtParent("input", inputMetLabel.type, parent, inputMetLabel.id, inputMetLabel.naam);
 }
-// TODO creeer function createFieldSetForm()
+
 //zoek de parent-div
 const hoofdFormulier = document.getElementById("registratie-personalia");
 
@@ -64,55 +64,14 @@ function createFieldSetForm(parent, legendText, formId, fieldsetId){
     registratieLegend.textContent = legendText;
     fieldSetOfForm.appendChild(registratieLegend);
     registratieForm.appendChild(fieldSetOfForm);
-    hoofdFormulier.appendChild(registratieForm);
+    parent.appendChild(registratieForm);
 }
+createFieldSetForm(hoofdFormulier,  "vul hier uw Gegevens in", "registratieOverig", "fieldSetVanForm");
 
-//creëer form voor alles
-const registratieForm = document.createElement("form");
-registratieForm.setAttribute("id", "registratieOverig");
-const fieldSetOfForm = document.createElement("FIELDSET");
-fieldSetOfForm.classList.add("flex-container")
-const registratieLegend = document.createElement("LEGEND");
-registratieLegend.textContent = "vul hier uw Gegevens in";
-fieldSetOfForm.appendChild(registratieLegend);
-registratieForm.appendChild(fieldSetOfForm);
-hoofdFormulier.appendChild(registratieForm);
+const fieldSetOfForm = document.getElementById("fieldSetVanForm");
 
 
-function fillFormOneColumn(parent, inputArrayEen, inputArrayTwee) {
-    for (let i = 0; i < inputArrayEen.length; i++) {
-        createLabelAndInputAtParent(parent, inputArrayEen[i])
-    }
-    for (let i = 0; i < inputArrayTwee.length; i++) {
-
-        createLabelAndInputAtParent(parent, inputArrayTwee[i])
-    }
-}
-
-function fillFormTwoColumnsOriginal(parent, inputArray1, inputArray2){
-
-    for (let i = 0; i < inputArray1.length; i++) {
-        const divRow = document.createElement("div");
-        divRow.classList.add("row");
-        parent.appendChild(divRow);
-            const divColPersoonLabel = createLabel(parent, inputArray1[i].id, inputArray1[i].id)
-            divColPersoonLabel.classList.add("col");
-            divRow.appendChild(divColPersoonLabel);
-            const divColAdresLabel = createLabel(parent, inputArray2[i].id, inputArray2[i].id)
-            divColAdresLabel.classList.add("col");
-            divRow.appendChild(divColAdresLabel);
-        const divRow2 = document.createElement("div");
-        divRow2.classList.add("row");
-        parent.appendChild(divRow2);
-            const divColPersoonInput = createElementAtParent("input", inputArray1[i].type, parent, inputArray1[i].id, inputArray1[i].naam);
-            divColPersoonInput.classList.add("col");
-            divRow2.appendChild(divColPersoonInput);
-            const divColAdresInput = createElementAtParent("input", inputArray2[i].type, parent, inputArray2[i].id, inputArray2[i].naam);
-            divColAdresInput.classList.add("col");
-            divRow2.appendChild(divColAdresInput);
-    }
-}
-
+// Deze functie wordt nu gebruikt om het formulier te maken
 function fillFormColumn(parent, inputArray, colName){
         const divColumn = document.createElement("div");
         divColumn.classList.add("row");
@@ -180,38 +139,61 @@ const span = document.getElementsByClassName("close")[0];
 //TODO magic word verwijderen
 //checkt of alle noodzakelijke velden zijn ingevuld
 function checkInput(inputElement){
+    let isIngevuld = false;
     if(inputElement.value === "" && inputElement.name !== "toevoeging"){
         if(inputElement.id === "wachtwoord"){
             inputElement.parentElement.style.borderColor = "red";
         }
         else inputElement.style.borderColor = "red";
         inputElement.setAttribute("placeholder", "verplicht veld");
-        return false;
+        isIngevuld = false;
     }
-    else inputElement.style.borderColor = "lightgrey";
-    return true;
+    else { inputElement.style.borderColor = "lightgrey";
+        isIngevuld = true; }
+    return isIngevuld;
 }
-//div wordt nu opgelost door border-color op focus
-//TODO div met outline uitrusten?
-//haalt rode border weg als veld wordt aangeklikt
+
+//haalt rode border weg als veld wordt ingevuld
+//overige addEventListeners zijn nodig omdat oorspronkelijke css buitenspel wordt gezet
 for(const element of document.getElementsByTagName("input")){
     element.addEventListener("input", () => {
-        element.style.borderColor = "lightgrey";
-        element.setAttribute("placeholder", "");
-    })
+        changeInput(element, "blue", "")
+        });
+        element.addEventListener("focusin", () => {
+            changeBorderColor(element, "blue")
+        });
+        element.addEventListener("focusout", () => {
+            changeBorderColor(element, "lightgrey")
+        })
 }
+function changeBorderColor(element, borderColor) {
+    element.style.borderColor = borderColor;
+}
+
+
+function changeInput(element, borderColor, placeholderText){
+    element.style.borderColor = borderColor;
+    element.setAttribute("placeholder", placeholderText);
+}
+document.getElementById("plaatsnaam").addEventListener("change", () => {
+    changeInput(document.getElementById("plaatsnaam"), "lightgrey", "");
+    })
 
 //TODO check op geboortedatum en BSN(?)
 
 function checkAllInputs(){
-    let correcteInvoer = true;
+    let count = 0;
     for (let i = 0; i < inputArrayPersoon.length; i++) {
-    correcteInvoer = checkInput(document.getElementById(inputArrayPersoon[i].id));
+        if(!checkInput(document.getElementById(inputArrayPersoon[i].id))){
+        count++;
+        }
     }
     for (let i = 0; i < inputArrayAdres.length; i++) {
-    correcteInvoer = checkInput(document.getElementById(inputArrayAdres[i].id));
+        if(!checkInput(document.getElementById(inputArrayAdres[i].id))){
+        count++;
+        }
     }
-    return correcteInvoer;
+    return count;
 }
 
 function maakModalBodyLeeg(){
@@ -227,22 +209,25 @@ const modalFunctie = () => {
     modal.style.display = "block";
 }
 function gegevensHandler(){
-if(checkAllInputs()){
+if(checkAllInputs() === 0){
     modalFunctie();
 }
 }
 openModalButton.addEventListener("click", gegevensHandler);
-
-// When the user clicks on <span> (x), close the modal
-span.onclick = function() {
+function registratieModalDicht(){
     modal.style.display = "none";
 }
+
+// When the user clicks on <span> (x), close the modal
+span.addEventListener("click", registratieModalDicht);
+
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
     if (event.target === modal) {
-        modal.style.display = "none";
+        registratieModalDicht();
     }
 }
+
 //modal laten vullen door inputvelden via flex-box-tabelstructuur
 //wachtwoord niet laten zien
 function fillModalBody(inputArray){
@@ -257,6 +242,7 @@ function fillModalBody(inputArray){
         const divColValue = document.createElement("div");
         divColValue.classList.add("col");
         const waarde = document.createTextNode(document.getElementById(inputArray[i].id).value);
+        divColValue.classList.add("italics");
         divRow.appendChild(divColValue).appendChild(waarde);
     }
     }
@@ -350,12 +336,10 @@ wachtwoordVeld.addEventListener("focusout", hideDivOutline);
 
     function postcodeVeldFunctie() {
         if (checkZipCodeFormat(postcodeVeld.value) && checkHuisnummer(huisnummerVeld.value)) {
-            vindStraatnaamEnPlaatsnaam();
+            vindStraatnaamEnPlaatsnaam(postcodeVeld.value, huisnummerVeld.value);
         }
     }
-function vindStraatnaamEnPlaatsnaam() {
-    const postcode = postcodeVeld.value;
-    const huisnummer = huisnummerVeld.value;
+function vindStraatnaamEnPlaatsnaam(postcode, huisnummer) {
     const apiKey = "7b7ea14e-5494-481b-b36c-cb40ebb63c62";
     const url = `https://postcode.tech/api/v1/postcode?postcode=${postcode}&number=${huisnummer}`;
     fetch(url, {
@@ -363,30 +347,37 @@ function vindStraatnaamEnPlaatsnaam() {
         headers: {
             'Authorization': `Bearer ${apiKey}`,
         }
-        //TODO vragen wat juiste manier is
     }).then((response) => {
         if (response.status === 200) return response.json()
             .then((json) => {
-                straatnaamVeld.value = json.street;
-                woonplaatsVeld.value = json.city;
+                inputHandler("straatnaam", "plaatsnaam", json)
             })
         else {
             straatnaamVeld.value = "";
             woonplaatsVeld.value = "";
-            //  throw new Error("geen juist huisnummer bij deze postcode")
         }
     })
         .catch((error) => {
             console.error('*** Iets misgegaan:', error);
         });
 }
+
+function vulVeldMetWaarde(veldId, source, sourceAttribuut){
+        document.getElementById(veldId).value = source[sourceAttribuut];
+}
+function inputHandler(inputId, inputTweeId, json){
+    vulVeldMetWaarde(inputId, json, "street");
+    changeInput(document.getElementById(inputId), "lightgrey", "")
+    vulVeldMetWaarde(inputTweeId, json, "city");
+    changeInput(document.getElementById(inputTweeId), "lightgrey", "")
+}
+
 // Deze functie maakt objecten met behulp van een inputArray
 function maakObject(inputArray) {
     const object = {};
     for (let i = 0; i < inputArray.length; i++) {
         const naam = inputArray[i].naam;
-        const waarde = document.getElementById(inputArray[i].id).value;
-        object[naam] = waarde;
+        object[naam] = document.getElementById(inputArray[i].id).value;
     }
     return object;
 }
@@ -411,14 +402,12 @@ function maakCompleetKlantObject(){
             body: JSON.stringify(maakCompleetKlantObject()),
         })
             .then((response) => {
-                if (response.status === 201)
+                if (response.status === STATUS_CODE_CREATED)
                     return response.json()
-                        // Toon "gelukt" o.i.d. in modal
-                        // Sluit modal en toon inlog
-                        .then((json) => console.log(json))
+                        .then((json) => showWelcomeMessage(json))
                 else return response.json()
                     .then((json) => {
-                        const modalFout = toonFoutmelding();
+                        const modalFout = toonMelding();
                         modalFout.textContent = json.message;
                     })
             })
@@ -427,11 +416,27 @@ function maakCompleetKlantObject(){
             });
     }
 
-function toonFoutmelding(){
+
+function showWelcomeMessage(json){
+        loginScreen();
     maakModalBodyLeeg();
-    const waarschuwing = document.createElement("label");
-    modalBody.appendChild(waarschuwing);
-    return waarschuwing;
+    document.getElementById("modalText").textContent = "Welkom bij The Vault!";
+    document.getElementById("verstuur").value = "Naar de Inlogpagina";
+    //TODO dit oplossen
+    document.getElementById("verstuur").removeEventListener("click", registreer);
+    document.getElementById("verstuur").addEventListener("click", registratieModalDicht);
+    const waarden = Object.values(json);
+    for(let waarde of waarden){
+        console.log(waarde);
+    const modalTekst = toonMelding();
+    modalTekst.textContent = waarde;
+    }
+}
+function toonMelding(){
+        maakModalBodyLeeg();
+    const melding = document.createElement("div");
+    modalBody.appendChild(melding);
+    return melding;
 }
 /*
 function addClassToTag(tagName, cssClass){
@@ -451,28 +456,38 @@ addClassToTag("input", "grid-item");
 removeClassFromElementById("verstuur", "grid-item");
 */
 
-/*
-        const formDataAdres = new FormData(document.getElementById('registratieAdres'));
-        const adres = Object.fromEntries(formDataAdres);
-        adres.adresId = 0;
-        const formData = new FormData(document.getElementById('registratieOverig'));
-        const klant = Object.fromEntries(formData);
-        klant.gebruikerId = 0;
-        klant.wachtwoord = document.getElementById("wachtwoord").value;
-        klant.rekening = null;
-        klant.portefeuille = null;
-        klant.adres = adres;
 
-*/
+/*function fillFormOneColumn(parent, inputArrayEen, inputArrayTwee) {
+    for (let i = 0; i < inputArrayEen.length; i++) {
+        createLabelAndInputAtParent(parent, inputArrayEen[i])
+    }
+    for (let i = 0; i < inputArrayTwee.length; i++) {
 
+        createLabelAndInputAtParent(parent, inputArrayTwee[i])
+    }
+}
 
-//code om een popup te maken
-/*const popupDiv = document.createElement("label");
-document.body.appendChild(popupDiv);
-popupDiv.classList.add("popup");
-popupDiv.textContent = "click me!"
-popupDiv.addEventListener("click", toonIncorrecteGegevens);
-const popupSpan = document.createElement("span");
-popupSpan.classList.add("popuptext");
-popupSpan.setAttribute("id", "incorrecteGegevensPopup");
-popupDiv.appendChild(popupSpan);*/
+function fillFormTwoColumnsOriginal(parent, inputArray1, inputArray2){
+
+    for (let i = 0; i < inputArray1.length; i++) {
+        const divRow = document.createElement("div");
+        divRow.classList.add("row");
+        parent.appendChild(divRow);
+            const divColPersoonLabel = createLabel(parent, inputArray1[i].id, inputArray1[i].id)
+            divColPersoonLabel.classList.add("col");
+            divRow.appendChild(divColPersoonLabel);
+            const divColAdresLabel = createLabel(parent, inputArray2[i].id, inputArray2[i].id)
+            divColAdresLabel.classList.add("col");
+            divRow.appendChild(divColAdresLabel);
+        const divRow2 = document.createElement("div");
+        divRow2.classList.add("row");
+        parent.appendChild(divRow2);
+            const divColPersoonInput = createElementAtParent("input", inputArray1[i].type, parent, inputArray1[i].id, inputArray1[i].naam);
+            divColPersoonInput.classList.add("col");
+            divRow2.appendChild(divColPersoonInput);
+            const divColAdresInput = createElementAtParent("input", inputArray2[i].type, parent, inputArray2[i].id, inputArray2[i].naam);
+            divColAdresInput.classList.add("col");
+            divRow2.appendChild(divColAdresInput);
+    }
+}*/
+

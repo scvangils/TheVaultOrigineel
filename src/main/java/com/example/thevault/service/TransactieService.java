@@ -25,8 +25,6 @@ public class TransactieService {
     private final  RekeningService rekeningService;
     private final  AssetService assetService;
     private final double TRANSACTION_FEE = Bank.getInstance().getFee();
-    public final double DEEL_PRIJSVERSCHIL_KOPER = 0.5;
-    public final double DEEL_PRIJSVERSCHIL_VERKOPER = 1 - DEEL_PRIJSVERSCHIL_KOPER;
     private final double DEEL_TRANSACTION_FEE_KOPER = 0.5;
     private final double DEEL_TRANSACTION_FEE_VERKOPER = 1 - DEEL_TRANSACTION_FEE_KOPER;
 
@@ -55,34 +53,14 @@ public class TransactieService {
     * */
 
 
-    /*public Transactie sluitTransactie(Gebruiker verkoper, Cryptomunt cryptomunt,
-                                      double vraagPrijs, double bod, double aantal, Gebruiker koper, LocalDateTime datumEnTijd){*/
-/*      public Transactie sluitTransactie(Trigger verkoopTrigger, Trigger koopTrigger, LocalDateTime datumEnTijd){
-
-        boolean bankIsKoper = (koper instanceof Bank);
-        boolean bankIsVerkoper = (verkoper instanceof Bank);
-        double prijs, transactieBedragKoper, transactieBedragVerkoper;
-
-
-      if (bankIsKoper || bankIsVerkoper) {
-            prijs = berekenPrijsTransactieMetBank(cryptomunt, datumEnTijd);
-            transactieBedragKoper = getBedragKoperMetBankAlsVerkoper(aantal, bankIsKoper, prijs);
-            transactieBedragVerkoper = getBedragVerkoperMetBankAlsKoper(aantal, bankIsVerkoper, prijs);
-        }
-        else {
-            prijs = vraagPrijs * DEEL_PRIJSVERSCHIL_VERKOPER + bod * DEEL_PRIJSVERSCHIL_KOPER;
-            transactieBedragKoper = getBedragKoperBijKlantTransactie(aantal, prijs);
-            transactieBedragVerkoper = getBedragVerkoperBijKlantTransactie(aantal, prijs);
-        }*/
-
     //TODO check voor negatief aantal toevoegen
     //TODO Bijbehorende triggers verwijderen uit de database
     //TODO check dat triggeraantallen gelijk zijn en bod groter of gelijk is aan vraagprijs
-            public Transactie sluitTransactie(Trigger verkoopTrigger, Trigger koopTrigger, LocalDateTime datumEnTijd){
+            public Transactie sluitTransactie (LocalDateTime datumEnTijd,Trigger koopTrigger, Trigger verkoopTrigger ){
             Gebruiker koper = koopTrigger.getGebruiker();
             Gebruiker verkoper = verkoopTrigger.getGebruiker();
             double aantal = koopTrigger.getAantal();
-            boolean bankIsKoper = (koper instanceof Bank);
+                boolean bankIsKoper = (koper instanceof Bank);
             boolean bankIsVerkoper = (verkoper instanceof Bank);
 
             double prijs = Transactie.getPrijsViaTrigger(koopTrigger, verkoopTrigger);
@@ -161,8 +139,8 @@ public class TransactieService {
         transactie.getKoper().setRekening(rekeningService.wijzigSaldo(transactie.getKoper(), -bedragKoper));
         transactie.getVerkoper().setRekening(rekeningService.wijzigSaldo(transactie.getVerkoper(), bedragVerkoper));
         rekeningService.wijzigSaldo(Bank.getInstance(), transactie.getBankFee());
-        assetService.wijzigAssetGebruiker(transactie.getKoper(), transactie.getCryptomunt(), -transactie.getAantal());
-        assetService.wijzigAssetGebruiker(transactie.getVerkoper(), transactie.getCryptomunt(), transactie.getAantal());
+        assetService.wijzigAssetGebruiker(transactie.getKoper(), transactie.getCryptomunt(), transactie.getAantal());
+        assetService.wijzigAssetGebruiker(transactie.getVerkoper(), transactie.getCryptomunt(), -transactie.getAantal());
 
     }
 
