@@ -19,6 +19,11 @@ import java.util.List;
 
 import static com.example.thevault.support.data.DataGenerator.genereerRandomGetal;
 
+/**
+ * Deze klasse zorgt ervoor dat de incomplete objecten uit de DAO's volledig gemaakt kunnen worden
+ * door de DAO's hier met elkaar te combineren
+ */
+
 @Repository
 public class RootRepository {
 
@@ -55,12 +60,18 @@ public class RootRepository {
      * @param klant het klant-object op basis van bij registratie ingevoerde gegevens
      * @return het klant-object met de juiste gebruikerId
      */
-    public Klant slaKlantOp(Klant klant){ //TODO niet te compact?
+    public Klant slaKlantOp(Klant klant){
         klant.setAdres(adresDAO.slaAdresOp(klant.getAdres()));
         return klantDAO.slaKlantOp(klant);
     }
 
-    //TODO netste manier?
+    /**
+     * Deze methode zorgt ervoor dat een nieuw adres van een klant kan worden opgeslagen
+     *
+     * @param klant De betreffende klant
+     * @param adres Het nieuwe adres
+     * @return
+     */
     public Adres slaNieuwAdresVanBestaandeKlantOp(Klant klant, Adres adres){
         adresDAO.slaAdresOp(adres);
         klant.setAdres(adres);
@@ -91,13 +102,16 @@ public class RootRepository {
 
     /**
      * Deze methode zoekt of er in de database al een klant bestaat met deze gebruikerId
-     * en maakt eventueel een klant-object aan op nasis van de teruggestuurde gegevens
+     * en maakt eventueel een klant-object aan op basis van de teruggestuurde gegevens
+     * Hier in de repository worden portefeuille en rekening toegevoegd
      *
      * @param gebruikerId gebruikerId van een (mogelijke) klant die uniek moet zijn
      * @return klant-object op basis van gegevens uit de database of null indien gebruikerId niet gevonden is
      */
     public Klant vindKlantById(int gebruikerId){
-        return klantDAO.vindKlantById(gebruikerId);
+        Klant klant = klantDAO.vindKlantById(gebruikerId);
+        maakKlantCompleet(klant);
+        return klant;
     }
 
     /**
@@ -207,23 +221,42 @@ public class RootRepository {
         cryptoWaarde.setCryptomunt(cryptomunt);
         return cryptoWaarde;
     }
+
+    /**
+     * Deze methode haalt de koers van een cryptomunt op een bepaalde dag op
+     *
+     * @param cryptomunt De betreffende cryptomunt
+     * @param datum De datum waarop gezocht wordt
+     * @return
+     */
     public CryptoWaarde haalCryptoWaardeOpDatum(Cryptomunt cryptomunt, LocalDate datum){
-        return cryptoWaardeDAO.getCryptoWaardeByCryptomuntAndDate(cryptomunt, datum);
+        CryptoWaarde cryptoWaarde = cryptoWaardeDAO.getCryptoWaardeByCryptomuntAndDate(cryptomunt, datum);
+        cryptoWaarde.setCryptomunt(cryptomunt);
+        return cryptoWaarde;
     }
     /**
+     * Deze methode slaat een cryptowaarde op in de database
      *
-     * @param cryptoWaarde
+     * @param cryptoWaarde De betreffende cryptowaarde
      * @return
      */
     public CryptoWaarde slaCryptoWaardeOp(CryptoWaarde cryptoWaarde){
         return cryptoWaardeDAO.slaCryptoWaardeOp(cryptoWaarde);
     }
 
+    /**
+     * Deze methode haalt de hele historie van koersen van een cryptomunt op
+     *
+     * @param cryptomunt  De betreffende cryptomunt
+     * @return
+     */
     public List<CryptoWaarde> haalAlleCryptoWaardesVanCryptomunt(Cryptomunt cryptomunt){
-        return cryptoWaardeDAO.getCryptoWaardeByCryptomunt(cryptomunt);
+        List<CryptoWaarde> cryptoWaardeList = cryptoWaardeDAO.getCryptoWaardeByCryptomunt(cryptomunt);
+        for(CryptoWaarde cryptoWaarde: cryptoWaardeList){
+            cryptoWaarde.setCryptomunt(cryptomunt);
+        }
+        return cryptoWaardeList;
     }
-
-
 
     public Transactie slaTransactieOp(Transactie transactie){
         return transactieDAO.slaTransactieOp(transactie);
@@ -258,7 +291,13 @@ public class RootRepository {
      * @return lijst transacties van de klant
      */
     List<Transactie> geefTransactiesVanGebruikerInPeriode(Gebruiker gebruiker, Timestamp startDatum, Timestamp eindDatum){
-        return transactieDAO.geefTransactiesVanGebruikerInPeriode(gebruiker, startDatum, eindDatum);
+        List<Transactie> transactiesVanKlant =  transactieDAO.geefTransactiesVanGebruikerInPeriode(gebruiker, startDatum, eindDatum);
+        for (Transactie transactie: transactiesVanKlant) {
+            transactie.setKoper(klantDAO.vindKlantById(transactie.getKoper().getGebruikerId()));
+            transactie.setVerkoper(klantDAO.vindKlantById(transactie.getVerkoper().getGebruikerId()));
+            transactie.setCryptomunt(cryptomuntDAO.geefCryptomunt(transactie.getCryptomunt().getId()));
+        }
+        return transactiesVanKlant;
     }
 
     /**
@@ -271,8 +310,8 @@ public class RootRepository {
     }
 
     /**
-     * methode die alle transacties die bij een klant horen met een bepaalde cryptmunt
-     * @params klant cryptomunt
+     * methode die alle transacties die bij een klant horen met een bepaalde cryptomunt
+     * @params gebruiker cryptomunt
      * @return lijst transacties van de klant met de meegegeven cryptomunt
      */
     List<Transactie> geefTransactiesVanGebruikerMetCryptomunt(Gebruiker gebruiker, Cryptomunt cryptomunt){
@@ -284,8 +323,6 @@ public class RootRepository {
         }
         return transactieList;
     }
-
-    //TODO Transacties compleet maken op juiste wijze
 
 
     public Cryptomunt geefCryptomunt(int cryptomuntId){

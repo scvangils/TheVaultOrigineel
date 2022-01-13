@@ -143,7 +143,7 @@ public class RekeningService {
     }
 
 
-
+// TODO verwijderen
     public RootRepository getRootRepository() {
         return rootRepository;
     }

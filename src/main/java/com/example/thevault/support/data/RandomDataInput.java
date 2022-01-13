@@ -14,6 +14,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Deze klasse bundelt de restricties die op de gegenereerde transacties zitten.
+ * De hoeveelheid transacties die gegenereerd moet worden, wordt hier los bepaald,
+ * De overige restricties, die bepalen hoe de transactie er uit kan zien, zijn in objecten gebundeld.
+ */
+
 public class RandomDataInput {
 
     @JsonIgnore

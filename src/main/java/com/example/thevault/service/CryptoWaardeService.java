@@ -52,16 +52,42 @@ public class CryptoWaardeService {
         return null;
     }
 
+    /**
+     * Deze methode slaat een cryptowaarde op in de database
+     *
+     * @param cryptoWaarde De betreffende cryptowaarde
+     * @return
+     */
     public void slaCryptoWaardeOp(CryptoWaarde cryptoWaarde){
         rootRepository.slaCryptoWaardeOp(cryptoWaarde);
     }
 
+    /**
+     * Deze methode haalt uit de database de waarde die de betreffende cryptomunt vandaag heeft
+     * zodat huidige waarde van assets kan worden berekend
+     *
+     * @param cryptomunt de cryptomunt
+     * @return CryptoWaarde-object om huidige waarde van asset te kunnen berekenen
+     */
     public CryptoWaarde vindMeestRecenteCryptoWaarde(Cryptomunt cryptomunt){
         return rootRepository.haalMeestRecenteCryptoWaarde(cryptomunt);
     }
+
+    /**
+     * Deze methode haalt de koers van een cryptomunt op een bepaalde dag op
+     *
+     * @param cryptomunt De betreffende cryptomunt
+     * @param datum De datum waarop gezocht wordt
+     * @return
+     */
     public CryptoWaarde vindCryptoWaardeOpDatum(Cryptomunt cryptomunt, LocalDate datum){
         return rootRepository.haalCryptoWaardeOpDatum(cryptomunt, datum);
     }
+
+    /**
+     * Deze methode roept een API aan die koersinformatie van cryptomunten biedt.
+     * De huidige koers wordt vervolgens opgeslagen voor alle verhandelbare cryptomunten
+     */
     @Scheduled(cron = CRON_ELKE_DAG_OM_MIDDERNACHT, zone = CRON_NEDERLANDSE_TIJDZONE)
     public void haalCryptoWaardes(){
         for (int i = 0; i < cryptoLijst().size(); i++) {
@@ -72,6 +98,13 @@ public class CryptoWaardeService {
             slaCryptoWaardeOp(cryptoWaarde);
         }
     }
+
+    /**
+     * Deze methode haalt uit de database alle meest recente koersen van de verhandelbare cryptomunten
+     *
+     * @return Een List van CryptoWaarde-objecten met de koersinformatie
+     */
+
     public List<CryptoWaarde> haalMeestRecenteCryptoWaardes(){
         List<Cryptomunt>  cryptomuntList = CryptoWaardeService.cryptoLijst();
         List<CryptoWaarde> cryptoWaardeList = new ArrayList<>();
