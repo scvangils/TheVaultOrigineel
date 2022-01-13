@@ -6,11 +6,19 @@ package com.example.thevault.support.data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Deze klasse bundelt beperkingen die meegegeven worden aan een gegenereerde lijst van transacties.
+ * Er kan worden gekozen welke groep gebruikers met elkaar kan handelen en in welke maand
+ * de transacties plaatsvinden.
+ */
+
 public class TransactieDataRange {
 
     private final Logger logger = LoggerFactory.getLogger(TransactieDataRange.class);
 
-    private int aantalGebruikers;
+
+    private int gebruikerIdMinimum;
+    private int gebruikerIdMaximum;
     private int maand;
 
     public TransactieDataRange() {
@@ -18,16 +26,21 @@ public class TransactieDataRange {
         logger.info("New TransactieDataRange");
     }
 
-    public TransactieDataRange(int aantalGebruikers, int maand) {
-        this.aantalGebruikers = aantalGebruikers;
+    public TransactieDataRange(int gebruikerIdMinimum, int gebruikerIdMaximum, int maand) {
+        this.gebruikerIdMinimum = gebruikerIdMinimum;
+        this.gebruikerIdMaximum = gebruikerIdMaximum;
         this.maand = maand;
-    }
-
-    public int getAantalGebruikers() {
-        return aantalGebruikers;
     }
 
     public int getMaand() {
         return maand;
+    }
+
+    public int getGebruikerIdMinimum() {
+        return gebruikerIdMinimum;
+    }
+
+    public int getGebruikerIdMaximum() {
+        return gebruikerIdMaximum;
     }
 }

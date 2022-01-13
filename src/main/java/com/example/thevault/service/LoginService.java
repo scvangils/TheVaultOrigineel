@@ -56,13 +56,16 @@ public class LoginService {
         }
         return klant;
     }
-
-    public Klant vindKlantByGebruikersnaam(String username){
-/*        Klant klant = rootRepository.vindKlantByGebruikersnaam(username);
-        if(klant != null){
-        Rekening rekening = rekeningService.vindRekening(klant);
-        klant.setRekening(rekening);}*/
-        return rootRepository.vindKlantByGebruikersnaam(username);
+    /**
+     * Deze methode zoekt of er in de database al een klant bestaat met deze gebruikersnaam
+     * en maakt eventueel een klant-object aan op nasis van de teruggestuurde gegevens
+     *
+     *
+     * @param gebruikersnaam gebruikersnaam van een (mogelijke) klant die uniek moet zijn
+     * @return klant-object op basis van gegevens uit de database of null indien gebruikersnaam niet gevonden is
+     */
+    public Klant vindKlantByGebruikersnaam(String gebruikersnaam){
+        return rootRepository.vindKlantByGebruikersnaam(gebruikersnaam);
     }
 
 

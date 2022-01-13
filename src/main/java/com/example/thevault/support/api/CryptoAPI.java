@@ -43,17 +43,20 @@ public class CryptoAPI {
         objectMapper.configure(
                 DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        try { //TODO betere parsing
+        bepaalWaarde(cryptomunt, uri, parameters, objectMapper);
+        return waarde;
+    }
+
+    private static void bepaalWaarde(Cryptomunt cryptomunt, String uri, List<NameValuePair> parameters, ObjectMapper objectMapper) {
+        try {
             String result = makeAPICall(uri, parameters);
             JsonNode cryptoNode = objectMapper.readTree(result);
             waarde = (cryptoNode.at("/data/" + cryptomunt.getId() + "/quote/EUR/price").doubleValue());
-            System.out.println(cryptoNode);
         } catch (IOException e) {
             System.out.println("Error: cannot access content - " + e.toString());
         } catch (URISyntaxException e) {
             System.out.println("Error: Invalid URL " + e.toString());
         }
-        return waarde;
     }
 
     public static String makeAPICall(String uri, List<NameValuePair> parameters)
@@ -69,6 +72,12 @@ public class CryptoAPI {
         request.setHeader(HttpHeaders.ACCEPT, "application/json");
         request.addHeader("X-CMC_PRO_API_KEY", apiKey);
 
+        response_content = getResponseContent(client, request);
+        return response_content;
+    }
+
+    private static String getResponseContent(CloseableHttpClient client, HttpGet request) throws IOException {
+        String response_content;
         CloseableHttpResponse response = client.execute(request);
         try {
             System.out.println(response.getStatusLine());

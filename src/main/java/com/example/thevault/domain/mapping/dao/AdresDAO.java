@@ -12,7 +12,7 @@ public interface AdresDAO {
 
     public Adres getAdresByKlant(Klant klant);
 
-    public Adres verwijderAdres(Adres adres);
+    public int verwijderAdres(Adres adres);
 
 
 }
