@@ -3,13 +3,23 @@
 function loginScreen(){
     document.getElementById("registratie-personalia").style.display = "none";
     document.getElementById("inlog").style.display = "block";
+    document.getElementById("dashboard").style.display = "none";
+   /* document.getElementById("rekening").style.display = "none";*/
 }
 
 function registreerScreen(){
     document.getElementById("registratie-personalia").style.display = "block";
     document.getElementById("inlog").style.display = "none";
+    document.getElementById("dashboard").style.display = "none";
+    /*document.getElementById("rekening").style.display = "none";*/
 }
 
+function dashboardScreen(){
+    document.getElementById("registratie-personalia").style.display = "none";
+    document.getElementById("inlog").style.display = "none";
+    document.getElementById("dashboard").style.display = "block";
+    /*document.getElementById("rekening").style.display = "block";*/
+}
 
 /*TODO Functie Login schrijven*/
 /* 3- Vanuit het endpoint moet een check worden uitgevoerd op naam en wachtwoord */
@@ -38,15 +48,12 @@ function login(){
         /*Worden die er nu op de juiste manier uitgehaald? We willen die gebruiken in het Dashboard*/
         .then((response) => {
             if(response.status === 200){
-
+                // Code die je naar je dashboard stuurt
+                document.getElementById("iban").textContent
+                document.getElementById("saldo").innerText(response.body.getReader().read())
+                dashboardScreen();
             }
             console.log('Success:', response);
-
-//TODO op een andere locatie zetten
-            return response.json();
-        })
-        .then((json) => {
-            vulCryptoGegevens(json)
         })
         .catch((error) => {
             console.error('*** Iets misgegaan:', error);

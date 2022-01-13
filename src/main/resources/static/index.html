@@ -65,16 +65,26 @@
         </form>
     </div>
 
-    <div>
-        <fieldset>
-
-            <div id = "koers"></div>
-        </fieldset>
+    <div class="dashboard" id="dashboard">
+        <div>
+            <fieldset>
+                <div id = "koers"></div>
+            </fieldset>
+        </div>
+        <div class="rekening" id="rekening" name="rekeningWeergave">
+            <fieldset class="fieldsetRekening" id="fieldsetRekening">
+                <legend>Rekening</legend>
+                <p><label for= “iban”>IBAN</label>
+                    <span id= “iban”>"Hier moet een IBAN verschijnen"</span></P>
+                <p><label for= “saldo”>Saldo €</label>
+                    <span id= “saldo”>"En hier een saldobedrag"</span></p>
+                <p><label id= “nogiets”>Nog iets?</label>
+                    <span id= “nogiets”>Nog iets?</span></p>
+            </fieldset>
+        </div>
     </div>
 
-
-
-    </div>
+</div>
 </div>
 
 </body>
