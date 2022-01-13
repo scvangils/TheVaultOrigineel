@@ -21,6 +21,7 @@ const inputArrayAdres = [
     new InputMetLabel("plaatsnaam", "plaatsnaam","text")
 ]
 const NEDERLANDSE_POSTCODE_LENGTE = 6;
+const STATUS_CODE_CREATED = 201;
 // ***** HIER NIEUWE FILE
 
 function createElementWithClassAndId(parent, tag, elementClass, elementId){
@@ -151,13 +152,22 @@ function checkInput(inputElement){
         isIngevuld = true; }
     return isIngevuld;
 }
-//div wordt nu opgelost door border-color op focus
-//TODO div met outline uitrusten?
-//haalt rode border weg als veld wordt aangeklikt
+
+//haalt rode border weg als veld wordt ingevuld
+//overige addEventListeners zijn nodig omdat oorspronkelijke css buitenspel wordt gezet
 for(const element of document.getElementsByTagName("input")){
     element.addEventListener("input", () => {
-        changeInput(element, "lightgrey", "");
-    })
+        changeInput(element, "blue", "")
+        });
+        element.addEventListener("focusin", () => {
+            changeBorderColor(element, "blue")
+        });
+        element.addEventListener("focusout", () => {
+            changeBorderColor(element, "lightgrey")
+        })
+}
+function changeBorderColor(element, borderColor) {
+    element.style.borderColor = borderColor;
 }
 
 
@@ -392,7 +402,7 @@ function maakCompleetKlantObject(){
             body: JSON.stringify(maakCompleetKlantObject()),
         })
             .then((response) => {
-                if (response.status === 201)
+                if (response.status === STATUS_CODE_CREATED)
                     return response.json()
                         .then((json) => showWelcomeMessage(json))
                 else return response.json()
@@ -423,7 +433,7 @@ function showWelcomeMessage(json){
     }
 }
 function toonMelding(){
-
+        maakModalBodyLeeg();
     const melding = document.createElement("div");
     modalBody.appendChild(melding);
     return melding;

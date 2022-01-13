@@ -138,16 +138,17 @@ public class JDBCKlantDAO implements KlantDAO{
 
     //TODO speciale functie voor wachtwoord?
     @Override
-    public Klant updateKlant(Klant klant){
+    public int updateKlant(Klant klant){
+        int affectedRows = 0;
         String sql = "UPDATE klant SET gebruikersnaam = ?, naam = ?, adresId = ? WHERE gebruikerId = ?;";
         try{
-            jdbcTemplate.update(sql, klant.getGebruikersnaam(), klant.getNaam(), klant.getAdres().getAdresId(),
+         affectedRows = jdbcTemplate.update(sql, klant.getGebruikersnaam(), klant.getNaam(), klant.getAdres().getAdresId(),
                     klant.getGebruikerId());
         }
         catch(DataAccessException noData){
             logger.warn(noData.getMessage());
         }
-        return klant;
+        return affectedRows;
     }
 
     private static class KlantRowMapper implements RowMapper<Klant>{
@@ -167,6 +168,9 @@ public class JDBCKlantDAO implements KlantDAO{
                     resultSet.getString("wachtwoord"), resultSet.getString("naam"),
                     resultSet.getLong("bsn"),resultSet.getDate("geboortedatum").toLocalDate());
             klant.setGebruikerId(resultSet.getInt("gebruikerId"));
+            Adres adres = new Adres();
+            adres.setAdresId(resultSet.getInt("adresId"));
+            klant.setAdres(adres);
             return klant;
         }
     }

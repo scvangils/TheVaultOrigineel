@@ -53,6 +53,7 @@ public class JDBCKlantDAOTest {
         testAdres1 = new Adres("Hoofdstraat", 4, null, "1234AB", "Hellevoetsluis");
         testAdres2 = new Adres("Zijstraat", 6, "a", "9876CD", "Groessen");
         testAdres1.setAdresId(1);
+        testAdres2.setAdresId(2);
         nieuweKlant = new Klant("StevenVG", "StevenPW", "Steven van Gils", 1010101010, LocalDate.parse("1975-12-30"));
 
  }
@@ -129,16 +130,51 @@ public class JDBCKlantDAOTest {
 
 
     @Test
-    void updateKlant() {
+    void updateKlantGebruikersnaam() {
+        Gebruiker before = jdbcKlantDAOTest.vindKlantByGebruikersnaam("Carmen");
+        Gebruiker beforeExpected = testKlant1;
+        ((Klant) before).setAdres(testAdres1);
+        assertThat(before).as("Zeker weten dat de base case klopt").isNotNull().isEqualTo(beforeExpected);
+        before.setGebruikersnaam("nieuweGebruikersnaam");
+        assertThat(before).as("Ze moeten niet meer gelijk zijn").isNotNull().isNotEqualTo(beforeExpected);
+        int actual = jdbcKlantDAOTest.updateKlant((Klant) before);
+        int expected = 1;
+        assertThat(actual).as("Er moet een rij aangepast zijn").isEqualTo(expected);
+        assertThat(jdbcKlantDAOTest.vindKlantByGebruikersnaam("Carmen")).as("Deze gebruikersnaam hoort niet meer te vinden te zijn").isNull();
+        Gebruiker after = jdbcKlantDAOTest.vindKlantByGebruikersnaam("nieuweGebruikersnaam");
+        assertThat(after).as("De nieuwe gebruikersnaam moet zijn opgeslagen").isEqualTo(before);
+    }
+
+    @Test
+    void updateKlantNaam() {
+        Gebruiker before = jdbcKlantDAOTest.vindKlantByGebruikersnaam("Carmen");
+        Gebruiker beforeExpected = testKlant1;
+        ((Klant) before).setAdres(testAdres1);
+        assertThat(before).as("Zeker weten dat de base case klopt").isNotNull().isEqualTo(beforeExpected);
+        ((Klant) before).setNaam("nieuweNaam");
+        assertThat(before).as("Ze moeten niet meer gelijk zijn").isNotNull().isNotEqualTo(beforeExpected);
+        int actual = jdbcKlantDAOTest.updateKlant((Klant) before);
+        int expected = 1;
+        assertThat(actual).as("Er moet een rij aangepast zijn").isEqualTo(expected);
+        Gebruiker after = jdbcKlantDAOTest.vindKlantByGebruikersnaam("Carmen");
+        assertThat(((Klant) after).getNaam()).as("De nieuwe naam moet zijn opgeslagen").isEqualTo(((Klant) before).getNaam());
+    }
+    @Test
+    void updateKlantAdres() {
         Gebruiker before = jdbcKlantDAOTest.vindKlantByGebruikersnaam("Carmen");
         Gebruiker beforeExpected = testKlant1;
         ((Klant)beforeExpected).setAdres(testAdres1);
         assertThat(before).as("Zeker weten dat de base case klopt").isNotNull().isEqualTo(beforeExpected);
+        assertThat(((Klant) before).getAdres().getAdresId()).as("Zeker weten dat adres hetzelfde is").isNotNull().isEqualTo(((Klant) beforeExpected).getAdres().getAdresId());
         ((Klant) before).setAdres(testAdres2);
         assertThat(((Klant) before).getAdres().getAdresId()).as("AdresId moet nu niet dezelfde zijn")
                 .isNotNull().isNotEqualTo(((Klant) beforeExpected).getAdres().getAdresId());
-        Gebruiker actual = jdbcKlantDAOTest.updateKlant((Klant) before);
-        assertThat(((Klant) before).getAdres().getAdresId()).as("AdresId moet nu dezelfde zijn")
-                .isNotNull().isEqualTo(((Klant) actual).getAdres().getAdresId());
+        int actual = jdbcKlantDAOTest.updateKlant((Klant) before);
+        int expected = 1;
+        assertThat(actual).as("Er moet een rij aangepast zijn").isEqualTo(expected);
+        Gebruiker after = jdbcKlantDAOTest.vindKlantByGebruikersnaam("Carmen");
+        assertThat(((Klant) before).getAdres().getAdresId()).as("AdresId moet nu aangepast zijn")
+                .isNotNull().isEqualTo(((Klant) after).getAdres().getAdresId());
     }
 }
+
