@@ -47,6 +47,7 @@ function login(){
         })
         .then((json) => {
             vulCryptoGegevens(json)
+            vulCryptoAantal(json)
         })
         .catch((error) => {
             console.error('*** Iets misgegaan:', error);
