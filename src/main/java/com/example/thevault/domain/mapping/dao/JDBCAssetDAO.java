@@ -118,7 +118,7 @@ public class JDBCAssetDAO implements AssetDAO{
             return voegNieuwAssetToeAanPortefeuille(new Asset(cryptomunt, aantal, gebruiker));
         }
         jdbcTemplate.update(sql, (optionalAsset.get().getAantal() + aantal), gebruiker.getGebruikerId(), cryptomunt.getId());
-        return optionalAsset.get();
+        return geefAssetGebruiker(gebruiker, cryptomunt).get();
     }
 
     /**

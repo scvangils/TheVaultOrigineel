@@ -1,13 +1,17 @@
 package com.example.thevault.domain.mapping.dao;
 
 import com.example.thevault.domain.model.*;
+import com.example.thevault.support.exceptions.AssetNotExistsException;
+import com.example.thevault.support.exceptions.NotEnoughCryptoException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
@@ -16,10 +20,13 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.doCallRealMethod;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 class JDBCAssetDAOTest {
 
     private AssetDAO testAssetDAO;
@@ -28,7 +35,6 @@ class JDBCAssetDAOTest {
     private static Cryptomunt testCryptomunt1;
     private static Cryptomunt testCryptomunt2;
     private static Cryptomunt testCryptomunt3;
-    private static Cryptomunt testCryptomunt4;
     private static Asset testAsset1;
     private static Asset testAsset2;
     private static Asset testAsset3;
@@ -36,6 +42,7 @@ class JDBCAssetDAOTest {
     private static Asset testAsset5;
     private static List<Asset> testAsset6;
     private static Asset testAsset7;
+    private static Asset testAsset8;
 
     @Autowired
     public JDBCAssetDAOTest(AssetDAO testAssetDAO) {
@@ -61,7 +68,6 @@ class JDBCAssetDAOTest {
         testCryptomunt1 = new Cryptomunt(1, "Bitcoin", "BCN");
         testCryptomunt2 = new Cryptomunt(1, null, null);
         testCryptomunt3 = new Cryptomunt(2, null, null);
-        testCryptomunt4 = new Cryptomunt(2, "LITECOIN", "LCN");
         testAsset1 = new Asset(testCryptomunt1, 3.4, testKlant1);
         testAsset2 = new Asset(testCryptomunt1, 4.2, testKlant2);
         testAsset3 = new Asset(testCryptomunt1, 5.3, testKlant2);
@@ -71,46 +77,8 @@ class JDBCAssetDAOTest {
         testAsset6.add(testAsset4);
         testAsset6.add(testAsset5);
         testAsset7 = new Asset(testCryptomunt1, 100, testKlant2);
+        testAsset8 = new Asset(testCryptomunt1, 3.1, testKlant2);
     }
-
-    @Test
-    void voegNieuwAssetToeAanPortefeuille() {
-        Asset actual = testAssetDAO.voegNieuwAssetToeAanPortefeuille(testAsset1);
-        Asset expected = testAsset1;
-        assertThat(actual).as("Test nieuwe asset toevoegen").isNotNull().isEqualTo(expected).extracting(Asset::getGebruiker).
-                extracting(Gebruiker::getGebruikersnaam).isEqualTo("Jolien");
-    }
-
-    @Test
-    void verwijderAssetUitPortefeuille() {
-        Asset actual = testAssetDAO.verwijderAssetUitPortefeuille(testAsset2);
-        Asset expected = testAsset2;
-        assertThat(actual).as("Verwijder asset uit portefeuille test deel 1").isNotNull().isEqualTo(expected).
-                hasNoNullFieldsOrPropertiesExcept("Cryptomunt", "Aantal", "Gebruiker");
-        Optional<Asset> actual2 = testAssetDAO.geefAssetGebruiker(testKlant2, testCryptomunt1);
-        assertThat(actual2).as("Verwijder asset uit portefeuille test deel 2").isEmpty();
-    }
-
-    //TODO Carmen: Uitvinden hoe ik een integratietest kan maken voor deze method, gevraagd aan Huub
-    //Staat het goed in de database? Wordt het object goed geupdate teruggegeven?
-    //Hoe kan ik controleren of de nieuwe informatie goed in de database staat?
-    //LITECOIN VERANDEREN IN ETHEREUM
-    @Test
-    void updateAssetAankoop() {
-        Asset actual = testAssetDAO.updateAsset(testKlant2, testCryptomunt1, 1.1);
-        Asset expected = testAsset3;
-        assertThat(actual.getAantal()).isEqualTo(expected.getAantal());
-        }
-
-   /* @Test
-    void updateAssetVerkoop() {
-        Asset actual = testAssetDAO.updateAsset(testKlant2, testCryptomunt1, -1);
-    }
-
-    @Test
-    void updateAssetVerkoopTekortAanCrypto() {
-        Asset actual = testAssetDAO.updateAsset(testKlant2, testCryptomunt1, -10);
-    }*/
 
     @Test
     void geefAanwezigAsset() {
@@ -154,6 +122,52 @@ class JDBCAssetDAOTest {
     void geefAlleAssetsLeeg() {
         List<Asset> actual = testAssetDAO.geefAlleAssets(testKlant1);
         assertThat(actual).as("Test ophalen alle assets van gebruiker is leeg").isNullOrEmpty();
+    }
+
+    @Test
+    void voegNieuwAssetToeAanPortefeuille() {
+        Asset actual = testAssetDAO.voegNieuwAssetToeAanPortefeuille(testAsset1);
+        Asset expected = testAsset1;
+        assertThat(actual).as("Test nieuwe asset toevoegen").isNotNull().isEqualTo(expected).extracting(Asset::getGebruiker).
+                extracting(Gebruiker::getGebruikersnaam).isEqualTo("Jolien");
+    }
+
+    @Test
+    void verwijderAssetUitPortefeuille() {
+        Asset actual = testAssetDAO.verwijderAssetUitPortefeuille(testAsset2);
+        Asset expected = testAsset2;
+        assertThat(actual).as("Verwijder asset uit portefeuille test deel 1").isNotNull().isEqualTo(expected).
+                hasNoNullFieldsOrPropertiesExcept("Cryptomunt", "Aantal", "Gebruiker");
+        Optional<Asset> actual2 = testAssetDAO.geefAssetGebruiker(testKlant2, testCryptomunt1);
+        assertThat(actual2).as("Verwijder asset uit portefeuille test deel 2").isEmpty();
+    }
+
+    //TODO Carmen: Uitvinden hoe ik een integratietest kan maken voor deze method, gevraagd aan Huub
+    //Staat het goed in de database? Wordt het object goed geupdate teruggegeven?
+    //Hoe kan ik controleren of de nieuwe informatie goed in de database staat?
+    //LITECOIN VERANDEREN IN ETHEREUM
+    @Test
+    void updateAssetAankoop() {
+        Asset actual = testAssetDAO.updateAsset(testKlant2, testCryptomunt1, 1.1);
+        Asset expected = testAsset3;
+        assertThat(actual.getAantal()).isEqualTo(expected.getAantal());
+    }
+
+    @Test
+    void updateAssetVerkoop() {
+        Asset actual = testAssetDAO.updateAsset(testKlant2, testCryptomunt1, -1.1);
+        Asset expected = testAsset8;
+        assertThat(actual.getAantal()).isEqualTo(expected.getAantal());
+    }
+
+    @Test
+    void updateAssetVerkoopTekortAanCrypto() {
+        try{
+            testAssetDAO.updateAsset(testKlant2, testCryptomunt1, -10);
+            fail();
+        } catch (NotEnoughCryptoException notEnoughCryptoException) {
+            System.out.println("Not Enough Crypto exception werkt");
+        }
     }
 
     /*@AfterEach
