@@ -31,7 +31,7 @@ function vulCryptoAantal(data){
 //JU-SEN  20220113
 
 function vulRekeningGegevens(data){
-    document.getElementById("iban").textContent = "saldo " + data.iban;
-    document.getElementById("saldo").textContent = "€ " + data.saldo;
+    document.getElementById("iban").textContent = "IBAN " + data.iban;
+    document.getElementById("saldo").textContent = "Saldo € " + data.saldo;
 }
 
