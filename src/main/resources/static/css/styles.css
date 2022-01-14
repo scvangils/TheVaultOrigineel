@@ -4,6 +4,7 @@
 }
 .flexBasis {
     display: flex;
+    justify-content: center;
 }
 
 .flex-container {
@@ -145,4 +146,8 @@ input:placeholder-shown {
 
 .flex-container#portefeuille {
     flex-direction: row;
+}
+.registratie-personalia {
+    display: flex;
+    flex-direction: column;
 }

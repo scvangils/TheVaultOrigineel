@@ -8,7 +8,9 @@ import com.example.thevault.domain.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.sql.Timestamp;
@@ -22,6 +24,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
 public class JDBCTransactieDAOTest {
 
 
@@ -107,11 +111,11 @@ public class JDBCTransactieDAOTest {
     void geefTransactiesVanGebruiker() {
         List <Transactie> actualTransactiesGebruiker = jdbcTransactieDAO.geefTransactiesVanGebruiker(testKlant1);
 
-        assertThat(actualTransactiesGebruiker).hasSize(4); // 1 transactie is tijdens de eerste unit test extra opgeslagen
+        assertThat(actualTransactiesGebruiker).hasSize(3); // 1 transactie is tijdens de eerste unit test extra opgeslagen
         assertThat(actualTransactiesGebruiker.get(0).getAantal()).isEqualTo(testTransactie1.getAantal());
         assertThat(actualTransactiesGebruiker.get(1).getTransactieId()).isEqualTo(testTransactie2.getTransactieId());
         assertThat(actualTransactiesGebruiker.get(2).getTransactieId()).isEqualTo(testTransactie3.getTransactieId());
-        assertThat(actualTransactiesGebruiker.get(3).getTransactieId()).isEqualTo(4); // de transactie die tijdens deze test is opgeslagen
+
     }
 
     /* TODO methode werkend maken. Geeft nu alles transacties van gebruiker ongeacht de periode */
@@ -119,7 +123,7 @@ public class JDBCTransactieDAOTest {
     void geefTransactiesVanGebruikerInPeriode() {
         List<Transactie> actualLijst = jdbcTransactieDAO.geefTransactiesVanGebruikerInPeriode(testKlant1, Timestamp.valueOf(LocalDateTime.of(2021, 12, 10, 1, 1)), Timestamp.valueOf(LocalDateTime.of(2021, 12, 25, 1, 1)));
 
-        assertThat(actualLijst).hasSize(3);
+        assertThat(actualLijst).hasSize(2);
     }
 
     @Test

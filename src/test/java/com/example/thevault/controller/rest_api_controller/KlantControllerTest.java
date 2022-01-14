@@ -4,11 +4,8 @@ import com.example.thevault.domain.model.Adres;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.model.Rekening;
 import com.example.thevault.domain.transfer.LoginDto;
-import com.example.thevault.service.LoginService;
+import com.example.thevault.service.*;
 import com.example.thevault.domain.transfer.RegistrationDto;
-import com.example.thevault.service.RegistrationService;
-import com.example.thevault.service.KlantService;
-import com.example.thevault.service.TransactieService;
 import com.example.thevault.support.BSNvalidator;
 import com.example.thevault.support.authorization.AuthorizationService;
 import com.example.thevault.support.authorization.TokenKlantCombinatie;
@@ -50,6 +47,8 @@ class KlantControllerTest {
     private AuthorizationService authorizationService;
     @MockBean
     private TransactieService transactieService;
+    @MockBean
+    private TestService testService;
 
     @Autowired
     public KlantControllerTest(MockMvc mockMvc){
@@ -96,9 +95,9 @@ class KlantControllerTest {
             ResultActions response = mockMvc.perform(requestBuilder);
             response.andExpect(MockMvcResultMatchers.status().isCreated()).andExpect(MockMvcResultMatchers
                             .content()
-                            .json("{\"naam\":\"Jan\"," +
-                            "\"gebruikersnaam\":\"testKlant\",\"iban\":\"NL20INGB0006582287\"," +
-                                    "\"postcodeEnHuisnummer\":\"1000AA / 357C\"}"))
+                            .json("{\"naam\":\"Welkom, Jan, bij The Vault\",\"gebruikersnaam\"" +
+                                    ":\"Onthoud je gebruikersnaam, testKlant, goed!\"" +
+                                    ",\"iban\":\"Dit is je IBAN: NL20INGB0006582287.\"}"))
                     .andDo(MockMvcResultHandlers.print());
         } catch (Exception e){
             System.out.println("nee fout: " + e);
