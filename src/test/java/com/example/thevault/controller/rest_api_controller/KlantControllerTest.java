@@ -48,7 +48,7 @@ class KlantControllerTest {
     @MockBean
     private TransactieService transactieService;
 /*    @MockBean
-    private TestService testService;*/
+    private CryptoHistorischService testService;*/
 
     @Autowired
     public KlantControllerTest(MockMvc mockMvc){
