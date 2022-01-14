@@ -1,10 +1,13 @@
 /* When the user clicks on the button,
 toggle between hiding and showing the dropdown content */
+const alleCryptomunten = fetch("/cryptoLijst", {
+
+})
+
 function myFunction() {
     document.getElementById("cryptoDropdown").classList.toggle("show");
 }
 document.getElementById("cryptoZoekveld")
-
 
 function filterFunction() {
  const input = document.getElementById("cryptoZoekveld");

@@ -3,6 +3,7 @@
 
 package com.example.thevault.controller.rest_api_controller;
 
+import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.transfer.CryptoWaardenHistorischDto;
 import com.example.thevault.service.CryptoHistorischService;
 import com.example.thevault.service.LoginService;
@@ -13,8 +14,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
 
 @Controller
 public class CryptoHistorischController extends BasisApiController{
@@ -35,5 +39,9 @@ public class CryptoHistorischController extends BasisApiController{
 
         CryptoWaardenHistorischDto cryptoArrays = cryptoHistorischService.maakCryptoWaardeArray(cryptoHistorischService.getCryptoMuntOpNaam(cryptoNaam));
         return ResponseEntity.ok().body(cryptoArrays);
+    }
+    @GetMapping("/cryptoLijst")
+    public ResponseEntity<Cryptomunt[]> getCryptomunten(){
+        return ResponseEntity.ok().body(cryptoHistorischService.maakCryptoMuntArray());
     }
 }
