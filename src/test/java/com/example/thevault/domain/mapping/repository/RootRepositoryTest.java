@@ -170,7 +170,6 @@ class RootRepositoryTest {
                 thenReturn(java.util.Optional.ofNullable(testAsset1));
         Asset expected = testAsset1;
         Asset actual = rootRepository.geefAssetVanGebruiker(testKlant, testAsset1.getCryptomunt());
-        System.out.println(actual);
         assertThat(actual).as("Test asset van testklant opvragen").isNotNull().isEqualTo(expected).
                 isIn(portefeuille).hasNoNullFieldsOrProperties().asString().startsWith("Asset{").contains("5.1").
                 doesNotContain("2.4").hasSize(229);

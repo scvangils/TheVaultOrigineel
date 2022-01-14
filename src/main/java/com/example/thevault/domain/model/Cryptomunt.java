@@ -79,6 +79,7 @@ public class Cryptomunt {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Cryptomunt that = (Cryptomunt) o;
+        //TODO Equals methode van Cryptomunt aanpassen? Voor de AssetDAOTest. Dan ook de hashmethode aanpassen!
         return Id == that.Id && name.equals(that.name) && Objects.equals(symbol, that.symbol);
     }
 
