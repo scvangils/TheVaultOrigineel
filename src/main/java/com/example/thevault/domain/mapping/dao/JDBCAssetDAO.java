@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -169,5 +170,16 @@ public class JDBCAssetDAO implements AssetDAO{
             }
         }
         return assets;
+    }
+
+    //WIBUL aantal in eigendom per gebruiker
+    public double geefAantalCryptoInEigendom(Gebruiker gebruiker, Cryptomunt cryptomunt) {
+        double aantal;
+        String sql = "Select * from asset where gebruikerId = ? AND cryptomuntId = ?;";
+        try{aantal = jdbcTemplate.queryForObject(sql, new JDBCAssetDAO.AssetRowMapper(), gebruiker.getGebruikerId(), cryptomunt.getId()).getAantal();}
+        catch (EmptyResultDataAccessException geenCryptoEigendom){
+            aantal = 0;
+        }
+        return aantal;
     }
 }

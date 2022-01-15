@@ -324,6 +324,10 @@ public class RootRepository {
         return transactieList;
     }
 
+    public double geefAssetVanGebruikerOrElseNull(Gebruiker gebruiker, Cryptomunt cryptomunt){
+        return assetDAO.geefAantalCryptoInEigendom(gebruiker, cryptomunt);
+    }
+
 
     public Cryptomunt geefCryptomunt(int cryptomuntId){
         return cryptomuntDAO.geefCryptomunt(cryptomuntId);
