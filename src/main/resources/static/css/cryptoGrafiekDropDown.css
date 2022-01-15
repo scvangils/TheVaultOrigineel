@@ -46,6 +46,6 @@
     display: block;
 }
 
-.dropdown div div:hover {background-color: #ddd;}
+.dropdown.keuze :hover {background-color: #ddd;}
 
 .show {display: block;}

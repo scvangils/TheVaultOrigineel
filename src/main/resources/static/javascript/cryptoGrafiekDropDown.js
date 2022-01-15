@@ -1,9 +1,35 @@
+const dropDownMenu = document.getElementById("cryptoDropdown");
+
+let cryptoArray;
+
+async function getCryptomunten() {
+ await fetch("/cryptoLijst")
+        .then((response) => response.json())
+        .then((json) => {
+            cryptoArray = json;
+        })
+        .catch((error) => {
+            console.error('*** cryptoLijst mislukt:', error);
+        })
+}
+
+
+async function useCryptomunten() {
+ await getCryptomunten();
+    for (let i = 0; i < cryptoArray.length; i++){
+     const cryptoGrafiekButton =
+         createElementWithClassAndId(dropDownMenu, "div", "keuze", cryptoArray[i].name + "GrafiekButton");
+     cryptoGrafiekButton.textContent = cryptoArray[i].name;
+     cryptoGrafiekButton.addEventListener("click", () => {
+         showCryptoChart(cryptoArray[i].name);
+     })
+    }
+}
+ useCryptomunten();
+
+
 /* When the user clicks on the button,
 toggle between hiding and showing the dropdown content */
-const alleCryptomunten = fetch("/cryptoLijst", {
-
-})
-
 function myFunction() {
     document.getElementById("cryptoDropdown").classList.toggle("show");
 }
