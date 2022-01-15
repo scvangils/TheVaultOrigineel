@@ -24,12 +24,10 @@ async function getCryptoKoersInfo(cryptomunt) {
 }
 function getXArray(cryptoHistorieJson){
     const xArray = cryptoHistorieJson.datum;
-    console.log(xArray);
     return xArray;
 }
 function getYArray(cryptoHistorieJson){
     const yArray = cryptoHistorieJson.waarde;
-    console.log(yArray);
     return yArray;
 }
 let xArray;
@@ -44,7 +42,6 @@ let layout;
 async function showCryptoChart(cryptomunt) {
 
     await getCryptoKoersInfo(cryptomunt);
-    console.log("***" + grafiekJson);
     xArray = getXArray(grafiekJson);
     yArray = getYArray(grafiekJson);
     xArrayMin = xArray.slice().sort()[0];
@@ -78,18 +75,7 @@ async function showCryptoChart(cryptomunt) {
     Plotly.newPlot(document.getElementById("myPlot"), data, layout);
 }
 
-const muntkiezer = document.getElementById("muntkiezer");
-
-// Display using Plotly
-//Plotly.newPlot(document.getElementById("myPlot"), data, layout);
-const muntButton = document.getElementById("muntButton");
-muntButton.addEventListener("click", () => {
-    showCryptoChart(muntkiezer.value);
-})
-// dropdown met namen maken
-
-// lijst cryptomunten binnenhalen
-// loopen over lijst
+ showCryptoChart("bitcoin");
 
 function setLayout(rangeArray){
     return {
@@ -118,12 +104,11 @@ laatsteMaandKnop.addEventListener("click", () => {
     const rangeArray = range(laatsteMaandKnop, xArray);
     console.log(rangeArray);
     const layOutNew = setLayout(rangeArray);
-    console.log(JSON.stringify(layOutNew));
     Plotly.newPlot(document.getElementById("myPlot"), data, layOutNew);
 })
 
 function range(element, dataArray){
-    switch (element.textContent){
+    switch (element.value){
         case "Laatste week": return [dataArray[dataArray.length - 8], dataArray[dataArray.length - 1]];
 
         case "Laatste 30 dagen": return [dataArray[dataArray.length - 31], dataArray[dataArray.length - 1]];
