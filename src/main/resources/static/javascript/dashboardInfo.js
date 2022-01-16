@@ -8,7 +8,7 @@ function vulCryptoGegevens(data){
     const div = document.createElement("div");
     for (let i = 0; i < portefeuilleArray.length; i++){
         const div = document.createElement("div");
-        const waarde = portefeuilleArray[i].cryptomunt.name
+        const waarde = portefeuilleArray[i].name
             /*+ " " + portefeuilleArray[i].aantal;*/
         console.log(waarde);
         div.textContent = waarde;

@@ -7,6 +7,7 @@ import com.example.thevault.domain.model.CryptoWaarde;
 import com.example.thevault.domain.model.Klant;
 import com.example.thevault.domain.transfer.RegistrationDto;
 import com.example.thevault.domain.transfer.WelkomDTO;
+import com.example.thevault.service.KlantService;
 import com.example.thevault.service.LoginService;
 import com.example.thevault.service.RegistrationService;
 import com.example.thevault.domain.transfer.LoginDto;
@@ -31,10 +32,13 @@ import java.util.List;
 public class KlantController extends BasisApiController{
 
     private final Logger logger = LoggerFactory.getLogger(KlantController.class);
+    private final KlantService klantService;
 
     public KlantController(RegistrationService registrationService,
-                           AuthorizationService authorizationService, LoginService loginService, TransactieService transactieService) {
+                           AuthorizationService authorizationService, LoginService loginService,
+                           TransactieService transactieService, KlantService klantService) {
         super(registrationService, authorizationService, loginService, transactieService);
+        this.klantService = klantService;
         logger.info("New KlantController");
     }
 
@@ -131,11 +135,11 @@ public class KlantController extends BasisApiController{
         throw new LoginFailedException();
     }
 
-    private static ResponseEntity<WelkomDTO> getResponseEntity(Klant klant, ResponseCookie responseCookie, String jwtToken) {
+    public ResponseEntity<WelkomDTO> getResponseEntity(Klant klant, ResponseCookie responseCookie, String jwtToken) {
         return ResponseEntity.ok()
                 .header("Authorization", "Bearer " + jwtToken)
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                .body(new WelkomDTO(klant));
+                .body(new WelkomDTO(klant, klantService.geefNuttigePortefeuille(klant)));
     }
 
     private ResponseCookie getResponseCookie(TokenKlantCombinatie tokenKlantCombinatie) {
