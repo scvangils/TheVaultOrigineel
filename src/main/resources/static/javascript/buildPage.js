@@ -1,3 +1,5 @@
+// @author Steven van Gils
+
 //TODO placeholder toevoegen (eventueel verplicht toevoegen?)
 class InputMetLabel{
   constructor(naam, id, type) {
@@ -413,6 +415,7 @@ function maakCompleetKlantObject(){
                         .then((json) => showWelcomeMessage(json))
                 else return response.json()
                     .then((json) => {
+                        maakModalBodyLeeg();
                         const modalFout = toonMelding();
                         modalFout.textContent = json.message;
                     })
@@ -439,7 +442,7 @@ function showWelcomeMessage(json){
     }
 }
 function toonMelding(){
-        maakModalBodyLeeg();
+
     const melding = document.createElement("div");
     modalBody.appendChild(melding);
     return melding;

@@ -31,6 +31,7 @@ public class AssetDto {
         this.aantal = asset.getAantal();
     }
 
+
     public String getName() {
         return name;
     }

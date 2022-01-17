@@ -3,10 +3,12 @@
 
 package com.example.thevault.service;
 
+import com.example.thevault.domain.mapping.dao.JDBCAssetDAO;
 import com.example.thevault.domain.mapping.repository.RootRepository;
 
 import com.example.thevault.domain.model.*;
 import com.example.thevault.domain.transfer.AssetDto;
+import com.example.thevault.domain.transfer.CryptoDto;
 import com.example.thevault.support.BSNvalidator;
 import com.example.thevault.support.exceptions.AgeTooLowException;
 import com.example.thevault.support.exceptions.IncorrectBSNException;
@@ -22,6 +24,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
+import java.sql.ResultSet;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,10 +80,22 @@ public class KlantService implements ApplicationListener<ContextRefreshedEvent> 
      * @return List</AssetDto> een lijst met alle assets van de klant, zijnde de portefeuille, in de vorm die voor de
      * klant meerwaarde heeft
      */
-    public List<AssetDto> geefNuttigePortefeuille(Klant klant){
-        List<AssetDto> portefeuilleVoorKlant = new ArrayList<>();
-        for (Asset asset : klant.getPortefeuille()) {
-            portefeuilleVoorKlant.add(new AssetDto(asset, rootRepository.haalMeestRecenteCryptoWaarde(asset.getCryptomunt())));
+//    public List<AssetDto> geefNuttigePortefeuille(Klant klant){
+//        List<AssetDto> portefeuilleVoorKlant = new ArrayList<>();
+//        for (Asset asset : klant.getPortefeuille()) {
+//            portefeuilleVoorKlant.add(new AssetDto(asset, rootRepository.haalMeestRecenteCryptoWaarde(asset.getCryptomunt())));
+//        }
+//        return portefeuilleVoorKlant;
+//    }
+
+    public List<CryptoDto> geefNuttigePortefeuille(Klant klant){
+        List<CryptoDto> portefeuilleVoorKlant = new ArrayList<>();
+        for (Cryptomunt cryptomunt : rootRepository.geefAlleCryptomunten()) {
+            String naam = cryptomunt.getName();
+            String afkorting = cryptomunt.getName();
+            double prijs = rootRepository.haalMeestRecenteCryptoWaarde(cryptomunt).getWaarde();
+            double aantal = rootRepository.geefAssetVanGebruikerOrElseNull(klant, cryptomunt);
+            portefeuilleVoorKlant.add(new CryptoDto(naam, afkorting, prijs,aantal));
         }
         return portefeuilleVoorKlant;
     }

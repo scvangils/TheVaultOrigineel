@@ -13,7 +13,7 @@ import java.util.List;
 
 public class WelkomDTO {
     private double saldo;
-    private List<Asset> portefeuille;
+    private List<CryptoDto> portefeuille;
     private String iban;
 
 
@@ -25,10 +25,10 @@ public class WelkomDTO {
         logger.info("New WelkomDTO, no args constructor");
     }
     //TODO StackOverflowError wegwerken
-    public WelkomDTO(Klant klant){
+    public WelkomDTO(Klant klant, List<CryptoDto> portefeuille){
         super();
         this.saldo = klant.getRekening().getSaldo();
-        this.portefeuille= klant.getPortefeuille();
+        this.portefeuille = portefeuille;
         this.iban = klant.getRekening().getIban();
         logger.info("New WelkomDTO: " + this);
     }
@@ -41,11 +41,11 @@ public class WelkomDTO {
         this.saldo = saldo;
     }
 
-    public List<Asset> getPortefeuille() {
+    public List<CryptoDto> getPortefeuille() {
         return portefeuille;
     }
 
-    public void setPortefeuille(List<Asset> portefeuille) {
+    public void setPortefeuille(List<CryptoDto> portefeuille) {
         this.portefeuille = portefeuille;
     }
 

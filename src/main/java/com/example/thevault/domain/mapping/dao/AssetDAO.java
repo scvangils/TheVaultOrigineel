@@ -55,4 +55,6 @@ public interface AssetDAO {
      * @return List</Asset> een lijst van alle Assets in het bezit van de klant
      */
     public List<Asset> geefAlleAssets(Gebruiker gebruiker);
+
+    public double geefAantalCryptoInEigendom(Gebruiker gebruiker, Cryptomunt cryptomunt);
 }
