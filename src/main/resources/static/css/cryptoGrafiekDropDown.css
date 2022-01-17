@@ -1,4 +1,4 @@
-.dropbtn {
+/*.dropbtn {
     background-color: #04AA6D;
     color: white;
     padding: 16px;
@@ -9,7 +9,7 @@
 
 .dropbtn:hover, .dropbtn:focus {
     background-color: #3e8e41;
-}
+}*/
 
 #cryptoZoekveld {
     box-sizing: border-box;
@@ -46,6 +46,6 @@
     display: block;
 }
 
-.dropdown.keuze :hover {background-color: #ddd;}
+.keuze:hover {background-color: #ddd;}
 
 .show {display: block;}

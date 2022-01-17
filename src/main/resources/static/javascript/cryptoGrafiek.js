@@ -1,4 +1,4 @@
-
+// @author Steven van Gils
 
 let grafiekJson;
 
@@ -23,12 +23,10 @@ async function getCryptoKoersInfo(cryptomunt) {
         });
 }
 function getXArray(cryptoHistorieJson){
-    const xArray = cryptoHistorieJson.datum;
-    return xArray;
+    return cryptoHistorieJson.datum;
 }
 function getYArray(cryptoHistorieJson){
-    const yArray = cryptoHistorieJson.waarde;
-    return yArray;
+    return cryptoHistorieJson.waarde;
 }
 let xArray;
 let yArray;
@@ -38,40 +36,26 @@ let xArrayMax;
 let yArrayMin;
 let yArrayMax;
 let layout;
-
+let cryptoName;
 async function showCryptoChart(cryptomunt) {
 
     await getCryptoKoersInfo(cryptomunt);
+    cryptoName = cryptomunt;
     xArray = getXArray(grafiekJson);
     yArray = getYArray(grafiekJson);
     xArrayMin = xArray.slice().sort()[0];
     xArrayMax = xArray.slice().sort().reverse()[0];
     yArrayMin = yArray.slice().sort(function (a, b) {
-        return a - b
-    })[0];
-    const yArrayMax = yArray.slice().sort(function (a, b) {
-        return b - a
-    })[0];
+        return a - b})[0];
+    yArrayMax = yArray.slice().sort(function (a, b) {
+        return b - a})[0];
     data = [{
         x: xArray,
         y: yArray,
         mode: "lines"
     }];
     // Define Layout
-    layout = {
-        xaxis: {
-            linecolor: '#636363',
-            range: [xArrayMin, xArrayMax],
-            type: 'date',
-            title: "datum"
-        },
-        yaxis: {
-            linecolor: '#636363',
-            range: [yArrayMin * 0.95, yArrayMax * 1.05],
-            title: "Koers"
-        },
-        title: cryptomunt
-    };
+    layout = setLayout(xArray);
     Plotly.newPlot(document.getElementById("myPlot"), data, layout);
 }
 
@@ -88,24 +72,23 @@ function setLayout(rangeArray){
             linecolor: '#636363',
             range: [yArrayMin * 0.95, yArrayMax * 1.05],
             title: "Koers"},
-        title: "Bitcoin"
+        title: cryptoName
     };
 }
 const laatsteWeekKnop = document.getElementById("laatsteWeek");
 const laatsteMaandKnop = document.getElementById("laatsteMaand");
+const laatsteDrieMaandenKnop = document.getElementById("laatsteDrieMaanden");
 
-laatsteWeekKnop.addEventListener("click", () => {
-    const rangeArray = range(laatsteWeekKnop, xArray);
-    const layOutNew = setLayout(rangeArray);
+function maakRangeKnop(element){
+    element.addEventListener("click", () => {
+    const rangeArray = range(element, xArray);
+    const layOutNew = setLayout(rangeArray, document.getElementById("cryptoDropdown").value);
     Plotly.newPlot(document.getElementById("myPlot"), data, layOutNew);
-})
-
-laatsteMaandKnop.addEventListener("click", () => {
-    const rangeArray = range(laatsteMaandKnop, xArray);
-    console.log(rangeArray);
-    const layOutNew = setLayout(rangeArray);
-    Plotly.newPlot(document.getElementById("myPlot"), data, layOutNew);
-})
+    })
+}
+maakRangeKnop(laatsteWeekKnop);
+maakRangeKnop(laatsteMaandKnop);
+maakRangeKnop(laatsteDrieMaandenKnop);
 
 function range(element, dataArray){
     switch (element.value){
@@ -113,6 +96,8 @@ function range(element, dataArray){
 
         case "Laatste 30 dagen": return [dataArray[dataArray.length - 31], dataArray[dataArray.length - 1]];
 
+        case "Laatste 90 dagen": return [dataArray[dataArray.length - 91], dataArray[dataArray.length - 1]];
     }
 }
+
 

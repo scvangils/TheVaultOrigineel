@@ -1,3 +1,5 @@
+// @author Steven van Gils
+
 //TODO placeholder toevoegen (eventueel verplicht toevoegen?)
 class InputMetLabel{
   constructor(naam, id, type) {

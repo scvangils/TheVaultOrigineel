@@ -1,3 +1,5 @@
+// @author Steven van Gils
+
 const dropDownMenu = document.getElementById("cryptoDropdown");
 
 let cryptoArray;
