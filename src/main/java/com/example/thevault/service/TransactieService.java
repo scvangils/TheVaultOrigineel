@@ -5,6 +5,8 @@ package com.example.thevault.service;
 
 import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.*;
+import com.example.thevault.domain.transfer.TransactiePaginaDto;
+import com.example.thevault.domain.transfer.TransactieStartDto;
 import com.example.thevault.support.exceptions.BalanceTooLowException;
 import com.example.thevault.support.exceptions.NotEnoughCryptoException;
 import com.example.thevault.domain.model.Asset;
@@ -239,6 +241,10 @@ public class TransactieService {
             logger.info("Saldo koper te laag voor deze transactie.");
             throw new BalanceTooLowException();
         }
+    }
+
+    public TransactiePaginaDto openTransactiescherm(TransactieStartDto transactieStartDto){
+        return rootRepository.openTransactieScherm(transactieStartDto);
     }
 }
 

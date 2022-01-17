@@ -5,6 +5,8 @@ package com.example.thevault.domain.mapping.repository;
 
 import com.example.thevault.domain.mapping.dao.*;
 import com.example.thevault.domain.model.*;
+import com.example.thevault.domain.transfer.TransactiePaginaDto;
+import com.example.thevault.domain.transfer.TransactieStartDto;
 import com.example.thevault.support.exceptions.AssetNotExistsException;
 import net.minidev.json.annotate.JsonIgnore;
 import org.slf4j.Logger;
@@ -336,5 +338,19 @@ public class RootRepository {
         return cryptomuntDAO.geefAlleCryptomunten();
     }
 
-
+    public TransactiePaginaDto openTransactieScherm(TransactieStartDto transactieStartDto){
+        TransactiePaginaDto transactiePaginaDto = new TransactiePaginaDto();
+        Klant klant = klantDAO.vindKlantByGebruikersnaam(transactieStartDto.getGebruikersNaam());
+        Rekening rekening = klant.getRekening();
+        Cryptomunt cryptomunt = cryptomuntDAO.geefCryptomunt(transactieStartDto.getCryptomuntId());
+        CryptoWaarde cryptoWaarde = cryptoWaardeDAO.getCryptoWaardeByCryptomuntAndDate(cryptomunt,LocalDate.now());
+        transactiePaginaDto.setKlantnaam(klant.getNaam());
+        transactiePaginaDto.setRekeningsaldo(rekening.getSaldo());
+        transactiePaginaDto.setIban(rekening.getIban());
+        transactiePaginaDto.setCryptoNaam(cryptomunt.getName());
+        transactiePaginaDto.setCryptoDagkoers(cryptoWaarde.getWaarde());
+        transactiePaginaDto.setCryptoAantal(assetDAO.geefAantalCryptoInEigendom(klant,cryptomunt));
+        transactiePaginaDto.setBankfee(Bank.getInstance().getFee());
+        return transactiePaginaDto;
+    }
 }
