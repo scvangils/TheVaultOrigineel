@@ -9,7 +9,7 @@ function vulCryptoGegevens(data){
     for (let i = 0; i < portefeuilleArray.length; i++){
         const div = document.createElement("div");
         const waarde = portefeuilleArray[i].name;
-            // + "   " + portefeuilleArray[i].aantal.toFixed(3) + "   " + portefeuilleArray[i].prijs.toFixed(2);
+        div.addEventListener("click", function (){alert("Naar Transactiepagina " + waarde)})
         console.log(waarde);
         div.textContent = waarde;
         mainContainer.appendChild(div)

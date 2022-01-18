@@ -146,8 +146,24 @@ input:placeholder-shown {
 
 .flex-container#portefeuille {
     flex-direction: row;
-    a
 }
+
+#cryptoNaam {
+    color: blue;
+    text-decoration: underline;
+    text-align: left;
+    cursor: pointer;
+
+}
+#cryptoNaamTitel{
+    color: black;
+    text-decoration: none;
+}
+
+#cryptoKoers{
+    text-align: right;
+}
+
 .registratie-personalia {
     display: flex;
     flex-direction: column;
