@@ -131,3 +131,51 @@ CREATE TABLE dagkoersCrypto (
 );
 
 CREATE INDEX verzinZelf8_idx ON dagkoersCrypto (cryptomuntId ASC);
+
+CREATE TABLE triggerKoper (
+                        triggerId INT NOT NULL AUTO_INCREMENT,
+                        gebruikerId INT NOT NULL,
+                        cryptomuntId INT NOT NULL,
+                        triggerPrijs DECIMAL(50,10) NOT NULL,
+                        aantal DECIMAL(50,10) NOT NULL,
+                        datum DATE NOT NULL,
+                        PRIMARY KEY (triggerId),
+                        CONSTRAINT koperTrigger
+                        FOREIGN KEY (gebruikerId)
+                        REFERENCES klant (gebruikerId)
+                        ON DELETE RESTRICT
+                        ON UPDATE CASCADE,
+                        CONSTRAINT triggerKoperMunt
+                        FOREIGN KEY (cryptomuntId)
+                        REFERENCES cryptomunt (cryptomuntId)
+                        ON DELETE RESTRICT
+                        ON UPDATE RESTRICT
+);
+
+CREATE INDEX triggerVanKoper ON triggerKoper (gebruikerId ASC);
+
+CREATE INDEX muntVoorTriggerKoper ON triggerKoper (cryptomuntId ASC);
+
+CREATE TABLE triggerVerkoper (
+                              triggerId INT NOT NULL AUTO_INCREMENT,
+                              gebruikerId INT NOT NULL,
+                              cryptomuntId INT NOT NULL,
+                              triggerPrijs DECIMAL(50,10) NOT NULL,
+                              aantal DECIMAL(50,10) NOT NULL,
+                              datum DATE NOT NULL,
+                              PRIMARY KEY (triggerId),
+                              CONSTRAINT verkoperTrigger
+                            FOREIGN KEY (gebruikerId)
+                            REFERENCES klant (gebruikerId)
+                            ON DELETE RESTRICT
+                            ON UPDATE CASCADE,
+                            CONSTRAINT triggerVerkoperMunt
+                            FOREIGN KEY (cryptomuntId)
+                            REFERENCES cryptomunt (cryptomuntId)
+                            ON DELETE RESTRICT
+                            ON UPDATE RESTRICT
+);
+
+CREATE INDEX triggerVanVerkoper ON triggerVerkoper (gebruikerId ASC);
+
+CREATE INDEX muntVoorTriggerVerkoper ON triggerVerkoper (cryptomuntId ASC);

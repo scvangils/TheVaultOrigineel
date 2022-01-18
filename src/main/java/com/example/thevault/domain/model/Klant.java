@@ -13,19 +13,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Objects;
 
 public class Klant extends Gebruiker {
     private String naam;
     private Adres adres;
     private long bsn;
-    private Rekening rekening;
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate geboortedatum;
-    //TODO lijst van transacties toevoegen
 
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Klant.class);
@@ -34,21 +31,19 @@ public class Klant extends Gebruiker {
         super();
         logger.info("Lege klant, no args constructor");
     }
-    //TODO navragen of all-args eigenlijk wel nodig is
+
     public Klant(String gebruikersnaam, String wachtwoord,
-                 List<Asset> portefeuille, Rekening rekening, List<Transactie> transacties,
                  String naam, Adres adres, long bsn, LocalDate geboortedatum) {
-        super(gebruikersnaam, wachtwoord,rekening, portefeuille, transacties);
+        super(gebruikersnaam, wachtwoord);
         this.naam = naam;
         this.adres = adres;
         this.bsn = bsn;
         this.geboortedatum = geboortedatum;
-        this.rekening = rekening;
         logger.info("New Klant, all args constructor");
     }
     public Klant(String gebruikersnaam, String wachtwoord,
                  String naam, long bsn, LocalDate geboortedatum){
-        this(gebruikersnaam, wachtwoord, null, null, null, naam, null, bsn, geboortedatum);
+        this(gebruikersnaam, wachtwoord, naam, null, bsn, geboortedatum);
         logger.info("New Klant, rowMapperConstructor");
     }
     public String getNaam() {

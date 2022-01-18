@@ -37,11 +37,12 @@ public class RootRepository {
     private final CryptoWaardeDAO cryptoWaardeDAO;
     private final AdresDAO adresDAO;
     private final TransactieDAO transactieDAO;
+    private final TriggerDAO triggerDAO;
 
     @Autowired
     public RootRepository(KlantDAO klantDAO, RekeningDAO rekeningDAO, AssetDAO assetDAO, CryptomuntDAO cryptomuntDAO,
                           CryptoWaardeDAO cryptoWaardeDAO, AdresDAO adresDAO,
-                          TransactieDAO transactieDAO) {
+                          TransactieDAO transactieDAO, TriggerDAO triggerDAO) {
         super();
         this.rekeningDAO = rekeningDAO;
         this.klantDAO = klantDAO;
@@ -50,6 +51,7 @@ public class RootRepository {
         this.cryptoWaardeDAO = cryptoWaardeDAO;
         this.adresDAO = adresDAO;
         this.transactieDAO = transactieDAO;
+        this.triggerDAO = triggerDAO;
         logger.info("New RootRepository");
     }
 
@@ -336,5 +338,79 @@ public class RootRepository {
         return cryptomuntDAO.geefAlleCryptomunten();
     }
 
+    /**
+     * Deze methode slaat een trigger op in de database met de huidige datum
+     * en voegt de door de database gegenereerde id toe aan de trigger
+     * Afhankelijk van het type trigger wordt hij in de triggerKoper- of
+     * in de triggerVerkopertabel opgeslagen.
+     *
+     * @param trigger de betreffende trigger
+     * @return de trigger met de gegenereerde id
+     */
+    public Trigger slaTriggerOp(Trigger trigger){
+        return triggerDAO.slaTriggerOp(trigger);
+    }
+    /**
+     * Deze methode verwijdert een trigger op basis van zijn id.
+     *
+     * @param trigger de te verwijderen trigger
+     * @return een 0 indien gefaald of niet gevonden, een 1 indien geslaagd
+     */
+    public int verwijderTrigger(Trigger trigger){
+        return triggerDAO.verwijderTrigger(trigger);
+    }
+    /** Deze methode zoekt voor een triggerKoper in de triggerVerkoperTabel een match
+     * om een transactie mee aan te gaan.
+     * Gegeven meerdere matches, eerste het grootste verschil tussen vraag en aanbod,
+     * dan de langst staande trigger.
+     *
+     * @param trigger de betreffende trigger
+     * @return de meest geschikte match of null indien geen match
+     */
+    public Trigger vindMatch(Trigger trigger){
+        Trigger triggerMatch = triggerDAO.vindMatch(trigger);
+        if(triggerMatch != null){
+            maakTriggerCompleet(triggerMatch);
+        }
+        return triggerMatch;
+    }
 
+    private void maakTriggerCompleet(Trigger trigger) {
+        trigger.setCryptomunt(geefCryptomunt(trigger.getCryptomunt().getId()));
+        trigger.setGebruiker(vindKlantById(trigger.getGebruiker().getGebruikerId()));
+    }
+
+    /**
+     * Geeft alle triggers van een bepaald type aanwezig in de database
+     *
+     * @param koperOfVerkoper Geeft aan welke tabel gebruikt moet worden
+     * @return een List van Triggers, geheel bestaand uit een enkele subklasse
+     */
+    // TODO triggers compleet maken
+    public List<Trigger> vindAlleTriggers(String koperOfVerkoper){
+        List<Trigger> triggerList = triggerDAO.vindAlleTriggers(koperOfVerkoper);
+        if(triggerList != null){
+            for(Trigger trigger: triggerList){
+                    maakTriggerCompleet(trigger);
+            }
+        }
+        return triggerList;
+    }
+    /**
+     * Geeft alle triggers van een bepaald type aanwezig in de database van een bepaalde gebruiker
+     *
+     * @param gebruiker De betreffende gebruiker
+     * @param koperOfVerkoper Geeft aan welke tabel gebruikt moet worden
+     * @return een List van Triggers, geheel bestaand uit een enkele subklasse
+     */
+    public List<Trigger> vindTriggersByGebruiker(Gebruiker gebruiker, String koperOfVerkoper){
+
+        List<Trigger> triggerList = triggerDAO.vindTriggersByGebruiker(gebruiker, koperOfVerkoper);
+        if(triggerList != null){
+            for(Trigger trigger: triggerList){
+                maakTriggerCompleet(trigger);
+            }
+        }
+        return triggerList;
+    }
 }

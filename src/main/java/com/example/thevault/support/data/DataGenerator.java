@@ -4,10 +4,8 @@
 package com.example.thevault.support.data;
 
 
-import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.Adres;
 import com.example.thevault.domain.model.Klant;
-import com.example.thevault.domain.model.Transactie;
 import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +15,6 @@ import org.springframework.core.io.Resource;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +83,7 @@ public class DataGenerator {
     private static void addKlantToList(List<Klant> klantList, String gebruikersnaam, String wachtwoord,
                                        String naam, long bsn, Adres adres) {
         Klant klant = new Klant(gebruikersnaam, wachtwoord,
-                null, null, null, naam, adres, bsn, genereerRandomGeboortedatum());
+                naam, adres, bsn, genereerRandomGeboortedatum());
         klantList.add(klant);
     }
 

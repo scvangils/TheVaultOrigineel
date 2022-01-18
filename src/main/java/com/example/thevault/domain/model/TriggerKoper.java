@@ -19,10 +19,12 @@ public class TriggerKoper extends Trigger{
 
     public TriggerKoper(Gebruiker gebruiker, Cryptomunt cryptomunt, double triggerPrijs, double aantal) {
         super(gebruiker, cryptomunt, triggerPrijs, aantal);
+        logger.info("New TriggerKoperVeelGebruikt");
     }
 
     public TriggerKoper(int triggerId, double triggerPrijs, double aantal, LocalDate datum) {
         super(triggerId, triggerPrijs, aantal, datum);
+        logger.info("New TriggerKoperRowMapper");
     }
 
     @Override

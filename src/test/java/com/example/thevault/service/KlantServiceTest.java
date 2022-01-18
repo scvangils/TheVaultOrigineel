@@ -51,11 +51,11 @@ class KlantServiceTest {
         mockRootRepository = Mockito.mock(RootRepository.class);
         String gehashtWachtwoord = BCryptWachtwoordHash.hashWachtwoord("testWW");
         testKlant = new Klant("testKlant", gehashtWachtwoord, // klant is exact 18 vandaag
-                null, null, null, "Jan", null, BSNvalidator.TESTBSN_VAN_RIVG,
+                "Jan", null, BSNvalidator.TESTBSN_VAN_RIVG,
                 LocalDate.now().minusYears(KlantService.VOLWASSEN_LEEFTIJD));
          klantService = new KlantService(mockRootRepository);
         andereKlant = new Klant("andereKlant", gehashtWachtwoord, // klant is exact 18 vandaag
-                null, null, null, "Jan", null, BSNvalidator.TESTBSN_VAN_RIVG,
+                "Jan", null, BSNvalidator.TESTBSN_VAN_RIVG,
                 LocalDate.now().minusYears(KlantService.VOLWASSEN_LEEFTIJD));
         /**
          * @Author Carmen

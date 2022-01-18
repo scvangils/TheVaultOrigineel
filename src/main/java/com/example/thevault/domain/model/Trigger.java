@@ -3,6 +3,7 @@
 
 package com.example.thevault.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ public abstract class Trigger {
 
     protected int triggerId;
     private int DEFAULT_TRIGGER_ID = 0;
+    @JsonBackReference
     protected Gebruiker gebruiker;
     protected  Cryptomunt cryptomunt;
     protected  double triggerPrijs;
@@ -100,13 +102,16 @@ public abstract class Trigger {
         this.aantal = aantal;
     }
 
+
     @Override
     public String toString() {
         return "Trigger{" +
-                "gebruiker=" + gebruiker +
+                "triggerId=" + triggerId +
+                ", gebruiker=" + gebruiker +
                 ", cryptomunt=" + cryptomunt +
                 ", triggerPrijs=" + triggerPrijs +
                 ", aantal=" + aantal +
+                ", datum=" + datum +
                 '}';
     }
 

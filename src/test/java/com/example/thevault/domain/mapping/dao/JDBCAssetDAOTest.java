@@ -1,16 +1,12 @@
 package com.example.thevault.domain.mapping.dao;
 
 import com.example.thevault.domain.model.*;
-import com.example.thevault.support.exceptions.AssetNotExistsException;
 import com.example.thevault.support.exceptions.NotEnoughCryptoException;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -21,7 +17,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.Mockito.doCallRealMethod;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -58,10 +53,10 @@ class JDBCAssetDAOTest {
     @BeforeEach
     void setup() {
         testKlant1 = new Klant("Jolien", "BeterWachtwoord",
-                null, null, null, "Jolien",null,
+                "Jolien",null,
                 987654321, LocalDate.parse("1985-10-14"));
         testKlant2 = new Klant("Carmen", "GoedWachtwoord",
-                null, null, null,"Carmen", null,
+                "Carmen", null,
                 123456789, LocalDate.parse("1985-12-30"));
         testKlant1.setGebruikerId(2);
         testKlant2.setGebruikerId(1);

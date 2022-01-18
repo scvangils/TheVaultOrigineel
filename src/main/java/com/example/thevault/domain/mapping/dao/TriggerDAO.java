@@ -15,6 +15,6 @@ public interface TriggerDAO {
 
     List<Trigger> vindAlleTriggers(String koperOfVerkoper);
 
-    List<Trigger> vindTriggersByAantalCryptomuntEnPrijs(Trigger trigger);
+    Trigger vindMatch(Trigger trigger);
 
 }

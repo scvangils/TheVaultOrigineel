@@ -347,10 +347,10 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         Cryptomunt bitcoin = cryptomuntList.get(0);
         CryptoWaarde bitcoinWaarde = cryptoWaardeService.vindMeestRecenteCryptoWaarde(bitcoin);
         Trigger triggerKoper = new TriggerKoper(klant, bitcoin, bitcoinWaarde.getWaarde(), 0.001);
-        Trigger triggerVerkoper = triggerService.maakBankTrigger(triggerKoper);
+        Trigger triggerVerkoper = transactieService.maakBankTrigger(triggerKoper);
         System.out.println(triggerVerkoper);
         Trigger triggerVerkoperTwee = new TriggerVerkoper(klant, bitcoin, bitcoinWaarde.getWaarde(), 0.01);
-        Trigger triggerKoperTwee = triggerService.maakBankTrigger(triggerVerkoperTwee);
+        Trigger triggerKoperTwee = transactieService.maakBankTrigger(triggerVerkoperTwee);
         transactieService.sluitTransactie(LocalDateTime.now(), triggerKoper,triggerVerkoper);
 
         transactieService.sluitTransactie(LocalDateTime.now(), triggerKoperTwee,triggerVerkoperTwee);
