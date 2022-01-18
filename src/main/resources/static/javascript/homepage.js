@@ -54,6 +54,7 @@ function login(){
         .then((json) => {
             vulCryptoGegevens(json);
             vulCryptoAantal(json);
+            vulCryptoKoers(json);
             vulRekeningGegevens(json);
         })
         .catch((error) => {
