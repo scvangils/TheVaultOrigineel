@@ -6,6 +6,8 @@ package com.example.thevault.domain.model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDate;
+
 public class TriggerVerkoper extends Trigger{
 
     private final Logger logger = LoggerFactory.getLogger(TriggerVerkoper.class);
@@ -17,15 +19,18 @@ public class TriggerVerkoper extends Trigger{
 
     public TriggerVerkoper(Gebruiker gebruiker, Cryptomunt cryptomunt, double triggerPrijs, double aantal) {
         super(gebruiker, cryptomunt, triggerPrijs, aantal);
+        logger.info("New TriggerVerkoperVeelGebruikt");
     }
 
-    public TriggerVerkoper(double triggerPrijs, double aantal) {
-        super(triggerPrijs, aantal);
+    public TriggerVerkoper(int triggerId, double triggerPrijs, double aantal, LocalDate datum) {
+        super(triggerId, triggerPrijs, aantal, datum);
+        logger.info("New TriggerVerkoperRowMapper");
     }
 
     @Override
     public String toString() {
         return "TriggerVerkoper: " + super.toString();
     }
+
 
 }

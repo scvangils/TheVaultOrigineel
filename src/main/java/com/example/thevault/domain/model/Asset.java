@@ -110,7 +110,6 @@ public class Asset {
         return "Asset{" +
                 "cryptomunt=" + cryptomunt +
                 ", aantal=" + aantal +
-                ", klant=" + gebruiker +
                                 '}';
     }
 }

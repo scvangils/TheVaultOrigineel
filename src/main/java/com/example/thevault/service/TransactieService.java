@@ -26,9 +26,9 @@ public class TransactieService {
     private final  KlantService klantService;
     private final  RekeningService rekeningService;
     private final  AssetService assetService;
-    private final double TRANSACTION_FEE = Bank.getInstance().getFee();
-    private final double DEEL_TRANSACTION_FEE_KOPER = 0.5;
-    private final double DEEL_TRANSACTION_FEE_VERKOPER = 1 - DEEL_TRANSACTION_FEE_KOPER;
+    public final double TRANSACTION_FEE = Bank.getInstance().getFee();
+    public final double DEEL_TRANSACTION_FEE_KOPER = 0.5;
+    public final double DEEL_TRANSACTION_FEE_VERKOPER = 1 - DEEL_TRANSACTION_FEE_KOPER;
 
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(TransactieService.class);
@@ -46,17 +46,15 @@ public class TransactieService {
     }
 
     /**
-     * Maak een transactie op basis van een bedrag, cryptomunt, koper en verkoper en een datum.
+     * * Maakt een transactie op basis van het bod en de vraagprijs van twee partijen.
      * Als de koper niet genoeg saldo heeft of wanneer de verkoper niet het aantal cryptomunten
      * heeft dat deze wilt verkopen geeft de methode een foutmelding
      *
-     *
-     * @return transactie
-    * */
-
-
-
-    //TODO Bijbehorende triggers verwijderen uit de database
+     * @param datumEnTijd het moment van de transactie
+     * @param koopTrigger de gewenste transactie van de koper
+     * @param verkoopTrigger de gewenste transactie van de verkoper
+     * @return De uiteindelijke transactie
+     */
             public Transactie sluitTransactie (LocalDateTime datumEnTijd,Trigger koopTrigger, Trigger verkoopTrigger ){
             Gebruiker koper = koopTrigger.getGebruiker();
             Gebruiker verkoper = verkoopTrigger.getGebruiker();
@@ -241,6 +239,15 @@ public class TransactieService {
             logger.info("Saldo koper te laag voor deze transactie.");
             throw new BalanceTooLowException();
         }
+    }
+    public Trigger maakBankTrigger(Trigger klantTrigger){
+        double prijs = rootRepository.haalMeestRecenteCryptoWaarde(klantTrigger.getCryptomunt()).getWaarde();
+        double aantal = klantTrigger.getAantal();
+        Cryptomunt cryptomunt = klantTrigger.getCryptomunt();
+        if(TriggerService.isKoper(klantTrigger)){
+            return new TriggerVerkoper(Bank.getInstance(), cryptomunt, prijs, aantal);
+        }
+        return new TriggerKoper(Bank.getInstance(), cryptomunt, prijs, aantal);
     }
 
     public TransactiePaginaDto openTransactiescherm(TransactieStartDto transactieStartDto){
