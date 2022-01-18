@@ -9,7 +9,7 @@ function validateJWT(jwtString, gebruikersnaam){
     body: gebruikersnaam,
     }).then((response) => {
         if(response.status === 200){
-            showDashboard()
+            showSomething()
         }
         if(response.status === 401){
             validateRefresh()
@@ -47,7 +47,7 @@ function validateRefresh(gebruikersnaam){
         console.error('*** Iets misgegaan:', error);
     })
 }
-function showDashboard(){
+function showSomething(){
     console.log("*** jwt gevalideerd ***")
 }
 function showLogin(){

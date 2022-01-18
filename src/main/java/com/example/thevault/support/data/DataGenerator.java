@@ -69,6 +69,8 @@ public class DataGenerator {
         return klantList;
     }
 
+
+    //TODO aantal parameters
     private static void createKlantList(int hoeveelKlanten, List<Klant> klantList, Scanner klantenLezer, int counter) {
         while (klantenLezer.hasNextLine() & counter < hoeveelKlanten) {
             String[] regelArray = klantenLezer.nextLine().split(",");

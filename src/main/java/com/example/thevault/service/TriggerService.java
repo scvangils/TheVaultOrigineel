@@ -5,6 +5,7 @@ package com.example.thevault.service;
 
 import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.*;
+import org.apache.commons.math3.util.Precision;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -27,26 +28,45 @@ public class TriggerService {
         this.cryptoWaardeService = cryptoWaardeService;
         logger.info("New TriggerService");
     }
-    
+
+    // iets zoals dit moet gebeuren
+    public Transactie checkTransactieMogelijk(Trigger trigger){
+        Transactie transactie = null;
+        Trigger triggerAnderePartij = zoekNaarMatch(trigger);
+        if(triggerAnderePartij == null){
+            slaTriggerOp(trigger);
+        }
+        // TODO kijken wie koper en verkoper is
+/*         else {
+         transactie = sluitTransactieAf(Trigger triggerKoper, Trigger triggerVerkoper)
+         }*/
+        return transactie;
+    }
+
     public Trigger slaTriggerOp(Trigger trigger){
         // eerst kijken of iemand in staat is om mogelijke transactie te betalen
         // dan wel of iemand genoeg van een asset heeft om te verkopen
         // TODO eerst in javascript al nakijken
         
         // sla trigger op
+        // rootRepository
+        
         
         return trigger;
     }
     
-    public void zoekNaarMatch(Trigger trigger){
+    public Trigger zoekNaarMatch(Trigger trigger){
         // haal lijst van prijzen binnen: nieuwe dagkoersen en lijst van aanbieders / kopers
         List<CryptoWaarde> cryptoWaardeList = cryptoWaardeService.haalMeestRecenteCryptoWaardes(); //TODO rootrepository-versie maken?
         
         // vergelijk met triggerPrijs
 
+        // selecteer grootste verschil in prijs
+
         // vergelijk met aantal (alleen bij perfecte match?)
 
         // triggers weghalen van klanten die trigger niet meer kunnen betalen?
+        return null;
     }
 
     public Transactie sluitTransactieAf(Trigger triggerKoper, Trigger triggerVerkoper){
@@ -55,7 +75,6 @@ public class TriggerService {
         vergelijkTriggerMetSaldo(triggerKoper);
         vergelijkTriggerMetAsset(triggerVerkoper);
         checkTriggers(triggerKoper, triggerVerkoper);
-
 
         return null;
     }
@@ -81,7 +100,7 @@ public class TriggerService {
     }
 
     public void checkAantalGelijk(Trigger triggerKoper, Trigger triggerVerkoper){
-        if(triggerKoper.getAantal() != triggerVerkoper.getAantal()){
+        if(Precision.equals(triggerKoper.getAantal(), triggerVerkoper.getAantal())){
             // throw exception
         }
     }
@@ -125,6 +144,7 @@ public class TriggerService {
         }
         return new TriggerKoper(Bank.getInstance(), cryptomunt, prijs, aantal);
     }
+
     public boolean isKoper(Trigger trigger){
         if(trigger instanceof TriggerKoper){
             return true;
