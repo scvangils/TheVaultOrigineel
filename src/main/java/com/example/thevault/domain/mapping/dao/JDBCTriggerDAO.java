@@ -6,6 +6,7 @@ package com.example.thevault.domain.mapping.dao;
 import com.example.thevault.domain.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -64,11 +65,16 @@ public class JDBCTriggerDAO implements TriggerDAO {
     @Override
     public int verwijderTrigger(Trigger trigger) {
         String sql = String.format("DELETE FROM %s WHERE triggerId = ?;", toonJuisteTabel(trigger));
-
-        return 0;
+        int affectedRows = 0;
+        try{
+            affectedRows = jdbcTemplate.update(sql, trigger.getTriggerId());
+        }
+        catch(DataAccessException noData){
+            logger.warn("het is niet goed gegaan: " + noData.getMessage());
+        }
+        return affectedRows;
     }
 
-    // TODO omkering koperOfVerkoper regelen
     @Override
     public List<Trigger> vindTriggersByGebruiker(Gebruiker gebruiker, String koperOfVerkoper) {
         String tabel = "trigger" + koperOfVerkoper;
@@ -87,6 +93,13 @@ public class JDBCTriggerDAO implements TriggerDAO {
     public List<Trigger> vindAlleTriggers(String koperOfVerkoper) {
         String tabel = "trigger" + koperOfVerkoper;
         String sql = String.format("SELECT * FROM %s;", tabel);
+        try {
+            return jdbcTemplate.query(sql, maakJuisteRowMapper(koperOfVerkoper));
+        }
+        catch (
+                EmptyResultDataAccessException exception){
+            System.out.println("Geen data gevonden, exceptie: " + exception);
+        }
         return null;
     }
 

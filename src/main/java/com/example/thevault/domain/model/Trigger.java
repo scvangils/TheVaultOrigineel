@@ -115,11 +115,12 @@ public abstract class Trigger {
         if (this == o) return true;
         if (!(o instanceof Trigger)) return false;
         Trigger trigger = (Trigger) o;
-        return Double.compare(trigger.triggerPrijs, triggerPrijs) == 0 && Double.compare(trigger.aantal, aantal) == 0 && Objects.equals(gebruiker, trigger.gebruiker) && Objects.equals(cryptomunt, trigger.cryptomunt);
+        return triggerId == trigger.triggerId && Objects.equals(gebruiker, trigger.gebruiker)
+                && Objects.equals(cryptomunt, trigger.cryptomunt) && Objects.equals(datum, trigger.datum);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(gebruiker, cryptomunt, triggerPrijs, aantal);
+        return Objects.hash(triggerId, gebruiker, cryptomunt, datum);
     }
 }

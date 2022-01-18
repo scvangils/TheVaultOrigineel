@@ -21,7 +21,6 @@ public class Klant extends Gebruiker {
     private Adres adres;
     private long bsn;
     private Rekening rekening;
-    private List<Asset> portefeuille;
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonFormat(pattern="yyyy-MM-dd")
@@ -45,7 +44,6 @@ public class Klant extends Gebruiker {
         this.bsn = bsn;
         this.geboortedatum = geboortedatum;
         this.rekening = rekening;
-        this.portefeuille = portefeuille;
         logger.info("New Klant, all args constructor");
     }
     public Klant(String gebruikersnaam, String wachtwoord,
@@ -109,6 +107,6 @@ public class Klant extends Gebruiker {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), naam, adres, bsn, rekening, portefeuille, geboortedatum);
+        return Objects.hash(super.hashCode(), naam, adres, bsn, rekening, geboortedatum);
     }
 }

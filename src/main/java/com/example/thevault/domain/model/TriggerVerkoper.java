@@ -19,15 +19,18 @@ public class TriggerVerkoper extends Trigger{
 
     public TriggerVerkoper(Gebruiker gebruiker, Cryptomunt cryptomunt, double triggerPrijs, double aantal) {
         super(gebruiker, cryptomunt, triggerPrijs, aantal);
+        logger.info("New TriggerVerkoperVeelGebruikt");
     }
 
     public TriggerVerkoper(int triggerId, double triggerPrijs, double aantal, LocalDate datum) {
         super(triggerId, triggerPrijs, aantal, datum);
+        logger.info("New TriggerVerkoperRowMapper");
     }
 
     @Override
     public String toString() {
         return "TriggerVerkoper: " + super.toString();
     }
+
 
 }

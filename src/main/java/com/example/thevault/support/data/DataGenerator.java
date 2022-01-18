@@ -69,27 +69,24 @@ public class DataGenerator {
         return klantList;
     }
 
-
-    //TODO aantal parameters
     private static void createKlantList(int hoeveelKlanten, List<Klant> klantList, Scanner klantenLezer, int counter) {
         while (klantenLezer.hasNextLine() & counter < hoeveelKlanten) {
             String[] regelArray = klantenLezer.nextLine().split(",");
             String adresStraatEnHuisnummer = regelArray[4];
             String[] adresArray = adresStraatEnHuisnummer.split(" ");
+            Adres adres = new Adres(getStraatnaam(adresArray), Integer.parseInt(adresArray[adresArray.length - 1]),
+                    genereerRandomToevoeging(AANTAL_TOEVOEGINGEN), regelArray[5].replace(" ", ""),
+                    regelArray[6]);
             addKlantToList(klantList, regelArray[0], regelArray[1], regelArray[2], Long.parseLong(regelArray[3])
-                    , getStraatnaam(adresArray), Integer.parseInt(adresArray[adresArray.length - 1]),
-                    regelArray[5].replace(" ", ""), regelArray[6],
-                    genereerRandomToevoeging(AANTAL_TOEVOEGINGEN));
+                    , adres);
             counter++;
         }
     }
 
     private static void addKlantToList(List<Klant> klantList, String gebruikersnaam, String wachtwoord,
-                                       String naam, long bsn, String straatnaam, int huisnummer,
-                                       String postcode, String plaatsnaam, String toevoeging) {
-        Adres adresKlant = new Adres(straatnaam, huisnummer, toevoeging, postcode, plaatsnaam);
+                                       String naam, long bsn, Adres adres) {
         Klant klant = new Klant(gebruikersnaam, wachtwoord,
-                null, null, null, naam, adresKlant, bsn, genereerRandomGeboortedatum());
+                null, null, null, naam, adres, bsn, genereerRandomGeboortedatum());
         klantList.add(klant);
     }
 

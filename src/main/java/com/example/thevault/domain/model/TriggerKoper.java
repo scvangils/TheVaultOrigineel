@@ -29,4 +29,6 @@ public class TriggerKoper extends Trigger{
     public String toString() {
         return "TriggerKoper:" + super.toString();
     }
+
+
 }
