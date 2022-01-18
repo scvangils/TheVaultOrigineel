@@ -340,7 +340,7 @@ public class RootRepository {
 
     public TransactiePaginaDto openTransactieScherm(TransactieStartDto transactieStartDto){
         TransactiePaginaDto transactiePaginaDto = new TransactiePaginaDto();
-        Klant klant = klantDAO.vindKlantByGebruikersnaam(transactieStartDto.getGebruikersNaam());
+        Klant klant = vindKlantByGebruikersnaam(transactieStartDto.getGebruikersNaam());
         Rekening rekening = klant.getRekening();
         Cryptomunt cryptomunt = cryptomuntDAO.geefCryptomunt(transactieStartDto.getCryptomuntId());
         CryptoWaarde cryptoWaarde = cryptoWaardeDAO.getCryptoWaardeByCryptomuntAndDate(cryptomunt,LocalDate.now());

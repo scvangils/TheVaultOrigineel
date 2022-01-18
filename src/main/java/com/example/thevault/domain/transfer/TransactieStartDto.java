@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
+
 public class TransactieStartDto {
 
     @JsonIgnore
@@ -28,5 +30,18 @@ public class TransactieStartDto {
 
     public int getCryptomuntId() {
         return cryptomuntId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TransactieStartDto that = (TransactieStartDto) o;
+        return cryptomuntId == that.cryptomuntId && gebruikersNaam.equals(that.gebruikersNaam);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(gebruikersNaam, cryptomuntId);
     }
 }

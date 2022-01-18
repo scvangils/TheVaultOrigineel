@@ -33,7 +33,7 @@ public class TransactieController extends BasisApiController {
         logger.info("New TransactieController");
     }
 
-    //TODO check: Is accesstoken nog geldig?
+    //TODO check: Is accesstoken nog geldig? In JavaScript 'getJWT' methode toepassen
     @PostMapping("/transaction")
     public ResponseEntity<TransactiePaginaDto> transactieAanvraagHandler(@RequestBody TransactieStartDto transactieStartDto) {
         TransactiePaginaDto transactiePaginaDto = transactieService.openTransactiescherm(transactieStartDto);
