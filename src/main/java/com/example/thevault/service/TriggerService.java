@@ -47,7 +47,7 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
      * @param trigger de betreffende trigger
      * @return true als de subclass TriggerKoper is
      */
-    public static boolean checkTriggerKoper(Trigger trigger){
+    public static boolean isKoper(Trigger trigger){
         return (trigger instanceof TriggerKoper);
     }
 
@@ -59,40 +59,45 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
      * @param trigger De betreffende trigger
      * @return Een geslaagde transactie of null indien deze niet heeft plaatsgevonden
      */
-    public Transactie checkTransactieMogelijk(Trigger trigger){
+    public Transactie checkTransactieMogelijk(Trigger trigger, LocalDateTime datumTijd){
         // TODO eerst saldo en/of asset in javascript al nakijken
-        checkAantalPositief(trigger);
-        checkPrijsPositief(trigger);
+        checkTriggerExceptions(trigger);
         maakTriggerTabelUpToDate(trigger);
         Transactie transactie = null;
         if(triggerMogelijkQuaFondsen(trigger)) {
-            transactie = handelTriggerAf(trigger);
+            transactie = handelTriggerAf(trigger, datumTijd);
         }
         return transactie;
     }
+
+    private void checkTriggerExceptions(Trigger trigger) {
+        checkAantalPositief(trigger);
+        checkPrijsPositief(trigger);
+    }
+
     private void maakTriggerTabelUpToDate(Trigger trigger) {
-        if(checkTriggerKoper(trigger)){
+        if(isKoper(trigger)){
             vergelijkAlleVerkoopTriggersMetBeschikbareFondsen();
         }
         else vergelijkAlleKoopTriggersMetBeschikbareFondsen();
     }
 
-    private Transactie handelTriggerAf(Trigger trigger) {
+    private Transactie handelTriggerAf(Trigger trigger, LocalDateTime datumTijd) {
         Trigger triggerAnderePartij = vindMatch(trigger);
         if (triggerAnderePartij == null) {
             slaTriggerOp(trigger);
         } else {
-            return bepaalTransactiePartijen(trigger, triggerAnderePartij);
+            return bepaalTransactiePartijen(datumTijd, trigger, triggerAnderePartij);
         }
         return null;
     }
 
-    private Transactie bepaalTransactiePartijen(Trigger trigger, Trigger triggerAnderePartij) {
+    private Transactie bepaalTransactiePartijen(LocalDateTime datumTijd, Trigger trigger, Trigger triggerAnderePartij) {
         Transactie transactie;
         if(isKoper(trigger)) {
-            transactie = sluitTransactieAfMetKlant(trigger, triggerAnderePartij);
+            transactie = sluitTransactieAfMetKlant(datumTijd, trigger, triggerAnderePartij) ;
         }
-        else transactie = sluitTransactieAfMetKlant(triggerAnderePartij, trigger);
+        else transactie = sluitTransactieAfMetKlant(datumTijd, triggerAnderePartij, trigger);
         checkVerwijderTrigger(triggerAnderePartij);
         return transactie;
     }
@@ -111,8 +116,8 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
      * @param triggerVerkoper de gewenste transactie van de verkoper
      * @return De uiteindelijke transactie
      */
-    public Transactie sluitTransactieAfMetKlant(Trigger triggerKoper, Trigger triggerVerkoper){
-                return transactieService.sluitTransactie(LocalDateTime.now(), triggerKoper, triggerVerkoper);
+    public Transactie sluitTransactieAfMetKlant(LocalDateTime datumTijd, Trigger triggerKoper, Trigger triggerVerkoper){
+                return transactieService.sluitTransactie(datumTijd, triggerKoper, triggerVerkoper);
             }
     /**
      * Deze methode kijkt na of iemand de gewenste trigger kan inzetten.
@@ -128,7 +133,7 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
      */
     public boolean triggerMogelijkQuaFondsen(Trigger trigger){
 
-        if(checkTriggerKoper(trigger)){
+        if(isKoper(trigger)){
             return schaduwSaldoExceptionHandler(trigger);
         }
         return schaduwAssetExceptionHandler(trigger);
@@ -202,7 +207,7 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
      */
     public static void checkTriggerAssetInPortefeuille(Cryptomunt cryptomunt, Asset asset) {
         if(asset == null){
-            throw new TriggerAssetNietInPortefeuille(
+            throw new TriggerAssetNietInPortefeuilleException(
                     String.format("Je hebt geen %s om een verkoopreservering mee te maken", cryptomunt.getName()));
         }
     }
@@ -325,10 +330,6 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
             logger.warn("**** Een altijd onhaalbare triggerVerkoper is in de database beland *****");
             verwijderTrigger(trigger);
         }
-    }
-
-    public static boolean isKoper(Trigger trigger){
-        return trigger instanceof TriggerKoper;
     }
 
     @Override

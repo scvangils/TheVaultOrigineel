@@ -9,9 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.NOT_ACCEPTABLE)
-public class TriggerAssetNietInPortefeuille extends RuntimeException{
+public class TriggerAssetNietInPortefeuilleException extends RuntimeException{
 
-    public TriggerAssetNietInPortefeuille(String message) {
+    public TriggerAssetNietInPortefeuilleException(String message) {
         super(message);
     }
 }
