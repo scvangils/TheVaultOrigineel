@@ -59,7 +59,7 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
      * @param trigger De betreffende trigger
      * @return Een geslaagde transactie of null indien deze niet heeft plaatsgevonden
      */
-    public Transactie checkTransactieMogelijk(Trigger trigger, LocalDateTime datumTijd){
+    public Transactie probeerTransactieMetTrigger(Trigger trigger, LocalDateTime datumTijd){
         // TODO eerst saldo en/of asset in javascript al nakijken
         checkTriggerExceptions(trigger);
         maakTriggerTabelUpToDate(trigger);
@@ -77,9 +77,9 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
 
     private void maakTriggerTabelUpToDate(Trigger trigger) {
         if(isKoper(trigger)){
-            vergelijkAlleVerkoopTriggersMetBeschikbareFondsen();
+            verwijderOnuitvoerbareVerkoopTriggers();
         }
-        else vergelijkAlleKoopTriggersMetBeschikbareFondsen();
+        else verwijderAlleOnuitvoerbareKoopTriggers();
     }
 
     private Transactie handelTriggerAf(Trigger trigger, LocalDateTime datumTijd) {
@@ -127,6 +127,8 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
      * Bij een triggerVerkoper wordt het aantal van de betreffende cryptomunt in zijn portefeuille vergeleken
      * met de uitstaande triggers en de toe te voegen trigger.
      * Er wordt een exception gegooid indien niet mogelijk.
+     * Ook wordt gekeken naar het minder waarschijnlijke geval dat het saldo van een verkoper plus de opbrengsten van een
+     * verkoop niet genoeg zouden zijn voor de transactie
      *
      * @param trigger de na te kijken trigger
      * @return true of een exception
@@ -136,7 +138,20 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
         if(isKoper(trigger)){
             return schaduwSaldoExceptionHandler(trigger);
         }
+        else {
+        verkoperSaldoEdgeCaseHandler(trigger);
+        }
         return schaduwAssetExceptionHandler(trigger);
+    }
+
+
+    private void verkoperSaldoEdgeCaseHandler(Trigger trigger){
+        double edgeCaseSaldo = rootRepository.vraagSaldoOpVanGebruiker(trigger.getGebruiker());
+        edgeCaseSaldo += trigger.getAantal() * trigger.getTriggerPrijs();
+        edgeCaseSaldo -= (1 - DEEL_TRANSACTION_FEE_KOPER) * Bank.getInstance().getFee();
+        if(edgeCaseSaldo < 0){
+            throw new BalanceTooLowException();
+        }
     }
 
     private boolean schaduwSaldoExceptionHandler(Trigger trigger) {
@@ -185,7 +200,7 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
      *
      * @param gebruiker De potentiële verkoper
      * @param cryptomunt De cryptomunt voor die mogelijke verkopen
-     * @return
+     * @return Het aantal van de cryptomunt dat hij zou hebben als al zijn triggers worden uitgevoerd
      */
     public double schaduwAantalAsset(Gebruiker gebruiker, Cryptomunt cryptomunt){
         Asset gebruikerAsset = rootRepository.geefAssetVanGebruiker(gebruiker, cryptomunt);
@@ -205,7 +220,7 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
      * @param cryptomunt De betreffende cryptomunt
      * @param asset De asset die niet null mag zijn
      */
-    public static void checkTriggerAssetInPortefeuille(Cryptomunt cryptomunt, Asset asset) {
+    private void checkTriggerAssetInPortefeuille(Cryptomunt cryptomunt, Asset asset) {
         if(asset == null){
             throw new TriggerAssetNietInPortefeuilleException(
                     String.format("Je hebt geen %s om een verkoopreservering mee te maken", cryptomunt.getName()));
@@ -299,9 +314,9 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
         }
     }
     /**
-     * Deze methode zorgt ervoor dat er geen onuitvoerbare triggers in de tabel triggerKoper staan
+     * Deze methode zorgt ervoor dat er geen onuitvoerbare triggers meer in de tabel triggerKoper staan
      */
-    public void vergelijkAlleKoopTriggersMetBeschikbareFondsen(){
+    private void verwijderAlleOnuitvoerbareKoopTriggers(){
         List<Trigger> triggerKoperList = vindAlleTriggers(KOPER);
         for(Trigger trigger: triggerKoperList){
             if(schaduwSaldo(trigger.getGebruiker()) < 0){
@@ -310,9 +325,9 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
         }
     }
     /**
-     * Deze methode zorgt ervoor dat er geen onuitvoerbare triggers in de tabel triggerVerkoper staan
+     * Deze methode zorgt ervoor dat er geen onuitvoerbare triggers meer in de tabel triggerVerkoper staan
      */
-    public void vergelijkAlleVerkoopTriggersMetBeschikbareFondsen(){
+    private void verwijderOnuitvoerbareVerkoopTriggers(){
         List<Trigger> triggerVerkoperList = vindAlleTriggers(VERKOPER);
             for (Trigger trigger : triggerVerkoperList) {
                 onhaalbareTriggerVerkoperHandler(trigger);
@@ -334,15 +349,7 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-/*        Trigger koopTrigger = new TriggerKoper(rootRepository.vindKlantById(1), rootRepository.geefCryptomunt(2), 30, 4);
-  //      slaTriggerOp(koopTrigger);
-        Trigger  verkoopTrigger = new TriggerVerkoper(rootRepository.vindKlantById(3), rootRepository.geefCryptomunt(2), 30, 4);
-    //    slaTriggerOp(verkoopTrigger);
-        verkoopTrigger.setTriggerId(7);
-      int geslaagd =  verwijderTrigger(verkoopTrigger);
-        System.out.println("********* " + geslaagd);*/
-/*        Trigger testTriggerMogelijk = new TriggerVerkoper(rootRepository.vindKlantById(1), rootRepository.geefCryptomunt(2), (100), 0.243);
-        System.out.println(triggerMogelijkQuaFondsen(testTriggerMogelijk));*/
+
     }
 
 }

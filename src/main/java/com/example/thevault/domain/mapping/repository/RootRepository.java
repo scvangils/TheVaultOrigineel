@@ -58,6 +58,7 @@ public class RootRepository {
     }
 
     /**
+     * author: Steven van Gils
      * Deze methode slaat de gegevens van een klant op in de database
      * op basis van een klant-object, de gebruikerId gaat van 0 naar de juiste
      *
@@ -70,6 +71,7 @@ public class RootRepository {
     }
 
     /**
+     * author: Steven van Gils
      * Deze methode zorgt ervoor dat een nieuw adres van een klant kan worden opgeslagen
      *
      * @param klant De betreffende klant
@@ -84,6 +86,7 @@ public class RootRepository {
     }
 
     /**
+     * author: Steven van Gils
      * Deze methode zoekt of er in de database al een klant bestaat met deze gebruikersnaam
      * en maakt eventueel een klant-object aan op nasis van de teruggestuurde gegevens
      * Hier in de repository worden portefeuille en rekening toegevoegd
@@ -105,6 +108,7 @@ public class RootRepository {
     }
 
     /**
+     * author: Steven van Gils
      * Deze methode zoekt of er in de database al een klant bestaat met deze gebruikerId
      * en maakt eventueel een klant-object aan op basis van de teruggestuurde gegevens
      * Hier in de repository worden portefeuille en rekening toegevoegd
@@ -213,6 +217,7 @@ public class RootRepository {
     }
 
     /**
+     * author: Steven van Gils
      * Deze methode haalt uit de database de waarde die de betreffende cryptomunt vandaag heeft
      * zodat huidige waarde van assets kan worden berekend
      *
@@ -227,6 +232,7 @@ public class RootRepository {
     }
 
     /**
+     * author: Steven van Gils
      * Deze methode haalt de koers van een cryptomunt op een bepaalde dag op
      *
      * @param cryptomunt De betreffende cryptomunt
@@ -239,6 +245,7 @@ public class RootRepository {
         return cryptoWaarde;
     }
     /**
+     * author: Steven van Gils/Wim Bultman
      * Deze methode slaat een cryptowaarde op in de database
      *
      * @param cryptoWaarde De betreffende cryptowaarde
@@ -341,6 +348,7 @@ public class RootRepository {
     }
 
     /**
+     * author: Steven van Gils
      * Deze methode slaat een trigger op in de database met de huidige datum
      * en voegt de door de database gegenereerde id toe aan de trigger
      * Afhankelijk van het type trigger wordt hij in de triggerKoper- of
@@ -353,6 +361,7 @@ public class RootRepository {
         return triggerDAO.slaTriggerOp(trigger);
     }
     /**
+     * author: Steven van Gils
      * Deze methode verwijdert een trigger op basis van zijn id.
      *
      * @param trigger de te verwijderen trigger
@@ -361,7 +370,10 @@ public class RootRepository {
     public int verwijderTrigger(Trigger trigger){
         return triggerDAO.verwijderTrigger(trigger);
     }
-    /** Deze methode zoekt voor een triggerKoper in de triggerVerkoperTabel een match
+
+    /**
+     * author: Steven van Gils
+     * Deze methode zoekt voor een triggerKoper in de triggerVerkoperTabel een match
      * om een transactie mee aan te gaan.
      * Gegeven meerdere matches, eerste het grootste verschil tussen vraag en aanbod,
      * dan de langst staande trigger.
@@ -383,12 +395,12 @@ public class RootRepository {
     }
 
     /**
+     * author: Steven van Gils
      * Geeft alle triggers van een bepaald type aanwezig in de database
      *
      * @param koperOfVerkoper Geeft aan welke tabel gebruikt moet worden
      * @return een List van Triggers, geheel bestaand uit een enkele subklasse
      */
-    // TODO triggers compleet maken
     public List<Trigger> vindAlleTriggers(String koperOfVerkoper){
         List<Trigger> triggerList = triggerDAO.vindAlleTriggers(koperOfVerkoper);
         if(triggerList != null){
@@ -399,6 +411,7 @@ public class RootRepository {
         return triggerList;
     }
     /**
+     * author: Steven van Gils
      * Geeft alle triggers van een bepaald type aanwezig in de database van een bepaalde gebruiker
      *
      * @param gebruiker De betreffende gebruiker

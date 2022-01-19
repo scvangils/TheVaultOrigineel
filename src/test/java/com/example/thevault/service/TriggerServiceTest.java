@@ -2,25 +2,22 @@ package com.example.thevault.service;
 
 import com.example.thevault.domain.mapping.repository.RootRepository;
 import com.example.thevault.domain.model.*;
-import com.example.thevault.domain.transfer.AssetDto;
 import com.example.thevault.support.BSNvalidator;
+import com.example.thevault.support.exceptions.SchaduwAssetException;
+import com.example.thevault.support.exceptions.SchaduwSaldoException;
 import com.example.thevault.support.exceptions.TriggerAantalNietPositiefException;
 import com.example.thevault.support.exceptions.TriggerPrijsNietPositiefException;
-import com.example.thevault.support.hashing.BCryptWachtwoordHash;
 import org.apache.commons.math3.util.Precision;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.jupiter.api.*;
-import static org.assertj.core.api.Assertions.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.*;
 
 class TriggerServiceTest {
 
@@ -42,11 +39,13 @@ class TriggerServiceTest {
     public static Trigger testTriggerKoper3;
     public static Trigger testTriggerKoper4;
     public static Trigger testTriggerKoper5;
+    public static Trigger testTriggerKoperEdgeCase;
     public static Trigger testTriggerVerkoper1;
     public static Trigger testTriggerVerkoper2;
     public static Trigger testTriggerVerkoper3;
     public static Trigger testTriggerVerkoper4;
     public static Trigger testTriggerVerkoper5;
+    public static Trigger testTriggerVerkoperEdgeCase;
     public static Transactie testTransactie1;
     public static LocalDateTime testDatumTijd;
     public static List<Trigger> testTriggerKoperLijst1;
@@ -85,16 +84,18 @@ class TriggerServiceTest {
         testTriggerKoper3 = new TriggerKoper(testKlant, testCryptomunt1, 1100.0, -1);
         testTriggerKoper4 = new TriggerKoper(testKlant, testCryptomunt2, 50, 2);
         testTriggerKoper5 = new TriggerKoper(testKlant, testCryptomunt3, 500.0, 2);
+        testTriggerKoperEdgeCase = new TriggerKoper(testKlant, testCryptomunt1, 0.5, 2);
         testTriggerKoperLijst1 = new ArrayList<>();
         testTriggerKoperLijst1.add(testTriggerKoper4);
         testTriggerKoperLijst1.add(testTriggerKoper5);
         testTriggerKoperLijst2 = new ArrayList<>();
         testTriggerKoperLijst2.add(testTriggerKoper4);
-        testTriggerVerkoper1 = new TriggerVerkoper(testKlant, testCryptomunt1, 1000.0, 2);
-        testTriggerVerkoper2 = new TriggerVerkoper(testKlant, testCryptomunt1, 0, 2);
-        testTriggerVerkoper3 = new TriggerVerkoper(testKlant, testCryptomunt1, -1000.0, 2);
-        testTriggerVerkoper4 = new TriggerVerkoper(testKlant, testCryptomunt1, 1000.0, 2);
-        testTriggerVerkoper5 = new TriggerVerkoper(testKlant, testCryptomunt1, 1000.0, 2);
+        testTriggerVerkoper1 = new TriggerVerkoper(andereKlant, testCryptomunt1, 1000.0, 2);
+        testTriggerVerkoper2 = new TriggerVerkoper(andereKlant, testCryptomunt1, 0, 2);
+        testTriggerVerkoper3 = new TriggerVerkoper(andereKlant, testCryptomunt1, -1000.0, 2);
+        testTriggerVerkoper4 = new TriggerVerkoper(andereKlant, testCryptomunt1, 1000.0, 2);
+        testTriggerVerkoper5 = new TriggerVerkoper(andereKlant, testCryptomunt1, 1000.0, 2);
+        testTriggerVerkoperEdgeCase = new TriggerVerkoper(andereKlant, testCryptomunt1, 0.5, 2);
         testTriggerVerkoperLijst1 = new ArrayList<>();
         testTriggerVerkoperLijst1.add(testTriggerVerkoper4);
         testTriggerVerkoperLijst1.add(testTriggerVerkoper5);
@@ -114,8 +115,41 @@ class TriggerServiceTest {
     }
 
     @Test
-    void checkTransactieMogelijk() {
+    void probeerTransactieMetTriggerKoper() {
 
+        Mockito.when(mockRootRepository.vraagSaldoOpVanGebruiker(testKlant))
+                .thenReturn(2300.0 + 3 * mockTransactieService.DEEL_TRANSACTION_FEE_KOPER * Bank.getInstance().getFee());
+        Mockito.when(mockRootRepository.vindTriggersByGebruiker(testKlant, triggerService.KOPER)).thenReturn(testTriggerKoperLijst2);
+        Mockito.when(mockRootRepository.vindMatch(testTriggerKoper1)).thenReturn(testTriggerVerkoper1);
+        Mockito.when(mockTransactieService.sluitTransactie(testDatumTijd,
+                testTriggerKoper1, testTriggerVerkoper1)).thenReturn(testTransactie1);
+        Transactie actual = triggerService.probeerTransactieMetTrigger(testTriggerKoper1, testDatumTijd);
+        Transactie expected = testTransactie1;
+        assertThat(actual).as("Transactie zou uitgevoerd moeten worden").isEqualTo(expected);
+    }
+    @Test
+    void probeerTransactieMetTriggerVerkoper(){
+        Mockito.when(mockRootRepository.vraagSaldoOpVanGebruiker(andereKlant))
+                .thenReturn(1000.0);
+        Mockito.when(mockRootRepository.geefAssetVanGebruiker(andereKlant, testCryptomunt1)).thenReturn(testAsset1);
+        Mockito.when(mockRootRepository.vindTriggersByGebruiker(andereKlant, triggerService.VERKOPER)).thenReturn(testTriggerVerkoperLijst2);
+        Mockito.when(mockRootRepository.vindMatch(testTriggerVerkoper1)).thenReturn(testTriggerKoper1);
+        Mockito.when(mockTransactieService.sluitTransactie(testDatumTijd,
+                testTriggerKoper1, testTriggerVerkoper1)).thenReturn(testTransactie1);
+        Transactie actual = triggerService.probeerTransactieMetTrigger(testTriggerVerkoper1, testDatumTijd);
+        Transactie expected = testTransactie1;
+        assertThat(actual).as("Transactie zou uitgevoerd moeten worden").isEqualTo(expected);
+    }
+    @Test
+    void probeerTransactieMetTriggerVerkoperEdgeCase(){
+        Mockito.when(mockRootRepository.vraagSaldoOpVanGebruiker(andereKlant))
+                .thenReturn(0.5);
+        Mockito.when(mockRootRepository.geefAssetVanGebruiker(andereKlant, testCryptomunt1)).thenReturn(testAsset1);
+        Mockito.when(mockRootRepository.vindTriggersByGebruiker(andereKlant, triggerService.VERKOPER)).thenReturn(testTriggerVerkoperLijst2);
+        Mockito.when(mockRootRepository.vindMatch(testTriggerVerkoperEdgeCase)).thenReturn(testTriggerKoperEdgeCase);
+        Mockito.when(mockTransactieService.sluitTransactie(testDatumTijd,
+                testTriggerKoper1, testTriggerVerkoper1)).thenReturn(testTransactie1);
+        assertThatThrownBy(()-> triggerService.probeerTransactieMetTrigger(testTriggerVerkoperEdgeCase, testDatumTijd));
     }
 
     @Test
@@ -126,12 +160,6 @@ class TriggerServiceTest {
         Transactie expected = testTransactie1;
         assertThat(actual).isNotNull().isEqualTo(expected);
     }
-
-    @Test
-    void triggerMogelijkQuaFondsen() {
-
-    }
-
     @Test
     void schaduwSaldoNietToereikend() {
         Mockito.when(mockRootRepository.vraagSaldoOpVanGebruiker(testKlant))
@@ -144,7 +172,7 @@ class TriggerServiceTest {
         assertThat(Precision.equals(actual, expected)).as("Het schaduwsaldo is hier nog niet negatief").isTrue();
         double kostenNieuweTrigger = testTriggerKoper1.getTriggerPrijs() * testTriggerKoper1.getAantal()
                 + mockTransactieService.DEEL_TRANSACTION_FEE_KOPER * Bank.getInstance().getFee();
-        assertThat((actual - kostenNieuweTrigger)).as("Nu blijkt het saldo niet toereikend").isLessThan(0.0);
+        assertThat((actual - kostenNieuweTrigger)).as("Nu blijkt het saldo niet toereikend").isNegative();
     }
 
     @Test
@@ -153,21 +181,74 @@ class TriggerServiceTest {
                 .thenReturn(2300.0 + 3 * mockTransactieService.DEEL_TRANSACTION_FEE_KOPER * Bank.getInstance().getFee());
         Mockito.when(mockRootRepository.vindTriggersByGebruiker(testKlant, triggerService.KOPER)).thenReturn(testTriggerKoperLijst2);
         double actual = triggerService.schaduwSaldo(testKlant);
-        System.out.println(actual);
         double expected = 2200 + 2 * mockTransactieService.DEEL_TRANSACTION_FEE_KOPER * Bank.getInstance().getFee();
-        System.out.println(expected);
         assertThat(Precision.equals(actual, expected)).as("Het schaduwsaldo is hier nog niet negatief").isTrue();
         double kostenNieuweTrigger = testTriggerKoper1.getTriggerPrijs() * testTriggerKoper1.getAantal()
                 + mockTransactieService.DEEL_TRANSACTION_FEE_KOPER * Bank.getInstance().getFee();
         assertThat((actual - kostenNieuweTrigger)).as("Nu blijkt het saldo toereikend").isNotNegative();
     }
-
     @Test
-    void schaduwAantalAsset() {
+    void triggerMogelijkQuaFondsenKoperFalse() {
+        Mockito.when(mockRootRepository.vraagSaldoOpVanGebruiker(testKlant))
+                .thenReturn(2300.0 + 3 * mockTransactieService.DEEL_TRANSACTION_FEE_KOPER * Bank.getInstance().getFee());
+        Mockito.when(mockRootRepository.vindTriggersByGebruiker(testKlant, triggerService.KOPER)).thenReturn(testTriggerKoperLijst1);
+        assertThatThrownBy(() -> triggerService.triggerMogelijkQuaFondsen(testTriggerKoper1)).isInstanceOf(SchaduwSaldoException.class);
+    }
+    @Test
+    void triggerMogelijkQuaFondsenKoperTrue() {
+        Mockito.when(mockRootRepository.vraagSaldoOpVanGebruiker(testKlant))
+                .thenReturn(2300.0 + 3 * mockTransactieService.DEEL_TRANSACTION_FEE_KOPER * Bank.getInstance().getFee());
+        Mockito.when(mockRootRepository.vindTriggersByGebruiker(testKlant, triggerService.KOPER)).thenReturn(testTriggerKoperLijst2);
+        assertThat(triggerService.triggerMogelijkQuaFondsen(testTriggerKoper1)).isTrue();
+    }
+    @Test
+    void schaduwAantalAssetOntoereikend() {
+        Mockito.when(mockRootRepository.geefAssetVanGebruiker(andereKlant, testCryptomunt1)).thenReturn(testAsset1);
+        Mockito.when(mockRootRepository.vindTriggersByGebruiker(andereKlant, triggerService.VERKOPER)).thenReturn(testTriggerVerkoperLijst1);
+        double actual = triggerService.schaduwAantalAsset(andereKlant, testCryptomunt1);
+        double expected = 0;
+        assertThat(Precision.equals(actual, expected)).as("Het schaduwAantalAsset is hier nog niet negatief").isTrue();
+        double cryptomuntAantalNieuweTrigger = testTriggerVerkoper1.getAantal();
+        assertThat(actual - cryptomuntAantalNieuweTrigger).as("Nu is het aantal van de cryptomunt niet toereikend").isNegative();
+
+    }
+    @Test
+    void schaduwAantalAssetToereikend() {
+        Mockito.when(mockRootRepository.geefAssetVanGebruiker(andereKlant, testCryptomunt1)).thenReturn(testAsset1);
+        Mockito.when(mockRootRepository.vindTriggersByGebruiker(andereKlant, triggerService.VERKOPER)).thenReturn(testTriggerVerkoperLijst2);
+        double actual = triggerService.schaduwAantalAsset(andereKlant, testCryptomunt1);
+        double expected = 2;
+        assertThat(Precision.equals(actual, expected)).as("Het schaduwAantalAsset is hier nog niet negatief").isTrue();
+        double cryptomuntAantalNieuweTrigger = testTriggerVerkoper1.getAantal();
+        assertThat(actual - cryptomuntAantalNieuweTrigger).as("Nu is het aantal van de cryptomunt nog toereikend").isNotNegative();
+    }
+    @Test
+    void triggerMogelijkQuaFondsenVerkoperFalse(){
+        Mockito.when(mockRootRepository.geefAssetVanGebruiker(andereKlant, testCryptomunt1)).thenReturn(testAsset1);
+        Mockito.when(mockRootRepository.vindTriggersByGebruiker(andereKlant, triggerService.VERKOPER)).thenReturn(testTriggerVerkoperLijst1);
+        assertThatThrownBy(() -> triggerService.triggerMogelijkQuaFondsen(testTriggerVerkoper1)).isInstanceOf(SchaduwAssetException.class);
+    }
+    @Test
+    void triggerMogelijkQuaFondsenVerkoperTrue(){
+        Mockito.when(mockRootRepository.geefAssetVanGebruiker(andereKlant, testCryptomunt1)).thenReturn(testAsset1);
+        Mockito.when(mockRootRepository.vindTriggersByGebruiker(andereKlant, triggerService.VERKOPER)).thenReturn(testTriggerVerkoperLijst2);
+        boolean actual = triggerService.triggerMogelijkQuaFondsen(testTriggerVerkoper1);
+        assertThat(actual).isTrue();
     }
 
     @Test
-    void slaTriggerOp() {
+    void slaTriggerOpKoper() {
+        Mockito.when(mockRootRepository.slaTriggerOp(testTriggerKoper1)).thenReturn(testTriggerKoper1);
+        Trigger actual = triggerService.slaTriggerOp(testTriggerKoper1);
+        Trigger expected = testTriggerKoper1;
+        assertThat(actual).isEqualTo(expected);
+    }
+    @Test
+    void slaTriggerOpVerkoper() {
+        Mockito.when(mockRootRepository.slaTriggerOp(testTriggerVerkoper1)).thenReturn(testTriggerVerkoper1);
+        Trigger actual = triggerService.slaTriggerOp(testTriggerVerkoper1);
+        Trigger expected = testTriggerVerkoper1;
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
@@ -187,14 +268,54 @@ class TriggerServiceTest {
 
     @Test
     void verwijderTrigger() {
+        Mockito.when(mockRootRepository.verwijderTrigger(testTriggerKoper4)).thenReturn(1);
+        int actual = mockRootRepository.verwijderTrigger(testTriggerKoper4);
+        int expected = 1;
+        assertThat(actual).isEqualTo(expected);
     }
 
     @Test
-    void vindAlleTriggers() {
+    void vindAlleTriggersKoper() {
+        Mockito.when(mockRootRepository.vindAlleTriggers(triggerService.KOPER)).thenReturn(testTriggerKoperLijst1);
+        List<Trigger> actual = mockRootRepository.vindAlleTriggers(triggerService.KOPER);
+        List<Trigger> expected = testTriggerKoperLijst1;
+        assertThat(actual).isEqualTo(expected);
+    }
+    @Test
+    void vindAlleTriggersVerkoper() {
+        Mockito.when(mockRootRepository.vindAlleTriggers(triggerService.VERKOPER)).thenReturn(testTriggerVerkoperLijst1);
+        List<Trigger> actual = mockRootRepository.vindAlleTriggers(triggerService.VERKOPER);
+        List<Trigger> expected = testTriggerVerkoperLijst1;
+        assertThat(actual).isEqualTo(expected);
+    }
+    @Test
+    void vindAlleTriggersNull() {
+        Mockito.when(mockRootRepository.vindAlleTriggers(triggerService.VERKOPER)).thenReturn(null);
+        List<Trigger> actual = mockRootRepository.vindAlleTriggers(triggerService.VERKOPER);
+        List<Trigger> expected = null;
+        assertThat(actual).isNull();
     }
 
     @Test
-    void vindTriggersByGebruiker() {
+    void vindTriggersByGebruikerKoper() {
+        Mockito.when(mockRootRepository.vindTriggersByGebruiker(testKlant, triggerService.KOPER)).thenReturn(testTriggerKoperLijst1);
+        List<Trigger> actual = mockRootRepository.vindTriggersByGebruiker(testKlant, triggerService.KOPER);
+        List<Trigger> expected = testTriggerKoperLijst1;
+        assertThat(actual).isEqualTo(expected);
+    }
+    @Test
+    void vindTriggersByGebruikerVerkoper() {
+        Mockito.when(mockRootRepository.vindTriggersByGebruiker(testKlant, triggerService.VERKOPER)).thenReturn(testTriggerVerkoperLijst1);
+        List<Trigger> actual = mockRootRepository.vindTriggersByGebruiker(testKlant, triggerService.VERKOPER);
+        List<Trigger> expected = testTriggerVerkoperLijst1;
+        assertThat(actual).isEqualTo(expected);
+    }
+    @Test
+    void vindTriggersByGebruikerNull() {
+        Mockito.when(mockRootRepository.vindTriggersByGebruiker(testKlant, triggerService.VERKOPER)).thenReturn(null);
+        List<Trigger> actual = mockRootRepository.vindTriggersByGebruiker(testKlant, triggerService.VERKOPER);
+        List<Trigger> expected = null;
+        assertThat(actual).isNull();
     }
 
     @Test
@@ -211,14 +332,6 @@ class TriggerServiceTest {
                 .isInstanceOf(TriggerPrijsNietPositiefException.class);
         assertThatThrownBy(() -> TriggerService.checkPrijsPositief(testTriggerVerkoper3)).as("triggerPrijs mag niet negatief zijn")
                 .isInstanceOf(TriggerPrijsNietPositiefException.class);
-    }
-
-    @Test
-    void vergelijkAlleKoopTriggersMetBeschikbareFondsen() {
-    }
-
-    @Test
-    void vergelijkAlleVerkoopTriggersMetBeschikbareFondsen() {
     }
 
 }
