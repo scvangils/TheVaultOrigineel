@@ -26,6 +26,7 @@ class RootRepositoryTest {
     private static CryptoWaardeDAO cryptoWaardeDAO;
     private static TransactieDAO transactieDAO;
     private static AdresDAO adresDAO;
+    private static TriggerDAO triggerDAO;
     private static Klant testKlant;
     private static Gebruiker testGebruiker;
     public static Asset testAsset1;
@@ -58,8 +59,9 @@ class RootRepositoryTest {
         cryptoWaardeDAO = Mockito.mock(CryptoWaardeDAO.class);
         transactieDAO = Mockito.mock(TransactieDAO.class);
         adresDAO = Mockito.mock(AdresDAO.class);
+        triggerDAO = Mockito.mock(TriggerDAO.class);
         testKlant = new Klant();
-        rootRepository = new RootRepository(klantDAO, rekeningDAO, assetDAO, cryptomuntDAO, cryptoWaardeDAO, adresDAO, transactieDAO);
+        rootRepository = new RootRepository(klantDAO, rekeningDAO, assetDAO, cryptomuntDAO, cryptoWaardeDAO, adresDAO, transactieDAO, triggerDAO);
 
         testCryptomunt1 = new Cryptomunt(1, "CarmenCrypto", "CCR" );
         testCryptoWaarde1 = new CryptoWaarde("20211214CCR", testCryptomunt1, 100.0, LocalDate.now());
@@ -81,8 +83,9 @@ class RootRepositoryTest {
         portefeuille.add(testAsset3);
         origineelSaldo = 1000.0;
         rekeningOrigineelSaldo = new Rekening("INGB0001234567NL", origineelSaldo);
-        testKlant = new Klant("Huub", "PWHuub", portefeuille, rekeningOrigineelSaldo, null, "Huub", null,
+        testKlant = new Klant("Huub", "PWHuub", "Huub", null,
                 0, null);
+        testKlant.setRekening(rekeningOrigineelSaldo);
         teWijzigenBedrag = 100.0;
         gewijzigdSaldo = 1100.0;
         rekeningGewijzigdSaldo = new Rekening("INGB0001234567NL", gewijzigdSaldo);

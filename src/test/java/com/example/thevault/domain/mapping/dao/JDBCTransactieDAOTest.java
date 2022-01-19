@@ -16,8 +16,6 @@ import org.springframework.test.context.ActiveProfiles;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -54,9 +52,9 @@ public class JDBCTransactieDAOTest {
 
 
         testKlant1 = new Klant("Carmen", "GoedWachtwoord",
-                null, null, null,"Carmen", null, 123456789, LocalDate.parse("1985-12-30"));
+                "Carmen", null, 123456789, LocalDate.parse("1985-12-30"));
         testKlant2 = new Klant("Jolien", "BeterWachtwoord",
-                null, null, null, "Jolien",null, 987654321, LocalDate.parse("1985-10-14"));
+                "Jolien",null, 987654321, LocalDate.parse("1985-10-14"));
         testKlant1.setGebruikerId(1);
         testKlant2.setGebruikerId(2);
 

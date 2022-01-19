@@ -347,18 +347,13 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         Cryptomunt bitcoin = cryptomuntList.get(0);
         CryptoWaarde bitcoinWaarde = cryptoWaardeService.vindMeestRecenteCryptoWaarde(bitcoin);
         Trigger triggerKoper = new TriggerKoper(klant, bitcoin, bitcoinWaarde.getWaarde(), 0.001);
-        Trigger triggerVerkoper = triggerService.maakBankTrigger(triggerKoper);
+        Trigger triggerVerkoper = transactieService.maakBankTrigger(triggerKoper);
         System.out.println(triggerVerkoper);
         Trigger triggerVerkoperTwee = new TriggerVerkoper(klant, bitcoin, bitcoinWaarde.getWaarde(), 0.01);
-        Trigger triggerKoperTwee = triggerService.maakBankTrigger(triggerVerkoperTwee);
-    //    transactieService.sluitTransactie(LocalDateTime.now(), triggerKoper,triggerVerkoper);
+        Trigger triggerKoperTwee = transactieService.maakBankTrigger(triggerVerkoperTwee);
+        transactieService.sluitTransactie(LocalDateTime.now(), triggerKoper,triggerVerkoper);
 
-     //   transactieService.sluitTransactie(triggerVerkoperTwee, triggerKoperTwee, LocalDateTime.now());
+        transactieService.sluitTransactie(LocalDateTime.now(), triggerKoperTwee,triggerVerkoperTwee);
 
-        // trigger met bank als tegenpartij
-       /* transactieService.sluitTransactie(bank, bitcoin, bitcoinWaarde.getWaarde(), bitcoinWaarde.getWaarde() * (1 + 0.02), 0.001, klant, LocalDateTime.now());
-        // trigger met andere klant als tegenpartij
-        transactieService.sluitTransactie(klant, bitcoin, bitcoinWaarde.getWaarde() * (1 - 0.02) , bitcoinWaarde.getWaarde() * (1 + 0.01), 0.001, andereKlant, LocalDateTime.now());
-*/
     }
 }

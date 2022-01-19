@@ -3,10 +3,12 @@
 
 package com.example.thevault.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 /**
@@ -20,10 +22,16 @@ public abstract class Trigger {
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Trigger.class);
 
+    protected int triggerId;
+    private int DEFAULT_TRIGGER_ID = 0;
+    @JsonBackReference
     protected Gebruiker gebruiker;
     protected  Cryptomunt cryptomunt;
     protected  double triggerPrijs;
     protected  double aantal;
+    protected LocalDate datum;
+
+
 
     public Trigger() {
         super();
@@ -31,6 +39,7 @@ public abstract class Trigger {
     }
     public Trigger(Gebruiker gebruiker, Cryptomunt cryptomunt, double triggerPrijs, double aantal){
         super();
+        this.triggerId = DEFAULT_TRIGGER_ID;
         this.gebruiker = gebruiker;
         this.cryptomunt = cryptomunt;
         this.triggerPrijs = triggerPrijs;
@@ -38,9 +47,27 @@ public abstract class Trigger {
 
         logger.info("New Trigger, all-args constructor");
     }
-    public Trigger(double triggerPrijs, double aantal) {
+    public Trigger(int triggerId, double triggerPrijs, double aantal, LocalDate datum) {
         this(null, null, triggerPrijs,aantal);
+        this.triggerId = triggerId;
+        this.datum = datum;
         logger.info("New Trigger, RowMapper constructor");
+    }
+
+    public int getTriggerId() {
+        return triggerId;
+    }
+
+    public void setTriggerId(int triggerId) {
+        this.triggerId = triggerId;
+    }
+
+    public LocalDate getDatum() {
+        return datum;
+    }
+
+    public void setDatum(LocalDate datum) {
+        this.datum = datum;
     }
 
     public Gebruiker getGebruiker() {
@@ -75,13 +102,16 @@ public abstract class Trigger {
         this.aantal = aantal;
     }
 
+
     @Override
     public String toString() {
         return "Trigger{" +
-                "gebruiker=" + gebruiker +
+                "triggerId=" + triggerId +
+                ", gebruiker=" + gebruiker +
                 ", cryptomunt=" + cryptomunt +
                 ", triggerPrijs=" + triggerPrijs +
                 ", aantal=" + aantal +
+                ", datum=" + datum +
                 '}';
     }
 
@@ -90,11 +120,12 @@ public abstract class Trigger {
         if (this == o) return true;
         if (!(o instanceof Trigger)) return false;
         Trigger trigger = (Trigger) o;
-        return Double.compare(trigger.triggerPrijs, triggerPrijs) == 0 && Double.compare(trigger.aantal, aantal) == 0 && Objects.equals(gebruiker, trigger.gebruiker) && Objects.equals(cryptomunt, trigger.cryptomunt);
+        return triggerId == trigger.triggerId && Objects.equals(gebruiker, trigger.gebruiker)
+                && Objects.equals(cryptomunt, trigger.cryptomunt) && Objects.equals(datum, trigger.datum);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(gebruiker, cryptomunt, triggerPrijs, aantal);
+        return Objects.hash(triggerId, gebruiker, cryptomunt, datum);
     }
 }
