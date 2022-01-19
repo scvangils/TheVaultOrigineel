@@ -75,14 +75,20 @@ public class AssetService {
         }
         return null;
     }
+
+    /**
+     * De klant vraagt de informatie van zijn/haar portefeuille op
+     * @param gebruiker de handelende partij
+     * @return List<Asset> alle Assets van de klant
+     */
     public List<Asset> vulPortefeuilleVanGebruiker(Gebruiker gebruiker){
         return rootRepository.vulPortefeuilleKlant(gebruiker);
     }
 
-    //TODO hoort dit hier
-    public Cryptomunt geefCryptomunt(int cryptomuntId){
-        return rootRepository.geefCryptomunt(cryptomuntId);
-    }
+    /**
+     * Er wordt een lijst van alle cryptomunten opgevraagd
+     * @return List<Cryptomunt> alle cryptomunten in de database
+     */
     public List<Cryptomunt> geefAlleCryptomunten(){
         return rootRepository.geefAlleCryptomunten();
     }

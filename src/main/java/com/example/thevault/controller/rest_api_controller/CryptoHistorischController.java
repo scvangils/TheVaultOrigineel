@@ -27,6 +27,7 @@ public class CryptoHistorischController extends BasisApiController{
 
     private final CryptoHistorischService cryptoHistorischService;
 
+    //TODO JavaDoc
     public CryptoHistorischController(RegistrationService registrationService,
                                       AuthorizationService authorizationService, LoginService loginService, TransactieService transactieService,
                                       CryptoHistorischService cryptoHistorischService) {
@@ -34,12 +35,16 @@ public class CryptoHistorischController extends BasisApiController{
         this.cryptoHistorischService = cryptoHistorischService;
         logger.info("New CryptoHistorischController");
     }
+
+    //TODO JavaDoc
     @PostMapping("/cryptoGrafiek")
     public ResponseEntity<CryptoWaardenHistorischDto> cryptoWaardeArrayHandler(@RequestBody String cryptoNaam){
 
         CryptoWaardenHistorischDto cryptoArrays = cryptoHistorischService.maakCryptoWaardeArray(cryptoHistorischService.getCryptoMuntOpNaam(cryptoNaam));
         return ResponseEntity.ok().body(cryptoArrays);
     }
+
+    //TODO JavaDoc
     @GetMapping("/cryptoLijst")
     public ResponseEntity<Cryptomunt[]> getCryptomunten(){
         return ResponseEntity.ok().body(cryptoHistorischService.maakCryptoMuntArray());

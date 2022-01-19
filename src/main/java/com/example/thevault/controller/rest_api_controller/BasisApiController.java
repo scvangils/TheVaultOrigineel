@@ -22,6 +22,7 @@ public abstract class BasisApiController {
     protected LoginService loginService;
     protected TransactieService transactieService;
 
+    //TODO JavaDoc
     public BasisApiController(RegistrationService registrationService, AuthorizationService authorizationService, LoginService loginService, TransactieService transactieService) {
         super();
         this.registrationService = registrationService;

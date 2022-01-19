@@ -27,13 +27,22 @@ public class TransactieController extends BasisApiController {
 
     private final Logger logger = LoggerFactory.getLogger(TransactieController.class);
 
+    //TODO JavaDoc
     public TransactieController(RegistrationService registrationService,
                                 AuthorizationService authorizationService, LoginService loginService, TransactieService transactieService) {
         super(registrationService, authorizationService, loginService, transactieService);
         logger.info("New TransactieController");
     }
 
-    //TODO check: Is accesstoken nog geldig? In JavaScript 'getJWT' methode toepassen
+    /**
+     *  Deze methode verzorgt de gegevens die nodig zijn om een transactiepagina te kunnen aanmaken
+     *  op basis van de klant en de gewenste cryptomunt waarin hij/zij wil handelen
+     *  Als dit goed verloopt komt alle benogide informatie terug en een
+     *  HTTP-response 200 = OK
+     * @param transactieStartDto een object dat wordt aangemaakt op basis van gebruikersnaam van de gebruiker
+     *                           en cryptoid van de gekozen cryptomunt
+     * @return TransactiePaginaDto waar alle relevante gegevens in staan voor de transactiepagina
+     */
     @PostMapping("/transaction")
     public ResponseEntity<TransactiePaginaDto> transactieAanvraagHandler(@RequestBody TransactieStartDto transactieStartDto) {
         TransactiePaginaDto transactiePaginaDto = transactieService.openTransactiescherm(transactieStartDto);

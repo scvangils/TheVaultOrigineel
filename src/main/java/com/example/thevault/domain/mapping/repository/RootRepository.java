@@ -326,11 +326,13 @@ public class RootRepository {
         return transactieList;
     }
 
+    //TODO JavaDoc
     public double geefAssetVanGebruikerOrElseNull(Gebruiker gebruiker, Cryptomunt cryptomunt){
         return assetDAO.geefAantalCryptoInEigendom(gebruiker, cryptomunt);
     }
 
 
+    //TODO JavaDoc
     public Cryptomunt geefCryptomunt(int cryptomuntId){
         return cryptomuntDAO.geefCryptomunt(cryptomuntId);
     }
@@ -338,14 +340,22 @@ public class RootRepository {
         return cryptomuntDAO.geefAlleCryptomunten();
     }
 
+/**
+ * @Author Carmen
+ *
+ * Verzamelt alle benodigde informatie voor het transactiescherm en geeft deze terug
+ *
+ * @param transactieStartDto Gebruikersnaam en cryptoid
+ * @param TransactiePaginaDto alle informatie die nodig is voor het transactiescherm
+ */
     public TransactiePaginaDto openTransactieScherm(TransactieStartDto transactieStartDto){
         TransactiePaginaDto transactiePaginaDto = new TransactiePaginaDto();
         Klant klant = vindKlantByGebruikersnaam(transactieStartDto.getGebruikersNaam());
         Rekening rekening = klant.getRekening();
         Cryptomunt cryptomunt = cryptomuntDAO.geefCryptomunt(transactieStartDto.getCryptomuntId());
-        CryptoWaarde cryptoWaarde = cryptoWaardeDAO.getCryptoWaardeByCryptomuntAndDate(cryptomunt,LocalDate.now());
+        CryptoWaarde cryptoWaarde = haalMeestRecenteCryptoWaarde(cryptomunt);
         transactiePaginaDto.setKlantnaam(klant.getNaam());
-        transactiePaginaDto.setRekeningsaldo(rekening.getSaldo());
+        transactiePaginaDto.setRekeningsaldo(vraagSaldoOpVanGebruiker(klant));
         transactiePaginaDto.setIban(rekening.getIban());
         transactiePaginaDto.setCryptoNaam(cryptomunt.getName());
         transactiePaginaDto.setCryptoDagkoers(cryptoWaarde.getWaarde());

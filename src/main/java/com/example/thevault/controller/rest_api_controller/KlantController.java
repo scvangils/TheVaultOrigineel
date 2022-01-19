@@ -34,6 +34,7 @@ public class KlantController extends BasisApiController{
     private final Logger logger = LoggerFactory.getLogger(KlantController.class);
     private final KlantService klantService;
 
+    //TODO JavaDoc
     public KlantController(RegistrationService registrationService,
                            AuthorizationService authorizationService, LoginService loginService,
                            TransactieService transactieService, KlantService klantService) {
@@ -56,12 +57,15 @@ public class KlantController extends BasisApiController{
         RegistrationDto registrationDto = registrationService.registreerKlant(klant);
     return ResponseEntity.status(HttpStatus.CREATED).body(registrationDto);
     }
+
+    //TODO JavaDoc
     @PostMapping("/klantDashboard") // 401 response nodig indien token niet geldig
     public ResponseEntity<String> clientDashboardHandler(@RequestHeader("Authorization") String token, @RequestBody String inhoud){
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(inhoud);
     }
 
     //TODO waar gebruikersnaam vandaan halen?
+    //TODO JavaDoc
     @PostMapping("/validate/jwt")
     public ResponseEntity<String> valideerJWT(@RequestHeader("Authorization") String accessToken, @RequestBody String gebruikersnaam){
         accessToken = accessToken.substring(7); // Verwijder "Bearer "
@@ -73,6 +77,7 @@ public class KlantController extends BasisApiController{
                 return ResponseEntity.status(401).body("niet toegestaan");
     }
     //TODO return type aanpassen en dubbele code beperken
+    //TODO JavaDoc
     @PostMapping("/validate/refresh")
     public ResponseEntity<WelkomDTO> valideerRefreshToken(@CookieValue("RefreshToken") String refreshToken, @RequestBody String gebruikersnaam){
         Klant klant = loginService.vindKlantByGebruikersnaam(gebruikersnaam);
@@ -90,7 +95,7 @@ public class KlantController extends BasisApiController{
         throw new RefreshJWTFailedException();
     }
 
-
+    //TODO Verwijderen?
     /**
     @author Wim 20211207
     methode die inloggegevens ontvangt en laat checken of deze correct zijn en inlog succesvol wordt
@@ -118,6 +123,7 @@ public class KlantController extends BasisApiController{
         throw new LoginFailedException();
     }*/
 
+    //TODO JavaDoc
     @PostMapping("/login")
     public ResponseEntity<WelkomDTO> loginHandler(@RequestBody LoginDto loginDto) throws LoginFailedException {
         //roep loginValidatie aan in de service
@@ -135,6 +141,7 @@ public class KlantController extends BasisApiController{
         throw new LoginFailedException();
     }
 
+    //TODO JavaDoc
     public ResponseEntity<WelkomDTO> getResponseEntity(Klant klant, ResponseCookie responseCookie, String jwtToken) {
         return ResponseEntity.ok()
                 .header("Authorization", "Bearer " + jwtToken)
@@ -142,6 +149,7 @@ public class KlantController extends BasisApiController{
                 .body(new WelkomDTO(klant, klantService.geefNuttigePortefeuille(klant)));
     }
 
+    //TODO JavaDoc(private method?)
     private ResponseCookie getResponseCookie(TokenKlantCombinatie tokenKlantCombinatie) {
         return ResponseCookie.from("RefreshToken",
                 tokenKlantCombinatie.getKey().toString()).path("/validate/refresh").httpOnly(true).build();

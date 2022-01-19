@@ -154,6 +154,7 @@ public class TransactieService {
         return transactieBedragKoper;
     }
 
+    //TODO JavaDoc
     private void checkTransactionExceptions(Trigger verkoopTrigger, Trigger koopTrigger, double transactieBedragKoper) {
         Gebruiker koper = koopTrigger.getGebruiker();
         Gebruiker verkoper = verkoopTrigger.getGebruiker();
@@ -243,6 +244,11 @@ public class TransactieService {
         }
     }
 
+/**
+ * Vraag informatie op voor het transactiescherm op basis van gebruikersnaam en cryptoid (transactieStartDto)
+ * @param transactieStartDto Gebruikersnaam en cryptoid
+ * @return TransactiePaginaDto benodigde gegevens voor het transactiescherm
+ */
     public TransactiePaginaDto openTransactiescherm(TransactieStartDto transactieStartDto){
         return rootRepository.openTransactieScherm(transactieStartDto);
     }
