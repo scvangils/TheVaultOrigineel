@@ -9,6 +9,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
+/**
+ * Author: Ju-Sen Cheung
+ * Beschrijving: Het model voor Rekening welke is opgebouwd uit een iban, saldo en een bijgbehorende gebruiker.
+ */
+
 public class Rekening {
 
     private String iban;
@@ -29,7 +34,7 @@ public class Rekening {
     /**
      * De all-args constructor voor Rekening
      * @param iban uniek iban-nummer die elke rekening heeft
-     * @param saldo het bedrag wat op de rekening staat met cryptomunten te handelen
+     * @param saldo het bedrag wat op de rekening staat om met cryptomunten te kunnen handelen
      */
     public Rekening(String iban, double saldo) {
         this.gebruiker = null;
@@ -70,6 +75,11 @@ public class Rekening {
                 '}';
     }
 
+    /**
+     * Equals methode voor Rekening
+     * @param o het object waarmee de Rekening wordt vergeleken
+     * @return boolean: is het vergeleken object gelijk aan de Rekening of niet
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -78,6 +88,10 @@ public class Rekening {
         return Double.compare(rekening.saldo, saldo) == 0 && iban.equals(rekening.iban) && gebruiker.equals(rekening.gebruiker);
     }
 
+    /**
+     * Hashcode-methode voor Rekening, waarbij een hashcode wordt gegenereerd op basis van iban, saldo en gebruiker
+     * @return int de hashcode voor deze Rekening
+     */
     @Override
     public int hashCode() {
         return Objects.hash(iban, saldo, gebruiker);

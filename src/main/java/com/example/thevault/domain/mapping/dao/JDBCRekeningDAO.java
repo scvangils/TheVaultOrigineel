@@ -19,7 +19,8 @@ import java.sql.SQLException;
 
 /**
  * Author: Ju-Sen Cheung
- * Beschrijving: De DAO voor Rekening, waar enkele methodes instaan voor CRUD van Rekening.
+ * Beschrijving: De DAO voor Rekening, waar enkele methodes instaan voor de CRUD-functionaliteiten van Rekening en het
+ * vinden van een rekening en het opvragen van het saldo op een rekening.
  */
 
 @Repository
@@ -30,7 +31,10 @@ public class JDBCRekeningDAO implements RekeningDAO {
 
     JdbcTemplate jdbcTemplate;
 
-    //TODO JavaDoc
+    /**
+     * Constructor voor JDBCRekeningDAO
+     * @param jdbcTemplate injectie van het jdbcTemplate in de constructor
+     */
     @Autowired
     public JDBCRekeningDAO(JdbcTemplate jdbcTemplate) {
         super();
@@ -65,9 +69,8 @@ public class JDBCRekeningDAO implements RekeningDAO {
 
     /**
      * Met deze methode wordt er een rekening opgeslagen.
-     * @param rekening is de rekening die is aangemaakt bij het registreren van de klant of een rekening waarvan het
-     * saldo gewijzigd wordt na een transactie.
-     * @return rekening die is opgeslagen na registratie of na een wijziging
+     * @param rekening is de rekening die is aangemaakt bij het registreren van de gebruiker.
+     * @return rekening die is opgeslagen na registratie van een gebruiker.
      */
     @Override
     public Rekening slaRekeningOp(Rekening rekening)  {
@@ -76,9 +79,9 @@ public class JDBCRekeningDAO implements RekeningDAO {
     }
 
     /**
-     * Met deze methode kan je een rekening terugvinden als je de klant meegeeft.
-     * @param gebruiker is de klant van wie de rekening wordt opgevraagd.
-     * @return rekening waarvan je de iban en het saldo van klant kunt zien
+     * Met deze methode kan je een rekening terugvinden als je de gebruiker meegeeft.
+     * @param gebruiker is de gerbuiker van wie de rekening wordt opgevraagd.
+     * @return rekening waarvan je de iban en het saldo kunt zien van de gebruiker.
      */
     @Override
     public Rekening vindRekeningVanGebruiker(Gebruiker gebruiker) {
@@ -94,8 +97,8 @@ public class JDBCRekeningDAO implements RekeningDAO {
     }
 
     /**
-     * Met deze methode kan je het saldo van de rekening opvragen als je de klant meegeeft.
-     * @param gebruiker is de klant van wie het rekeningsaldo wordt opgevraagd.
+     * Met deze methode kan je het saldo van de rekening opvragen als je de gebruiker meegeeft.
+     * @param gebruiker is de gebruiker van wie het rekeningsaldo wordt opgevraagd.
      * @return het saldo van de rekening.
      */
     @Override
@@ -112,9 +115,9 @@ public class JDBCRekeningDAO implements RekeningDAO {
     }
 
     /**
-     * Met deze methode kan je het saldo van de rekening updaten als je de klant en het transactiebedrag meegeeft.
+     * Met deze methode kan je het saldo van de rekening updaten als je de gebruiker en het transactiebedrag meegeeft.
      * Het wijzigen van het saldo gebeurt doordat je een cryptomunt koopt of verkoopt via een transactie.
-     * @param gebruiker is de klant bij wie een transactie plaatsvindt.
+     * @param gebruiker is de gebruiker bij wie een transactie plaatsvindt.
      * @param transactiebedrag is het bedrag dat bij het rekeningsaldo opgeteld of afgetrokken wordt.
      * @return Als er voldoende saldo is voor de transactie, dan wordt het saldo geüpdatet. Zo niet, dan komt er een
      * bericht dat het saldo niet toereikend is.
@@ -131,10 +134,10 @@ public class JDBCRekeningDAO implements RekeningDAO {
     }
 
     /**
-     * Met deze methode kan je het nieuwe saldo in de rekening opslaan.
-     * @param gebruiker is de klant van er wie het saldo is geüpdatet.
-     * @param transactiebedrag is het nieuwe bedrag waarmee de rekening opgeslagen moet worden.
-     * @return geüpdatete rekening.
+     * Met deze methode kan je het nieuwe saldo na een transactie in de rekening opslaan.
+     * @param gebruiker is de gebruiker van wie het saldo geüpdatet moet worden.
+     * @param transactiebedrag is het bedrag waarmee het saldo van de rekening verhoogd of verlaagd moet worden.
+     * @return geüpdatete saldo.
      */
     @Override
     public Rekening wijzigSaldoVanGebruiker(Gebruiker gebruiker, double transactiebedrag) {

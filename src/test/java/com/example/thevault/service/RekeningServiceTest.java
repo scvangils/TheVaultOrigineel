@@ -44,7 +44,7 @@ class RekeningServiceTest {
     }
 
     /**
-     * @Author Wim Bultman
+     * Author Wim Bultman
      */
     @Test
     void createIban() {
@@ -53,7 +53,7 @@ class RekeningServiceTest {
     }
 
     /**
-     * @Author Ju-Sen Cheung
+     * Author Ju-Sen Cheung
      */
     @Test
     void creeerRekening() {
@@ -65,7 +65,7 @@ class RekeningServiceTest {
     }
 
     /**
-     * @Author Ju-Sen Cheung
+     * Author Ju-Sen Cheung
      */
     @Test
     void slaRekeningOp() {
@@ -78,7 +78,7 @@ class RekeningServiceTest {
     }
 
     /**
-     * @Author Ju-Sen Cheung
+     * Author Ju-Sen Cheung
      */
     @Test
     void vindRekeningVanKlant() {
@@ -92,7 +92,7 @@ class RekeningServiceTest {
     }
 
     /**
-     * @Author Ju-Sen Cheung
+     * Author Ju-Sen Cheung
      */
     @Test
     void vindRekeningVanNietBestaandeKlant() {
@@ -108,7 +108,7 @@ class RekeningServiceTest {
     }
 
     /**
-     * @Author Elise Olthof
+     * Author Elise Olthof
      */
     @Test
     void vraagSaldoOp() {
@@ -123,7 +123,7 @@ class RekeningServiceTest {
     }
 
     /**
-     * @Author Elise Olthof
+     * Author Elise Olthof
      */
     @Test
     void vraagSaldoOpVanNietBestaandeKlant() {
@@ -140,7 +140,7 @@ class RekeningServiceTest {
     }
 
     /**
-     * @Author Ju-Sen Cheung
+     * Author Ju-Sen Cheung
      */
     @Test
     void wijzigSaldo() {
@@ -152,7 +152,9 @@ class RekeningServiceTest {
         assertThat(actual).isEqualTo(expected);
     }
 
-
+    /**
+     * Author Ju-Sen Cheung
+     */
     @Test
     void wijzigSaldoInGebruikerRekeningJava(){
         Mockito.when(mockRepo.wijzigSaldoVanGebruiker(bestaandeKlant, 2000.0)).thenReturn(rekeningVoorWijzigSaldoExpected);

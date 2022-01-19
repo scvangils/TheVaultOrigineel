@@ -14,8 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Author Ju-Sen m.u.v. methode creeerIban
- * Servicelaag voor rekening waarin een rekening aangemaakt kan worden en informatie over een rekening opgevraagd of aangepast kan worden.
+ * Author Ju-Sen Cheung m.u.v. methode creeerIban
+ * Servicelaag voor rekening waarin een rekening aangemaakt kan worden en informatie over een rekening opgevraagd of
+ * aangepast kan worden.
  */
 
 @Service
@@ -28,7 +29,11 @@ public class RekeningService {
 
     private final Double STARTSALDO = 1000.0;
 
-    //TODO JavaDoc
+     /**
+     * Hier is sprake van Dependency Injection. Dee rekeningService wordt hier aangemaakt en deze maakt gebruik van de
+     * rootrepository. Deze wordt als het ware geïnjecteerd.
+     * @param rootRepository de repository waar de methodes kunnen worden aangeroepen die in deze klasse worden gebruikt.
+     */
     @Autowired
     public RekeningService(RootRepository rootRepository) {
         super();
@@ -46,11 +51,10 @@ public class RekeningService {
     }
 
     /**
-     * Deze methode zorgt ervoor dat er een rekening wordt aangemaakt voor een nieuwe klant
-     * met een juiste iban en vast startsaldo.
-     *
+     * Deze methode zorgt ervoor dat er een rekening wordt aangemaakt voor een nieuwe klant met een juiste iban en een
+     * vast startsaldo.
      * @param klant is de klant die meegegeven wordt waarvoor de rekening wordt aangemaakt.
-     * @return de aangemaakte rekening wordt teruggegeven.
+     * @return de aangemaakte rekening voor de nieuwe gebruiker wordt teruggegeven met een iban en startsaldo van € 1.000,-.
      */
     public Rekening creeerRekening(Klant klant) {
         String iban = creeerIban().toString();
@@ -62,45 +66,20 @@ public class RekeningService {
 
     /**
      * Deze methode zorgt ervoor dat een aangemaakte rekening wordt opgeslagen.
-     *
      * @param rekening is de meegegeven rekening welke opgeslagen moet worden.
-     * @return de aangemaakte rekening wordt doorgegeven aan de root repository
-     * voor het verdere opslagproces via de DAO in de database.
+     * @return de aangemaakte rekening wordt doorgegeven aan de RootRepository voor het verdere opslagproces via de DAO
+     * in de database.
      */
     public Rekening slaRekeningOp(Rekening rekening){
         return rootRepository.slaRekeningOp(rekening);
     }
 
-    /**
-     * Met deze methode kan je met een opgegeven klant de rekening opvragen als de klant
-     * terug te vinden is in de database.
-     *
-     * @param klant is de meegegeven klant voor wie je de rekening op wilt vragen.
-     * @throws UserNotExistsException als er geen klant wordt meegegeven of als de
-     * gebruikersnaam niet bestaat, wordt er een exceptie gegooid.
-     * @return als de gebruikersnaam overeenkomt met de gebruikersnaam in de database dan
-     * wordt de opgevraagde rekening teruggegeven.
-     */
-    //TODO Verwijderen?
- /*   public Rekening vindRekening(Klant klant) throws UserNotExistsException {
-        if (klant == null){
-            throw new UserNotExistsException();
-        }
-        if (rootRepository.vindKlantByGebruikersnaam(klant.getGebruikersnaam()) == null ){
-            throw new UserNotExistsException();
-        }
-        return rootRepository.vindRekeningVanKlant(klant);
-    }*/
-
-    /**
-     * Met deze methode kan je met een opgegeven klant de rekening opvragen als de klant
-     * terug te vinden is in de database.
-     *
-     * @param gebruiker is de meegegeven klant voor wie je de rekening op wilt vragen.
-     * @throws UserNotExistsException als er geen klant wordt meegegeven of als de
-     * gebruikersnaam niet bestaat, wordt er een exceptie gegooid.
-     * @return als de gebruikersnaam overeenkomt met de gebruikersnaam in de database dan
-     * wordt de opgevraagde rekening teruggegeven.
+     /**
+     * Met deze methode kan je met een opgegeven gebruiker de rekening opvragen als de gebruiker voorkomt in de database.
+     * @param gebruiker is de meegegeven gebruiker voor wie de rekening wordt opgevraagd.
+     * @throws UserNotExistsException als er geen gebruiker wordt meegegeven of als de gebruikersnaam niet bestaat,
+     * wordt er een exceptie gegooid.
+     * @return de opgevraagde rekening wordt teruggegeven.
      */
     public Rekening vindRekening(Gebruiker gebruiker) throws UserNotExistsException {
         if (gebruiker == null){
@@ -113,33 +92,25 @@ public class RekeningService {
     }
 
     /**
-     * Met deze methode kan je het rekeningsaldo van de klant opvragen als de klant
-     * terug te vinden is in de database.
-     *
-     * @param gebruiker is de meegegeven klant voor wie je het rekeningsaldo op wilt vragen.
-     * @throws UserNotExistsException als er geen klant wordt meegegeven of als de
-     * gebruikersnaam niet bestaat, wordt er een exceptie gegooid.
-     * @return als de gebruikersnaam overeenkomt met de gebruikersnaam in de database dan
-     * wordt het saldo van de opgevraagde rekening teruggegeven.
+     * Met deze methode kan je het rekeningsaldo van de gebruiker opvragen als de gerbuiker voorkomt in de database.
+     * @param gebruiker is de meegegeven gebruiker voor wie het rekeningsaldo wordt opgevraagd.
+     * @throws UserNotExistsException als er geen gebruiker wordt meegegeven of als de gebruikersnaam niet bestaat,
+     * wordt er een exceptie gegooid.
+     * @return het saldo van de opgevraagde rekening wordt teruggegeven.
      */
     public double vraagSaldoOp(Gebruiker gebruiker) throws UserNotExistsException{
         return vindRekening(gebruiker).getSaldo();
     }
 
     /**
-     * Met deze methode kan je het rekeningsaldo van de klant wijzigen als de klant
-     * terug te vinden is in de database.
-     *
-     * @param gebruiker is de meegegeven klant voor wie je het rekeningsaldo op wilt wijzigen.
-     * @param transactiebedrag is het bedrag waarnaar je het wil wijzigen.
-     * @throws UserNotExistsException als er geen klant wordt meegegeven of als de
-     * gebruikersnaam niet bestaat, wordt er een exceptie gegooid.
-     * @return als de gebruikersnaam overeenkomt met de gebruikersnaam in de database dan
-     * wordt het saldo van de opgevraagde rekening gewijzigd naar het opgegeven bedrag.
+     * Met deze methode kan je het rekeningsaldo van de gebruiker wijzigen als er een tarnsactie heeft plaatsgevonden.
+     * @param gebruiker is de meegegeven gebruiker voor wie het rekeningsaldo wordt opgevraagd.
+     * @param transactiebedrag is het bedrag van de transactie.
+     * @throws UserNotExistsException als er geen gebruiker wordt meegegeven of als de gebruikersnaam niet bestaat,
+     * wordt er een exceptie gegooid.
+     * @return het saldo van de opgevraagde rekening wordt gewijzigd na de transactie.
      */
-    //TODO Verwijderen?
-    //parameter bedrag = transactiebedrag NIET saldo van rekening
-    //IPV rekening geven we een klant mee
+
     public Rekening wijzigSaldo(Gebruiker gebruiker, double transactiebedrag) {
         return rootRepository.wijzigSaldoVanGebruiker(gebruiker, transactiebedrag);
     }
