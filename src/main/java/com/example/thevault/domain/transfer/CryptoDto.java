@@ -19,11 +19,14 @@ public class CryptoDto {
     private double prijs;
     private double aantal;
 
+    //TODO JavaDoc
+    //TODO Verwijderen?
     public CryptoDto(){
         super();
         logger.info("new cryptoDTO no args");
     }
 
+    //TODO JavaDoc
     public CryptoDto(String name, String afkorting, double prijs, double aantal) {
         this.name = name;
         this.afkorting = afkorting;
@@ -51,19 +54,19 @@ public class CryptoDto {
         this.afkorting = afkorting;
     }
 
-    public double getPrijs() {
-        return prijs;
-    }
-
-    public void setPrijs(double prijs) {
-        this.prijs = prijs;
-    }
-
     public double getAantal() {
         return aantal;
     }
 
     public void setAantal(double aantal) {
         this.aantal = aantal;
+    }
+
+    public double getPrijs() {
+        return prijs;
+    }
+
+    public void setPrijs(double prijs) {
+        this.prijs = prijs;
     }
 }

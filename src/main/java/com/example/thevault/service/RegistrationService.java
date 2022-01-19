@@ -20,6 +20,7 @@ public class RegistrationService {
     private final AdresService adresService;
     private final RekeningService rekeningService;
 
+    //TODO JavaDoc
     @Autowired
     public RegistrationService(KlantService klantService, AdresService adresService, RekeningService rekeningService) {
         super();
@@ -47,5 +48,4 @@ public class RegistrationService {
         rekeningService.slaRekeningOp(klant.getRekening());
         return new RegistrationDto(klant);
     }
-
 }

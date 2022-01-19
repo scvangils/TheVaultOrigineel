@@ -31,12 +31,13 @@ public abstract class Trigger {
     protected  double aantal;
     protected LocalDate datum;
 
-
-
+    //TODO JavaDoc
     public Trigger() {
         super();
         logger.info("New Trigger");
     }
+
+    //TODO JavaDoc
     public Trigger(Gebruiker gebruiker, Cryptomunt cryptomunt, double triggerPrijs, double aantal){
         super();
         this.triggerId = DEFAULT_TRIGGER_ID;
@@ -47,6 +48,8 @@ public abstract class Trigger {
 
         logger.info("New Trigger, all-args constructor");
     }
+
+    //TODO JavaDoc
     public Trigger(int triggerId, double triggerPrijs, double aantal, LocalDate datum) {
         this(null, null, triggerPrijs,aantal);
         this.triggerId = triggerId;
@@ -101,7 +104,6 @@ public abstract class Trigger {
     public void setAantal(double aantal) {
         this.aantal = aantal;
     }
-
 
     @Override
     public String toString() {

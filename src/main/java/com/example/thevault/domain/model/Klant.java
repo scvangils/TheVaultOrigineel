@@ -27,11 +27,13 @@ public class Klant extends Gebruiker {
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Klant.class);
 
+    //TODO JavaDoc
     public Klant(){
         super();
         logger.info("Lege klant, no args constructor");
     }
 
+    //TODO JavaDoc
     public Klant(String gebruikersnaam, String wachtwoord,
                  String naam, Adres adres, long bsn, LocalDate geboortedatum) {
         super(gebruikersnaam, wachtwoord);
@@ -41,11 +43,14 @@ public class Klant extends Gebruiker {
         this.geboortedatum = geboortedatum;
         logger.info("New Klant, all args constructor");
     }
+
+    //TODO JavaDoc
     public Klant(String gebruikersnaam, String wachtwoord,
                  String naam, long bsn, LocalDate geboortedatum){
         this(gebruikersnaam, wachtwoord, naam, null, bsn, geboortedatum);
         logger.info("New Klant, rowMapperConstructor");
     }
+
     public String getNaam() {
         return naam;
     }
@@ -78,7 +83,6 @@ public class Klant extends Gebruiker {
         this.geboortedatum = geboortedatum;
     }
 
-
     @Override
     public String toString() {
         return  "Klant{" + super.toString() +
@@ -90,6 +94,7 @@ public class Klant extends Gebruiker {
                 ", geboortedatum=" + geboortedatum +
                 '}';
     }
+
 //TODO nadenken over noodzakelijke velden
     @Override
     public boolean equals(Object o) {

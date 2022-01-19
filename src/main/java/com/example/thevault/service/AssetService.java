@@ -15,11 +15,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * @Author: Carmen Rietdijk
+ * Author: Carmen
  * Beschrijving: de servicelaag voor asset, waarin informatie over assets kan worden opgeslagen, aangepast en opgevraagd
  * inclusief het vullen van de portefeuille
  */
-
 
 @Service
 public class AssetService {
@@ -67,7 +66,6 @@ public class AssetService {
      * @param aantal de hoeveelheid die verhandeld wordt
      * @return Asset de asset die is aangepast
      */
-
     public Asset wijzigAssetGebruiker(Gebruiker gebruiker, Cryptomunt cryptomunt, double aantal){
         List<Asset> portefeuille = vulPortefeuilleVanGebruiker(gebruiker);
         if(portefeuille != null) {
@@ -92,5 +90,4 @@ public class AssetService {
     public List<Cryptomunt> geefAlleCryptomunten(){
         return rootRepository.geefAlleCryptomunten();
     }
-
 }

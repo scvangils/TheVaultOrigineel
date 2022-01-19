@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * @Author Ju-Sen m.u.v. methode creeerIban
+ * Author Ju-Sen m.u.v. methode creeerIban
  * Servicelaag voor rekening waarin een rekening aangemaakt kan worden en informatie over een rekening opgevraagd of aangepast kan worden.
  */
 
@@ -28,15 +28,16 @@ public class RekeningService {
 
     private final Double STARTSALDO = 1000.0;
 
-
+    //TODO JavaDoc
     @Autowired
     public RekeningService(RootRepository rootRepository) {
         super();
         this.rootRepository = rootRepository;
         logger.info("Nieuwe RekeningService.");
     }
+
     /**
-     * @Author Wim Bultman
+     * Author Wim Bultman
      * creeert IBAN, mbv org.iban4j.Iban library, zie https://github.com/arturmkrtchyan/iban4j
      */
     public static Iban creeerIban(){
@@ -80,6 +81,7 @@ public class RekeningService {
      * @return als de gebruikersnaam overeenkomt met de gebruikersnaam in de database dan
      * wordt de opgevraagde rekening teruggegeven.
      */
+    //TODO Verwijderen?
  /*   public Rekening vindRekening(Klant klant) throws UserNotExistsException {
         if (klant == null){
             throw new UserNotExistsException();
@@ -135,16 +137,10 @@ public class RekeningService {
      * @return als de gebruikersnaam overeenkomt met de gebruikersnaam in de database dan
      * wordt het saldo van de opgevraagde rekening gewijzigd naar het opgegeven bedrag.
      */
-
+    //TODO Verwijderen?
     //parameter bedrag = transactiebedrag NIET saldo van rekening
     //IPV rekening geven we een klant mee
     public Rekening wijzigSaldo(Gebruiker gebruiker, double transactiebedrag) {
         return rootRepository.wijzigSaldoVanGebruiker(gebruiker, transactiebedrag);
-    }
-
-
-// TODO verwijderen
-    public RootRepository getRootRepository() {
-        return rootRepository;
     }
 }

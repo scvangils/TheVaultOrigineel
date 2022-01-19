@@ -9,6 +9,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
+/**
+ * Author: Carmen
+ * Beschrijving: er wordt een object aangemaakt met gegevens benodigd voor het opvragen van de gegevens nodig voor
+ * het vullen van de transactiepagina
+ */
+
 public class TransactieStartDto {
 
     @JsonIgnore
@@ -17,11 +23,16 @@ public class TransactieStartDto {
     private String gebruikersNaam;
     private int cryptomuntId;
 
+    /**
+     * All-args constructor voor transactieStartDto
+     * @param gebruikersNaam
+     * @param cryptomuntId
+     */
     public TransactieStartDto(String gebruikersNaam, int cryptomuntId) {
         super();
         this.gebruikersNaam = gebruikersNaam;
         this.cryptomuntId = cryptomuntId;
-        logger.info("New TransactieStartDto");
+        logger.info("New all-args TransactieStartDto");
     }
 
     public String getGebruikersNaam() {
@@ -30,6 +41,14 @@ public class TransactieStartDto {
 
     public int getCryptomuntId() {
         return cryptomuntId;
+    }
+
+    public void setGebruikersNaam(String gebruikersNaam) {
+        this.gebruikersNaam = gebruikersNaam;
+    }
+
+    public void setCryptomuntId(int cryptomuntId) {
+        this.cryptomuntId = cryptomuntId;
     }
 
     @Override

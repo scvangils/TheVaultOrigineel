@@ -21,11 +21,15 @@ public class TransactieDataRange {
     private int gebruikerIdMaximum;
     private int maand;
 
+    //TODO JavaDoc
+    //TODO Verwijderen?
     public TransactieDataRange() {
         super();
         logger.info("New TransactieDataRange");
     }
 
+    //TODO JavaDoc
+    //TODO Verwijderen?
     public TransactieDataRange(int gebruikerIdMinimum, int gebruikerIdMaximum, int maand) {
         this.gebruikerIdMinimum = gebruikerIdMinimum;
         this.gebruikerIdMaximum = gebruikerIdMaximum;

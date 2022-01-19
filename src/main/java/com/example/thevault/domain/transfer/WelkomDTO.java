@@ -20,10 +20,14 @@ public class WelkomDTO {
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(LoginDto.class);
 
+    //TODO JavaDoc
+    //TODO Verwijderen?
     public WelkomDTO() {
         super();
         logger.info("New WelkomDTO, no args constructor");
     }
+
+    //TODO JavaDoc
     //TODO StackOverflowError wegwerken
     public WelkomDTO(Klant klant, List<CryptoDto> portefeuille){
         super();

@@ -18,7 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * @Author: Ju-Sen Cheung
+ * Author: Ju-Sen Cheung
  * Beschrijving: De DAO voor Rekening, waar enkele methodes instaan voor CRUD van Rekening.
  */
 
@@ -30,6 +30,7 @@ public class JDBCRekeningDAO implements RekeningDAO {
 
     JdbcTemplate jdbcTemplate;
 
+    //TODO JavaDoc
     @Autowired
     public JDBCRekeningDAO(JdbcTemplate jdbcTemplate) {
         super();

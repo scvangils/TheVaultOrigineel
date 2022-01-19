@@ -11,3 +11,5 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(value = HttpStatus.NOT_ACCEPTABLE, reason = "Username already registered.")
 public class RegistrationFailedException extends RuntimeException {}
 
+//TODO Waar is de method?
+

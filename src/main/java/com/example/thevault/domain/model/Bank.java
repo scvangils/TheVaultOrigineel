@@ -28,12 +28,11 @@ public class Bank extends Gebruiker{
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Bank.class);
 
-
-
     private Bank() {
         super();
         logger.info("New Bank");
     }
+
     private Bank(Rekening rekening, List<Asset> portefeuille){
         super();
         this.gebruikerId = ID_BANK;
@@ -44,26 +43,10 @@ public class Bank extends Gebruiker{
         this.rekening = rekening;
         this.portefeuille = portefeuille;
         this.fee = BANK_FEE;
-
     }
+
     public static Bank getInstance(){
         return instance;
-    }
-
-    public String getBanknaam() {
-        return banknaam;
-    }
-
-    public void setBanknaam(String banknaam) {
-        this.banknaam = banknaam;
-    }
-
-    public String getBankcode() {
-        return bankcode;
-    }
-
-    public void setBankcode(String bankcode) {
-        this.bankcode = bankcode;
     }
 
     public Rekening getRekening() {
@@ -84,6 +67,22 @@ public class Bank extends Gebruiker{
 
     public double getFee() {
         return fee;
+    }
+
+    public String getBanknaam() {
+        return banknaam;
+    }
+
+    public void setBanknaam(String banknaam) {
+        this.banknaam = banknaam;
+    }
+
+    public String getBankcode() {
+        return bankcode;
+    }
+
+    public void setBankcode(String bankcode) {
+        this.bankcode = bankcode;
     }
 
     public void setFee(double fee) {

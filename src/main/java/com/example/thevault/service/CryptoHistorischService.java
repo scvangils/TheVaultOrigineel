@@ -18,18 +18,18 @@ import java.util.List;
 @Service
 public class CryptoHistorischService implements ApplicationListener<ContextRefreshedEvent> {
 
-
     private final Logger logger = LoggerFactory.getLogger(CryptoHistorischService.class);
 
     private final RootRepository rootRepository;
 
+    //TODO JavaDoc
     public CryptoHistorischService(RootRepository rootRepository) {
         super();
         this.rootRepository = rootRepository;
         logger.info("New CryptoHistorischService");
     }
 
-
+    //TODO JavaDoc
     public CryptoWaardenHistorischDto maakCryptoWaardeArray(Cryptomunt cryptomunt){
         // bepalen wat voor soort array moet geschreven worden
         List<CryptoWaarde> cryptoWaardeList = rootRepository.haalAlleCryptoWaardesVanCryptomunt(cryptomunt);
@@ -42,19 +42,21 @@ public class CryptoHistorischService implements ApplicationListener<ContextRefre
         return new CryptoWaardenHistorischDto(datum, waarde);
     }
 
+    //TODO JavaDoc
     public Cryptomunt[] maakCryptoMuntArray(){
         return rootRepository.geefAlleCryptomunten().toArray(Cryptomunt[]::new);
     }
 
+    //TODO JavaDoc
     public Cryptomunt getCryptoMuntOpNaam(String naam){
        return CryptoWaardeService.cryptoLijst().stream()
                .filter(cryptomunt -> cryptomunt.getName().equals(naam)).findFirst().orElse(null);
     }
 
-
+    //TODO JavaDoc?
+    //TODO Verwijderen?
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-
     /*    List<CryptoWaarde> cryptoWaardeList = rootRepository.haalAlleCryptoWaardesVanCryptomunt(getCryptoMuntOpNaam("bitcoin"));
         cryptoWaardeList.forEach(System.out::println);*/
     }

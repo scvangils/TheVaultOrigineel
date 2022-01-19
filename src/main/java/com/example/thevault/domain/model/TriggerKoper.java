@@ -12,16 +12,19 @@ public class TriggerKoper extends Trigger{
 
     private final Logger logger = LoggerFactory.getLogger(TriggerKoper.class);
 
+    //TODO JavaDoc
     public TriggerKoper() {
         super();
         logger.info("New TriggerKoper");
     }
 
+    //TODO JavaDoc
     public TriggerKoper(Gebruiker gebruiker, Cryptomunt cryptomunt, double triggerPrijs, double aantal) {
         super(gebruiker, cryptomunt, triggerPrijs, aantal);
         logger.info("New TriggerKoperVeelGebruikt");
     }
 
+    //TODO JavaDoc
     public TriggerKoper(int triggerId, double triggerPrijs, double aantal, LocalDate datum) {
         super(triggerId, triggerPrijs, aantal, datum);
         logger.info("New TriggerKoperRowMapper");
@@ -31,6 +34,4 @@ public class TriggerKoper extends Trigger{
     public String toString() {
         return "TriggerKoper:" + super.toString();
     }
-
-
 }

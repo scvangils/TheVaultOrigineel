@@ -26,6 +26,7 @@ import java.util.UUID;
 public class AuthorizationService {
     private final static String SECRET_KEY = "secretTheVaultKey5dRQPD_sCsArU";
     private int accessExpirationDateInMinutes = 2;
+    //TODO Verwijderen?
     private int refreshExpirationDateInMinutes;
     //protected final TokenKlantCombinatieDao tokenKlantCombinatieDao;
     public static TokenKlantCombinatieDao tokenKlantCombinatieDao;
@@ -33,6 +34,7 @@ public class AuthorizationService {
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(AuthorizationService.class);
 
+    //TODO JavaDoc
     @Autowired
     public AuthorizationService(TokenKlantCombinatieDao tokenKlantCombinatieDao) {
         super();
@@ -51,6 +53,7 @@ public class AuthorizationService {
         return refreshToken;
     }
 
+    //TODO Kortere methodes van maken?
     /**
      * Genereert een access token middels een JWT (JSON Web Token). Hierbij wordt
      * het HMAC256 algorithme gebruikt om het token te signeren. De token
@@ -87,11 +90,8 @@ public class AuthorizationService {
         return accessToken;
     }
 
-
+    //TODO Wat is beter try catch of een throw exception?????
     /**
-     * REVIEW
-     * TO DO: Wat is beter try catch of een throw exception?????
-     *
      * Valideert het access token. Deze methode kan worden gebruikt zodra de klant
      * een nieuwe request verstuurt. De validatie van de methode hangt onder andere
      * af van de vervaldatum
@@ -117,7 +117,6 @@ public class AuthorizationService {
         return true;
     }
 
-
     /**
      * Authoriseert de klant doormiddel van het refresh token. Dit token wordt
      * in de database opgezocht. Als er als een klant-token combinatie bestaat
@@ -137,7 +136,6 @@ public class AuthorizationService {
             tokenKlantCombinatieDao.delete(optioneleCombinatie.get().getKey());
         }
         return getNewTokenKlantCombinatie(klant);
-
     }
 
     private TokenKlantCombinatie getNewTokenKlantCombinatie(Klant klant) {
@@ -147,6 +145,7 @@ public class AuthorizationService {
         return tokenKlantCombinatie;
     }
 
+    //TODO JavaDoc
     public TokenKlantCombinatie controleerRefreshToken(Klant klant, String refreshToken){
         Optional<TokenKlantCombinatie> optioneleCombinatie = tokenKlantCombinatieDao.vindTokenKlantCombinatieMetKlant(klant);
         if (optioneleCombinatie.isPresent()) {
@@ -157,9 +156,10 @@ public class AuthorizationService {
             tokenKlantCombinatieDao.delete(optioneleCombinatie.get().getKey());
         }
         return getNewTokenKlantCombinatie(klant);
-
     }
 
+    //TODO JavaDoc
+    //TODO Huh? Een main method? Verwijderen?
     public static void main(String[] args) {
         Klant test = new Klant( "HarryBeste", "210jklf", "", 101212,LocalDate.of(1991,
                 1, 12));
@@ -168,11 +168,5 @@ public class AuthorizationService {
         authorizationService.genereerRefreshToken();
         authorizationService.genereerAccessToken(test);
         //authorizationService.valideerAccessToken(authorizationService.genereerAccessToken(test), test);
-
-
-
     }
-
-
-
 }

@@ -37,6 +37,7 @@ public class KlantService implements ApplicationListener<ContextRefreshedEvent> 
     public final static int VOLWASSEN_LEEFTIJD = 18;
     public final static int MINIMALE_WACHTWOORDLENGTE = 8; // TODO navragen of dit public of private moet
 
+    //TODO JavaDoc
     @Autowired
     public KlantService(RootRepository rootRepository) {
         super();
@@ -44,11 +45,12 @@ public class KlantService implements ApplicationListener<ContextRefreshedEvent> 
         logger.info("New KlantService.");
     }
 
+    //TODO JavaDoc
+    //TODO Vullen of verwijderen?
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         // hier kan het dus ook
     }
-
 
     /**
      * Deze methode zoekt of er in de database al een klant bestaat met deze gebruikersnaam
@@ -72,8 +74,10 @@ public class KlantService implements ApplicationListener<ContextRefreshedEvent> 
     public Klant vindKlantById(int gebruikerId){
         return rootRepository.vindKlantById(gebruikerId);
     }
+
+    //TODO Verwijderen?
     /**
-     * @Author Carmen
+     * Author: Carmen
      * In de portefeuille van de klant worden de assets vervangen door AssetDTO objecten, waarbij alleen de
      * voor de klant nuttige informatie wordt doorgegeven (deze methode stond eerst in AssetService)
      * @param klant de klant die de portefeuille oproept
@@ -121,7 +125,6 @@ public class KlantService implements ApplicationListener<ContextRefreshedEvent> 
         return null;
     }
 
-
     /**
      * Deze methode probeert een nieuwe klant te registreren.
      * Als de gegevens correct zijn ingevuld en de gebruikersnaam nog niet bestaat,
@@ -131,7 +134,6 @@ public class KlantService implements ApplicationListener<ContextRefreshedEvent> 
      * @param klant een Klant-object is wordt aangemaakt op basis van ingevoerde gegevens
      * @return het klant-object met het gealtereerde wachtwoord
      */
-
     public Klant registreerKlant(Klant klant){
         bsnExceptionHandler(klant);
         wachtWoordExceptionHandler(klant);
@@ -155,6 +157,7 @@ public class KlantService implements ApplicationListener<ContextRefreshedEvent> 
             throw new RegistrationFailedException();
         }
     }
+
     /**
      * Deze methode zorgt ervoor dat bij een te lage leeftijd de juiste exception wordt aangeroepen
      *
@@ -180,6 +183,7 @@ public class KlantService implements ApplicationListener<ContextRefreshedEvent> 
             throw new PasswordNotSuitableException(message);
         }
     }
+
     /**
      * Deze methode zorgt ervoor dat bij een niet correct ingevoerde BSN de juiste exception wordt aangeroepen
      *
@@ -191,6 +195,7 @@ public class KlantService implements ApplicationListener<ContextRefreshedEvent> 
         }
     }
 
+    //TODO Verwijderen?
 //    /**
 //     * Wim 20211207
 //     * @param gebruikersNaam
@@ -238,12 +243,4 @@ public class KlantService implements ApplicationListener<ContextRefreshedEvent> 
     public boolean checkWachtwoordFormat(Klant klant){
        return !klant.getWachtwoord().contains(" ");
     }
-
-
-    //TODO verwijderen?
-    public RootRepository getRootRepository() {
-        return rootRepository;
-    }
-
-
 }

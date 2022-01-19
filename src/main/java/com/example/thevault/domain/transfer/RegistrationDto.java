@@ -27,16 +27,18 @@ public class RegistrationDto {
     private final String LET_OP = "Onthoud je gebruikersnaam, %s, goed!";
     private final String IBAN = "Dit is je IBAN: %s.";
 
-
+    //TODO JavaDoc
+    //TODO Verwijderen?
     public RegistrationDto() {
         super();
         logger.info("New RegistrationDto no args");
     }
+
+    //TODO JavaDoc
     public RegistrationDto(Klant klant){
         this.naam = String.format(WELKOM, klant.getNaam());
         this.gebruikersnaam = String.format(LET_OP, klant.getGebruikersnaam());
         this.iban = String.format(IBAN, klant.getRekening().getIban());
-
     }
 
     public String getNaam() {
@@ -62,7 +64,6 @@ public class RegistrationDto {
     public void setIban(String iban) {
         this.iban = iban;
     }
-
 
     @Override
     public String toString() {

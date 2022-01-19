@@ -33,6 +33,7 @@ public class TransactieService {
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(TransactieService.class);
 
+    //TODO JavaDoc
     @Autowired
     public TransactieService(RootRepository rootRepository, KlantService klantService, RekeningService rekeningService,
                              AssetService assetService) {
@@ -88,6 +89,7 @@ public class TransactieService {
         getBedragVerkoperBijKlantTransactie(aantal, prijs);
         return transactieBedragVerkoper;
     }
+
     /**
      * Deze methode bepaalt het bedrag dat de koper moet betalen voor de transactie
      *
@@ -103,6 +105,7 @@ public class TransactieService {
                 getBedragKoperBijKlantTransactie(aantal, prijs);
         return transactieBedragKoper;
     }
+
     /**
      * Deze methode bepaalt het bedrag dat de verkoper krijgt voor de transactie als de bank geen partij is
      *
@@ -115,6 +118,7 @@ public class TransactieService {
         transactieBedragVerkoper = aantal * prijs - TRANSACTION_FEE * DEEL_TRANSACTION_FEE_VERKOPER;
         return transactieBedragVerkoper;
     }
+
     /**
      * Deze methode bepaalt het bedrag dat de koper moet betalen voor de transactie als de bank geen partij is
      *
@@ -127,6 +131,7 @@ public class TransactieService {
         transactieBedragKoper = aantal * prijs + TRANSACTION_FEE * DEEL_TRANSACTION_FEE_KOPER;
         return transactieBedragKoper;
     }
+
     /**
      * Deze methode bepaalt het bedrag dat de verkoper krijgt voor de transactie als de bank de koper is
      *
@@ -139,6 +144,7 @@ public class TransactieService {
         transactieBedragVerkoper = (bankIsVerkoper) ? aantal * prijs: aantal * prijs - TRANSACTION_FEE;
         return transactieBedragVerkoper;
     }
+
     /**
      * Deze methode bepaalt het bedrag dat de verkoper krijgt voor de transactie als de bank de verkoper is
      *
@@ -152,7 +158,7 @@ public class TransactieService {
         return transactieBedragKoper;
     }
 
-    //TODO JavaDoc
+    //TODO JavaDoc?
     private void checkTransactionExceptions(Trigger verkoopTrigger, Trigger koopTrigger, double transactieBedragKoper) {
         Gebruiker koper = koopTrigger.getGebruiker();
         Gebruiker verkoper = verkoopTrigger.getGebruiker();
@@ -161,7 +167,6 @@ public class TransactieService {
         saldoTooLowExceptionHandler(koper, transactieBedragKoper);
         notEnoughCryptoExceptionHandler(verkoper, cryptomunt, aantal);
     }
-
 
     /**
      * Deze methode zorgt ervoor dat de transactie opgeslagen wordt en alle relevante rekeningen en
@@ -184,7 +189,7 @@ public class TransactieService {
 
     }
 
-
+    //TODO Wordt deze methode later gebruikt? Anders verwijderen?
     /**
      * Berekent de prijs wanneer direct met de bank gehandeld wordt door het aantal te verkopen of te kopen
      * cryptomunten met de huidige koerswaarde van de cryptomunt te vermenigvuldigen
@@ -196,7 +201,6 @@ public class TransactieService {
         return rootRepository.haalCryptoWaardeOpDatum(cryptomunt, datumEnTijd.toLocalDate()).getWaarde();
     }
 
-
     /**
      * Methode slaat transactie op
     *
@@ -207,7 +211,7 @@ public class TransactieService {
         return rootRepository.slaTransactieOp(transactie);
     }
 
-    /***
+    /**
      * Checkt of de verkoper genoeg cryptomunten heeft om de transactie
      * te kunnen sluiten
      *
@@ -241,6 +245,8 @@ public class TransactieService {
             throw new BalanceTooLowException();
         }
     }
+
+    //TODO JavaDoc
     public Trigger maakBankTrigger(Trigger klantTrigger){
         double prijs = rootRepository.haalMeestRecenteCryptoWaarde(klantTrigger.getCryptomunt()).getWaarde();
         double aantal = klantTrigger.getAantal();
@@ -252,6 +258,7 @@ public class TransactieService {
     }
 
 /**
+ * Author: Carmen
  * Vraag informatie op voor het transactiescherm op basis van gebruikersnaam en cryptoid (transactieStartDto)
  * @param transactieStartDto Gebruikersnaam en cryptoid
  * @return TransactiePaginaDto benodigde gegevens voor het transactiescherm

@@ -13,8 +13,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class TheVaultApplication {
 
-
-
+    //TODO JavaDoc?
     public static void main(String[] args) {
         SpringApplication.run(TheVaultApplication.class, args);
 

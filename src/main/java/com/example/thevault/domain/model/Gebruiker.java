@@ -26,12 +26,13 @@ public abstract class Gebruiker {
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Gebruiker.class);
 
+    //TODO JavaDoc
     public Gebruiker() {
         super();
         logger.info("Lege Gebruiker, no args constructor");
     }
 
-
+    //TODO JavaDoc
     public Gebruiker(String gebruikersnaam, String wachtwoord){
         this.gebruikerId = DEFAULT_GEBRUIKERID;
         this.gebruikersnaam = gebruikersnaam;

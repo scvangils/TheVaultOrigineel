@@ -27,6 +27,7 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
 
     private final Logger logger = LoggerFactory.getLogger(TriggerService.class);
 
+    //TODO JavaDoc
     public TriggerService(RootRepository rootRepository, TransactieService transactieService) {
         super();
         this.rootRepository = rootRepository;
@@ -63,6 +64,7 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
         }
         return transactie;
     }
+
     private void maakTriggerTabelUpToDate(Trigger trigger) {
         if(checkTriggerKoper(trigger)){
             vergelijkAlleVerkoopTriggersMetBeschikbareFondsen();
@@ -92,6 +94,7 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
         }
             return transactie;
     }
+
     /**
      * Maakt een transactie op basis van het bod en de vraagprijs van twee partijen.
      *
@@ -103,6 +106,7 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
     public Transactie sluitTransactieAfMetKlant(Trigger triggerKoper, Trigger triggerVerkoper){
                 return transactieService.sluitTransactie(LocalDateTime.now(), triggerKoper, triggerVerkoper);
             }
+
     /**
      * Deze methode kijkt na of iemand de gewenste trigger kan inzetten.
      * Bij een triggerKoper wordt het saldo nagekeken en vergeleken met de mogelijke kosten,
@@ -140,8 +144,6 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
         return schaduwSaldo;
     }
 
-
-
     private boolean checkSchaduwAsset(Trigger trigger) {
         return Precision.compareTo(schaduwAantalAsset(trigger.getGebruiker(), trigger.getCryptomunt()),
                 trigger.getAantal(), 1) >= 0;
@@ -177,6 +179,7 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
 
        return rootRepository.slaTriggerOp(trigger);
     }
+
     /** Deze methode zoekt voor een triggerKoper in de triggerVerkoperTabel een match
      * om een transactie mee aan te gaan.
      * Gegeven meerdere matches, eerste het grootste verschil tussen vraag en aanbod,
@@ -188,6 +191,7 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
     public Trigger vindMatch(Trigger trigger){
         return rootRepository.vindMatch(trigger);
     }
+
     /**
      * Deze methode verwijdert een trigger op basis van zijn id.
      *
@@ -197,6 +201,7 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
     public int verwijderTrigger(Trigger trigger){
         return rootRepository.verwijderTrigger(trigger);
     }
+
     /**
      * Geeft alle triggers van een bepaald type aanwezig in de database
      *
@@ -206,6 +211,7 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
     public List<Trigger> vindAlleTriggers(String koperOfVerkoper){
         return rootRepository.vindAlleTriggers(koperOfVerkoper);
     }
+
     /**
      * Geeft alle triggers van een bepaald type aanwezig in de database van een bepaalde gebruiker
      *
@@ -216,6 +222,7 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
     public List<Trigger> vindTriggersByGebruiker(Gebruiker gebruiker, String koperOfVerkoper){
         return rootRepository.vindTriggersByGebruiker(gebruiker, koperOfVerkoper);
     }
+
     private List<Trigger> vindTriggersByGebruikerByCryptomunt(Gebruiker gebruiker, Cryptomunt cryptomunt){
         System.out.println("De cryptomunt waarvan een lijst wordt gemaakt: " + cryptomunt);
         List<Trigger> triggerList = vindTriggersByGebruiker(gebruiker, VERKOPER);
@@ -229,16 +236,21 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
                 return triggerListVoorCryptomunt;
     }
 
+    //TODO JavaDoc
     public static void checkAantalPositief(Trigger trigger){
         if(trigger.getAantal() <= 0){
             // throw exception
         }
     }
+
+    //TODO JavaDoc
+    //TODO Verwijderen?
     public void checkPrijs(Trigger triggerKoper, Trigger triggerVerkoper){
         if(triggerKoper.getTriggerPrijs() < triggerVerkoper.getTriggerPrijs()){
             // throw exception
         }
     }
+
     /**
      * Deze methode zorgt ervoor dat er geen onuitvoerbare triggers in de tabel triggerKoper staan
      */
@@ -250,6 +262,7 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
             }
         }
     }
+
     /**
      * Deze methode zorgt ervoor dat er geen onuitvoerbare triggers in de tabel triggerVerkoper staan
      */
@@ -263,10 +276,13 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
         }
     }
 
+    //TODO JavaDoc
     public static boolean isKoper(Trigger trigger){
         return trigger instanceof TriggerKoper;
     }
 
+    //TODO JavaDoc
+    //TODO uitgecommente code in gebruik nemen of verwijderen?
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
 /*        Trigger koopTrigger = new TriggerKoper(rootRepository.vindKlantById(1), rootRepository.geefCryptomunt(2), 30, 4);
@@ -278,7 +294,6 @@ public class TriggerService implements ApplicationListener<ContextRefreshedEvent
         System.out.println("********* " + geslaagd);*/
 /*        Trigger testTriggerMogelijk = new TriggerVerkoper(rootRepository.vindKlantById(1), rootRepository.geefCryptomunt(2), (100), 0.243);
         System.out.println(triggerMogelijkQuaFondsen(testTriggerMogelijk));*/
-
     }
 
 }

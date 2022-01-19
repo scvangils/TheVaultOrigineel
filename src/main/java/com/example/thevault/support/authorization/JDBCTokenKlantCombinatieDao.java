@@ -28,20 +28,19 @@ public class JDBCTokenKlantCombinatieDao implements TokenKlantCombinatieDao{
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(AuthorizationService.class);
 
+    //TODO JavaDoc
     @Autowired
     public JDBCTokenKlantCombinatieDao(JdbcTemplate jdbcTemplate, KlantDAO klantDAO) {
         super();
         this.jdbcTemplate = jdbcTemplate;
         this.klantDAO = klantDAO;
         logger.info("New JDBCTokenKlantCombinatieDao.");
-
     }
 
     /**
      * Slaat een token met klant op in de database
      *
      * @param tokenKlantCombinatie
-     *
      * @return de tokenKlantCombinatie die wordt opgeslagen
      */
     @Override
@@ -69,7 +68,6 @@ public class JDBCTokenKlantCombinatieDao implements TokenKlantCombinatieDao{
         }
         return Optional.empty();
     }
-
 
     /**
      * Zoekt het refresh token op op basis van een klant als deze in de database staat
@@ -101,7 +99,6 @@ public class JDBCTokenKlantCombinatieDao implements TokenKlantCombinatieDao{
         return uuid;
     }
 
-
     private class ConnectionRowMapper implements RowMapper<TokenKlantCombinatie> {
 
         @Override
@@ -112,6 +109,5 @@ public class JDBCTokenKlantCombinatieDao implements TokenKlantCombinatieDao{
             return new TokenKlantCombinatie(uuid, klant);
         }
     }
-
 }
 

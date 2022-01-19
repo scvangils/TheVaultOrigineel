@@ -25,6 +25,8 @@ public class CryptoWaardeService {
     private static final String CRON_ELKE_DAG_OM_MIDDERNACHT = "0 0 0 * * *";
     private static final String CRON_NEDERLANDSE_TIJDZONE = "Europe/Paris";
 
+    //TODO Verwijderen of uitwerken?
+    //TODO JavaDoc
 /*    *//*
     roept 1x per dag de methode haalCryptoWaardes op
      *//*
@@ -39,11 +41,14 @@ public class CryptoWaardeService {
         timer.schedule(tt, new Date(), TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
 
     }*/
+
+    //TODO JavaDoc
     public CryptoWaardeService(RootRepository rootRepository){
         super();
         this.rootRepository = rootRepository;
     }
 
+    //TODO JavaDoc
     //TODO Arraymaker-methode schrijven
     public CryptoWaarde[] maakCryptoWaardeArray(Cryptomunt cryptomunt){
         // bepalen wat voor soort array moet geschreven worden
@@ -56,7 +61,6 @@ public class CryptoWaardeService {
      * Deze methode slaat een cryptowaarde op in de database
      *
      * @param cryptoWaarde De betreffende cryptowaarde
-     * @return
      */
     public void slaCryptoWaardeOp(CryptoWaarde cryptoWaarde){
         rootRepository.slaCryptoWaardeOp(cryptoWaarde);
@@ -73,6 +77,7 @@ public class CryptoWaardeService {
         return rootRepository.haalMeestRecenteCryptoWaarde(cryptomunt);
     }
 
+    //TODO Returnwaarde toevoegen
     /**
      * Deze methode haalt de koers van een cryptomunt op een bepaalde dag op
      *
@@ -104,7 +109,6 @@ public class CryptoWaardeService {
      *
      * @return Een List van CryptoWaarde-objecten met de koersinformatie
      */
-
     public List<CryptoWaarde> haalMeestRecenteCryptoWaardes(){
         List<Cryptomunt>  cryptomuntList = CryptoWaardeService.cryptoLijst();
         List<CryptoWaarde> cryptoWaardeList = new ArrayList<>();
@@ -113,6 +117,8 @@ public class CryptoWaardeService {
         }
         return cryptoWaardeList;
     }
+
+    //TODO JavaDoc
     //TODO juiste plek voor aanmaken arraylist?
     public static ArrayList<Cryptomunt> cryptoLijst(){
         Cryptomunt bitcoin = new Cryptomunt(1, "bitcoin", "BTC");
@@ -141,7 +147,6 @@ public class CryptoWaardeService {
                 polygon, litecoin, terrausd, algorand, tron, bitcoin_cash, stellar, elrond, vechain, filecoin);
 
         return new ArrayList<>(list);
-
     }
 }
 

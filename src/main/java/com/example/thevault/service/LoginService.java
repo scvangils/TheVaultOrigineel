@@ -24,11 +24,13 @@ public class LoginService {
     private AuthorizationService authorizationService;
     private RekeningService rekeningService;
 
+    //TODO Verwijderen? Worden nergens gebruikt
     private UUID opaakToken;
     private String jwtToken;
 
     private final Logger logger = LoggerFactory.getLogger(LoginService.class);
 
+    //TODO JavaDoc
     @Autowired
     public LoginService(RootRepository rootRepository, AuthorizationService authorizationService, RekeningService rekeningService) {
         super();
@@ -37,7 +39,6 @@ public class LoginService {
         this.rekeningService = rekeningService;
         logger.info("New LoginService......");
     }
-
 
     /**
      * Wim 20211207
@@ -56,6 +57,7 @@ public class LoginService {
         }
         return klant;
     }
+
     /**
      * Deze methode zoekt of er in de database al een klant bestaat met deze gebruikersnaam
      * en maakt eventueel een klant-object aan op nasis van de teruggestuurde gegevens
@@ -67,6 +69,4 @@ public class LoginService {
     public Klant vindKlantByGebruikersnaam(String gebruikersnaam){
         return rootRepository.vindKlantByGebruikersnaam(gebruikersnaam);
     }
-
-
 }

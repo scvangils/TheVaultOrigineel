@@ -29,9 +29,11 @@ public class CryptoAPI {
     private static HttpURLConnection connection;
     private static String apiKey = "ce1e8754-b694-41b5-99ca-dbb28dc5b68d";
     private static double waarde;
+    //TODO Verwijderen?
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(CryptoAPI.class);
 
+    //TODO JavaDoc
     public static double cryptoDagwaarde(Cryptomunt cryptomunt){
         String uri = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest";
         List<NameValuePair> parameters = new ArrayList<NameValuePair>();
@@ -59,6 +61,7 @@ public class CryptoAPI {
         }
     }
 
+    //TODO JavaDoc
     public static String makeAPICall(String uri, List<NameValuePair> parameters)
             throws URISyntaxException, IOException {
         String response_content = "";

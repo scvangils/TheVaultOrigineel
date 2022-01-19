@@ -21,11 +21,13 @@ public class Adres {
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Adres.class);
 
+    //TODO JavaDoc
     public Adres(){
         super();
         logger.info("Leeg adres, no args constructor");
     }
 
+    //TODO JavaDoc
     public Adres(String straatnaam, int huisnummer, String toevoeging, String postcode, String plaatsnaam) {
         super();
         this.adresId = DEFAULT_ADRES_ID;

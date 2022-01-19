@@ -30,6 +30,8 @@ public class RandomDataInput {
     private BankAlsTransactiePartij bankAlsTransactiePartij;
     private RandomTransactieRange randomTransactieRange;
 
+    //TODO JavaDoc
+    //TODO Verwijderen?
     public RandomDataInput(int hoeveelTransacties, TransactieDataRange transactieDataRange,
                            BankAlsTransactiePartij bankAlsTransactiePartij, RandomTransactieRange randomTransactieRange) {
         this.hoeveelTransacties = hoeveelTransacties;
@@ -38,20 +40,24 @@ public class RandomDataInput {
         this.randomTransactieRange = randomTransactieRange;
     }
 
+    //TODO JavaDoc
+    //TODO Verwijderen?
     public RandomDataInput() {
         super();
         logger.info("New RandomDataInput");
     }
 
+    //TODO JavaDoc
     public TransactieDataRange getTransactieDataRange() {
         return transactieDataRange;
     }
 
+    //TODO JavaDoc
     public RandomTransactieRange getRandomTransactieRange() {
         return randomTransactieRange;
     }
 
-
+    //TODO JavaDoc
     public int getHoeveelTransacties() {
         return hoeveelTransacties;
     }
@@ -59,6 +65,4 @@ public class RandomDataInput {
     public BankAlsTransactiePartij getBankAlsTransactiePartij() {
         return bankAlsTransactiePartij;
     }
-
-
 }

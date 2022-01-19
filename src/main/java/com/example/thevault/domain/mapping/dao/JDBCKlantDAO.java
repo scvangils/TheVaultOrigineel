@@ -26,6 +26,7 @@ public class JDBCKlantDAO implements KlantDAO{
 
     private final JdbcTemplate jdbcTemplate;
 
+    //TODO JavaDoc
     public JDBCKlantDAO(JdbcTemplate jdbcTemplate) {
         super();
         this.jdbcTemplate = jdbcTemplate;
@@ -143,7 +144,7 @@ public class JDBCKlantDAO implements KlantDAO{
         return affectedRows;
     }
 
-
+    //TODO JavaDoc
     @Override
     public int updateKlant(Klant klant){
         int affectedRows = 0;

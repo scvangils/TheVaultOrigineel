@@ -18,11 +18,15 @@ public class RandomTransactieRange {
     private double maxAantal;
     private int maxAfwijkingPrijs;
 
+    //TODO JavaDoc
+    //TODO Verwijderen?
     public RandomTransactieRange() {
         super();
         logger.info("New RandomTransactieRange");
     }
 
+    //TODO JavaDoc
+    //TODO Verwijderen?
     public RandomTransactieRange(double maxAantal, int maxAfwijkingPrijs) {
         this.maxAantal = maxAantal;
         this.maxAfwijkingPrijs = maxAfwijkingPrijs;

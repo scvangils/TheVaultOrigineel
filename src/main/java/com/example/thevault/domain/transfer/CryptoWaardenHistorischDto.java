@@ -22,11 +22,14 @@ public class CryptoWaardenHistorischDto {
     private String[] datum;
     private double[] waarde;
 
+    //TODO JavaDoc
+    //TODO Verwijderen?
     public CryptoWaardenHistorischDto() {
         super();
         logger.info("New CryptoWaardenHistorischDto");
     }
 
+    //TODO JavaDoc
     public CryptoWaardenHistorischDto(String[] datum, double[] waarde){
         this.datum = datum;
         this.waarde = waarde;

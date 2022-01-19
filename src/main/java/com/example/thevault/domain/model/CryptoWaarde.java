@@ -27,18 +27,20 @@ public class CryptoWaarde {
 
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(CryptoWaarde.class);
+
+    //TODO JavaDoc
     public CryptoWaarde() {
         super();
         logger.info("New CryptoWaarde");
     }
 
+    //TODO JavaDoc
     public CryptoWaarde(String cryptoWaardeId, Cryptomunt cryptomunt, double waarde, LocalDate datum){
         this.cryptoWaardeId = cryptoWaardeId;
         this.cryptomunt = cryptomunt;
         this.waarde = waarde;
         this.datum = datum;
     }
-
 
     public String getCryptoWaardeId() {
         return cryptoWaardeId;

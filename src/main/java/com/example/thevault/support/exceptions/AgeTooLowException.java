@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(value = HttpStatus.NOT_ACCEPTABLE)
 public class AgeTooLowException extends RuntimeException{
 
+    //TODO JavaDoc
     public AgeTooLowException(String message){
         super(message);
-
     }
-
 }

@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 import java.util.Objects;
 
 /**
- * @Author: Carmen Rietdijk
- * Beschrijving: De model voor Asset, bestaande uit cryptomunt en aantal, wat de bouwstenen zijn voor de portefeuille
+ * Author: Carmen
+ * Beschrijving: Het model voor Asset, bestaande uit cryptomunt en aantal, wat de bouwstenen zijn voor de portefeuille
  * van cryptomunten van de klant
  */
 
@@ -103,7 +103,6 @@ public class Asset {
     public void setGebruiker(Gebruiker gebruiker) {
         this.gebruiker = gebruiker;
     }
-
 
     @Override
     public String toString() {

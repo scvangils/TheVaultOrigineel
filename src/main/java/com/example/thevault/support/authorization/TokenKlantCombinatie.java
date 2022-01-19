@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
 
-
 public class TokenKlantCombinatie {
 
     private UUID key;
@@ -18,13 +17,13 @@ public class TokenKlantCombinatie {
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(AuthorizationService.class);
 
+    //TODO JavaDoc
     public TokenKlantCombinatie(UUID key, Klant klant) {
         super();
         this.key = key;
         this.klant = klant;
         logger.info("New TokenKlantCombinatie");
     }
-
 
     public UUID getKey() {
         return key;

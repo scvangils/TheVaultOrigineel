@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(value = HttpStatus.NOT_ACCEPTABLE)
 public class PasswordNotSuitableException extends RuntimeException{
 
+    //TODO JavaDoc
     public PasswordNotSuitableException(String message){
         super(message);
     }

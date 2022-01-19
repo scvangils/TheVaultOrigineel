@@ -16,6 +16,10 @@ public class AssetNotExistsException extends RuntimeException{
 
     String message;
 
+    /**
+     * Author: Carmen
+     * Geeft een waarschuwing dat de opgevraagde asset niet bestaat
+     */
     public AssetNotExistsException() {
         super();
         message = "Asset bestaat niet.";

@@ -12,6 +12,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
+/**
+ * Author: Carmen
+ * Beschrijving: Hier wordt een datatransfer object van Asset aangemaakt
+ */
+
 public class AssetDto {
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(AssetDto.class);
@@ -20,17 +25,25 @@ public class AssetDto {
     private double price;
     private double aantal;
 
+    /**
+     * No-args constructor voor AssetDto
+     */
     public AssetDto() {
         super();
         logger.info("New AssetDto, no args constructor");
     }
 
+    /**
+     * All-args constructor voor AssetDto waarin zowel de
+     * @param asset
+     * @param cryptoWaarde
+     */
     public AssetDto(Asset asset, CryptoWaarde cryptoWaarde){
         this.name = asset.getCryptomunt().getName();
         this.price = cryptoWaarde.getWaarde();
         this.aantal = asset.getAantal();
+        logger.info("AssetDto: " + this);
     }
-
 
     public String getName() {
         return name;
@@ -40,20 +53,20 @@ public class AssetDto {
         this.name = name;
     }
 
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
     public double getAantal() {
         return aantal;
     }
 
     public void setAantal(double aantal) {
         this.aantal = aantal;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     @Override

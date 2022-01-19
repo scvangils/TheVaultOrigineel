@@ -9,6 +9,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
+/**
+ * Author: Carmen
+ * Beschrijving: er wordt een object aangemaakt met gegevens benodigd voor het vullen van de transactiepagina
+ */
+
 public class TransactiePaginaDto {
 
     @JsonIgnore
@@ -22,21 +27,16 @@ public class TransactiePaginaDto {
     private double cryptoAantal;
     private double bankfee;
 
+    /**
+     * No-args constructor voor transactiePaginaDto
+     */
     public TransactiePaginaDto() {
         super();
-        logger.info("New TransactiePaginaDto");
-    }
-
-    public String getKlantnaam() {
-        return klantnaam;
+        logger.info("New no-args TransactiePaginaDto");
     }
 
     public void setKlantnaam(String klantnaam) {
         this.klantnaam = klantnaam;
-    }
-
-    public double getRekeningsaldo() {
-        return rekeningsaldo;
     }
 
     public void setRekeningsaldo(double rekeningsaldo) {
@@ -51,36 +51,44 @@ public class TransactiePaginaDto {
         this.iban = iban;
     }
 
-    public String getCryptoNaam() {
-        return cryptoNaam;
-    }
-
     public void setCryptoNaam(String cryptoNaam) {
         this.cryptoNaam = cryptoNaam;
-    }
-
-    public double getCryptoDagkoers() {
-        return cryptoDagkoers;
     }
 
     public void setCryptoDagkoers(double cryptoDagkoers) {
         this.cryptoDagkoers = cryptoDagkoers;
     }
 
-    public double getCryptoAantal() {
-        return cryptoAantal;
-    }
-
     public void setCryptoAantal(double cryptoAantal) {
         this.cryptoAantal = cryptoAantal;
     }
 
-    public double getBankfee() {
-        return bankfee;
-    }
-
     public void setBankfee(double bankfee) {
         this.bankfee = bankfee;
+    }
+
+    public String getKlantnaam() {
+        return klantnaam;
+    }
+
+    public double getRekeningsaldo() {
+        return rekeningsaldo;
+    }
+
+    public String getCryptoNaam() {
+        return cryptoNaam;
+    }
+
+    public double getCryptoDagkoers() {
+        return cryptoDagkoers;
+    }
+
+    public double getCryptoAantal() {
+        return cryptoAantal;
+    }
+
+    public double getBankfee() {
+        return bankfee;
     }
 
     @Override

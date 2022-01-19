@@ -8,3 +8,5 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "BSN kan niet kloppen.")
 public class IncorrectBSNException extends RuntimeException {}
+
+//TODO Waar is de method?

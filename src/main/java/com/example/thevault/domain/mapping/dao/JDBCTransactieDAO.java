@@ -26,6 +26,7 @@ public class JDBCTransactieDAO implements TransactieDAO {
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(JDBCKlantDAO.class);
 
+    //TODO JavaDoc
     @Autowired
     public JDBCTransactieDAO(JdbcTemplate jdbcTemplate) {
         super();
@@ -50,6 +51,7 @@ public class JDBCTransactieDAO implements TransactieDAO {
     }
 
 
+    //TODO JavaDoc
     @Override
     public Transactie slaTransactieOp(Transactie transactie) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -59,12 +61,14 @@ public class JDBCTransactieDAO implements TransactieDAO {
         return transactie;
     }
 
+    //TODO Javadoc
     @Override
     public List<Transactie> geefAlleTransacties(){
         String sql = "SELECT * FROM transactie;";
         return jdbcTemplate.query(sql, new TransactieRowMapper());
     }
 
+    //TODO JavaDoc
     @Override
     public List<Transactie> geefTransactiesVanGebruiker(Gebruiker gebruiker) {
         String sql = "SELECT * FROM transactie WHERE verkoperGebruikerId = ? OR koperGebruikerId = ?;";
@@ -78,6 +82,7 @@ public class JDBCTransactieDAO implements TransactieDAO {
         return transactiesGebruiker;
     }
 
+    //TODO JavaDoc
     @Override
     public List<Transactie> geefTransactiesVanGebruikerInPeriode(Gebruiker gebruiker, Timestamp startDatum, Timestamp eindDatum) {
         String sql = "SELECT * FROM transactie WHERE (verkoperGebruikerId = ? OR koperGebruikerId = ?) AND momentTransactie BETWEEN ? AND ?;";
@@ -92,6 +97,7 @@ public class JDBCTransactieDAO implements TransactieDAO {
         return transactiesGebruiker;
     }
 
+    //TODO JavaDoc
     @Override
     public List<Transactie> geefAlleTransactiesInPeriode(Timestamp startDatum, Timestamp eindDatum) {
         String sql = "SELECT * FROM transactie WHERE momentTransactie BETWEEN ? AND ?;";
@@ -105,6 +111,7 @@ public class JDBCTransactieDAO implements TransactieDAO {
         return transactiesInPeriode;
     }
 
+    //TODO JavaDoc
     @Override
     public List<Transactie> geefTransactiesVanGebruikerMetCryptomunt(Gebruiker gebruiker, Cryptomunt cryptomunt) {
         String sql = "SELECT * FROM transactie WHERE (verkoperGebruikerId = ? OR koperGebruikerId = ?) AND cryptomuntId = ?;";
@@ -120,6 +127,7 @@ public class JDBCTransactieDAO implements TransactieDAO {
         return transactiesGebruiker;
     }
 
+    //TODO JavaDoc
     @Override
     public Transactie verwijderTransactie(Transactie transactie) {
         String sql = "DELETE FROM transactie WHERE transactieId = ?";

@@ -15,6 +15,8 @@ public class LoginDto {
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(LoginDto.class);
 
+    //TODO JavaDoc
+    //TODO Verwijderen?
     public LoginDto() {
         super();
         gebruikersnaam = "testKlant";
@@ -22,8 +24,7 @@ public class LoginDto {
         logger.info("New LoginDto noArgs");
     }
 
-
-
+    //TODO JavaDoc
     public LoginDto(String gebruikersnaam, String wachtwoord) {
         this.gebruikersnaam = gebruikersnaam;
         this.wachtwoord = wachtwoord;

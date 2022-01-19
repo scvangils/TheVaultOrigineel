@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class BalanceTooLowException extends RuntimeException {
     String message;
 
+    //TODO JavaDoc
     public BalanceTooLowException() {
         super();
         message = "Saldo te laag.";

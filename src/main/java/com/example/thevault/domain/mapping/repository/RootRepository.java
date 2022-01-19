@@ -41,6 +41,18 @@ public class RootRepository {
     private final TransactieDAO transactieDAO;
     private final TriggerDAO triggerDAO;
 
+    /**
+     * Constructor voor RootRepository
+     * In de constructor worden alle DAOs geinjecteerd die de RootRepository nodig heeft
+     * @param klantDAO
+     * @param rekeningDAO
+     * @param assetDAO
+     * @param cryptomuntDAO
+     * @param cryptoWaardeDAO
+     * @param adresDAO
+     * @param transactieDAO
+     * @param triggerDAO
+     */
     @Autowired
     public RootRepository(KlantDAO klantDAO, RekeningDAO rekeningDAO, AssetDAO assetDAO, CryptomuntDAO cryptomuntDAO,
                           CryptoWaardeDAO cryptoWaardeDAO, AdresDAO adresDAO,
@@ -69,6 +81,7 @@ public class RootRepository {
         return klantDAO.slaKlantOp(klant);
     }
 
+    //TODO Verwijderen?
     /**
      * Deze methode zorgt ervoor dat een nieuw adres van een klant kan worden opgeslagen
      *
@@ -162,7 +175,7 @@ public class RootRepository {
     }
 
     /**
-     * @Author Carmen
+     * Author: Carmen
      * Dit betreft het vullen van de portefeuille met alle cryptomunten die er in zitten. Voor iedere asset
      * wordt alle informatie over de bijbehorende cryptomunt opgevraagd en meegegeven
      * @param gebruiker de klant die informatie opvraagt over de cryptomunt
@@ -181,6 +194,7 @@ public class RootRepository {
     }
 
     /**
+     * Author: Carmen
      * Dit betreft het vinden van een specifieke cryptomunt die in de portefeuille zit
      * @param gebruiker de gebruiker die informatie opvraagt over de cryptomunt
      * @param cryptomunt cryptomunt waarover informatie wordt opgevraagd
@@ -191,6 +205,7 @@ public class RootRepository {
     }
 
     /**
+     * Author: Carmen
      * Dit betreft het toevoegen van een cryptomunt die nog niet in de portefeuille zit
      * Dit gebeurt via een 'transactie', waarbij een klant crypto's koopt
      * @param asset de cryptomunt en het aantal dat de klant aanschaft
@@ -201,6 +216,7 @@ public class RootRepository {
     }
 
     /**
+     * Author: Carmen
      * Dit betreft het wijzigen van een cryptomunt die al in de portefeuille zit
      * Dit gebeurt via een 'transactie', waarbij een klant crypto's koopt of verkoopt
      * @param gebruiker de handelende partij
@@ -262,6 +278,7 @@ public class RootRepository {
         return cryptoWaardeList;
     }
 
+    //TODO JavaDoc
     public Transactie slaTransactieOp(Transactie transactie){
         return transactieDAO.slaTransactieOp(transactie);
     }
@@ -333,11 +350,12 @@ public class RootRepository {
         return assetDAO.geefAantalCryptoInEigendom(gebruiker, cryptomunt);
     }
 
-
     //TODO JavaDoc
     public Cryptomunt geefCryptomunt(int cryptomuntId){
         return cryptomuntDAO.geefCryptomunt(cryptomuntId);
     }
+
+    //TODO JavaDoc
     public List<Cryptomunt> geefAlleCryptomunten(){
         return cryptomuntDAO.geefAlleCryptomunten();
     }
@@ -354,6 +372,7 @@ public class RootRepository {
     public Trigger slaTriggerOp(Trigger trigger){
         return triggerDAO.slaTriggerOp(trigger);
     }
+
     /**
      * Deze methode verwijdert een trigger op basis van zijn id.
      *
@@ -363,6 +382,7 @@ public class RootRepository {
     public int verwijderTrigger(Trigger trigger){
         return triggerDAO.verwijderTrigger(trigger);
     }
+
     /** Deze methode zoekt voor een triggerKoper in de triggerVerkoperTabel een match
      * om een transactie mee aan te gaan.
      * Gegeven meerdere matches, eerste het grootste verschil tussen vraag en aanbod,
@@ -400,6 +420,7 @@ public class RootRepository {
         }
         return triggerList;
     }
+
     /**
      * Geeft alle triggers van een bepaald type aanwezig in de database van een bepaalde gebruiker
      *
@@ -419,12 +440,12 @@ public class RootRepository {
     }
 
     /**
-     * @Author Carmen
+     * Author: Carmen
      *
      * Verzamelt alle benodigde informatie voor het transactiescherm en geeft deze terug
      *
      * @param transactieStartDto Gebruikersnaam en cryptoid
-     * @param TransactiePaginaDto alle informatie die nodig is voor het transactiescherm
+     * @return TransactiePaginaDto alle informatie die nodig is voor het transactiescherm
      */
     public TransactiePaginaDto openTransactieScherm(TransactieStartDto transactieStartDto){
         TransactiePaginaDto transactiePaginaDto = new TransactiePaginaDto();

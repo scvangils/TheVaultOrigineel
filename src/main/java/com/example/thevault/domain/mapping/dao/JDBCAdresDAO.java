@@ -27,6 +27,7 @@ public class JDBCAdresDAO implements AdresDAO{
 
     private final Logger logger = LoggerFactory.getLogger(JDBCAdresDAO.class);
 
+    //TODO JavaDoc
     public JDBCAdresDAO(JdbcTemplate jdbcTemplate) {
         super();
         this.jdbcTemplate = jdbcTemplate;
@@ -87,7 +88,8 @@ public class JDBCAdresDAO implements AdresDAO{
 
     }
 
-// TODO verwijderen?
+// TODO verwijderen? ...
+    //TODO ... of JavaDoc schrijven
     @Override
     public Adres wijzigAdres(Adres adres) {
         String sql = "UPDATE adres SET straatnaam = ?, huisnummer = ?, toevoeging = ?, postcode = ?, plaatsnaam = ?" +
@@ -138,6 +140,7 @@ public class JDBCAdresDAO implements AdresDAO{
     }
 
 
+    //TODO JavaDoc
     @Override
     public int verwijderAdres(Adres adres) {
         int affectedRows = 0;

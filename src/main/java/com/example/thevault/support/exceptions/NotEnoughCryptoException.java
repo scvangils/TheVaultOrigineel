@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class NotEnoughCryptoException extends RuntimeException {
     String message;
 
+    //TODO JavaDoc
     public NotEnoughCryptoException() {
         super();
         message = "Niet genoeg cryptomunten voor transactie.";

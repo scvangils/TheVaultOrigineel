@@ -26,16 +26,19 @@ public class JDBCTriggerDAO implements TriggerDAO {
 
     private final Logger logger = LoggerFactory.getLogger(JDBCTriggerDAO.class);
 
+    //TODO JavaDoc
     public JDBCTriggerDAO(JdbcTemplate jdbcTemplate) {
         super();
         this.jdbcTemplate = jdbcTemplate;
         logger.info("New JDBCTriggerDAO");
     }
 
+    //TODO JavaDoc
     public boolean checkTriggerKoper(Trigger trigger){
         return (trigger instanceof TriggerKoper);
     }
 
+    //TODO JavaDoc
     public String toonJuisteTabel(Trigger trigger){
         if(checkTriggerKoper(trigger)){
             return "triggerKoper";
@@ -123,6 +126,7 @@ public class JDBCTriggerDAO implements TriggerDAO {
         return (checkTriggerKoper(trigger)) ? verkoperSql: koperSql;
     }
 
+    //TODO JavaDoc
     @Override
     public List<Trigger> vindTriggersByGebruiker(Gebruiker gebruiker, String koperOfVerkoper) {
         String tabel = "trigger" + koperOfVerkoper;
@@ -157,6 +161,7 @@ public class JDBCTriggerDAO implements TriggerDAO {
         return null;
     }
 
+    //TODO JavaDoc
     public static Trigger getTrigger(ResultSet resultSet, Trigger trigger) throws SQLException {
         trigger.setTriggerId(resultSet.getInt("triggerId"));
         trigger.setTriggerPrijs(resultSet.getDouble("triggerPrijs"));
@@ -170,18 +175,23 @@ public class JDBCTriggerDAO implements TriggerDAO {
         return trigger;
     }
 
+    //TODO JavaDoc
     public RowMapper<Trigger> maakJuisteRowMapper(Trigger trigger){
         if(checkTriggerKoper(trigger)){
             return new TriggerKoperRowMapper();
         }
         else return new TriggerVerkoperRowMapper();
     }
+
+    //TODO JavaDoc
     public RowMapper<Trigger> maakJuisteRowMapper(String typeGebruiker){
         if(typeGebruiker.equals("Koper")){
             return new TriggerKoperRowMapper();
         }
         else return new TriggerVerkoperRowMapper();
     }
+
+    //TODO JavaDoc
     public RowMapper<Trigger> maakOmgekeerdeRowMapper(Trigger trigger) {
         if (!checkTriggerKoper(trigger)) {
             return new TriggerKoperRowMapper();

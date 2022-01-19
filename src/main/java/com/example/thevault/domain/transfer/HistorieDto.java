@@ -27,10 +27,13 @@ public class HistorieDto {
     private List<Trigger> koopTriggers;
     private List<Trigger> verkoopTriggers;
 
+    //TODO JavaDoc
     public HistorieDto() {
         super();
         logger.info("New HistorieDto");
     }
+
+    //TODO JavaDoc
     public HistorieDto(Gebruiker klant){
         this.transactieLijst = klant.getTransacties();
     }

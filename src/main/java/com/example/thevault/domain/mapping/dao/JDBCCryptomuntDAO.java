@@ -26,6 +26,7 @@ public class JDBCCryptomuntDAO implements CryptomuntDAO{
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(JDBCCryptomuntDAO.class);
 
+    //TODO JavaDoc
     @Autowired
     public JDBCCryptomuntDAO(JdbcTemplate jdbcTemplate) {
         super();

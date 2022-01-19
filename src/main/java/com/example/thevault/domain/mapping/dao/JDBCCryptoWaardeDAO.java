@@ -26,20 +26,23 @@ public class JDBCCryptoWaardeDAO implements CryptoWaardeDAO {
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(JDBCCryptoWaardeDAO.class);
 
+    //TODO JavaDoc
     public JDBCCryptoWaardeDAO(JdbcTemplate jdbcTemplate) {
         super();
         this.jdbcTemplate = jdbcTemplate;
         logger.info("New JDBCCryptoWaardeDAO");
     }
 
+    //TODO JavaDoc
     //voor historische lijst
     //TODO CryptoWaardeDto
     @Override
     public List<CryptoWaarde> getCryptoWaardeByCryptomunt(Cryptomunt cryptomunt) {
         String sql = "SELECT * FROM dagkoersCrypto WHERE cryptomuntId = ?;";
     return jdbcTemplate.query(sql, new CryptoWaardeRowMapper(), cryptomunt.getId());
-
     }
+
+    //TODO JavaDoc
     //vooral handig voor laatste waarde
     @Override
     public CryptoWaarde getCryptoWaardeByCryptomuntAndDate(Cryptomunt cryptomunt, LocalDate datum) {
@@ -82,8 +85,6 @@ public class JDBCCryptoWaardeDAO implements CryptoWaardeDAO {
         int maand = localDate.getMonthValue();
         int dag = localDate.getDayOfMonth();
         return String.format(jaar + "%02d" + "%02d" + cryptomunt.getSymbol(), maand, dag);
-
-
     }
 
     private static class CryptoWaardeRowMapper implements RowMapper<CryptoWaarde> {

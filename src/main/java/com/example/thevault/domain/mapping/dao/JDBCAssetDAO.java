@@ -23,7 +23,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
- * @Author: Carmen Rietdijk
+ * Author: Carmen Rietdijk
  * Beschrijving: De implementatie van de DAO voor Asset, waarin zowel de CRUD functionaliteit van Asset wordt geregeld,
  * alsmede het ophalen van de benodigde informatie voor het vullen van de portefeuille van de klant
  */
@@ -37,12 +37,17 @@ public class JDBCAssetDAO implements AssetDAO{
     private JdbcTemplate jdbcTemplate;
     private Supplier<AssetNotExistsException> AssetNotExistsException;
 
+    /**
+     * Constructor voor JDBCAssetDAO
+     * @param jdbcTemplate injectie van het jdbcTemplate in de constructor
+     */
     @Autowired
     public JDBCAssetDAO(JdbcTemplate jdbcTemplate) {
         super();
         this.jdbcTemplate = jdbcTemplate;
         logger.info("New JDBCAssetDAO");
     }
+
         //TODO versimpelen?
     private PreparedStatement slaAssetOpStatement(Asset asset, Connection connection) throws SQLException {
         String sql = "INSERT INTO asset (gebruikerId, cryptomuntId, aantal) values " +
@@ -125,7 +130,7 @@ public class JDBCAssetDAO implements AssetDAO{
     /**
      * Dit betreft een controle of een verkoper voldoende cryptomunt bezit om de transactie door te zetten
      * @param aantal het aantal cryptomunten dat de klant wil verkopen
-     * @param Optional<Asset> de asset die de verkoper wil verkopen
+     * @param optionalAsset de asset die de verkoper wil verkopen
      */
     private void genoegCrypto(double aantal, Optional<Asset> optionalAsset) {
         if(aantal < 0) {
@@ -174,6 +179,7 @@ public class JDBCAssetDAO implements AssetDAO{
         return assets;
     }
 
+    //TODO JavaDoc
     //WIBUL aantal in eigendom per gebruiker
     public double geefAantalCryptoInEigendom(Gebruiker gebruiker, Cryptomunt cryptomunt) {
         double aantal;

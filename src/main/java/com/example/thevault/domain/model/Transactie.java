@@ -26,15 +26,16 @@ public class Transactie{
     public static final double DEEL_PRIJSVERSCHIL_KOPER = 0.5;
     public static final double DEEL_PRIJSVERSCHIL_VERKOPER = 1 - DEEL_PRIJSVERSCHIL_KOPER;
 
-
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Rekening.class);
 
+    //TODO JavaDoc
     public Transactie() {
         super();
         logger.info("lege Transactie, no args constructor");
     }
 
+    //TODO JavaDoc
     public Transactie(LocalDateTime momentTransactie,
                       Trigger triggerKoper, Trigger triggerVerkoper) {
         this.momentTransactie = momentTransactie;
@@ -46,10 +47,13 @@ public class Transactie{
         this.bankFee = Bank.getInstance().getFee();
         logger.info("New "+ this + " aangemaakt");
     }
+
+    //TODO JavaDoc
     public static double getPrijsViaTrigger(Trigger triggerKoper, Trigger triggerVerkoper){
         return triggerKoper.getTriggerPrijs() * DEEL_PRIJSVERSCHIL_KOPER + triggerVerkoper.getTriggerPrijs() * DEEL_PRIJSVERSCHIL_VERKOPER;
     }
 
+    //TODO JavaDoc
     public Transactie(LocalDateTime momentTransactie,
                       Gebruiker verkoper, Cryptomunt cryptomunt, double prijs, double aantal,
                       Gebruiker koper) {
@@ -83,16 +87,8 @@ public class Transactie{
         return momentTransactie;
     }
 
-    public void setMomentTransactie(LocalDateTime momentTransactie) {
-        this.momentTransactie = momentTransactie;
-    }
-
     public double getPrijs() {
         return prijs;
-    }
-
-    public void setPrijs(double prijs) {
-        this.prijs = prijs;
     }
 
     public Gebruiker getKoper() {
@@ -127,6 +123,18 @@ public class Transactie{
         this.bankFee = bankFee;
     }
 
+    public void setMomentTransactie(LocalDateTime momentTransactie) {
+        this.momentTransactie = momentTransactie;
+    }
+
+    public void setPrijs(double prijs) {
+        this.prijs = prijs;
+    }
+
+    public void setBankFee(double bankFee) {
+        this.bankFee = bankFee;
+    }
+
     @Override
     public String toString() {
         return "Transactie{" +
@@ -139,7 +147,6 @@ public class Transactie{
                 ", cryptomunt=" + cryptomunt +
                 '}';
     }
-
 
     @Override
     public boolean equals(Object o) {

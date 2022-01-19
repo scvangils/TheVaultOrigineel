@@ -38,6 +38,7 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
 
     public static final int BITCOIN_ID = 1;
     public static final int ETHEREUM_ID = 1027;
+    //TODO Verwijderen?
     public static final String BESTANDSNAAM_RANDOM_DATASET = "Sprint2/datacsv.csv"; // gebruikt om huidige database te vullen
     public static final int UITGANGSJAAR = 2021;
     private final Logger logger = LoggerFactory.getLogger(DataController.class);
@@ -50,7 +51,7 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
     private final KlantService klantService;
     private final TriggerService triggerService;
 
-
+    //TODO JavaDoc
     public DataController(RegistrationService registrationService,
                           AuthorizationService authorizationService, LoginService loginService, TransactieService transactieService,
                           AssetService assetService, CryptoWaardeService cryptoWaardeService, KlantService klantService, TriggerService triggerService) {
@@ -65,6 +66,8 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         logger.info("New DataController");
     }
 
+    //TODO JavaDoc
+    //TODO Code in gebruik nemen of verwijderen?
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         // gebruik hier onderstaande functies om data te genereren
@@ -79,10 +82,10 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         RandomDataInput randomDataInput = new RandomDataInput(200, transactieDataRange, bankAlsTransactiePartij, randomTransactieRange);
         List<Transactie> transactieList = genereerRandomTransacties(randomDataInput);
         transactieList.forEach(System.out::println);*/
-
     }
 
-
+    //TODO 'Throws' tag mist
+    //TODO Verwijderen?
     /**
      * Deze methode slaat klanten op die gegenereerd worden op basis van een csv-bestand en methodes uit Datagenerator
      *
@@ -91,7 +94,6 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
      * @param bestandsnaam de naam van het csv-bestand
      * @throws IOException
      */
-
     public void vulKlantAdresEnRekeningTabel(int hoeveelKlanten, String bestandsnaam) throws IOException {
         List<Klant> list = DataGenerator.maakLijstKlantenVanCSV(bestandsnaam, hoeveelKlanten);
         for (Klant klant : list) {
@@ -99,6 +101,8 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         }
     }
 
+    //TODO Parameter tag toevoegen
+    //TODO Verwijderen?
     /**
      * Deze methode genereert random transacties en slaat ze op
      * Het catch-block zorgt ervoor dat een transactie die niet slaagt niet meteen het hele proces stopt
@@ -187,6 +191,7 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         Gebruiker verkoper = getTransactiepartij(verkoperId);
         return new TriggerVerkoper(verkoper, cryptomunt, prijs, randomAantal);
     }
+
     /**
      * Maakt een TriggerKoper aan op basis van de random gegenereerde data
      * dat gebruikt wordt als input voor de Transactie-constructor
@@ -234,7 +239,6 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         if (koperId != 0 && verkoperId != 0) {
             afwijking = genereerRandomGetal(-100000 * maxAfwijkingsPercentage,
                     100000 * maxAfwijkingsPercentage, 1) / 10000000.0;
-
         }
         return afwijking;
     }
@@ -269,6 +273,7 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         return LocalTime.of(randomUur, randomMinuut, randomSeconde);
     }
 
+    //TODO Verwijderen?
     /**
      * Deze methode haalt een List binnen van verschillende cryptomunten met hun meest recente koers
      * Op basis van die koers genereert hij historische koersen en slaat die op.
@@ -276,7 +281,6 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
      * @param hoeveelWaarden er wordt per dag een cryptoWaarde gegenereerd, dit bepaalt hoeveel dagwaarden je genereert
      * @param afwijkingsPercentage hoeveel schommelt de koers per dag maximaal
      */
-
     public void slaHistorischeCryptoWaardenOp(int hoeveelWaarden, int afwijkingsPercentage){
         List<CryptoWaarde> cryptoWaardeList = cryptoWaardeService.haalMeestRecenteCryptoWaardes();
         for(CryptoWaarde cryptoWaarde: cryptoWaardeList){
@@ -322,11 +326,11 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         }
     }
 
+    //TODO Verwijderen?
     /**
      * Deze methode creeert een basisportefeuille voor de bank zodat deze kan handelen en slaat deze op.
      * Deze portefeuille bevat 20 verschillende cryptomunten
      */
-
     public void creeerPortefeuilleVoorBank(){
         Gebruiker bank = Bank.getInstance();
         List<Cryptomunt> cryptomuntList = assetService.geefAlleCryptomunten();
@@ -337,6 +341,10 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         }
         assetService.vulPortefeuilleVanGebruiker(bank);
     }
+
+    //TODO JavaDoc
+    //TODO Verwijderen?
+    //TODO Waarom staat hier een test?
     public void integratieTestSluitTransactie(){
         Gebruiker klant = loginService.vindKlantByGebruikersnaam("LavernRoman");
         Gebruiker andereKlant = loginService.vindKlantByGebruikersnaam("ColumbusMccoy");
@@ -354,6 +362,5 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         transactieService.sluitTransactie(LocalDateTime.now(), triggerKoper,triggerVerkoper);
 
         transactieService.sluitTransactie(LocalDateTime.now(), triggerKoperTwee,triggerVerkoperTwee);
-
     }
 }

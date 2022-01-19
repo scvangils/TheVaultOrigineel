@@ -20,11 +20,14 @@ public class BankAlsTransactiePartij {
     private boolean bankAlsKoper;
     private boolean bankAlsVerkoper;
 
+    //TODO JavaDoc
+    //TODO Verwijderen?
     public BankAlsTransactiePartij() {
         super();
         logger.info("New BankAlsTransactiePartij");
     }
 
+    //TODO JavaDoc
     public BankAlsTransactiePartij(boolean bankAlsKoper, boolean bankAlsVerkoper) {
         this.bankAlsKoper = bankAlsKoper;
         this.bankAlsVerkoper = bankAlsVerkoper;

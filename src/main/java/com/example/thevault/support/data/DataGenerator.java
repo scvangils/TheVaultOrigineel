@@ -22,18 +22,17 @@ import java.util.Scanner;
 
 public class DataGenerator {
 
+    //TODO Verwijderen?
     private final Logger logger = LoggerFactory.getLogger(DataGenerator.class);
 
-
-
-
+    //TODO JavaDoc
     public static void main(String[] args) throws IOException {
     List<Klant> list = maakLijstKlantenVanCSV("Sprint2/datacsv.csv", 20);
         for(Klant klant: list){
             System.out.println(klant);
         }
-
     }
+
     public static int[] LANGE_MAANDEN = {1,3,5,7,8,10,12};
     public static int FEBRUARI = 2;
     public static int AANTAL_DAGEN_IN_LANGE_MAAND = 31;
@@ -47,8 +46,7 @@ public class DataGenerator {
     public static int LAATSTE_MAAND_VAN_JAAR = 12;
     public static int AANTAL_TOEVOEGINGEN = 5;
 
-
-
+    //TODO JavaDoc
     public static List<Klant> maakLijstKlantenVanCSV(String filename, int hoeveelKlanten) throws IOException {
         Resource resource = new ClassPathResource(filename);
 
@@ -115,15 +113,18 @@ public class DataGenerator {
         return laatsteDagVanDeMaand;
     }
 
+    //TODO JavaDoc
     public static boolean isSchrikkeljaar(int jaar){
         return jaar%SCHRIKKELJAAR_PER_ZOVEEL_JAAR == 0;
     }
 
+    //TODO JavaDoc
     public static int genereerRandomGetal(int mpMinimum, int mpMaximum, int mpTussenstap){
         return mpTussenstap *
                 ((int)(Math.random() * ((mpMaximum - mpMinimum + 1))/mpTussenstap)) + mpMinimum;
     }
 
+    //TODO JavaDoc
     public static String genereerRandomToevoeging(int aantalVerschillende){
         String letter = "";
        int getal = genereerRandomGetal(0, aantalVerschillende, 1);
@@ -132,6 +133,4 @@ public class DataGenerator {
        }
        return letter;
     }
-
-
 }

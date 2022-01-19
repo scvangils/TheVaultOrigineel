@@ -10,6 +10,10 @@ import org.slf4j.LoggerFactory;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+/**
+ * Author: Carmen
+ */
+
 public class Cryptomunt {
 
     private int Id;
@@ -25,14 +29,21 @@ public class Cryptomunt {
     }
 
     /**
-     * @Author Carmen
-     * Constructor voor het opvragen van informatie uit de database voor Asset
+     * Author: Carmen
+     * Constructor voor het opvragen van kale informatie van cryptomunt uit de database voor Asset
      * @param cryptomuntId de identifier van de cryptomunt
      */
     public Cryptomunt(int cryptomuntId){
         this(cryptomuntId, null, null);
     }
 
+    /**
+     * Author: Carmen
+     * All-args constructor voor cryptomunt
+     * @param cryptomuntId de identifier van de cryptomunt
+     * @param name Naam van de cryptomunt
+     * @param afkorting afkorting van de cryptomunt
+     */
     public Cryptomunt (int cryptomuntId, String name, String afkorting){
         this.Id = cryptomuntId;
         this.name = name;
@@ -69,17 +80,15 @@ public class Cryptomunt {
         return symbol;
     }
 
-    public void setSymbol(String afkorting) {
-        this.symbol = afkorting;
+    public void setSymbol(String symbol) {
+        this.symbol = symbol;
     }
-
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Cryptomunt that = (Cryptomunt) o;
-        //TODO Equals methode van Cryptomunt aanpassen? Voor de AssetDAOTest. Dan ook de hashmethode aanpassen!
         return Id == that.Id && name.equals(that.name) && Objects.equals(symbol, that.symbol);
     }
 
