@@ -17,7 +17,11 @@ function dashboardScreen(){
     document.getElementById("inlog").style.display = "none";
     document.getElementById("dashboard").style.display = "block";
 }
-
+function historieScreen(){
+    document.getElementById("registratie-personalia").style.display = "none";
+    document.getElementById("inlog").style.display = "none";
+    document.getElementById("dashboard").style.display = "none";
+}
 
 /*TODO Functie Login schrijven*/
 /* 3- Vanuit het endpoint moet een check worden uitgevoerd op naam en wachtwoord */

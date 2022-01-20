@@ -95,9 +95,12 @@ public class Klant extends Gebruiker {
                 ", naam='" + naam + '\'' +
                 ", adres=" + adres +
                 ", BSN=" + bsn +
+                ", geboortedatum=" + geboortedatum +
                 ", rekening=" + rekening +
                 ", portefeuille=" + portefeuille +
-                ", geboortedatum=" + geboortedatum +
+                ", transacties=" + transacties +
+                ", koopTriggers=" + triggerKoperList +
+                ", verkoopTriggers=" + triggerVerkoperList +
                 '}';
     }
 

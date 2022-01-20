@@ -4,7 +4,7 @@ function validateJWT(jwtString, gebruikersnaam){
     fetch(endpoint, {
         method: 'POST',
     headers: {
-        'Authorization': 'Bearer' + jwtString,
+        'Authorization': 'Bearer' + jwtString
     },
     body: gebruikersnaam,
     }).then((response) => {
@@ -18,6 +18,20 @@ function validateJWT(jwtString, gebruikersnaam){
     }).catch((error) => {
         console.error('*** Iets misgegaan:', error);
     })
+}
+async function getJWTResponse (jwtString, gebruikersnaam){
+    const endpoint = "/validate/jwt";
+  await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+            'Authorization': 'Bearer' + jwtString
+        },
+        body: gebruikersnaam
+    })
+}
+async function jwtHandler(jwtString, gebruikersnaam){
+    let response = await getJWTResponse(jwtString, gebruikersnaam);
+    return response.json();
 }
 
 function getJWT(response){
@@ -40,7 +54,7 @@ function validateRefresh(gebruikersnaam){
         if(response.status === 400){
             console.log(response.statusText);
             console.log("*** refresh token niet meer geldig ***");
-            showLogin();
+            loginScreen();
         }
         else console.log("*** andere status: " + response.statusText)
     }).catch((error) => {

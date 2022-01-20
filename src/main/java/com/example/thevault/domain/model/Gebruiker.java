@@ -19,6 +19,7 @@ import java.util.Objects;
 public abstract class Gebruiker {
     protected int gebruikerId;
     protected String gebruikersnaam;
+    @JsonBackReference
     protected String wachtwoord;
     protected Rekening rekening;
     protected List<Asset> portefeuille;

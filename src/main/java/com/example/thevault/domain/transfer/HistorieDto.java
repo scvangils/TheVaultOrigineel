@@ -7,7 +7,6 @@
 
 package com.example.thevault.domain.transfer;
 
-import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.model.Gebruiker;
 import com.example.thevault.domain.model.Transactie;
 import com.example.thevault.domain.model.Trigger;
@@ -15,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class HistorieDto {
@@ -23,7 +22,8 @@ public class HistorieDto {
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(HistorieDto.class);
 
-    private List<Transactie> transactieLijst;
+    private List<Transactie> transactieLijstGekocht;
+    private List<Transactie> transactieLijstVerkocht;
     private List<Trigger> koopTriggers;
     private List<Trigger> verkoopTriggers;
 
@@ -35,19 +35,51 @@ public class HistorieDto {
 
     //TODO JavaDoc
     public HistorieDto(Gebruiker klant){
-        this.transactieLijst = klant.getTransacties();
+        this.transactieLijstGekocht = maakTransactieLijstGekocht(klant);
+        this.transactieLijstVerkocht = maakTransactieLijstVerkocht(klant);
+        this.koopTriggers = klant.getTriggerKoperList();
+        this.verkoopTriggers = klant.getTriggerVerkoperList();
     }
 
-    public List<Transactie> getTransactieLijst() {
-        return transactieLijst;
+
+
+    public List<Transactie> maakTransactieLijstGekocht(Gebruiker klant) {
+        List<Transactie> transactieLijstGekocht = new ArrayList<>();
+        for(Transactie transactie: klant.getTransacties()){
+            if(transactie.getKoper().getGebruikerId() == klant.getGebruikerId()){
+                transactieLijstGekocht.add(transactie);
+            }
+        }
+        return transactieLijstGekocht;
     }
 
-    public void setTransactieLijst(List<Transactie> transactieLijst) {
-        this.transactieLijst = transactieLijst;
+    public List<Transactie> getTransactieLijstGekocht() {
+        return transactieLijstGekocht;
+    }
+
+    public void setTransactieLijstGekocht(List<Transactie> transactieLijstGekocht) {
+        this.transactieLijstGekocht = transactieLijstGekocht;
+    }
+
+    public List<Transactie> maakTransactieLijstVerkocht(Gebruiker klant) {
+        List<Transactie> transactieLijstVerkocht = new ArrayList<>();
+        for(Transactie transactie: klant.getTransacties()){
+            if(transactie.getVerkoper().getGebruikerId() == klant.getGebruikerId()){
+                transactieLijstVerkocht.add(transactie);
+            }
+        }
+        return transactieLijstVerkocht;
+    }
+
+    public List<Transactie> getTransactieLijstVerkocht() {
+        return transactieLijstVerkocht;
+    }
+
+    public void setTransactieLijstVerkocht(List<Transactie> transactieLijstVerkocht) {
+        this.transactieLijstVerkocht = transactieLijstVerkocht;
     }
 
     public List<Trigger> getKoopTriggers() {
-
         return koopTriggers;
     }
 

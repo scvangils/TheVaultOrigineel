@@ -12,6 +12,8 @@ import net.minidev.json.annotate.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
@@ -27,7 +29,7 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
  */
 
 @Repository
-public class RootRepository {
+public class RootRepository implements ApplicationListener<ContextRefreshedEvent> {
 
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(RootRepository.class);
@@ -40,6 +42,8 @@ public class RootRepository {
     private final AdresDAO adresDAO;
     private final TransactieDAO transactieDAO;
     private final TriggerDAO triggerDAO;
+    private final String KOPER = "Koper";
+    private final String VERKOPER = "Verkoper";
 
     /**
      * Constructor voor RootRepository
@@ -116,6 +120,10 @@ public class RootRepository {
             klant.setRekening(vindRekeningVanGebruiker(klant));
             klant.setAdres(adresDAO.getAdresByKlant(klant));
             klant.setPortefeuille(vulPortefeuilleKlant(klant));
+            klant.setTransacties(geefTransactiesVanGebruiker(klant));
+            klant.setTriggerKoperList(vindTriggersByGebruiker(klant, KOPER));
+            klant.setTriggerVerkoperList(vindTriggersByGebruiker(klant, VERKOPER));
+
         }
     }
 
@@ -284,7 +292,12 @@ public class RootRepository {
         return cryptoWaardeList;
     }
 
-    //TODO JavaDoc
+    /**
+     *  Deze methode slaat een transactie op in de database
+     *
+     * @param transactie de betreffende transactie
+     * @return de transactie met zijn nieuwe Id
+     */
     public Transactie slaTransactieOp(Transactie transactie){
         return transactieDAO.slaTransactieOp(transactie);
     }
@@ -293,6 +306,8 @@ public class RootRepository {
      * methode die alle transacties die bij een klant horen teruggeeft
      * hierbij worden eerst de koper, verkoper en cryptomunt op id uit de database
      * gehaald en toegevoegd aan het transactie object
+     * Als de bank een partij is, wordt er geen gebruiker uit de database gehaald,
+     * alleen een rekening
      *
      * @param gebruiker de klant waarvan alle transacties moeten worden opgezocht
      * @return lijst transacties van de klant
@@ -300,11 +315,29 @@ public class RootRepository {
     List<Transactie> geefTransactiesVanGebruiker(Gebruiker gebruiker){
         List<Transactie> transactiesVanKlant = transactieDAO.geefTransactiesVanGebruiker(gebruiker);
         for (Transactie transactie: transactiesVanKlant) {
-            transactie.setKoper(klantDAO.vindKlantById(transactie.getKoper().getGebruikerId()));
-            transactie.setVerkoper(klantDAO.vindKlantById(transactie.getVerkoper().getGebruikerId()));
-            transactie.setCryptomunt(cryptomuntDAO.geefCryptomunt(transactie.getCryptomunt().getId()));
+            maakTransactieCompleet(transactie);
         }
         return transactiesVanKlant;
+    }
+
+    private void maakTransactieCompleet(Transactie transactie) {
+        setKoperTransactie(transactie);
+        setVerkoperTransactie(transactie);
+        transactie.setCryptomunt(cryptomuntDAO.geefCryptomunt(transactie.getCryptomunt().getId()));
+    }
+
+    private void setVerkoperTransactie(Transactie transactie) {
+        if(transactie.getVerkoper().getGebruikerId() != 0) {
+            transactie.setVerkoper(klantDAO.vindKlantById(transactie.getVerkoper().getGebruikerId()));
+        }
+        else transactie.getVerkoper().setRekening(vindRekeningVanGebruiker(transactie.getVerkoper()));
+    }
+
+    private void setKoperTransactie(Transactie transactie) {
+        if(transactie.getKoper().getGebruikerId() != 0){
+            transactie.setKoper(klantDAO.vindKlantById(transactie.getKoper().getGebruikerId()));
+        }
+        else transactie.getKoper().setRekening(vindRekeningVanGebruiker(transactie.getKoper()));
     }
 
 
@@ -320,9 +353,7 @@ public class RootRepository {
     List<Transactie> geefTransactiesVanGebruikerInPeriode(Gebruiker gebruiker, Timestamp startDatum, Timestamp eindDatum){
         List<Transactie> transactiesVanKlant =  transactieDAO.geefTransactiesVanGebruikerInPeriode(gebruiker, startDatum, eindDatum);
         for (Transactie transactie: transactiesVanKlant) {
-            transactie.setKoper(klantDAO.vindKlantById(transactie.getKoper().getGebruikerId()));
-            transactie.setVerkoper(klantDAO.vindKlantById(transactie.getVerkoper().getGebruikerId()));
-            transactie.setCryptomunt(cryptomuntDAO.geefCryptomunt(transactie.getCryptomunt().getId()));
+            maakTransactieCompleet(transactie);
         }
         return transactiesVanKlant;
     }
@@ -344,9 +375,7 @@ public class RootRepository {
     List<Transactie> geefTransactiesVanGebruikerMetCryptomunt(Gebruiker gebruiker, Cryptomunt cryptomunt){
         List<Transactie> transactieList = transactieDAO.geefTransactiesVanGebruikerMetCryptomunt(gebruiker, cryptomunt);
         for (Transactie transactie : transactieList) {
-            transactie.setCryptomunt(cryptomunt);
-            transactie.setKoper(vindKlantById(transactie.getKoper().getGebruikerId()));
-            transactie.setVerkoper(vindKlantById(transactie.getVerkoper().getGebruikerId()));
+        maakTransactieCompleet(transactie);
         }
         return transactieList;
     }
@@ -410,7 +439,7 @@ public class RootRepository {
 
     private void maakTriggerCompleet(Trigger trigger) {
         trigger.setCryptomunt(geefCryptomunt(trigger.getCryptomunt().getId()));
-        trigger.setGebruiker(vindKlantById(trigger.getGebruiker().getGebruikerId()));
+        trigger.setGebruiker(klantDAO.vindKlantById(trigger.getGebruiker().getGebruikerId()));
     }
 
     /**
@@ -471,5 +500,12 @@ public class RootRepository {
         transactiePaginaDto.setCryptoAantal(assetDAO.geefAantalCryptoInEigendom(klant,cryptomunt));
         transactiePaginaDto.setBankfee(Bank.getInstance().getFee());
         return transactiePaginaDto;
+    }
+
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        List<Transactie> transactieList = geefTransactiesVanGebruiker(vindKlantByGebruikersnaam("LavernRoman"));
+        transactieList.forEach(System.out::println);
+        System.out.println(vindKlantByGebruikersnaam("LavernRoman"));
     }
 }

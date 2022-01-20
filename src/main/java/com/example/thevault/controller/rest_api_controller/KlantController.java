@@ -95,35 +95,11 @@ public class KlantController extends BasisApiController{
         throw new RefreshJWTFailedException();
     }
 
-    //TODO Verwijderen?
     /**
     @author Wim 20211207
     methode die inloggegevens ontvangt en laat checken of deze correct zijn en inlog succesvol wordt
     of een algemene foutmelding verstuurt
      */
-/*    @PostMapping("/login")
-    public ResponseEntity<WelkomDTO> loginHandler(@RequestBody LoginDto loginDto) throws LoginFailedException {
-        //roep loginValidatie aan in de service
-        Klant klant = loginService.valideerLogin(loginDto);
-        System.out.println();
-        System.out.println(klant);
-        System.out.println();
-        if(klant != null){
-            TokenKlantCombinatie tokenKlantCombinatie = authorizationService.authoriseer(klant);
-            System.out.println();
-            System.out.println(tokenKlantCombinatie.toString());
-            String jwtToken = authorizationService.generateJwtToken(klant);
-            System.out.println("test van transparent: " + jwtToken);
-            System.out.println();
-            // hier moeten de tokens worden toegevoegd aan de header
-            return ResponseEntity.ok()
-                    .header("Authorization", tokenKlantCombinatie.getKey().toString(), "AuthoriatJwt", jwtToken)
-                    .body(new WelkomDTO(klant));
-        }
-        throw new LoginFailedException();
-    }*/
-
-    //TODO JavaDoc
     @PostMapping("/login")
     public ResponseEntity<WelkomDTO> loginHandler(@RequestBody LoginDto loginDto) throws LoginFailedException {
         //roep loginValidatie aan in de service
@@ -141,15 +117,13 @@ public class KlantController extends BasisApiController{
         throw new LoginFailedException();
     }
 
-    //TODO JavaDoc
-    public ResponseEntity<WelkomDTO> getResponseEntity(Klant klant, ResponseCookie responseCookie, String jwtToken) {
+    private ResponseEntity<WelkomDTO> getResponseEntity(Klant klant, ResponseCookie responseCookie, String jwtToken) {
         return ResponseEntity.ok()
                 .header("Authorization", "Bearer " + jwtToken)
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
                 .body(new WelkomDTO(klant, klantService.geefNuttigePortefeuille(klant)));
     }
 
-    //TODO JavaDoc(private method?)
     private ResponseCookie getResponseCookie(TokenKlantCombinatie tokenKlantCombinatie) {
         return ResponseCookie.from("RefreshToken",
                 tokenKlantCombinatie.getKey().toString()).path("/validate/refresh").httpOnly(true).build();

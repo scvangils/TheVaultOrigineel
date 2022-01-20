@@ -37,7 +37,7 @@ public class TransactieController extends BasisApiController {
     /**
      *  Deze methode verzorgt de gegevens die nodig zijn om een transactiepagina te kunnen aanmaken
      *  op basis van de klant en de gewenste cryptomunt waarin hij/zij wil handelen
-     *  Als dit goed verloopt komt alle benogide informatie terug en een
+     *  Als dit goed verloopt komt alle benodigde informatie terug en een
      *  HTTP-response 200 = OK
      * @param transactieStartDto een object dat wordt aangemaakt op basis van gebruikersnaam van de gebruiker
      *                           en cryptoid van de gekozen cryptomunt
