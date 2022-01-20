@@ -34,4 +34,11 @@ public class TriggerVerkoper extends Trigger{
     public String toString() {
         return "TriggerVerkoper: " + super.toString();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TriggerVerkoper)) return false;
+        return super.equals(o);
+    }
 }

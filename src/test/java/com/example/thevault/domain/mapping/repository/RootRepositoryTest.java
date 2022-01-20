@@ -214,8 +214,4 @@ class RootRepositoryTest {
     }*/
 
 
-    @Test
-    void checkRekeningNaTransactie () {
-
-    }
 }

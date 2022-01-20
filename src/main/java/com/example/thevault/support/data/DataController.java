@@ -1,9 +1,6 @@
 // Created by S.C. van Gils
 // Creation date 20-12-2021
 
-/**
- * Deze klasse is bedoeld om de database te kunnen vullen met random gegenereerde data
- */
 
 package com.example.thevault.support.data;
 
@@ -71,28 +68,15 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         // gebruik hier onderstaande functies om data te genereren
-    //   cryptoWaardeService.haalCryptoWaardes();
-
-
-
-/*        TransactieDataRange transactieDataRange = new TransactieDataRange(60, 11);
-        RandomTransactieRange randomTransactieRange = new RandomTransactieRange(2, 5);
-        BankAlsTransactiePartij bankAlsTransactiePartij = new BankAlsTransactiePartij(false, false);
-
-        RandomDataInput randomDataInput = new RandomDataInput(200, transactieDataRange, bankAlsTransactiePartij, randomTransactieRange);
-        List<Transactie> transactieList = genereerRandomTransacties(randomDataInput);
-        transactieList.forEach(System.out::println);*/
     }
 
-    //TODO 'Throws' tag mist
-    //TODO Verwijderen?
     /**
      * Deze methode slaat klanten op die gegenereerd worden op basis van een csv-bestand en methodes uit Datagenerator
      *
      * @param hoeveelKlanten Bepaalt hoeveel klanten er worden opgeslagen,
      *                      zodat je niet vast zit aan de grootte van het bestand
      * @param bestandsnaam de naam van het csv-bestand
-     * @throws IOException
+     * @throws IOException Als bestand niet gevonden wordt
      */
     public void vulKlantAdresEnRekeningTabel(int hoeveelKlanten, String bestandsnaam) throws IOException {
         List<Klant> list = DataGenerator.maakLijstKlantenVanCSV(bestandsnaam, hoeveelKlanten);
@@ -101,13 +85,11 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         }
     }
 
-    //TODO Parameter tag toevoegen
-    //TODO Verwijderen?
     /**
      * Deze methode genereert random transacties en slaat ze op
      * Het catch-block zorgt ervoor dat een transactie die niet slaagt niet meteen het hele proces stopt
      *
-     * @param randomDataInput
+     * @param randomDataInput Een object dat de gewenste restricties aan de dataset meegeeft
      */
     public void slaRandomTransactiesOp(RandomDataInput randomDataInput){
         List<Transactie> transacties = genereerRandomTransacties(randomDataInput);
@@ -213,10 +195,10 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
      *
      * @param randomDataInput Een object dat de gewenste restricties aan de dataset meegeeft
      * @param koperId De gebruikerId van de koper
-     * @return
+     * @return een random gegenereerde gebruikerId
      */
     private int setVerkoperId(RandomDataInput randomDataInput, int koperId) {
-        int verkoperId = 0;
+        int verkoperId;
         do {
             verkoperId = getRandomGebruikerId(randomDataInput.getTransactieDataRange().getGebruikerIdMinimum(),
                     randomDataInput.getTransactieDataRange().getGebruikerIdMaximum(),
@@ -303,7 +285,7 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
      */
     public List<CryptoWaarde> genereerHistorischeCryptoWaardesVanEenCryptomunt(CryptoWaarde cryptoWaarde, int hoeveelWaarden, int afwijkingsPercentage){
         List<CryptoWaarde> cryptoWaardeList = new ArrayList<>();
-        double afwijking = 0;
+        double afwijking;
         double waarde = cryptoWaarde.getWaarde();
         for (int i = 0; i < hoeveelWaarden; i++) {
             afwijking = genereerRandomGetal(-100000 + afwijkingsPercentage, 100000 * afwijkingsPercentage, 1) / 10000000.0;
@@ -359,8 +341,9 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         System.out.println(triggerVerkoper);
         Trigger triggerVerkoperTwee = new TriggerVerkoper(klant, bitcoin, bitcoinWaarde.getWaarde(), 0.01);
         Trigger triggerKoperTwee = transactieService.maakBankTrigger(triggerVerkoperTwee);
-        transactieService.sluitTransactie(LocalDateTime.now(), triggerKoper,triggerVerkoper);
+/*        transactieService.sluitTransactie(LocalDateTime.now(), triggerKoper,triggerVerkoper);
 
-        transactieService.sluitTransactie(LocalDateTime.now(), triggerKoperTwee,triggerVerkoperTwee);
+        transactieService.sluitTransactie(LocalDateTime.now(), triggerKoperTwee,triggerVerkoperTwee);*/
+        System.out.println("Is dit hetzelfde? " + triggerKoper.equals(triggerVerkoperTwee));
     }
 }

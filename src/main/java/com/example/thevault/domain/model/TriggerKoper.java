@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class TriggerKoper extends Trigger{
 
@@ -33,5 +34,12 @@ public class TriggerKoper extends Trigger{
     @Override
     public String toString() {
         return "TriggerKoper:" + super.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof TriggerKoper)) return false;
+        return super.equals(o);
     }
 }

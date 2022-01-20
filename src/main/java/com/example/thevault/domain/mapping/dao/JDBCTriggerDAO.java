@@ -19,6 +19,12 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
+import static com.example.thevault.service.TriggerService.isKoper;
+
+/**
+ * Deze klasse zorgt ervoor dat de backend kan communiceren met de database,
+ * in dit geval met de triggerKoper en TriggerVerkoper-tabel
+ */
 @Repository
 public class JDBCTriggerDAO implements TriggerDAO {
 
@@ -26,21 +32,19 @@ public class JDBCTriggerDAO implements TriggerDAO {
 
     private final Logger logger = LoggerFactory.getLogger(JDBCTriggerDAO.class);
 
-    //TODO JavaDoc
+    /**
+     * Een constructor voor dependency injection
+     *
+     * @param jdbcTemplate De Spring Boot class die java-naar-sql makkelijk maakt
+     */
     public JDBCTriggerDAO(JdbcTemplate jdbcTemplate) {
         super();
         this.jdbcTemplate = jdbcTemplate;
         logger.info("New JDBCTriggerDAO");
     }
 
-    //TODO JavaDoc
-    public boolean checkTriggerKoper(Trigger trigger){
-        return (trigger instanceof TriggerKoper);
-    }
-
-    //TODO JavaDoc
-    public String toonJuisteTabel(Trigger trigger){
-        if(checkTriggerKoper(trigger)){
+    private String toonJuisteTabel(Trigger trigger){
+        if(isKoper(trigger)){
             return "triggerKoper";
         }
         return "triggerVerkoper";
@@ -118,15 +122,37 @@ public class JDBCTriggerDAO implements TriggerDAO {
         return null;
     }
 
+    @Override
+    public Trigger vindTriggerById(int triggerId, String koperOfVerkoper) {
+        String tabel = "trigger" + koperOfVerkoper;
+        String sql = String.format("SELECT * FROM %s WHERE triggerId = ?;", tabel);
+        try{
+            return jdbcTemplate.queryForObject(sql, maakJuisteRowMapper(koperOfVerkoper), triggerId);
+        }
+        catch (
+                EmptyResultDataAccessException exception){
+            logger.warn("Geen data gevonden, exceptie: " + exception);
+        }
+        return null;
+    }
+
+
     private String getMatchSql(Trigger trigger) {
         String koperSql = "SELECT * FROM triggerKoper WHERE aantal = ? AND cryptomuntId = ? AND triggerPrijs >= ? " +
                 "AND NOT gebruikerId = ? ORDER BY triggerPrijs DESC, datum ASC LIMIT 1;";
         String verkoperSql = "SELECT * FROM triggerVerkoper WHERE aantal = ? AND cryptomuntId = ? AND triggerPrijs <= ? " +
                 "AND NOT gebruikerId = ? ORDER BY triggerPrijs ASC, datum ASC LIMIT 1;";
-        return (checkTriggerKoper(trigger)) ? verkoperSql: koperSql;
+        return (isKoper(trigger)) ? verkoperSql: koperSql;
     }
 
-    //TODO JavaDoc
+    /**
+     * author: Steven van Gils
+     * Geeft alle triggers van een bepaald type aanwezig in de database van een bepaalde gebruiker
+     *
+     * @param gebruiker De betreffende gebruiker
+     * @param koperOfVerkoper Geeft aan welke tabel gebruikt moet worden
+     * @return een List van Triggers, geheel bestaand uit een enkele subklasse
+     */
     @Override
     public List<Trigger> vindTriggersByGebruiker(Gebruiker gebruiker, String koperOfVerkoper) {
         String tabel = "trigger" + koperOfVerkoper;
@@ -161,8 +187,18 @@ public class JDBCTriggerDAO implements TriggerDAO {
         return null;
     }
 
-    //TODO JavaDoc
-    public static Trigger getTrigger(ResultSet resultSet, Trigger trigger) throws SQLException {
+
+    /**
+     * Deze methode maakt een Trigger-object aan op basis van een resultSet
+     * Hij is protected static zodat hij binnen de package gebruikt kan worden,
+     * maar binnen meerdere klassen, aangezien hij in twee RowMapper-klassen nodig is.
+     *
+     * @param resultSet De database-informatie over de aan te passen trigger
+     * @param trigger de aan te passen trigger
+     * @return het trigger-object met de gevulde fields
+     * @throws SQLException Als er een sql-fout optreedt
+     */
+    protected static Trigger getTrigger(ResultSet resultSet, Trigger trigger) throws SQLException {
         trigger.setTriggerId(resultSet.getInt("triggerId"));
         trigger.setTriggerPrijs(resultSet.getDouble("triggerPrijs"));
         trigger.setAantal(resultSet.getDouble("aantal"));
@@ -175,25 +211,29 @@ public class JDBCTriggerDAO implements TriggerDAO {
         return trigger;
     }
 
-    //TODO JavaDoc
-    public RowMapper<Trigger> maakJuisteRowMapper(Trigger trigger){
-        if(checkTriggerKoper(trigger)){
+    /**
+     * Deze methode zorgt ervoor dat afhankelijk van de mogelijke rol in de transactie
+     * de juiste tabel wordt geraadpleegd
+     *
+     * @param rolGebruiker Of de gebruiker koper of verkoper is
+     * @return een RowMapper
+     */
+    private RowMapper<Trigger> maakJuisteRowMapper(String rolGebruiker){
+        if(rolGebruiker.equals("Koper")){
             return new TriggerKoperRowMapper();
         }
         else return new TriggerVerkoperRowMapper();
     }
 
-    //TODO JavaDoc
-    public RowMapper<Trigger> maakJuisteRowMapper(String typeGebruiker){
-        if(typeGebruiker.equals("Koper")){
-            return new TriggerKoperRowMapper();
-        }
-        else return new TriggerVerkoperRowMapper();
-    }
-
-    //TODO JavaDoc
-    public RowMapper<Trigger> maakOmgekeerdeRowMapper(Trigger trigger) {
-        if (!checkTriggerKoper(trigger)) {
+    /**
+     * Deze methode zorgt ervoor dat bij een triggerKoper een TriggerVerkoperRowMapper geïnstantieerd wordt
+     * en vice versa, toepasbaar in de vindMatch-methode;
+     *
+     * @param trigger De betreffende trigger
+     * @return een RowMapper
+     */
+    private RowMapper<Trigger> maakOmgekeerdeRowMapper(Trigger trigger) {
+        if (!isKoper(trigger)) {
             return new TriggerKoperRowMapper();
         } else return new TriggerVerkoperRowMapper();
     }
