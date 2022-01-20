@@ -11,6 +11,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * Deze class handelt de zaken af die met registreren te maken hebben
+ * en combineert de functionaliteit van enkele andere services daarvoor
+ */
 @Service
 public class RegistrationService {
 
@@ -20,7 +24,14 @@ public class RegistrationService {
     private final AdresService adresService;
     private final RekeningService rekeningService;
 
-    //TODO JavaDoc
+    /**
+     * De constructor van de RegistrationService class voor Spring Boot
+     * met dependency injection
+     *
+     * @param klantService De service-class die zich bezighoudt met klant-gerelateerde processen
+     * @param adresService De service-class die zich bezighoudt met adres-gerelateerde processen
+     * @param rekeningService De service-class die zich bezighoudt met rekening-gerelateerde processen
+     */
     @Autowired
     public RegistrationService(KlantService klantService, AdresService adresService, RekeningService rekeningService) {
         super();

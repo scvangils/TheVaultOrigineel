@@ -3,11 +3,11 @@
 
 package com.example.thevault.service;
 
-import com.example.thevault.domain.mapping.dao.JDBCAssetDAO;
+
 import com.example.thevault.domain.mapping.repository.RootRepository;
 
 import com.example.thevault.domain.model.*;
-import com.example.thevault.domain.transfer.AssetDto;
+
 import com.example.thevault.domain.transfer.CryptoDto;
 import com.example.thevault.support.BSNvalidator;
 import com.example.thevault.support.exceptions.AgeTooLowException;
@@ -19,39 +19,40 @@ import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
-import java.sql.ResultSet;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Deze class handelt zaken af die met klanten te maken hebben
+ * en zorgt dat deze in de database opgeslagen worden
+ */
+
 @Service
-public class KlantService implements ApplicationListener<ContextRefreshedEvent> {
+public class KlantService{
 
     private final RootRepository rootRepository;
     private final Logger logger = LoggerFactory.getLogger(KlantService.class);
     public final static int VOLWASSEN_LEEFTIJD = 18;
-    public final static int MINIMALE_WACHTWOORDLENGTE = 8; // TODO navragen of dit public of private moet
+    public final static int MINIMALE_WACHTWOORDLENGTE = 8;
 
-    //TODO JavaDoc
+    /**
+     * De constructor van de KlantService class voor Spring Boot
+     * met dependency injection
+     *
+     * @param rootRepository De class die als facade voor de database dient
+     */
     @Autowired
     public KlantService(RootRepository rootRepository) {
         super();
         this.rootRepository = rootRepository;
         logger.info("New KlantService.");
-    }
-
-    //TODO JavaDoc
-    //TODO Vullen of verwijderen?
-    @Override
-    public void onApplicationEvent(ContextRefreshedEvent event) {
-        // hier kan het dus ook
     }
 
     /**
@@ -77,7 +78,6 @@ public class KlantService implements ApplicationListener<ContextRefreshedEvent> 
         return rootRepository.vindKlantById(gebruikerId);
     }
 
-    //TODO Verwijderen?
     /**
      * Author: Carmen
      * In de portefeuille van de klant worden de assets vervangen door AssetDTO objecten, waarbij alleen de
@@ -86,13 +86,6 @@ public class KlantService implements ApplicationListener<ContextRefreshedEvent> 
      * @return List</AssetDto> een lijst met alle assets van de klant, zijnde de portefeuille, in de vorm die voor de
      * klant meerwaarde heeft
      */
-//    public List<AssetDto> geefNuttigePortefeuille(Klant klant){
-//        List<AssetDto> portefeuilleVoorKlant = new ArrayList<>();
-//        for (Asset asset : klant.getPortefeuille()) {
-//            portefeuilleVoorKlant.add(new AssetDto(asset, rootRepository.haalMeestRecenteCryptoWaarde(asset.getCryptomunt())));
-//        }
-//        return portefeuilleVoorKlant;
-//    }
 
     public List<CryptoDto> geefNuttigePortefeuille(Klant klant){
         List<CryptoDto> portefeuilleVoorKlant = new ArrayList<>();
@@ -196,24 +189,6 @@ public class KlantService implements ApplicationListener<ContextRefreshedEvent> 
             throw new IncorrectBSNException();
         }
     }
-
-    //TODO Verwijderen?
-//    /**
-//     * Wim 20211207
-//     * @param gebruikersNaam
-//     * @param wachtwoord
-//     * @return Klant als combinatie gebruikersnaam en wachtwoord correct is, anders geef foutmelding
-//     */
-//    public Klant valideerLogin (String gebruikersNaam, String wachtwoord) throws LoginFailedException {
-//        //vraag wachtwoord op via RootRepos
-//        if(vindKlantByGebruikersnaam(gebruikersNaam) == null){
-//            throw new LoginFailedException();
-//        }
-//       if(!BCryptWachtwoordHash.verifyHash(wachtwoord, vindKlantByGebruikersnaam(gebruikersNaam).getWachtwoord())){
-//           throw new LoginFailedException();
-//       }
-//        return vindKlantByGebruikersnaam(gebruikersNaam);
-//    }
 
     /**
      * Deze methode kijkt of de ingevulde geboortedatum van de klant

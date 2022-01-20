@@ -31,13 +31,22 @@ public abstract class Trigger {
     protected  double aantal;
     protected LocalDate datum;
 
-    //TODO JavaDoc
+    /**
+     * no-args constructor voor Trigger class
+     */
     public Trigger() {
         super();
         logger.info("New Trigger");
     }
 
-    //TODO JavaDoc
+    /**
+     * constructor voor de Trigger class die wordt gebruikt in de subclasses
+     *
+     * @param gebruiker de maker van de trigger
+     * @param cryptomunt de gewenste cryptomunt
+     * @param triggerPrijs de gewenste prijs
+     * @param aantal het gewenste aantal
+     */
     public Trigger(Gebruiker gebruiker, Cryptomunt cryptomunt, double triggerPrijs, double aantal){
         super();
         this.triggerId = DEFAULT_TRIGGER_ID;
@@ -46,10 +55,17 @@ public abstract class Trigger {
         this.triggerPrijs = triggerPrijs;
         this.aantal = aantal;
 
-        logger.info("New Trigger, all-args constructor");
+        logger.info("New Trigger, veel ");
     }
 
-    //TODO JavaDoc
+    /**
+     * Constructor voor Trigger die fields set die geen complexe objecten zijn
+     *
+     * @param triggerId de id in de database
+     * @param triggerPrijs de gewenste prijs
+     * @param aantal het gewenste aantal
+     * @param datum de datum waarop de trigger is aangemaakt
+     */
     public Trigger(int triggerId, double triggerPrijs, double aantal, LocalDate datum) {
         this(null, null, triggerPrijs,aantal);
         this.triggerId = triggerId;
@@ -122,8 +138,8 @@ public abstract class Trigger {
         if (this == o) return true;
         if (!(o instanceof Trigger)) return false;
         Trigger trigger = (Trigger) o;
-        return triggerId == trigger.triggerId && Objects.equals(gebruiker, trigger.gebruiker)
-                && Objects.equals(cryptomunt, trigger.cryptomunt) && Objects.equals(datum, trigger.datum);
+        return triggerId == trigger.triggerId && Objects.equals(gebruiker.getGebruikerId(), trigger.gebruiker.gebruikerId)
+                && Objects.equals(cryptomunt.getId(), trigger.cryptomunt.getId()) && Objects.equals(datum, trigger.datum);
     }
 
     @Override

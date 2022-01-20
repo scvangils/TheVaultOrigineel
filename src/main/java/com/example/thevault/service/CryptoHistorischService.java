@@ -9,29 +9,42 @@ import com.example.thevault.domain.model.Cryptomunt;
 import com.example.thevault.domain.transfer.CryptoWaardenHistorischDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Deze class zorgt ervoor dat de juiste data naar de front-end kan gaan
+ * voor de grafische weergave van de historische koersen van de verschillende cryptomunten
+ */
+
 @Service
-public class CryptoHistorischService implements ApplicationListener<ContextRefreshedEvent> {
+public class CryptoHistorischService{
 
     private final Logger logger = LoggerFactory.getLogger(CryptoHistorischService.class);
 
     private final RootRepository rootRepository;
 
-    //TODO JavaDoc
+    /**
+     * constructor voor CryptoHistorischService voor Spring Boot
+     * met dependency injection
+     *
+     * @param rootRepository  De class die als facade voor de database dient
+     */
     public CryptoHistorischService(RootRepository rootRepository) {
         super();
         this.rootRepository = rootRepository;
         logger.info("New CryptoHistorischService");
     }
 
-    //TODO JavaDoc
+    /**
+     * Deze methode combineert de koersen en de data waarop die koersen waren
+     * van een specifieke cryptomunt in een object dat twee arrays bevat
+     *
+     * @param cryptomunt De betreffende cryptomunt
+     * @return een Dto die een array van waarden en een array van datum-strings bevat
+     */
     public CryptoWaardenHistorischDto maakCryptoWaardeArray(Cryptomunt cryptomunt){
-        // bepalen wat voor soort array moet geschreven worden
         List<CryptoWaarde> cryptoWaardeList = rootRepository.haalAlleCryptoWaardesVanCryptomunt(cryptomunt);
         String[] datum = new String[cryptoWaardeList.size()];
         double[] waarde = new double[cryptoWaardeList.size()];
@@ -42,22 +55,26 @@ public class CryptoHistorischService implements ApplicationListener<ContextRefre
         return new CryptoWaardenHistorischDto(datum, waarde);
     }
 
-    //TODO JavaDoc
+    /**
+     * Deze methode maakt een array van cryptomunten die ingelezen kan worden in de front-end
+     * als input voor html-elementen
+     *
+     * @return een array van alle gebruikte cryptomunten
+     */
     public Cryptomunt[] maakCryptoMuntArray(){
         return rootRepository.geefAlleCryptomunten().toArray(Cryptomunt[]::new);
     }
 
-    //TODO JavaDoc
+    /**
+     * Deze methode geeft een Cryptomunt-object terug op basis van de naam van de munt
+     * Deze wordt gehaald uit de tabel in de database
+     *
+     * @param naam de naam van de gezochte cryptomunt
+     * @return het corresponderende cryptomunt object of null indien niet aanwezig in de database
+     */
     public Cryptomunt getCryptoMuntOpNaam(String naam){
-       return CryptoWaardeService.cryptoLijst().stream()
+       return rootRepository.geefAlleCryptomunten().stream()
                .filter(cryptomunt -> cryptomunt.getName().equals(naam)).findFirst().orElse(null);
     }
 
-    //TODO JavaDoc?
-    //TODO Verwijderen?
-    @Override
-    public void onApplicationEvent(ContextRefreshedEvent event) {
-    /*    List<CryptoWaarde> cryptoWaardeList = rootRepository.haalAlleCryptoWaardesVanCryptomunt(getCryptoMuntOpNaam("bitcoin"));
-        cryptoWaardeList.forEach(System.out::println);*/
-    }
 }

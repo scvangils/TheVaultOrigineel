@@ -25,36 +25,10 @@ public class CryptoWaardeService {
     private static final String CRON_ELKE_DAG_OM_MIDDERNACHT = "0 0 0 * * *";
     private static final String CRON_NEDERLANDSE_TIJDZONE = "Europe/Paris";
 
-    //TODO Verwijderen of uitwerken?
-    //TODO JavaDoc
-/*    *//*
-    roept 1x per dag de methode haalCryptoWaardes op
-     *//*
-    public void main(String[] args) {
-        Timer timer = new Timer();
-        TimerTask tt = new TimerTask() {
-            @Override
-            public void run() {
-                haalCryptoWaardes();
-            }
-        };
-        timer.schedule(tt, new Date(), TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
-
-    }*/
-
     //TODO JavaDoc
     public CryptoWaardeService(RootRepository rootRepository){
         super();
         this.rootRepository = rootRepository;
-    }
-
-    //TODO JavaDoc
-    //TODO Arraymaker-methode schrijven
-    public CryptoWaarde[] maakCryptoWaardeArray(Cryptomunt cryptomunt){
-        // bepalen wat voor soort array moet geschreven worden
-        List<CryptoWaarde> cryptoWaardeList = rootRepository.haalAlleCryptoWaardesVanCryptomunt(cryptomunt);
-        // eventueel in json-string veranderen
-        return null;
     }
 
     /**
@@ -77,13 +51,12 @@ public class CryptoWaardeService {
         return rootRepository.haalMeestRecenteCryptoWaarde(cryptomunt);
     }
 
-    //TODO Returnwaarde toevoegen
     /**
      * Deze methode haalt de koers van een cryptomunt op een bepaalde dag op
      *
      * @param cryptomunt De betreffende cryptomunt
      * @param datum De datum waarop gezocht wordt
-     * @return
+     * @return Een cryptoWaarde-object met de gezochte informatie of null indien niet aanwezig voor die datum
      */
     public CryptoWaarde vindCryptoWaardeOpDatum(Cryptomunt cryptomunt, LocalDate datum){
         return rootRepository.haalCryptoWaardeOpDatum(cryptomunt, datum);
