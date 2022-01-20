@@ -54,6 +54,9 @@ class RekeningServiceTest {
 
     /**
      * Author Ju-Sen Cheung
+     * Er kan geen nieuweRekening object(regel 39) aan deze test gekoppeld worden, omdat er iedere keer een nieuwe iban
+     * wordt gegenereerd. Het startsaldo van een nieuwe rekening is € 1000,-. De klant wordt in de methode creeerRekening
+     * meegegeven/vastgezet.
      */
     @Test
     void creeerRekening() {
@@ -61,7 +64,13 @@ class RekeningServiceTest {
         System.out.println(actual);
         assertThat(actual.getIban()).isNotNull();
         assertThat(actual.getSaldo()).isEqualTo(1000.0);
-        //TODO Testen dat de rekening aan de juiste klant is gekoppeld
+        Rekening expected = nieuweKlant.getRekening();
+        System.out.println(expected);
+        assertThat(actual.getGebruiker().getGebruikersnaam()).isEqualTo("ThomasBeste");
+        assertThat(actual.getGebruiker()).isEqualTo(nieuweKlant);
+        assertThat(actual.getGebruiker()).isNotEqualTo(nietBestaandeKlant);
+        assertThat(actual.getGebruiker()).isNotEqualTo(bestaandeKlant);
+        assertThat(actual.getGebruiker().getGebruikersnaam()).isNotEqualTo("AlsDezeNaamWordtGoedGekeurdDanKloptDeTestNiet");
     }
 
     /**
@@ -152,9 +161,8 @@ class RekeningServiceTest {
         assertThat(actual).isEqualTo(expected);
     }
 
-    /**
-     * Author Ju-Sen Cheung
-     */
+    // TODO author toevoegen
+
     @Test
     void wijzigSaldoInGebruikerRekeningJava(){
         Mockito.when(mockRepo.wijzigSaldoVanGebruiker(bestaandeKlant, 2000.0)).thenReturn(rekeningVoorWijzigSaldoExpected);
@@ -165,5 +173,4 @@ class RekeningServiceTest {
         double actual = bestaandeKlant.getRekening().getSaldo();
         assertThat(actual).isEqualTo(expected);
     }
-
 }

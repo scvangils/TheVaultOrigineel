@@ -85,7 +85,7 @@ public class Rekening {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Rekening rekening = (Rekening) o;
-        return Double.compare(rekening.saldo, saldo) == 0 && iban.equals(rekening.iban) && gebruiker.equals(rekening.gebruiker);
+        return Double.compare(rekening.saldo, saldo) == 0 && iban.equals(rekening.iban) && gebruiker.gebruikersnaam.equals(rekening.gebruiker.gebruikersnaam);
     }
 
     /**
