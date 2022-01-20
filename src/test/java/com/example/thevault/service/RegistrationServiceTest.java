@@ -31,7 +31,8 @@ class RegistrationServiceTest {
         String gehashtWachtwoord = BCryptWachtwoordHash.hashWachtwoord("testWWWWWWWWW");
         adres = new Adres("straat", 357, "C", "1000AA", "Amsterdam");
         testKlant = new Klant("testKlant", gehashtWachtwoord,
-                "Jan", adres, 145801354, LocalDate.now().minusYears(18));
+                "Jan", 145801354, LocalDate.now().minusYears(18));
+        testKlant.setAdres(adres);
         testRekening = new Rekening("NL20INGB0006582287", 0.0);
     }
 

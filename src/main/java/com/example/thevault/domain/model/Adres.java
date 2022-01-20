@@ -9,6 +9,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
+/**
+ * Deze class maakt van een adres een object
+ */
+
 public class Adres {
     private int adresId;
     private static int DEFAULT_ADRES_ID = 0;
@@ -21,13 +25,23 @@ public class Adres {
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Adres.class);
 
-    //TODO JavaDoc
+    /**
+     * No-args constructor voor Adres-class
+     */
     public Adres(){
         super();
         logger.info("Leeg adres, no args constructor");
     }
 
-    //TODO JavaDoc
+    /**
+     * All-args constructor voor Adres-class
+     *
+     * @param straatnaam de straatnaam
+     * @param huisnummer het huisnummer
+     * @param toevoeging de mogelijke toevoeging van het huisnummer
+     * @param postcode de postcode
+     * @param plaatsnaam de plaatsnaam
+     */
     public Adres(String straatnaam, int huisnummer, String toevoeging, String postcode, String plaatsnaam) {
         super();
         this.adresId = DEFAULT_ADRES_ID;

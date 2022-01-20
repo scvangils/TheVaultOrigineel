@@ -48,11 +48,11 @@ public class JDBCKlantDAOTest {
  @BeforeEach
  void setup(){
         testKlant1 = new Klant("Carmen", "GoedWachtwoord",
-                "Carmen", null, 123456789, LocalDate.parse("1985-12-30"));
+                "Carmen", 123456789, LocalDate.parse("1985-12-30"));
         testKlant2 = new Klant("Jolien", "BeterWachtwoord",
-                "Jolien",null, 987654321, LocalDate.parse("1985-10-14"));
+                "Jolien", 987654321, LocalDate.parse("1985-10-14"));
         testKlant3 = new Klant("Steven", "mijnWachtwoord",
-                "Steven", null, 123456789, LocalDate.parse("1975-12-30"));
+                "Steven", 123456789, LocalDate.parse("1975-12-30"));
         testAdres1 = new Adres("Hoofdstraat", 4, null, "1234AB", "Hellevoetsluis");
         testAdres2 = new Adres("Zijstraat", 6, "a", "9876CD", "Groessen");
         testAdres1.setAdresId(1);

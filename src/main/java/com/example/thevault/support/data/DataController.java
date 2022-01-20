@@ -144,9 +144,9 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
      * @return Een random gegenereerd Transactie-object
      */
     private Transactie getRandomTransactie(RandomDataInput randomDataInput, List<Cryptomunt> cryptomuntList) {
-        Cryptomunt cryptomunt = cryptomuntList.get((genereerRandomGetal(0, cryptomuntList.size() - 1, 1)));
+        Cryptomunt cryptomunt = cryptomuntList.get((genereerRandomGetal(0, cryptomuntList.size() - 1)));
         LocalDate cryptoDatum = LocalDate.of(UITGANGSJAAR, randomDataInput.getTransactieDataRange().getMaand(),
-                genereerRandomGetal(1, 30, 1));
+                genereerRandomGetal(1, 30));
         double prijs = cryptoWaardeService.vindCryptoWaardeOpDatum(cryptomunt, cryptoDatum).getWaarde();
         int koperId = getRandomGebruikerId(randomDataInput.getTransactieDataRange().getGebruikerIdMinimum(),
                 randomDataInput.getTransactieDataRange().getGebruikerIdMaximum(), randomDataInput.getBankAlsTransactiePartij().isBankAlsKoper());
@@ -209,7 +209,7 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
     }
 
     private int getRandomGebruikerId(int gebruikerIdMinimum, int gebruikerIdMaximum, boolean bankAlsKoperOfVerkoper) {
-        int gebruikerId = genereerRandomGetal(gebruikerIdMinimum, gebruikerIdMaximum, 1);
+        int gebruikerId = genereerRandomGetal(gebruikerIdMinimum, gebruikerIdMaximum);
         if (bankAlsKoperOfVerkoper) {
             gebruikerId = 0;
         }
@@ -220,7 +220,7 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         double afwijking = 0;
         if (koperId != 0 && verkoperId != 0) {
             afwijking = genereerRandomGetal(-100000 * maxAfwijkingsPercentage,
-                    100000 * maxAfwijkingsPercentage, 1) / 10000000.0;
+                    100000 * maxAfwijkingsPercentage) / 10000000.0;
         }
         return afwijking;
     }
@@ -233,9 +233,9 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
      * @return Een random aantal voor de transactie
      */
     private double getRandomAantal(Cryptomunt cryptomunt, double maxAantal) {
-        double randomAantal = genereerRandomGetal(0, (int) maxAantal * 1000, 1) / 1000.0;
+        double randomAantal = genereerRandomGetal(0, (int) maxAantal * 1000) / 1000.0;
         if(cryptomunt.getId() == BITCOIN_ID || cryptomunt.getId() == ETHEREUM_ID){ // bedrag wordt snel te hoog met deze munten
-            randomAantal = genereerRandomGetal(0, 10, 1) / 1000.0;
+            randomAantal = genereerRandomGetal(0, 10) / 1000.0;
         }
         return randomAantal;
     }
@@ -249,9 +249,9 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
     }
 
     private LocalTime genereerRandomTijdstip() {
-        int randomUur = genereerRandomGetal(0, 23, 1);
-        int randomMinuut = genereerRandomGetal(0, 59, 1);
-        int randomSeconde = genereerRandomGetal(0,59,1);
+        int randomUur = genereerRandomGetal(0, 23);
+        int randomMinuut = genereerRandomGetal(0, 59);
+        int randomSeconde = genereerRandomGetal(0,59);
         return LocalTime.of(randomUur, randomMinuut, randomSeconde);
     }
 
@@ -288,7 +288,7 @@ import static com.example.thevault.support.data.DataGenerator.genereerRandomGeta
         double afwijking;
         double waarde = cryptoWaarde.getWaarde();
         for (int i = 0; i < hoeveelWaarden; i++) {
-            afwijking = genereerRandomGetal(-100000 + afwijkingsPercentage, 100000 * afwijkingsPercentage, 1) / 10000000.0;
+            afwijking = genereerRandomGetal(-100000 + afwijkingsPercentage, 100000 * afwijkingsPercentage) / 10000000.0;
             CryptoWaarde oudereCryptoWaarde = new CryptoWaarde();
             oudereCryptoWaarde.setCryptomunt(cryptoWaarde.getCryptomunt());
             oudereCryptoWaarde.setWaarde(waarde * (1 + afwijking));

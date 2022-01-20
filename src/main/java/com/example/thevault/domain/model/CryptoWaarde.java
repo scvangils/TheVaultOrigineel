@@ -14,6 +14,9 @@ import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 
+/**
+ * Deze class zorgt ervoor dat een cryptomunt aan zijn koers gekoppeld kan worden
+ */
 public class CryptoWaarde {
 
     private String cryptoWaardeId;
@@ -28,18 +31,29 @@ public class CryptoWaarde {
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(CryptoWaarde.class);
 
-    //TODO JavaDoc
+    /**
+     * no-args constructor voor Cryptowaarde
+     */
     public CryptoWaarde() {
         super();
-        logger.info("New CryptoWaarde");
+        logger.info("New CryptoWaarde no-args");
     }
 
-    //TODO JavaDoc
+    /**
+     * all-args constructor voor Cryptowaarde
+     *
+     * @param cryptoWaardeId de databaseId van de Crypt
+     * @param cryptomunt de betreffende cryptomunt
+     * @param waarde diens koers
+     * @param datum de datum waarop de koers zo was
+     */
     public CryptoWaarde(String cryptoWaardeId, Cryptomunt cryptomunt, double waarde, LocalDate datum){
         this.cryptoWaardeId = cryptoWaardeId;
         this.cryptomunt = cryptomunt;
         this.waarde = waarde;
         this.datum = datum;
+        logger.info("New CryptoWaarde all-args");
+
     }
 
     public String getCryptoWaardeId() {

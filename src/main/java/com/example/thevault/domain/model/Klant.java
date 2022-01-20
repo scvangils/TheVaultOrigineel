@@ -15,6 +15,10 @@ import org.slf4j.LoggerFactory;
 import java.time.LocalDate;
 import java.util.Objects;
 
+/**
+ * deze class voegt klant-specifieke fields toe aan het Gebruiker-Model
+ */
+
 public class Klant extends Gebruiker {
     private String naam;
     private Adres adres;
@@ -27,28 +31,30 @@ public class Klant extends Gebruiker {
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Klant.class);
 
-    //TODO JavaDoc
+    /**
+     * No-args constructor voor Klant
+     */
     public Klant(){
         super();
         logger.info("Lege klant, no args constructor");
     }
 
-    //TODO JavaDoc
+    /**
+     * Constructor voor Klant-object voor fields die geen complex object zijn
+     *
+     * @param gebruikersnaam de gekozen gebruikersnaam
+     * @param wachtwoord het gekozen wachtwoord
+     * @param naam de naam van de klant
+     * @param bsn Het BurgerServiceNummer van de Klant
+     * @param geboortedatum de geboortedatum van de klant, die minimaal 18 jaar moet zijn
+     */
     public Klant(String gebruikersnaam, String wachtwoord,
-                 String naam, Adres adres, long bsn, LocalDate geboortedatum) {
+                 String naam, long bsn, LocalDate geboortedatum) {
         super(gebruikersnaam, wachtwoord);
         this.naam = naam;
-        this.adres = adres;
         this.bsn = bsn;
         this.geboortedatum = geboortedatum;
-        logger.info("New Klant, all args constructor");
-    }
-
-    //TODO JavaDoc
-    public Klant(String gebruikersnaam, String wachtwoord,
-                 String naam, long bsn, LocalDate geboortedatum){
-        this(gebruikersnaam, wachtwoord, naam, null, bsn, geboortedatum);
-        logger.info("New Klant, rowMapperConstructor");
+        logger.info("New Klant, meest gebruikte constructor");
     }
 
     public String getNaam() {
@@ -95,7 +101,6 @@ public class Klant extends Gebruiker {
                 '}';
     }
 
-//TODO nadenken over noodzakelijke velden
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

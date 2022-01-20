@@ -53,10 +53,10 @@ class JDBCAssetDAOTest {
     @BeforeEach
     void setup() {
         testKlant1 = new Klant("Jolien", "BeterWachtwoord",
-                "Jolien",null,
+                "Jolien",
                 987654321, LocalDate.parse("1985-10-14"));
         testKlant2 = new Klant("Carmen", "GoedWachtwoord",
-                "Carmen", null,
+                "Carmen",
                 123456789, LocalDate.parse("1985-12-30"));
         testKlant1.setGebruikerId(2);
         testKlant2.setGebruikerId(1);

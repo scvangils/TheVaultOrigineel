@@ -23,7 +23,7 @@ import java.util.Scanner;
 public class DataGenerator {
 
     //TODO Verwijderen?
-    private final Logger logger = LoggerFactory.getLogger(DataGenerator.class);
+
 
     //TODO JavaDoc
     public static void main(String[] args) throws IOException {
@@ -32,6 +32,9 @@ public class DataGenerator {
             System.out.println(klant);
         }
     }
+
+
+    private final Logger logger = LoggerFactory.getLogger(DataGenerator.class);
 
     public static int[] LANGE_MAANDEN = {1,3,5,7,8,10,12};
     public static int FEBRUARI = 2;
@@ -46,10 +49,25 @@ public class DataGenerator {
     public static int LAATSTE_MAAND_VAN_JAAR = 12;
     public static int AANTAL_TOEVOEGINGEN = 5;
 
-    //TODO JavaDoc
+
+    /**
+     * No-args constructor voor DataGenerator class
+     */
+    public DataGenerator(){
+        super();
+        logger.info("new Datagenerator");
+    }
+
+    /**
+     * Deze methode maakt van een csv met een voor dit project specifieke gegevensset een List van Klant-objecten
+     *
+     * @param filename de naam van het bestand
+     * @param hoeveelKlanten Biedt de mogelijkheid om niet alle gegevens in objecten om te zetten
+     * @return een List van Klant-objecten
+     * @throws IOException als het bestand niet gevonden wordt of niet uitgelezen kan worden
+     */
     public static List<Klant> maakLijstKlantenVanCSV(String filename, int hoeveelKlanten) throws IOException {
         Resource resource = new ClassPathResource(filename);
-
         File file = resource.getFile();
         List<Klant> klantList = new ArrayList<>();
         Scanner klantenLezer;
@@ -59,7 +77,7 @@ public class DataGenerator {
             createKlantList(hoeveelKlanten, klantList, klantenLezer, counter);
         }
         catch (FileNotFoundException exception){
-            System.out.println("geen bestand");
+            System.out.println("geen bestand kunnen uitlezen");
         }
         return klantList;
     }
@@ -73,15 +91,15 @@ public class DataGenerator {
                     genereerRandomToevoeging(AANTAL_TOEVOEGINGEN), regelArray[5].replace(" ", ""),
                     regelArray[6]);
             addKlantToList(klantList, regelArray[0], regelArray[1], regelArray[2], Long.parseLong(regelArray[3])
-                    , adres);
+            );
             counter++;
         }
     }
 
     private static void addKlantToList(List<Klant> klantList, String gebruikersnaam, String wachtwoord,
-                                       String naam, long bsn, Adres adres) {
+                                       String naam, long bsn) {
         Klant klant = new Klant(gebruikersnaam, wachtwoord,
-                naam, adres, bsn, genereerRandomGeboortedatum());
+                naam, bsn, genereerRandomGeboortedatum());
         klantList.add(klant);
     }
 
@@ -94,11 +112,11 @@ public class DataGenerator {
     }
 
     private static LocalDate genereerRandomGeboortedatum() {
-        int geboortejaar = genereerRandomGetal(VROEGSTE_GEBOORTEJAAR, LAATSTE_GEBOORTEJAAR, 1);
-        int geboortemaand = genereerRandomGetal(EERSTE_MAAND_VAN_JAAR, LAATSTE_MAAND_VAN_JAAR, 1);
+        int geboortejaar = genereerRandomGetal(VROEGSTE_GEBOORTEJAAR, LAATSTE_GEBOORTEJAAR);
+        int geboortemaand = genereerRandomGetal(EERSTE_MAAND_VAN_JAAR, LAATSTE_MAAND_VAN_JAAR);
         int laatsteDagVanDeMaand = AANTAL_DAGEN_IN_KORTE_MAAND;
         laatsteDagVanDeMaand = getLaatsteDagVanDeMaand(geboortejaar, geboortemaand, laatsteDagVanDeMaand);
-        int geboortedag = genereerRandomGetal(1, laatsteDagVanDeMaand, 1);
+        int geboortedag = genereerRandomGetal(1, laatsteDagVanDeMaand);
         return LocalDate.of(geboortejaar, geboortemaand, geboortedag);
     }
 
@@ -113,21 +131,38 @@ public class DataGenerator {
         return laatsteDagVanDeMaand;
     }
 
-    //TODO JavaDoc
+    /**
+     * Deze methode geeft aan of een jaartal een schrikkeljaar is
+     *
+     * @param jaar het jaartal
+     * @return true voor een schrikkeljaar, anders false
+     */
     public static boolean isSchrikkeljaar(int jaar){
         return jaar%SCHRIKKELJAAR_PER_ZOVEEL_JAAR == 0;
     }
 
-    //TODO JavaDoc
-    public static int genereerRandomGetal(int mpMinimum, int mpMaximum, int mpTussenstap){
-        return mpTussenstap *
-                ((int)(Math.random() * ((mpMaximum - mpMinimum + 1))/mpTussenstap)) + mpMinimum;
+    /**
+     * deze methode genereert een random getal tussen aangegeven waarden
+     *
+     * @param minimum de minimumwaarde
+     * @param maximum de maximumwaarde
+     * @return een random getal tussen aangegeven waarden inclusief
+     */
+    public static int genereerRandomGetal(int minimum, int maximum){
+        return
+                ((int)(Math.random() * ((maximum - minimum + 1)))) + minimum;
     }
 
-    //TODO JavaDoc
-    public static String genereerRandomToevoeging(int aantalVerschillende){
+    /**
+     * Deze methode genereert een random letter die als toevoeging kan dienen voor een huisnummer.
+     * Kan ook een lege String teruggeven omdat toevoegingen optioneel zijn.
+     *
+     * @param aantalVerschillende Het aantal verschillende toevoegingen waa uit gekozen kan worden
+     * @return een letter of een lege String
+     */
+    private static String genereerRandomToevoeging(int aantalVerschillende){
         String letter = "";
-       int getal = genereerRandomGetal(0, aantalVerschillende, 1);
+       int getal = genereerRandomGetal(0, aantalVerschillende);
        if(getal != 0) {
         letter = Character.toString((char)(getal + 64)).toString();
        }

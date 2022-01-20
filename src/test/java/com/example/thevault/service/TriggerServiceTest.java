@@ -59,11 +59,11 @@ class TriggerServiceTest {
         mockRootRepository = Mockito.mock(RootRepository.class);
         mockTransactieService = Mockito.mock(TransactieService.class);
         testKlant = new Klant("testKlant", "testWachtWoord",
-                "Jan", null, BSNvalidator.TESTBSN_VAN_RIVG,
+                "Jan", BSNvalidator.TESTBSN_VAN_RIVG,
                 LocalDate.now().minusYears(KlantService.VOLWASSEN_LEEFTIJD));
         triggerService = new TriggerService(mockRootRepository, mockTransactieService);
         andereKlant = new Klant("andereKlant", "anderWachtWoord",
-                "Jan", null, BSNvalidator.TESTBSN_VAN_RIVG,
+                "Jan", BSNvalidator.TESTBSN_VAN_RIVG,
                 LocalDate.now().minusYears(KlantService.VOLWASSEN_LEEFTIJD));
         testCryptomunt1 = new Cryptomunt(1, "CarmenCrypto", "CCR" );
         testCryptomunt2 = new Cryptomunt(2, "DigiCrypto", "DIG");

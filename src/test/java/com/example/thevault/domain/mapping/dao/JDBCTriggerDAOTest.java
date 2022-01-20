@@ -8,26 +8,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
-import static org.junit.jupiter.api.Assertions.*;
 
-
-
-    import com.example.thevault.domain.model.Adres;
 import com.example.thevault.domain.model.Gebruiker;
 import com.example.thevault.domain.model.Klant;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
+
 import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
@@ -68,9 +56,9 @@ public class JDBCTriggerDAOTest {
     @BeforeEach
     void setup(){
         testKlant1 = new Klant("Carmen", "GoedWachtwoord",
-                "Carmen", null, 123456789, LocalDate.parse("1985-12-30"));
+                "Carmen", 123456789, LocalDate.parse("1985-12-30"));
         testKlant2 = new Klant("Jolien", "BeterWachtwoord",
-                "Jolien",null, 987654321, LocalDate.parse("1985-10-14"));
+                "Jolien", 987654321, LocalDate.parse("1985-10-14"));
         testKlant1.setGebruikerId(1);
         testKlant2.setGebruikerId(2);
         testDatum1 = LocalDate.of(2022,1,1);
