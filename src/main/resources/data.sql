@@ -3,23 +3,23 @@ INSERT INTO adres (straatnaam, huisnummer, toevoeging, postcode, plaatsnaam) VAL
 
 INSERT INTO klant VALUES (1, 'Carmen', 'GoedWachtwoord', 'Carmen', 123456789, '1985-12-30', 1);
 INSERT INTO klant VALUES (2, 'Jolien', 'BeterWachtwoord', 'Jolien', 987654321, '1985-10-14', 2);
+INSERT INTO klant VALUES (3, 'Pimmeh', 'BesteWachtwoord', 'Pim', 246813579, '1987-02-26', 1);
 
 INSERT INTO rekening VALUES ('NL01INGB0056210575', 41908, 1);
 INSERT INTO rekening VALUES ('NL05RABO0957285205', 57313, 2);
 
 INSERT INTO cryptomunt VALUES (1, 'BITCOIN', 'BCN');
 INSERT INTO cryptomunt VALUES (2, 'ETHERIUM', 'ETH');
+INSERT INTO cryptomunt VALUES(3, 'ELROND', 'LOTR');
 
 INSERT INTO asset VALUES (1, 1, 4.2);
 INSERT INTO asset VALUES (1, 2, 3.5);
 INSERT INTO asset VALUES (2, 1, 4.2);
 INSERT INTO asset VALUES (2, 2, 3.5);
 
-
 INSERT INTO transactie VALUES (1, 1.3, '2021-12-15 12:43:21', 1, 1, 43.5, 2, 1.5);
 INSERT INTO transactie VALUES (2, 1.7, '2021-12-21 10:43:21', 2, 1, 10.5, 1, 1.5);
 INSERT INTO transactie VALUES (3, 0.5, '2021-11-10 22:22:22', 2, 1, 9.5, 1, 1.8);
-
 
 INSERT INTO refreshToken VALUES ('th120857fw1380n5yvb1i4y6dg', 1);
 

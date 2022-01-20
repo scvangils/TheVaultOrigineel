@@ -30,6 +30,7 @@ public class JDBCKlantDAOTest {
     private static Gebruiker testKlant1;
     private static Gebruiker testKlant2;
     private static Gebruiker testKlant3;
+    private Gebruiker testKlant4;
     private static Adres testAdres1;
     private static Adres testAdres2;
     private static Klant nieuweKlant;
@@ -53,6 +54,8 @@ public class JDBCKlantDAOTest {
                 "Jolien", 987654321, LocalDate.parse("1985-10-14"));
         testKlant3 = new Klant("Steven", "mijnWachtwoord",
                 "Steven", 123456789, LocalDate.parse("1975-12-30"));
+        testKlant4 = new Klant("Pimmeh", "BesteWachtwoord",
+                "Pim", 246813579, LocalDate.parse("1987-02-26"));
         testAdres1 = new Adres("Hoofdstraat", 4, null, "1234AB", "Hellevoetsluis");
         testAdres2 = new Adres("Zijstraat", 6, "a", "9876CD", "Groessen");
         testAdres1.setAdresId(1);
@@ -91,6 +94,7 @@ public class JDBCKlantDAOTest {
         List<Klant> expected = new ArrayList<>();
         expected.add((Klant) testKlant1);
         expected.add((Klant) testKlant2);
+        expected.add((Klant) testKlant4);
         assertThat(actual).as("Alle klanten in de database").isNotNull().isEqualTo(expected);
     }
 
