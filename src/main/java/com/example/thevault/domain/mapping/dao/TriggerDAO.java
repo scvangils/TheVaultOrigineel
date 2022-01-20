@@ -17,4 +17,6 @@ public interface TriggerDAO {
 
     Trigger vindMatch(Trigger trigger);
 
+    Trigger vindTriggerById(int triggerId, String koperOfVerkoper);
+
 }

@@ -44,7 +44,7 @@ class RekeningServiceTest {
     }
 
     /**
-     * @Author Wim Bultman
+     * Author Wim Bultman
      */
     @Test
     void createIban() {
@@ -53,7 +53,10 @@ class RekeningServiceTest {
     }
 
     /**
-     * @Author Ju-Sen Cheung
+     * Author Ju-Sen Cheung
+     * Er kan geen nieuweRekening object(regel 39) aan deze test gekoppeld worden, omdat er iedere keer een nieuwe iban
+     * wordt gegenereerd. Het startsaldo van een nieuwe rekening is € 1000,-. De klant wordt in de methode creeerRekening
+     * meegegeven/vastgezet.
      */
     @Test
     void creeerRekening() {
@@ -61,11 +64,17 @@ class RekeningServiceTest {
         System.out.println(actual);
         assertThat(actual.getIban()).isNotNull();
         assertThat(actual.getSaldo()).isEqualTo(1000.0);
-        //TODO Testen dat de rekening aan de juiste klant is gekoppeld
+        Rekening expected = nieuweKlant.getRekening();
+        System.out.println(expected);
+        assertThat(actual.getGebruiker().getGebruikersnaam()).isEqualTo("ThomasBeste");
+        assertThat(actual.getGebruiker()).isEqualTo(nieuweKlant);
+        assertThat(actual.getGebruiker()).isNotEqualTo(nietBestaandeKlant);
+        assertThat(actual.getGebruiker()).isNotEqualTo(bestaandeKlant);
+        assertThat(actual.getGebruiker().getGebruikersnaam()).isNotEqualTo("AlsDezeNaamWordtGoedGekeurdDanKloptDeTestNiet");
     }
 
     /**
-     * @Author Ju-Sen Cheung
+     * Author Ju-Sen Cheung
      */
     @Test
     void slaRekeningOp() {
@@ -78,7 +87,7 @@ class RekeningServiceTest {
     }
 
     /**
-     * @Author Ju-Sen Cheung
+     * Author Ju-Sen Cheung
      */
     @Test
     void vindRekeningVanKlant() {
@@ -92,7 +101,7 @@ class RekeningServiceTest {
     }
 
     /**
-     * @Author Ju-Sen Cheung
+     * Author Ju-Sen Cheung
      */
     @Test
     void vindRekeningVanNietBestaandeKlant() {
@@ -108,7 +117,7 @@ class RekeningServiceTest {
     }
 
     /**
-     * @Author Elise Olthof
+     * Author Elise Olthof
      */
     @Test
     void vraagSaldoOp() {
@@ -123,7 +132,7 @@ class RekeningServiceTest {
     }
 
     /**
-     * @Author Elise Olthof
+     * Author Elise Olthof
      */
     @Test
     void vraagSaldoOpVanNietBestaandeKlant() {
@@ -140,7 +149,7 @@ class RekeningServiceTest {
     }
 
     /**
-     * @Author Ju-Sen Cheung
+     * Author Ju-Sen Cheung
      */
     @Test
     void wijzigSaldo() {
@@ -152,6 +161,7 @@ class RekeningServiceTest {
         assertThat(actual).isEqualTo(expected);
     }
 
+    // TODO author toevoegen
 
     @Test
     void wijzigSaldoInGebruikerRekeningJava(){
@@ -163,5 +173,4 @@ class RekeningServiceTest {
         double actual = bestaandeKlant.getRekening().getSaldo();
         assertThat(actual).isEqualTo(expected);
     }
-
 }

@@ -70,6 +70,7 @@ public class RootRepository {
     }
 
     /**
+     * author: Steven van Gils
      * Deze methode slaat de gegevens van een klant op in de database
      * op basis van een klant-object, de gebruikerId gaat van 0 naar de juiste
      *
@@ -81,8 +82,8 @@ public class RootRepository {
         return klantDAO.slaKlantOp(klant);
     }
 
-    //TODO Verwijderen?
     /**
+     * author: Steven van Gils
      * Deze methode zorgt ervoor dat een nieuw adres van een klant kan worden opgeslagen
      *
      * @param klant De betreffende klant
@@ -97,6 +98,7 @@ public class RootRepository {
     }
 
     /**
+     * author: Steven van Gils
      * Deze methode zoekt of er in de database al een klant bestaat met deze gebruikersnaam
      * en maakt eventueel een klant-object aan op nasis van de teruggestuurde gegevens
      * Hier in de repository worden portefeuille en rekening toegevoegd
@@ -118,6 +120,7 @@ public class RootRepository {
     }
 
     /**
+     * author: Steven van Gils
      * Deze methode zoekt of er in de database al een klant bestaat met deze gebruikerId
      * en maakt eventueel een klant-object aan op basis van de teruggestuurde gegevens
      * Hier in de repository worden portefeuille en rekening toegevoegd
@@ -132,10 +135,10 @@ public class RootRepository {
     }
 
     /**
+     * Author: Ju-Sen Cheung
      * Deze methode slaat de gegevens van een rekening op in de database via de methode in de rekeningDAO.
-     *
-     * @param rekening is de rekening die is aangemaakt bij een nieuwe klant.
-     * @return de rekening behorend bij de nieuwe klant met klant-id
+     * @param rekening is de rekening die is aangemaakt bij een nieuwe gebruiker.
+     * @return de rekening behorende bij de nieuwe gebruiker.
      */
     public Rekening slaRekeningOp(Rekening rekening){
         return rekeningDAO.slaRekeningOp(rekening);
@@ -143,32 +146,32 @@ public class RootRepository {
 
 
     /**
+    * Author: Ju-Sen Cheung
     * Methode die op gebruiker zoekt en de rekening teruggeeft
-     *
-     * @param gebruiker kan zowel een klant als een bank zijn
-     * @return rekening geeft een rekening object terug
+    * @param gebruiker kan zowel een klant als een bank zijn
+    * @return rekening geeft een rekening object terug
     * */
     public Rekening vindRekeningVanGebruiker(Gebruiker gebruiker){
         return rekeningDAO.vindRekeningVanGebruiker(gebruiker);
     }
 
-
     /**
-     * Deze methode geeft het rekeningsaldo op van de klant in de database via de methode in de rekeningDAO.
-     *
-     * @param gebruiker is de klant van wie het rekeningsaldo wordt opgevraagd.
-     * @return het rekeningsaldo behorend bij de klant met klant-id
+     * Author: Ju-Sen Cheung
+     * Deze methode geeft het rekeningsaldo op van de gebruiker. Het saldo wordt via de methode in de rekeningDAO uit
+     * de database gehaald.
+     * @param gebruiker is de gebruiker van wie het rekeningsaldo wordt opgevraagd.
+     * @return het rekeningsaldo behorende bij de gebruiker.
      */
     public double vraagSaldoOpVanGebruiker(Gebruiker gebruiker){
         return rekeningDAO.vraagSaldoOpVanGebruiker(gebruiker);
     }
 
     /**
+     * Author: Ju-Sen Cheung
      * Deze methode wijzigt het rekeningsaldo van de klant in de database via de methode in de rekeningDAO.
-     *
-     * @param gebruiker is de klant van wie het rekeningsaldo wordt opgevraagd.
-     * @param transactiebedrag is het bedrag waarnaar het saldo gewijzigd moet worden.
-     * @return het rekeningsaldo behorend bij de klant met klant-id wordt gewijzigd.
+     * @param gebruiker is de gebruiker van wie het rekeningsaldo wordt opgevraagd.
+     * @param transactiebedrag is het bedrag waarmee het saldo van de rekening verhoogd of verlaagd moet worden.
+     * @return geüpdatete saldo.
      */
     public Rekening wijzigSaldoVanGebruiker(Gebruiker gebruiker, double transactiebedrag){
         return rekeningDAO.wijzigSaldoVanGebruiker(gebruiker, transactiebedrag);
@@ -229,6 +232,7 @@ public class RootRepository {
     }
 
     /**
+     * author: Steven van Gils
      * Deze methode haalt uit de database de waarde die de betreffende cryptomunt vandaag heeft
      * zodat huidige waarde van assets kan worden berekend
      *
@@ -243,6 +247,7 @@ public class RootRepository {
     }
 
     /**
+     * author: Steven van Gils
      * Deze methode haalt de koers van een cryptomunt op een bepaalde dag op
      *
      * @param cryptomunt De betreffende cryptomunt
@@ -255,6 +260,7 @@ public class RootRepository {
         return cryptoWaarde;
     }
     /**
+     * author: Steven van Gils/Wim Bultman
      * Deze methode slaat een cryptowaarde op in de database
      *
      * @param cryptoWaarde De betreffende cryptowaarde
@@ -361,6 +367,7 @@ public class RootRepository {
     }
 
     /**
+     * author: Steven van Gils
      * Deze methode slaat een trigger op in de database met de huidige datum
      * en voegt de door de database gegenereerde id toe aan de trigger
      * Afhankelijk van het type trigger wordt hij in de triggerKoper- of
@@ -372,8 +379,8 @@ public class RootRepository {
     public Trigger slaTriggerOp(Trigger trigger){
         return triggerDAO.slaTriggerOp(trigger);
     }
-
     /**
+     * author: Steven van Gils
      * Deze methode verwijdert een trigger op basis van zijn id.
      *
      * @param trigger de te verwijderen trigger
@@ -383,7 +390,9 @@ public class RootRepository {
         return triggerDAO.verwijderTrigger(trigger);
     }
 
-    /** Deze methode zoekt voor een triggerKoper in de triggerVerkoperTabel een match
+    /**
+     * author: Steven van Gils
+     * Deze methode zoekt voor een triggerKoper in de triggerVerkoperTabel een match
      * om een transactie mee aan te gaan.
      * Gegeven meerdere matches, eerste het grootste verschil tussen vraag en aanbod,
      * dan de langst staande trigger.
@@ -405,12 +414,12 @@ public class RootRepository {
     }
 
     /**
+     * author: Steven van Gils
      * Geeft alle triggers van een bepaald type aanwezig in de database
      *
      * @param koperOfVerkoper Geeft aan welke tabel gebruikt moet worden
      * @return een List van Triggers, geheel bestaand uit een enkele subklasse
      */
-    // TODO triggers compleet maken
     public List<Trigger> vindAlleTriggers(String koperOfVerkoper){
         List<Trigger> triggerList = triggerDAO.vindAlleTriggers(koperOfVerkoper);
         if(triggerList != null){
@@ -422,6 +431,7 @@ public class RootRepository {
     }
 
     /**
+     * author: Steven van Gils
      * Geeft alle triggers van een bepaald type aanwezig in de database van een bepaalde gebruiker
      *
      * @param gebruiker De betreffende gebruiker

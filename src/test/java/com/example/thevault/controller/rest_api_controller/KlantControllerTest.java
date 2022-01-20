@@ -70,8 +70,9 @@ class KlantControllerTest {
         gehashtWachtwoord = BCryptWachtwoordHash.hashWachtwoord("testWW");
         adres = new Adres("straat", 357, "C", "1000AA", "Amsterdam");
         testKlant = new Klant("testKlant", gehashtWachtwoord, "Jan",
-                adres, BSNvalidator.TESTBSN_VAN_RIVG, LocalDate.of(1975, 7, 30));
+                BSNvalidator.TESTBSN_VAN_RIVG, LocalDate.of(1975, 7, 30));
         testKlant.setGebruikerId(2);
+        testKlant.setAdres(adres);
         rekening = new Rekening("NL20INGB0006582287", 1000);
         gebruikersnaam = "testKlant";
         wachtwoord = "testWW";
@@ -113,8 +114,9 @@ class KlantControllerTest {
 
         String testInlogJson = objectMapper.writeValueAsString(loginDto2);
         Klant klant = new Klant("testKlant", gehashtWachtwoord, "Jan",
-                adres, BSNvalidator.TESTBSN_VAN_RIVG, LocalDate.of(1975, 7, 30));
+                BSNvalidator.TESTBSN_VAN_RIVG, LocalDate.of(1975, 7, 30));
         testKlant.setRekening(rekening);
+        testKlant.setAdres(adres);
 
 
         Mockito.when(loginService.valideerLogin(loginDto2)).thenReturn(testKlant);

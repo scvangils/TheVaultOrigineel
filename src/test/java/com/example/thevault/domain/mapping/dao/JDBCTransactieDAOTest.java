@@ -52,9 +52,9 @@ public class JDBCTransactieDAOTest {
 
 
         testKlant1 = new Klant("Carmen", "GoedWachtwoord",
-                "Carmen", null, 123456789, LocalDate.parse("1985-12-30"));
+                "Carmen", 123456789, LocalDate.parse("1985-12-30"));
         testKlant2 = new Klant("Jolien", "BeterWachtwoord",
-                "Jolien",null, 987654321, LocalDate.parse("1985-10-14"));
+                "Jolien", 987654321, LocalDate.parse("1985-10-14"));
         testKlant1.setGebruikerId(1);
         testKlant2.setGebruikerId(2);
 

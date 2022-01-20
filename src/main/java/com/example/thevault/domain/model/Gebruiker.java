@@ -11,6 +11,11 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Deze class definieert wat een gebruiker aan informatie moet opgeven,
+ * wat hij aan bezittingen heeft en wat zijn handelingen binnen de bank zijn geweest
+ */
+
 public abstract class Gebruiker {
     protected int gebruikerId;
     protected String gebruikersnaam;
@@ -26,13 +31,21 @@ public abstract class Gebruiker {
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(Gebruiker.class);
 
-    //TODO JavaDoc
+    /**
+     * No-args constructor voor Gebruiker class
+     */
     public Gebruiker() {
         super();
         logger.info("Lege Gebruiker, no args constructor");
     }
 
-    //TODO JavaDoc
+    /**
+     * Constructor voor Gebruiker class voor die fields set
+     * die geen complexe objecten zijn
+     *
+     * @param gebruikersnaam de gekozen gebruikersnaam van de gebruiker
+     * @param wachtwoord het gekozen wachtwoord van de gebruiker
+     */
     public Gebruiker(String gebruikersnaam, String wachtwoord){
         this.gebruikerId = DEFAULT_GEBRUIKERID;
         this.gebruikersnaam = gebruikersnaam;
@@ -112,7 +125,7 @@ public abstract class Gebruiker {
         this.triggerVerkoperList = triggerVerkoperList;
     }
 
-    @Override // TODO juiste equals?
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Gebruiker)) return false;
