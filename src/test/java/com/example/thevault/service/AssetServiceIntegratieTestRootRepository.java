@@ -49,7 +49,7 @@ class AssetServiceIntegratieTestRootRepository {
         testCryptomunt1 = new Cryptomunt(1, "CarmenCrypto", "CCR" );
         testAsset1 = new Asset(testCryptomunt1, 5.1);
         testAsset4 = new Asset(testCryptomunt1, 5.6);
-        testKlant = new Klant("Huub", "PWHuub", "Huub", null,
+        testKlant = new Klant("Huub", "PWHuub", "Huub",
                 0, null);
         testKlant.setGebruikerId(1);
     }

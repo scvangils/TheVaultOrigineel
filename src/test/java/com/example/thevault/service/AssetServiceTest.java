@@ -69,7 +69,7 @@ class AssetServiceTest {
         testLijstCrypto.add(testCryptomunt1);
         testLijstCrypto.add(testCryptomunt2);
         testLijstCrypto.add(testCryptomunt3);
-        testKlant = new Klant("Huub", "PWHuub", "Huub", null,
+        testKlant = new Klant("Huub", "PWHuub", "Huub",
                 0, null);
     }
 

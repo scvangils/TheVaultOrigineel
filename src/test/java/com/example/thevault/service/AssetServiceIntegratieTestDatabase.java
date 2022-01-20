@@ -31,7 +31,7 @@ class AssetServiceIntegratieTestDatabase {
         assetService = new AssetService(rootRepository);
         testCryptomunt1 = new Cryptomunt(1, null, null);
         testAsset1 = new Asset(testCryptomunt1, 0.2);
-        testKlant = new Klant("Huub", "PWHuub", "Huub", null,
+        testKlant = new Klant("Huub", "PWHuub", "Huub",
                 0, null);
         testKlant.setGebruikerId(1);
     }
