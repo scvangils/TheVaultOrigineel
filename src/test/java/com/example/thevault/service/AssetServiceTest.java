@@ -1,10 +1,7 @@
 package com.example.thevault.service;
 
 import com.example.thevault.domain.mapping.repository.RootRepository;
-import com.example.thevault.domain.model.Asset;
-import com.example.thevault.domain.model.CryptoWaarde;
-import com.example.thevault.domain.model.Cryptomunt;
-import com.example.thevault.domain.model.Klant;
+import com.example.thevault.domain.model.*;
 import com.example.thevault.domain.transfer.AssetDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -38,7 +35,7 @@ class AssetServiceTest {
     public static CryptoWaarde testCryptoWaarde1;
     public static CryptoWaarde testCryptoWaarde2;
     public static CryptoWaarde testCryptoWaarde3;
-
+    public static List<Cryptomunt> testLijstCrypto;
 
     @BeforeEach
     void setUp() {
@@ -46,9 +43,9 @@ class AssetServiceTest {
         testCryptomunt1 = new Cryptomunt(1, "CarmenCrypto", "CCR" );
         testCryptoWaarde1 = new CryptoWaarde("20211214CCR", testCryptomunt1, 100.0, LocalDate.now());
         testCryptomunt2 = new Cryptomunt(2, "DigiCrypto", "DIG");
-        testCryptoWaarde2 = new CryptoWaarde("20211214DIG", testCryptomunt1, 75.0, LocalDate.now());
+        testCryptoWaarde2 = new CryptoWaarde("20211214DIG", testCryptomunt2, 75.0, LocalDate.now());
         testCryptomunt3 = new Cryptomunt(3, "Coyne", "COY");
-        testCryptoWaarde3 = new CryptoWaarde("20211214COY", testCryptomunt1, 125.0, LocalDate.now());
+        testCryptoWaarde3 = new CryptoWaarde("20211214COY", testCryptomunt3, 125.0, LocalDate.now());
         testAsset1 = new Asset(testCryptomunt1, 5.1);
         testAsset2 = new Asset(testCryptomunt2, 2.4);
         testAsset3 = new Asset(testCryptomunt3, 3.6);
@@ -68,6 +65,12 @@ class AssetServiceTest {
         portefeuilleDto.add(testAssetDto1);
         portefeuilleDto.add(testAssetDto2);
         portefeuilleDto.add(testAssetDto3);
+        testLijstCrypto = new ArrayList<>();
+        testLijstCrypto.add(testCryptomunt1);
+        testLijstCrypto.add(testCryptomunt2);
+        testLijstCrypto.add(testCryptomunt3);
+        testKlant = new Klant("Huub", "PWHuub", "Huub", null,
+                0, null);
     }
 
     @Test
@@ -88,12 +91,31 @@ class AssetServiceTest {
                 isIn(portefeuille).isNotEqualTo(testAsset3).isNotSameAs(testAsset4);
     }
 
-/*    @Test
-    void wijzigAsset() {
-        Mockito.when(rootRepository.wijzigAssetVanKlant(testAsset4)).thenReturn(testAsset5);
+    @Test
+    void wijzigAssetGebruiker() {
+        Mockito.when(rootRepository.vulPortefeuilleKlant(testKlant)).thenReturn(portefeuille);
+        Mockito.when(rootRepository.wijzigAssetVanKlant(testKlant, testCryptomunt1, 0.5)).thenReturn(testAsset5);
         Asset expected = testAsset5;
-        Asset actual = assetService.wijzigAsset(testAsset4);
+        Asset actual = assetService.wijzigAssetGebruiker(testKlant, testCryptomunt1, 0.5);
         assertThat(actual).as("Test wijzigen van asset van testklant").isNotNull().isEqualTo(expected).
-                isNotIn(portefeuille).isNotEqualTo(testAsset1).isNotSameAs(testAsset2);
-    }*/
+                isNotIn(portefeuille);
+    }
+
+    @Test
+    void vulPortefeuilleVanGebruiker() {
+        Mockito.when(rootRepository.vulPortefeuilleKlant(testKlant)).thenReturn(portefeuille);
+        List<Asset> expected = portefeuille;
+        List<Asset> actual = assetService.vulPortefeuilleVanGebruiker(testKlant);
+        assertThat(actual).as("Test vullen portefeuille gebruiker").isNotNull().isEqualTo(expected)
+                .extracting(Asset::getAantal).contains(5.1).contains(2.4).contains(3.6);
+    }
+
+    @Test
+    void geefAlleCryptomunten() {
+        Mockito.when(rootRepository.geefAlleCryptomunten()).thenReturn(testLijstCrypto);
+        List<Cryptomunt> expected = testLijstCrypto;
+        List<Cryptomunt> actual = assetService.geefAlleCryptomunten();
+        assertThat(actual).as("Test geef alle cryptomunten").isNotNull().isNotEmpty().isEqualTo(expected).
+                extracting(Cryptomunt::getName).contains("CarmenCrypto").doesNotContain("Elrond");
+    }
 }
