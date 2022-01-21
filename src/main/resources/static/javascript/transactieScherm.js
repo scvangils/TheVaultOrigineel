@@ -5,11 +5,17 @@ function transactieCrypto(){
     input.appendChild(div);
 }
 
-
 function cryptoKoers(){
     const input = document.getElementById("transactieKoers");
+    let div = document.createElement("div")
+    div.textContent = "100";
+    input.appendChild(div);
+}
+
+function cryptoInPortefeuille(){
+    const input = document.getElementById("aantalCryptoInPortefeuille");
     const div = document.createElement("div")
-    div.textContent = "{koers}";
+    div.textContent = "{aantal}";
     input.appendChild(div);
 }
 
@@ -29,9 +35,17 @@ function transactieBedrag(){
     input.appendChild(div);
 }
 
-function transactieAankoop(){
+function wijzigPrijs(){
+    let checkbox = document.getElementById("aanpassenTransactiePrijs");
+    document.getElementById("transactiePrijsInvoer").value = "100";
+    document.getElementById("transactiePrijsInvoer").disabled = true;
+    document.getElementById("aanpassenTransactiePrijs").addEventListener("click", function (){
+    document.getElementById("transactiePrijsInvoer").value = "100";
+    if(checkbox.checked){
+        document.getElementById("transactiePrijsInvoer").disabled = false;
+        }else {
+        document.getElementById("transactiePrijsInvoer").disabled = true;
+        }
+    })
 }
 
-function transactieVerkoop(){
-
-}

@@ -171,3 +171,16 @@ input:placeholder-shown {
     display: flex;
     flex-direction: column;
 }
+
+#transactiegegevens{
+    /*background-color:;*/
+    margin: 0px;
+}
+#transactie-pagina{
+    margin: 0px;
+}
+
+.transactieButton{
+    background-color: #888888;
+    margin: 8px;
+}
