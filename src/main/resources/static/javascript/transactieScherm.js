@@ -8,7 +8,7 @@ function transactieCrypto(){
 function cryptoKoers(){
     const input = document.getElementById("transactieKoers");
     let div = document.createElement("div")
-    div.textContent = "100";
+    div.textContent = "{koers}";
     input.appendChild(div);
 }
 
@@ -20,7 +20,6 @@ function cryptoInPortefeuille(){
 }
 
 function bankfee(){
-    //op basis van handel met bank of klanten onderling
     const input = document.getElementById("transactieBankfee");
     const div = document.createElement("div")
     div.textContent = "{fee}";
