@@ -171,7 +171,7 @@ public class RootRepository {
      * Deze methode wijzigt het rekeningsaldo van de klant in de database via de methode in de rekeningDAO.
      * @param gebruiker is de gebruiker van wie het rekeningsaldo wordt opgevraagd.
      * @param transactiebedrag is het bedrag waarmee het saldo van de rekening verhoogd of verlaagd moet worden.
-     * @return geüpdatete saldo.
+     * @return rekening met geüpdatete saldo.
      */
     public Rekening wijzigSaldoVanGebruiker(Gebruiker gebruiker, double transactiebedrag){
         return rekeningDAO.wijzigSaldoVanGebruiker(gebruiker, transactiebedrag);

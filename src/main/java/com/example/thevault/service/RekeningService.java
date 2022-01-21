@@ -99,6 +99,12 @@ public class RekeningService {
      * @return het saldo van de opgevraagde rekening wordt teruggegeven.
      */
     public double vraagSaldoOp(Gebruiker gebruiker) throws UserNotExistsException{
+        if (gebruiker == null){
+            throw new UserNotExistsException();
+        }
+        if (rootRepository.vindKlantByGebruikersnaam(gebruiker.getGebruikersnaam()) == null ){
+            throw new UserNotExistsException();
+        }
         return vindRekening(gebruiker).getSaldo();
     }
 
