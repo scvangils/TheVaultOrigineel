@@ -5,6 +5,7 @@ package com.example.thevault.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,8 +23,8 @@ public abstract class Gebruiker {
     @JsonBackReference
     protected String wachtwoord;
     protected Rekening rekening;
+    @JsonManagedReference
     protected List<Asset> portefeuille;
-    @JsonBackReference
     protected List<Transactie> transacties;
     protected static int DEFAULT_GEBRUIKERID = 0;
     protected List<Trigger> triggerKoperList;

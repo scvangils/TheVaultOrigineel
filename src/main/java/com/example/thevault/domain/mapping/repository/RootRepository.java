@@ -329,6 +329,7 @@ public class RootRepository implements ApplicationListener<ContextRefreshedEvent
     private void setVerkoperTransactie(Transactie transactie) {
         if(transactie.getVerkoper().getGebruikerId() != 0) {
             transactie.setVerkoper(klantDAO.vindKlantById(transactie.getVerkoper().getGebruikerId()));
+            transactie.getVerkoper().setRekening(rekeningDAO.vindRekeningVanGebruiker(transactie.getVerkoper()));
         }
         else transactie.getVerkoper().setRekening(vindRekeningVanGebruiker(transactie.getVerkoper()));
     }
@@ -336,6 +337,7 @@ public class RootRepository implements ApplicationListener<ContextRefreshedEvent
     private void setKoperTransactie(Transactie transactie) {
         if(transactie.getKoper().getGebruikerId() != 0){
             transactie.setKoper(klantDAO.vindKlantById(transactie.getKoper().getGebruikerId()));
+            transactie.getKoper().setRekening(rekeningDAO.vindRekeningVanGebruiker(transactie.getKoper()));
         }
         else transactie.getKoper().setRekening(vindRekeningVanGebruiker(transactie.getKoper()));
     }

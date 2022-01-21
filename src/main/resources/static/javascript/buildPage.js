@@ -211,6 +211,8 @@ function maakModalBodyLeeg(){
 }
 //Zorg ervoor dat de modal eerst leeg wordt gemaakt i.v.m. eerdere pogingen
 const modalFunctie = () => {
+    document.getElementById("verstuur").style.display = "block";
+    document.getElementById("modalText").textContent = "Kloppen alle gegevens?"
     maakModalBodyLeeg();
     fillModalBody(inputArrayPersoon);
     fillModalBody(inputArrayAdres)
@@ -236,9 +238,11 @@ window.onclick = function(event) {
     }
 }
 
+
 //modal laten vullen door inputvelden via flex-box-tabelstructuur
 //wachtwoord niet laten zien
 function fillModalBody(inputArray){
+    document.getElementById("modalText").textContent = "Kloppen alle gegevens?";
     for (let i = 0; i < inputArray.length; i++) {
         if (inputArray[i].naam !== "wachtwoord") {
         const divRow = document.createElement("div");
@@ -396,6 +400,9 @@ function maakCompleetKlantObject(){
     const klantObject = maakObject(inputArrayPersoon);
     klantObject.gebruikerId = 0;
     klantObject.rekening = null;
+    klantObject.transacties = null;
+    klantObject.triggerKoperList = null;
+    klantObject.triggerVerkoperList = null;
     klantObject.portefeuille = null;
     klantObject.adres = adresObject;
     return klantObject;
@@ -412,11 +419,10 @@ function maakCompleetKlantObject(){
         })
             .then((response) => {
                 if (response.status === STATUS_CODE_CREATED)
-                    return response.json()
+                 return response.json()
                         .then((json) => showWelcomeMessage(json))
                 else return response.json()
                     .then((json) => {
-                        maakModalBodyLeeg();
                         const modalFout = toonMelding();
                         modalFout.textContent = json.message;
                     })
@@ -443,9 +449,12 @@ function showWelcomeMessage(json){
     }
 }
 function toonMelding(){
-
+        maakModalBodyLeeg();
+    document.getElementById("modalText").textContent = "Er klopt helaas iets niet";
     const melding = document.createElement("div");
     modalBody.appendChild(melding);
+    document.getElementById("verstuur").style.display = "none";
+
     return melding;
 }
 /*

@@ -185,14 +185,13 @@ input:placeholder-shown {
 }
 .details {
     display: none;
-    position: absolute;
+    position: sticky;
+    position: -webkit-sticky;
     width: 185px;
     height: 200px;
     margin-top: -50px;
     background-color: white;
     border-radius: 6px;
-
-
 }
 .transactieField {
 

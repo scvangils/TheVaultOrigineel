@@ -51,17 +51,25 @@ function login(){
         .then((response) => {
             if(response.status === 200){
                 dashboardScreen();
-            }
-            console.log('Success:', response);
-            return response.json();
+                console.log('Success:', response);
+            return response.json()
+            .then((json) => {
+
+                vulCryptoGegevens(json);
+                vulCryptoAantal(json);
+                vulCryptoKoers(json);
+                vulTotaleWaarde(json);
+                vulRekeningGegevens(json);
+            })}
+            else return response.json()
+                .then((json) => {
+                    console.log("****** We zitten in de else *******")
+                    modal.style.display = "block";
+                    const modalFout = toonMelding();
+                    modalFout.textContent = json.message;
+                })
         })
-        .then((json) => {
-            vulCryptoGegevens(json);
-            vulCryptoAantal(json);
-            vulCryptoKoers(json);
-            vulTotaleWaarde(json);
-            vulRekeningGegevens(json);
-        })
+
         .catch((error) => {
             console.error('*** Iets misgegaan:', error);
         });

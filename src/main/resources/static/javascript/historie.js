@@ -41,16 +41,17 @@ function maakTransactieTabel(element, transactieArray) {
         const inhoud = transactieArray[i];
         const moment = inhoud.momentTransactie.toString();
         transactieDiv.textContent = moment.substring(0, 10) + " " + moment.substring(11);
-/*        transactieDiv.classList.add("tooltip");
-        const tooltipText = createElementWithClassAndId(transactieDiv, "span", "tooltiptext", transactieDiv.id + "tooltip");
+        transactieDiv.classList.add("tooltip");
+/*        const tooltipText = createElementWithClassAndId(transactieDiv, "span", "tooltiptext", transactieDiv.id + "tooltip");
         tooltipText.textContent = "klik voor details";*/
-        const popup = createElementWithClassAndId(transactieDiv, "fieldset", "details", transactieDiv.id + "popup");
-        popup.textContent = 'Zie ik het?';
-        window.onclick = function(event) {
+/*        const popup = createElementWithClassAndId(transactieDiv, "fieldset", "details", transactieDiv.id + "popup");
+        popup.textContent = 'Zie ik het?';*/
+
+/*        window.onclick = function(event) {
             if (event.target === popup) {
                 popup.classList.toggle("show");
             }
-        }
+        }*/
         transactieDiv.addEventListener("click", () => {
             popup.classList.toggle("show");
             if(detailsTeZien === 0){
@@ -59,4 +60,10 @@ function maakTransactieTabel(element, transactieArray) {
             else detailsTeZien--;
         })
     }
+}
+function vulModalMetTransactie(){
+
+}
+function vulModalMetTrigger(){
+
 }
