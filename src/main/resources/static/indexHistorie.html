@@ -8,21 +8,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/registrationModal.css">
+    <link rel="stylesheet" href="css/cryptoGrafiekDropDown.css">
     <script src="javascript/homepage.js" defer></script>
     <script src="javascript/buildPage.js" defer></script>
     <script src="javascript/validation.js" defer></script>
     <script src="javascript/dashboardInfo.js" defer></script>
-    <link rel="stylesheet" href="css/cryptoGrafiekDropDown.css">
     <script src="https://cdn.plot.ly/plotly-latest.min.js" defer></script>
     <script src="javascript/cryptoGrafiek.js" defer></script>
     <script src="javascript/cryptoGrafiekDropDown.js" defer></script>
     <link rel="stylesheet" href="css/tooltip.css">
     <script src="javascript/historie.js" defer></script>
 
-           <link rel = "icon" href = "http://localhost:63342/vault/src/main/resources/Sprint2/favicon.ico" type="image/x-icon"/>
+    <link rel = "icon" href = "http://localhost:63342/vault/src/main/resources/Sprint2/favicon.ico" type="image/x-icon"/>
 </head>
-<!--Het inlogform is onzichtbaar bij het laden van de website, het registreerform is bereikbaar via een knop-->
-<body onload="loginScreen()">
+<!--Het inlogform is onzichtbaar bij het laden van de website, het registreerdform is bereikbaar via een knop-->
+<body onload="historieScreen()">
 
 <!-- TODO Kan de DOM kleiner? Dat maakt de website sneller. Dan moeten we meer JavaScript gebruiken om de elementen te vullen-->
 
@@ -33,7 +33,7 @@
 
 <div class="flex-container">
 
-<div class="registratie-personalia" id="registratie-personalia">
+    <div class="registratie-personalia" id="registratie-personalia">
 
     </div>
     <!-- The Modal -->
@@ -100,9 +100,9 @@
             <fieldset class="fieldsetRekening" id="fieldsetRekening">
                 <legend>Rekening</legend>
                 <div><label for="iban"></label></div>
-                    <div id="iban"></div>
+                <div id="iban"></div>
                 <div><label for="saldo"></label></div>
-                    <div id="saldo"></div>
+                <div id="saldo"></div>
             </fieldset>
         </div>
 
@@ -113,16 +113,16 @@
             <div id = "transacties" class = "flex-container">
                 <h3 style="margin: auto">Transacties</h3>
                 <div id = "transactieBox" class="flexBasis">
-                    <fieldset id ="fieldsetKoopTransactie" class = flex-containerStart>
-                        <legend>gekocht</legend>
+                <fieldset id ="fieldsetKoopTransactie" class = flex-containerStart>
+                    <legend>gekocht</legend>
 
-                    </fieldset>
+                        </fieldset>
                     <fieldset id ="fieldsetVerkoopTransactie" class = flex-containerStart>
                         <legend>verkocht</legend>
 
                     </fieldset>
                 </div>
-            </div>
+                </div>
             <div id = "triggers" class = "flex-container">
                 <h3 style="margin: auto">Triggers</h3>
                 <div class="flexBasis">
@@ -138,7 +138,13 @@
             </div>
         </fieldset>
 
+            </div>
+
+
+
+
     </div>
+
 </div>
 
 </body>
