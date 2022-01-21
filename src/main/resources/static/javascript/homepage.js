@@ -30,6 +30,7 @@ function historieScreen(){
 /* 4a-Als 'valid' dan moet gebruiker worden doorgestuurd naar dashboard */
 /* 4b-En er moet een token worden meegegeven die wordt opgeslagen, via sessionStorage.setItem("sessietoken", "token")? */
 
+
 function login(){
     const formDataInlog = new FormData(document.getElementById("inlogform"));
     const inlogGegevens = Object.fromEntries(formDataInlog);
@@ -50,6 +51,8 @@ function login(){
         /*Worden die er nu op de juiste manier uitgehaald? We willen die gebruiken in het Dashboard*/
         .then((response) => {
             if(response.status === 200){
+                localStorage.setItem("gebruikersnaam", inlogGegevens.gebruikersnaam);
+                console.log("Gebruikersnaam uit localstorage = " + localStorage.getItem("gebruikersnaam"));
                 dashboardScreen();
                 console.log('Success:', response);
             return response.json()

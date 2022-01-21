@@ -92,10 +92,9 @@ public class KlantService{
         for (Cryptomunt cryptomunt : rootRepository.geefAlleCryptomunten()) {
             String naam = cryptomunt.getName();
             String afkorting = cryptomunt.getName();
-            int cryptoId = cryptomunt.getId();
             double prijs = rootRepository.haalMeestRecenteCryptoWaarde(cryptomunt).getWaarde();
             double aantal = rootRepository.geefAssetVanGebruikerOrElseNull(klant, cryptomunt);
-            portefeuilleVoorKlant.add(new CryptoDto(naam, afkorting, prijs,aantal, cryptoId));
+            portefeuilleVoorKlant.add(new CryptoDto(naam, afkorting, prijs,aantal));
         }
         return portefeuilleVoorKlant;
     }
