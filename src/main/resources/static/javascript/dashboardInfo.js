@@ -16,13 +16,19 @@ function sorteerCryptoArray(data){
     sortedPortefeuilleArray.sort(function (a, b){return a.aantal - b.aantal});
 }
 
+//TODO naam waarde veranderen naar naam
 function vulCryptoGegevens(data){
+    console.log(data);
     const mainContainer = document.getElementById("cryptoNaam");
     const portefeuilleArray = data.portefeuille;
+    /*const crypto = portefeuilleArray[0];
+    console.log(crypto);*/
     for (let i = 0; i < portefeuilleArray.length; i++){
         const div = document.createElement("div");
         const waarde = portefeuilleArray[i].name;
-        div.addEventListener("click", function (){alert("Naar Transactiepagina " + waarde)})
+        console.log("cryptomunt: " + crypto);
+        div.addEventListener("click", function (){alert("Naar Transactiepagina " + waarde);
+            nieuweTransactie(waarde)})
         console.log(waarde);
         div.textContent = waarde;
         mainContainer.appendChild(div)
@@ -80,39 +86,39 @@ function vulRekeningGegevens(data){
  *  cryptomunt
  * */
 
-function nieuweTransactie(){
+function nieuweTransactie(cryptomuntNaam){
     // haal cryptomunt en gebruikersnaam op
     // ??? waarvandaan???
-    const cryptomunt = data.cryptomunt;
-    const gebruikersnaam = data.gebruikersnaam;
-    const transactieGegevens = Object.fromEntries(cryptomunt + gebruikersnaam);
-    console.log("Gebruikersnaam en cryptomunt zijn: " + JSON.stringify(transactieGegevens));
 
+    const gebruikersnaam = localStorage.getItem("gebruikersnaam");
+    console.log("gebruikersnaam en cryptomuntId: " + gebruikersnaam + " " + cryptomuntNaam);
+    const transactieStartDTO = {};
+    transactieStartDTO.gebruikersNaam = gebruikersnaam;
+    transactieStartDTO.cryptoNaam = cryptomuntNaam;
     /*  Hoe voeg je cryptomunt en waarde toe? */
     fetch('/transaction', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
         },
-        /*???? geef ik nu de juiste informatie mee ? */
-        body: JSON.stringify(gebruikersNaamEnCryptomunt),
+        body: JSON.stringify(transactieStartDTO),
     })
         .then((response) => {
-            if(response.status === 200){
-                tranactieScherm();
+            if(response.status === 200) {
+                console.log(transactieStartDTO);
+                console.log('Success:', response);
+                return response.json();
             }
-            console.log('Success:', response);
-            return response.json();
         })
         /*????? wat geef je hier terug???*/
         .then((json) => {
-            transactieCrypto();
+            transactieCrypto(json);
             cryptoKoers()
             bankfee()
             transactieBedrag()
             transactieAankoop()
-            transactieVerkoop()//
+            transactieVerkoop()
+            console.log("Hier is de json: " + json);
         })
         .catch((error) => {
             console.error('*** Iets misgegaan:', error);
