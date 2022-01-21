@@ -21,17 +21,17 @@ public class TransactieStartDto {
     private final Logger logger = LoggerFactory.getLogger(TransactieStartDto.class);
 
     private String gebruikersNaam;
-    private int cryptomuntId;
+    private String cryptoNaam;
 
     /**
      * All-args constructor voor transactieStartDto
      * @param gebruikersNaam
-     * @param cryptomuntId
+     * @param cryptoNaam
      */
-    public TransactieStartDto(String gebruikersNaam, int cryptomuntId) {
+    public TransactieStartDto(String gebruikersNaam, String cryptoNaam) {
         super();
         this.gebruikersNaam = gebruikersNaam;
-        this.cryptomuntId = cryptomuntId;
+        this.cryptoNaam = cryptoNaam;
         logger.info("New all-args TransactieStartDto");
     }
 
@@ -39,16 +39,19 @@ public class TransactieStartDto {
         return gebruikersNaam;
     }
 
-    public int getCryptomuntId() {
-        return cryptomuntId;
-    }
+
 
     public void setGebruikersNaam(String gebruikersNaam) {
         this.gebruikersNaam = gebruikersNaam;
     }
 
-    public void setCryptomuntId(int cryptomuntId) {
-        this.cryptomuntId = cryptomuntId;
+
+    public String getCryptoNaam() {
+        return cryptoNaam;
+    }
+
+    public void setCryptoNaam(String cryptoNaam) {
+        this.cryptoNaam = cryptoNaam;
     }
 
     @Override
@@ -56,11 +59,11 @@ public class TransactieStartDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TransactieStartDto that = (TransactieStartDto) o;
-        return cryptomuntId == that.cryptomuntId && gebruikersNaam.equals(that.gebruikersNaam);
+        return cryptoNaam.equals(that.cryptoNaam) && gebruikersNaam.equals(that.gebruikersNaam);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(gebruikersNaam, cryptomuntId);
+        return Objects.hash(gebruikersNaam, cryptoNaam);
     }
 }

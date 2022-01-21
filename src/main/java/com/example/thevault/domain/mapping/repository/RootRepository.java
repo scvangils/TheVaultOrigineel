@@ -386,6 +386,11 @@ public class RootRepository implements ApplicationListener<ContextRefreshedEvent
     public double geefAssetVanGebruikerOrElseNull(Gebruiker gebruiker, Cryptomunt cryptomunt){
         return assetDAO.geefAantalCryptoInEigendom(gebruiker, cryptomunt);
     }
+    //TODO JavaDoc
+    public Cryptomunt geefCryptomuntByNaam(String cryptoNaam){
+        return cryptomuntDAO.geefCryptomuntByNaam(cryptoNaam);
+    }
+
 
     //TODO JavaDoc
     public Cryptomunt geefCryptomunt(int cryptomuntId){
@@ -492,7 +497,7 @@ public class RootRepository implements ApplicationListener<ContextRefreshedEvent
         TransactiePaginaDto transactiePaginaDto = new TransactiePaginaDto();
         Klant klant = vindKlantByGebruikersnaam(transactieStartDto.getGebruikersNaam());
         Rekening rekening = klant.getRekening();
-        Cryptomunt cryptomunt = cryptomuntDAO.geefCryptomunt(transactieStartDto.getCryptomuntId());
+        Cryptomunt cryptomunt = cryptomuntDAO.geefCryptomuntByNaam(transactieStartDto.getCryptoNaam());
         CryptoWaarde cryptoWaarde = haalMeestRecenteCryptoWaarde(cryptomunt);
         transactiePaginaDto.setKlantnaam(klant.getNaam());
         transactiePaginaDto.setRekeningsaldo(vraagSaldoOpVanGebruiker(klant));

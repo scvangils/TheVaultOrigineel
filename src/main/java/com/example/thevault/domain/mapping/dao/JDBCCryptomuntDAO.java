@@ -45,6 +45,17 @@ public class JDBCCryptomuntDAO implements CryptomuntDAO{
         String sql = "Select * from cryptomunt where cryptomuntId = ?;";
         return jdbcTemplate.queryForObject(sql, new JDBCCryptomuntDAO.CryptomuntRowMapper(), cryptomuntId);
     }
+    /**
+     * Methode die de informatie over een specifieke cryptomunt uit de database haalt
+     * @param cryptoNaam cryptomuntidentifier waarover informatie wordt opgevraagd
+     * @return Cryptomunt alle informatie over de opgevraagde cryptomunt
+     */
+    @Override
+    public Cryptomunt geefCryptomuntByNaam(String cryptoNaam) {
+        String sql = "Select * from cryptomunt where naam = ?;";
+        return jdbcTemplate.queryForObject(sql, new JDBCCryptomuntDAO.CryptomuntRowMapper(), cryptoNaam);
+    }
+
 
     /**
      * Deze methode haalt uit de database een lijst met alle cryptomunten die verhandeld kunnen worden

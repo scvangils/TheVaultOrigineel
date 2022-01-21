@@ -61,6 +61,8 @@ function maakTransactieTabel(element, transactieArray) {
         })
     }
 }
+const modalText = document.getElementById("modalText");
+
 function vulModalMetTransactie(){
 
 }
