@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 
-<body onload="cryptoKoers(); transactieCrypto(); bankfee(); transactieBedrag()">
+<body onload="wijzigPrijs(); cryptoKoers(); transactieCrypto(); bankfee(); transactieBedrag(); cryptoInPortefeuille()">
 <div class="header" id="header">
     <p><h1> The Vault</h1>
     <p><h2> Bank to the Future </h2>
@@ -20,26 +20,43 @@
 <div class="transactie-pagina" id="transactie-pagina">
 
     <fieldset class="flex-container" id="transactiegegevens">
+
         <legend>Transactie</legend>
-        <div id = "transactieCrypto" >Crypto</div>
 
-<!--        toevoegen: handel met bank of met klant -->
+<!--radio button invoeren-->
 
-        <p><div id = "transactieAantal" >Aantal</div>
-        <div><input type="number" id="transactieAantalInvoer" placeholder="aantal"></div>
+        <div class="flexBasis">
+            <div class="transactieButton" >
+               <div id="aankoop">Aankoop</div>
+            </div>
+
+            <div class="transactieButton">
+                <div>Verkoop</div>
+            </div>
+        </div>
+
+        <div>
+        <div id = "transactieCrypto" class= "flexBasis">Crypto</div>
+        <div id = "transactieKoers" class="flexBasis">Koers € </div>
+        <div id = "aantalCryptoInPortefeuille" class="flexBasis">in Portefeuille</div>
 
 
-        <p><div id = "transactieKoers">Koers</div>
+        <div id = "transactieAantal" >Aantal
+        <input type="number" id="transactieAantalInvoer" placeholder="aantal">
+        </div>
 
+        <div id = "transactiePrijs" >Prijs €
+        <input type="number" id="transactiePrijsInvoer">
+           <div> <input type="checkbox" id="aanpassenTransactiePrijs">
+            <label for="aanpassenTransactiePrijs"> Wijzigen transactiekoers</label>
+           </div>
+        </div>
 
-        <p><div id = "transactieBankfee">Bankfee</div>
+        <div id = "transactieBankfee" class="flexBasis">Bankfee € </div>
 
-        <p><div id = "transactieBedrag">Transactie Bedrag</div>
+        <div id = "transactieBedrag" class="flexBasis">Transactie Bedrag € </div>
+            <input class="button" type="button" id = "transactie" value = "Lets Go!" onclick="registreerScreen()">
 
-
-        <p></p><div>
-            <button type="button" onclick="transactieAankoop()">Aankoop</button>
-            <button type="button" onclick="transactieVerkoop()">Verkoop</button>
         </div>
     </fieldset>
 
