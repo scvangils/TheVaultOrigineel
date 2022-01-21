@@ -504,8 +504,6 @@ public class RootRepository implements ApplicationListener<ContextRefreshedEvent
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        List<Transactie> transactieList = geefTransactiesVanGebruiker(vindKlantByGebruikersnaam("LavernRoman"));
-        transactieList.forEach(System.out::println);
-        System.out.println(vindKlantByGebruikersnaam("LavernRoman"));
+
     }
 }

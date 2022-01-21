@@ -43,7 +43,7 @@ public class HistorieDto {
 
 
 
-    public List<Transactie> maakTransactieLijstGekocht(Gebruiker klant) {
+    private List<Transactie> maakTransactieLijstGekocht(Gebruiker klant) {
         List<Transactie> transactieLijstGekocht = new ArrayList<>();
         for(Transactie transactie: klant.getTransacties()){
             if(transactie.getKoper().getGebruikerId() == klant.getGebruikerId()){
@@ -61,7 +61,7 @@ public class HistorieDto {
         this.transactieLijstGekocht = transactieLijstGekocht;
     }
 
-    public List<Transactie> maakTransactieLijstVerkocht(Gebruiker klant) {
+    private List<Transactie> maakTransactieLijstVerkocht(Gebruiker klant) {
         List<Transactie> transactieLijstVerkocht = new ArrayList<>();
         for(Transactie transactie: klant.getTransacties()){
             if(transactie.getVerkoper().getGebruikerId() == klant.getGebruikerId()){

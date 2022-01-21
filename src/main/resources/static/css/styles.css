@@ -18,6 +18,16 @@
     align-items: center;
     flex-direction: column;
 }
+.flex-containerStart {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    height: 300px;
+    width: 300px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
 
 fieldset {
     font-size: 20px;
@@ -169,3 +179,23 @@ input:placeholder-shown {
     display: flex;
     flex-direction: column;
 }
+.transactieField:hover {
+    background-color: aliceblue;
+    color: darkgray;
+}
+.details {
+    display: none;
+    position: absolute;
+    width: 185px;
+    height: 200px;
+    margin-top: -50px;
+    background-color: white;
+    border-radius: 6px;
+
+
+}
+.transactieField {
+
+}
+
+

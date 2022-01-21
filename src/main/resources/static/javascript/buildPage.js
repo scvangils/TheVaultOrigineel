@@ -406,6 +406,7 @@ function maakCompleetKlantObject(){
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+
             },
             body: JSON.stringify(maakCompleetKlantObject()),
         })
