@@ -1,4 +1,4 @@
-function transactieCrypto(){
+function transactieCrypto(json){
     const input = document.getElementById("transactieCrypto");
     const div = document.createElement("div");
     div.textContent = "{crypto}";
@@ -6,7 +6,7 @@ function transactieCrypto(){
 }
 
 
-function cryptoKoers(){
+function cryptoKoers(json){
     const input = document.getElementById("transactieKoers");
     const div = document.createElement("div")
     div.textContent = "{koers}";
