@@ -73,3 +73,49 @@ function vulRekeningGegevens(data){
     document.getElementById("saldo").textContent = "Saldo € " + data.saldo.toFixed(2);
 }
 
+
+
+/** Transactie Fetch
+ *  Fetch functie voor het ophalen van de transactiegegevens voor het transactiescherm van een bepaalde
+ *  cryptomunt
+ * */
+
+function nieuweTransactie(){
+    // haal cryptomunt en gebruikersnaam op
+    // ??? waarvandaan???
+    const cryptomunt = data.cryptomunt;
+    const gebruikersnaam = data.gebruikersnaam;
+    const transactieGegevens = Object.fromEntries(cryptomunt + gebruikersnaam);
+    console.log("Gebruikersnaam en cryptomunt zijn: " + JSON.stringify(transactieGegevens));
+
+    /*  Hoe voeg je cryptomunt en waarde toe? */
+    fetch('/transaction', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+        /*???? geef ik nu de juiste informatie mee ? */
+        body: JSON.stringify(gebruikersNaamEnCryptomunt),
+    })
+        .then((response) => {
+            if(response.status === 200){
+                tranactieScherm();
+            }
+            console.log('Success:', response);
+            return response.json();
+        })
+        /*????? wat geef je hier terug???*/
+        .then((json) => {
+            transactieCrypto();
+            cryptoKoers()
+            bankfee()
+            transactieBedrag()
+            transactieAankoop()
+            transactieVerkoop()//
+        })
+        .catch((error) => {
+            console.error('*** Iets misgegaan:', error);
+        });
+}
+

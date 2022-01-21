@@ -28,7 +28,10 @@ public class JDBCTokenKlantCombinatieDao implements TokenKlantCombinatieDao{
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(AuthorizationService.class);
 
-    //TODO JavaDoc
+    /**
+     * Deze klasse is gemaakt om de database aan te spreken voor het refreshtoken dat aan een klant
+     * gekoppeld is op het moment dat er wordt ingelogd in het systeem.
+     * */
     @Autowired
     public JDBCTokenKlantCombinatieDao(JdbcTemplate jdbcTemplate, KlantDAO klantDAO) {
         super();
@@ -101,6 +104,16 @@ public class JDBCTokenKlantCombinatieDao implements TokenKlantCombinatieDao{
 
     private class ConnectionRowMapper implements RowMapper<TokenKlantCombinatie> {
 
+
+        /**
+         * Deze methode zorgt ervoor dat er een tokenklant object wordt aangemaakt op basis
+         * van de meegegeven resultset die wordt opgehaald uit de database en het rijnummer waarop
+         * de tokenklantcombinatie te vinden is.
+         * @param resultSet de opgehaalde data uit de databasetabel
+         * @param i rijnummer van de betreffende token-klantcombinatie
+         * @return tokenKlantcombinatie (bestaande uit het UUID token en een klantobject)
+         * @throws SQLException
+         * */
         @Override
         public TokenKlantCombinatie mapRow(ResultSet resultSet, int i) throws SQLException {
             UUID uuid = UUID.fromString(resultSet.getString("token"));

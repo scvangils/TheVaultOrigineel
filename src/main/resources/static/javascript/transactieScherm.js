@@ -35,3 +35,4 @@ function transactieAankoop(){
 function transactieVerkoop(){
 
 }
+

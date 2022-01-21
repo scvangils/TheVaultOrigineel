@@ -9,14 +9,12 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.thevault.domain.model.Klant;
-import com.example.thevault.support.exceptions.LoginFailedException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Optional;
@@ -26,15 +24,19 @@ import java.util.UUID;
 public class AuthorizationService {
     private final static String SECRET_KEY = "secretTheVaultKey5dRQPD_sCsArU";
     private int accessExpirationDateInMinutes = 2;
-    //TODO Verwijderen?
-    private int refreshExpirationDateInMinutes;
-    //protected final TokenKlantCombinatieDao tokenKlantCombinatieDao;
     public static TokenKlantCombinatieDao tokenKlantCombinatieDao;
 
     @JsonIgnore
     private final Logger logger = LoggerFactory.getLogger(AuthorizationService.class);
 
-    //TODO JavaDoc
+
+    /**
+    * Deze klasse zorgt ervoor dat er een accesstoken en een refreshtoken worden aangemaakt waarmee
+     * een gebruiker kan worden gecheckt. Het access token vervalt binnen een hier aangegeven aantal
+     * minuten waarna een refreshtoken vanuit de database moet worden aangesproken om de accesstoken
+     * te refreshen.
+     *
+    * */
     @Autowired
     public AuthorizationService(TokenKlantCombinatieDao tokenKlantCombinatieDao) {
         super();
@@ -42,6 +44,7 @@ public class AuthorizationService {
         logger.info("New AuthorizationSupport");
     }
     /**
+     * @author Elise Olthof
      * Genereert een refresh token op basis van de UUID (universally unique identifier)
      * library en bestaat uit een willekeurig gegenereerde 128-bit waarde
      *
@@ -55,6 +58,7 @@ public class AuthorizationService {
 
     //TODO Kortere methodes van maken?
     /**
+     * @author Elise Olthof
      * Genereert een access token middels een JWT (JSON Web Token). Hierbij wordt
      * het HMAC256 algorithme gebruikt om het token te signeren. De token
      * vervalt na een aangegeven aantal minuten via de accessExpirationDateInMs
@@ -92,6 +96,7 @@ public class AuthorizationService {
 
     //TODO Wat is beter try catch of een throw exception?????
     /**
+     * @author Elise Olthof
      * Valideert het access token. Deze methode kan worden gebruikt zodra de klant
      * een nieuwe request verstuurt. De validatie van de methode hangt onder andere
      * af van de vervaldatum
@@ -118,6 +123,7 @@ public class AuthorizationService {
     }
 
     /**
+     * @author Elise Olthof
      * Authoriseert de klant doormiddel van het refresh token. Dit token wordt
      * in de database opgezocht. Als er als een klant-token combinatie bestaat
      * wordt het oude token weggegooid en wordt het nieuwe token opgeslagen
@@ -158,15 +164,5 @@ public class AuthorizationService {
         return getNewTokenKlantCombinatie(klant);
     }
 
-    //TODO JavaDoc
-    //TODO Huh? Een main method? Verwijderen?
-    public static void main(String[] args) {
-        Klant test = new Klant( "HarryBeste", "210jklf", "", 101212,LocalDate.of(1991,
-                1, 12));
 
-        AuthorizationService authorizationService = new AuthorizationService(tokenKlantCombinatieDao);
-        authorizationService.genereerRefreshToken();
-        authorizationService.genereerAccessToken(test);
-        //authorizationService.valideerAccessToken(authorizationService.genereerAccessToken(test), test);
-    }
 }
