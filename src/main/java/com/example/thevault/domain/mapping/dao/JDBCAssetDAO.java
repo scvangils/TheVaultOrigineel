@@ -23,7 +23,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
- * Author: Carmen Rietdijk
+ * Author: Carmen
  * Beschrijving: De implementatie van de DAO voor Asset, waarin zowel de CRUD functionaliteit van Asset wordt geregeld,
  * alsmede het ophalen van de benodigde informatie voor het vullen van de portefeuille van de klant
  */

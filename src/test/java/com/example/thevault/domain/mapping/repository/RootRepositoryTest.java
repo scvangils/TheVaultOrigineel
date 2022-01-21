@@ -37,6 +37,7 @@ class RootRepositoryTest {
     public static Asset testAsset4;
     public static Asset testAsset5;
     public static Optional<Asset> testAsset6;
+    public static Asset testAsset7;
     public static List<Asset> portefeuille;
     public static Cryptomunt testCryptomunt1;
     public static Cryptomunt testCryptomunt2;
@@ -65,13 +66,12 @@ class RootRepositoryTest {
         testKlant = new Klant();
         rootRepository = new RootRepository(klantDAO, rekeningDAO, assetDAO, cryptomuntDAO, cryptoWaardeDAO, adresDAO, transactieDAO, triggerDAO);
         klantService = new KlantService(rootRepository);
-
         testCryptomunt1 = new Cryptomunt(1, "CarmenCrypto", "CCR" );
         testCryptoWaarde1 = new CryptoWaarde("20211214CCR", testCryptomunt1, 100.0, LocalDate.now());
         testCryptomunt2 = new Cryptomunt(2, "DigiCrypto", "DIG");
-        testCryptoWaarde2 = new CryptoWaarde("20211214DIG", testCryptomunt1, 75.0, LocalDate.now());
+        testCryptoWaarde2 = new CryptoWaarde("20211214DIG", testCryptomunt2, 75.0, LocalDate.now());
         testCryptomunt3 = new Cryptomunt(3, "Coyne", "COY");
-        testCryptoWaarde3 = new CryptoWaarde("20211214COY", testCryptomunt1, 125.0, LocalDate.now());
+        testCryptoWaarde3 = new CryptoWaarde("20211214COY", testCryptomunt3, 125.0, LocalDate.now());
         testCryptomunt4 = new Cryptomunt(4,"VaultMoney","VMN");
         testCryptoMunt5 = null;
         testAsset1 = new Asset(testCryptomunt1, 5.1, testKlant);
@@ -80,6 +80,7 @@ class RootRepositoryTest {
         testAsset4 = new Asset(testCryptomunt1, 0.5, testKlant);
         testAsset5 = new Asset(testCryptomunt4, 1.3, testKlant);
         testAsset6 = Optional.empty();
+        testAsset7 = new Asset(testCryptomunt1, 5.6, testKlant);
         portefeuille = new ArrayList<>();
         portefeuille.add(testAsset1);
         portefeuille.add(testAsset2);
@@ -94,15 +95,14 @@ class RootRepositoryTest {
         rekeningGewijzigdSaldo = new Rekening("INGB0001234567NL", gewijzigdSaldo);
 
     }
-    // TODO overleg Carmen mbt notnullfields van transacties, rekening en portefeuille
+
     @Test
     void slaKlantOp() {
         Mockito.when(klantDAO.slaKlantOp(testKlant)).thenReturn(testKlant);
         Klant expected = testKlant;
         Klant actual = rootRepository.slaKlantOp(testKlant);
         assertThat(actual).as("Test opslaan van klant").isNotNull().isEqualTo(expected).
-                hasNoNullFieldsOrPropertiesExcept("adres", "geboortedatum", "transacties", "rekening", "portefeuille").asString().startsWith("Klant{").
-                contains("Huub").doesNotContain("Michel");
+                asString().startsWith("Klant{").contains("Huub").doesNotContain("Michel");
     }
 
     /**
@@ -123,8 +123,7 @@ class RootRepositoryTest {
         Klant expected = testKlant;
         Klant actual = rootRepository.vindKlantByGebruikersnaam("Huub");
         assertThat(actual).as("Testen zoeken klant op gebruikersnaam").isNotNull().isEqualTo(expected).
-                hasNoNullFieldsOrPropertiesExcept("adres", "geboortedatum", "transacties", "rekening", "portefeuille").asString().startsWith("Klant{").
-                contains("Huub").doesNotContain("Michel");
+                asString().startsWith("Klant{").contains("Huub").doesNotContain("Michel");
     }
 
     @Test
@@ -188,7 +187,7 @@ class RootRepositoryTest {
         Asset actual = rootRepository.geefAssetVanGebruiker(testKlant, testAsset1.getCryptomunt());
         assertThat(actual).as("Test asset van testklant opvragen").isNotNull().isEqualTo(expected).
                 isIn(portefeuille).hasNoNullFieldsOrProperties().asString().startsWith("Asset{").contains("5.1").
-                doesNotContain("2.4").hasSize(229);
+                doesNotContain("2.4").hasSize(81);
     }
 
     @Test
@@ -215,16 +214,13 @@ class RootRepositoryTest {
                 extracting("name", "symbol").contains("VaultMoney", "VMN");
     }
 
-/*    // TODO overleg Carmen mbt notnullfields van transacties, rekening en portefeuille
     @Test
     void wijzigAssetVanKlant() {
-        Mockito.when(assetDAO.updateAsset(testAsset3, , )).thenReturn(testAsset3);
-        Asset expected = testAsset3;
-        Asset actual = rootRepository.wijzigAssetVanKlant(testAsset3);
+        Mockito.when(assetDAO.updateAsset(testKlant, testCryptomunt1, 0.5)).thenReturn(testAsset7);
+        Asset expected = testAsset7;
+        Asset actual = rootRepository.wijzigAssetVanKlant(testKlant, testCryptomunt1, 0.5);
         assertThat(actual).as("Test wijzigen asset van testklant").isNotNull().isEqualTo(expected).
-                isIn(portefeuille).hasNoNullFieldsOrProperties().asString().startsWith("Asset{").contains("Coyne").
-                doesNotContain("BitCoin").hasSize(222);
-    }*/
-
-
+                isNotIn(portefeuille).hasNoNullFieldsOrProperties().asString().startsWith("Asset{").contains("CarmenCrypto").
+                doesNotContain("BitCoin").hasSize(81);
+    }
 }
