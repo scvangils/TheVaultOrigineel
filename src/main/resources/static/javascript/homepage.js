@@ -1,26 +1,29 @@
 "use strict";
-
 function loginScreen(){
     document.getElementById("registratie-personalia").style.display = "none";
     document.getElementById("inlog").style.display = "block";
     document.getElementById("dashboard").style.display = "none";
+    document.getElementById("klantHistorie").style.display = "none";
 }
 
 function registreerScreen(){
     document.getElementById("registratie-personalia").style.display = "block";
     document.getElementById("inlog").style.display = "none";
     document.getElementById("dashboard").style.display = "none";
+    document.getElementById("klantHistorie").style.display = "none";
 }
 
 function dashboardScreen(){
     document.getElementById("registratie-personalia").style.display = "none";
     document.getElementById("inlog").style.display = "none";
     document.getElementById("dashboard").style.display = "block";
+    document.getElementById("klantHistorie").style.display = "none";
 }
 function historieScreen(){
     document.getElementById("registratie-personalia").style.display = "none";
     document.getElementById("inlog").style.display = "none";
     document.getElementById("dashboard").style.display = "none";
+    document.getElementById("klantHistorie").style.display = "block";
 }
 
 /*TODO Functie Login schrijven*/

@@ -88,6 +88,8 @@ p.modal-body {
     display: flex;  /* aligns all child elements (flex items) in a row */
     justify-content: center;
     flex-direction: column;
+    white-space: pre;
+
 }
 
 .col {

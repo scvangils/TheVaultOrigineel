@@ -265,19 +265,9 @@ function fillModalBody(inputArray){
 
 // **** HIER NIEUWE FILE
 
-//vervang wachtwoord-veld door div met div met input en span als children
-//verdeel input en image over div
-//grootte div en children laten bepalen door ander input-text-element
+
     const passwordDiv = document.createElement("div");
     passwordDiv.setAttribute("id", "passwordDiv");
-    passwordDiv.style.width = (document.getElementById("naam").offsetWidth).toString() + "px";
-
-    //waarom werkt dit niet?
-/*const hoogte = document.getElementById("naam").offsetHeight;
-console.log(hoogte.toString());
-    passwordDiv.style.height = (document.getElementById("naam").offsetHeight).toString() + "px";*/
-    passwordDiv.style.height = "23px";
-//zorgen dat div er als input uitziet
 //TODO kleur en breedte bepalen via andere input of alle inputs hetzelfde zetten?
     passwordDiv.style.borderColor = "lightgrey";
     passwordDiv.style.borderWidth = "2px";
@@ -289,7 +279,8 @@ console.log(hoogte.toString());
 //TODO deels via css regelen
     const hoverEye = document.createElement("span");
     hoverEye.setAttribute("id", "toonWachtwoord");
-    hoverEye.style.width = (document.getElementById("naam").offsetWidth * 0.2).toString() + "px";
+    let hoverEyeWidth = 149 * 0.2;
+    hoverEye.style.width = hoverEyeWidth + "px";
     hoverEye.style.height = "100%";
 //voeg input en span toe aan div
     passwordDiv.appendChild(passwordInput);
@@ -299,7 +290,8 @@ console.log(hoogte.toString());
 
 //TODO deels via css regelen
     const wachtwoordVeld = document.getElementById("wachtwoord");
-    wachtwoordVeld.style.width = (document.getElementById("naam").offsetWidth * 0.8).toString() + "px";
+    let wachtwoordVeldWidth = 149 * 0.8;
+    wachtwoordVeld.style.width = wachtwoordVeldWidth + "px";
     wachtwoordVeld.style.alignSelf = "start";
     wachtwoordVeld.style.borderRight = "none";
 
