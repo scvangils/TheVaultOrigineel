@@ -26,7 +26,6 @@ function vulCryptoGegevens(data){
     for (let i = 0; i < portefeuilleArray.length; i++){
         const div = document.createElement("div");
         const waarde = portefeuilleArray[i].name;
-        const crypto = portefeuilleArray[i].afkorting;
         console.log("cryptomunt: " + crypto);
         div.addEventListener("click", function (){alert("Naar Transactiepagina " + waarde);
             nieuweTransactie()})

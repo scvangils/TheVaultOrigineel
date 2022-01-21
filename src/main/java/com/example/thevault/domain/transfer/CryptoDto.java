@@ -17,7 +17,6 @@ public class CryptoDto {
     private String afkorting;
     private double prijs;
     private double aantal;
-    private int cryptoId;
 
     //TODO JavaDoc
     //TODO Verwijderen?
@@ -27,12 +26,11 @@ public class CryptoDto {
     }
 
     //TODO JavaDoc
-    public CryptoDto(String name, String afkorting, double prijs, double aantal, int cryptoId) {
+    public CryptoDto(String name, String afkorting, double prijs, double aantal) {
         this.name = name;
         this.afkorting = afkorting;
         this.prijs = prijs;
         this.aantal = aantal;
-        this.cryptoId = cryptoId;
     }
 
     public Logger getLogger() {
@@ -71,11 +69,4 @@ public class CryptoDto {
         this.prijs = prijs;
     }
 
-    public int getCryptoId() {
-        return cryptoId;
-    }
-
-    public void setCryptoId(int cryptoId) {
-        this.cryptoId = cryptoId;
-    }
 }
