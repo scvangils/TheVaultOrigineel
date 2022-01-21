@@ -242,6 +242,7 @@ window.onclick = function(event) {
 //modal laten vullen door inputvelden via flex-box-tabelstructuur
 //wachtwoord niet laten zien
 function fillModalBody(inputArray){
+    document.getElementById("verstuur").style.display = "block";
     document.getElementById("modalText").textContent = "Kloppen alle gegevens?";
     for (let i = 0; i < inputArray.length; i++) {
         if (inputArray[i].naam !== "wachtwoord") {

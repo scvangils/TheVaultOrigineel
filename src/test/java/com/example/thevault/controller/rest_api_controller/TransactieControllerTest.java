@@ -40,6 +40,8 @@ class TransactieControllerTest {
     private TransactieService transactieService;
     @MockBean
     private CryptoHistorischService testService;
+    @MockBean
+    private TriggerService triggerService;
 
     @Autowired
     public TransactieControllerTest(MockMvc mockMvc){
@@ -52,7 +54,7 @@ class TransactieControllerTest {
 
     @BeforeEach
     void setup(){
-        testTransactieStartDto = new TransactieStartDto("Carmen", 1);
+        testTransactieStartDto = new TransactieStartDto("Carmen", "Elrond");
         testTransactiePaginaDto = new TransactiePaginaDto();
         testTransactiePaginaDto.setKlantnaam("Carmen");
         testTransactiePaginaDto.setRekeningsaldo(100.0);
