@@ -107,9 +107,8 @@ public class JDBCRekeningDAO implements RekeningDAO {
         Rekening rekening;
         try {
             rekening = jdbcTemplate.queryForObject(sql, new JDBCRekeningDAO.RekeningRowMapper(), gebruiker.getGebruikerId());
-            //TODO nadenken over nullPointer
         } catch (EmptyResultDataAccessException geenResultaatGevonden) {
-            return 0.0;
+            return -1;
         }
        return rekening.getSaldo();
     }
@@ -137,7 +136,7 @@ public class JDBCRekeningDAO implements RekeningDAO {
      * Met deze methode kan je het nieuwe saldo na een transactie in de rekening opslaan.
      * @param gebruiker is de gebruiker van wie het saldo geüpdatet moet worden.
      * @param transactiebedrag is het bedrag waarmee het saldo van de rekening verhoogd of verlaagd moet worden.
-     * @return geüpdatete saldo.
+     * @return rekening met geüpdatete saldo.
      */
     @Override
     public Rekening wijzigSaldoVanGebruiker(Gebruiker gebruiker, double transactiebedrag) {
