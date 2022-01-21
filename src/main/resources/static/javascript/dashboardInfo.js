@@ -16,13 +16,20 @@ function sorteerCryptoArray(data){
     sortedPortefeuilleArray.sort(function (a, b){return a.aantal - b.aantal});
 }
 
+//TODO naam waarde veranderen naar naam
 function vulCryptoGegevens(data){
+    console.log(data);
     const mainContainer = document.getElementById("cryptoNaam");
     const portefeuilleArray = data.portefeuille;
+    /*const crypto = portefeuilleArray[0];
+    console.log(crypto);*/
     for (let i = 0; i < portefeuilleArray.length; i++){
         const div = document.createElement("div");
         const waarde = portefeuilleArray[i].name;
-        div.addEventListener("click", function (){alert("Naar Transactiepagina " + waarde)})
+        const crypto = portefeuilleArray[i].afkorting;
+        console.log("cryptomunt: " + crypto);
+        div.addEventListener("click", function (){alert("Naar Transactiepagina " + waarde);
+            nieuweTransactie()})
         console.log(waarde);
         div.textContent = waarde;
         mainContainer.appendChild(div)
@@ -80,23 +87,22 @@ function vulRekeningGegevens(data){
  *  cryptomunt
  * */
 
-function nieuweTransactie(){
+function nieuweTransactie(cryptomuntId){
     // haal cryptomunt en gebruikersnaam op
     // ??? waarvandaan???
-    const cryptomunt = data.cryptomunt;
-    const gebruikersnaam = data.gebruikersnaam;
-    const transactieGegevens = Object.fromEntries(cryptomunt + gebruikersnaam);
-    console.log("Gebruikersnaam en cryptomunt zijn: " + JSON.stringify(transactieGegevens));
+
+    const gebruikersnaam = localStorage.getItem("gebruikersnaam");
+    console.log("gebruikersnama en cryptomuntId: " + gebruikersnaam, cryptomuntId);
 
     /*  Hoe voeg je cryptomunt en waarde toe? */
-    fetch('/transaction', {
+   /* fetch('/transaction', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         },
-        /*???? geef ik nu de juiste informatie mee ? */
-        body: JSON.stringify(gebruikersNaamEnCryptomunt),
+        /!*???? geef ik nu de juiste informatie mee ? *!/
+        //body: JSON.stringify(gebruikersNaamEnCryptomunt),
     })
         .then((response) => {
             if(response.status === 200){
@@ -105,7 +111,7 @@ function nieuweTransactie(){
             console.log('Success:', response);
             return response.json();
         })
-        /*????? wat geef je hier terug???*/
+        /!*????? wat geef je hier terug???*!/
         .then((json) => {
             transactieCrypto();
             cryptoKoers()
@@ -116,6 +122,6 @@ function nieuweTransactie(){
         })
         .catch((error) => {
             console.error('*** Iets misgegaan:', error);
-        });
+        });*/
 }
 
