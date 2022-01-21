@@ -47,11 +47,11 @@ public class JDBCRekeningDAOTest {
     @BeforeEach
     void setUp() {
         bestaandeKlant1 = new Klant("Carmen", "GoedWachtwoord",
-                "Carmen", null, 123456789, LocalDate.parse("1985-12-30"));
+                "Carmen", 123456789, LocalDate.parse("1985-12-30"));
         bestaandeKlant2 = new Klant("Jolien", "BeterWachtwoord",
-                "Jolien",null, 987654321, LocalDate.parse("1985-10-14"));
+                "Jolien", 987654321, LocalDate.parse("1985-10-14"));
         nietBestaandeKlant = new Klant("Charlotte", "SlechtWW",
-                "Charlotte",null, BSNvalidator.TESTBSN_VAN_RIVG, LocalDate.parse("1997-08-01"));
+                "Charlotte", BSNvalidator.TESTBSN_VAN_RIVG, LocalDate.parse("1997-08-01"));
         bestaandeRekening1 = new Rekening("NL01INGB0056210575", 41908);
         bestaandeRekening2 = new Rekening("NL05RABO0957285205", 57313);
         nieuweRekening = new Rekening("NL20RABO9876543", 1000.0);
