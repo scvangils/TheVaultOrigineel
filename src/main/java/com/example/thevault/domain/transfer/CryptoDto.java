@@ -5,7 +5,6 @@
 
 package com.example.thevault.domain.transfer;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +17,7 @@ public class CryptoDto {
     private String afkorting;
     private double prijs;
     private double aantal;
+    private int cryptoId;
 
     //TODO JavaDoc
     //TODO Verwijderen?
@@ -27,11 +27,12 @@ public class CryptoDto {
     }
 
     //TODO JavaDoc
-    public CryptoDto(String name, String afkorting, double prijs, double aantal) {
+    public CryptoDto(String name, String afkorting, double prijs, double aantal, int cryptoId) {
         this.name = name;
         this.afkorting = afkorting;
         this.prijs = prijs;
         this.aantal = aantal;
+        this.cryptoId = cryptoId;
     }
 
     public Logger getLogger() {
@@ -68,5 +69,13 @@ public class CryptoDto {
 
     public void setPrijs(double prijs) {
         this.prijs = prijs;
+    }
+
+    public int getCryptoId() {
+        return cryptoId;
+    }
+
+    public void setCryptoId(int cryptoId) {
+        this.cryptoId = cryptoId;
     }
 }
